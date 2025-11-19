@@ -154,4 +154,23 @@
   .animate-float {
     animation: float 6s ease-in-out infinite;
   }
+
+  /* Animación de scroll infinito para logos */
+  @keyframes scroll {
+    0% {
+      transform: translateX(0);
+    }
+    100% {
+      transform: translateX(-50%);
+    }
+  }
+
+  .animate-scroll {
+    animation: scroll 30s linear infinite;
+  }
+
+  /* Pausar animación al hacer hover */
+  .animate-scroll:hover {
+    animation-play-state: paused;
+  }
 }

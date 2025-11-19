@@ -1,6 +1,7 @@
 'use client';
 
 import Link from 'next/link';
+import Image from 'next/image';
 import { useEffect, useRef } from 'react';
 
 // Iconos flotantes de lenguaje de señas (simulados con emojis/letras por ahora)
@@ -90,7 +91,7 @@ export function Hero() {
               ))}
             </div>
 
-            {/* Video circular - Opción 1: Video HTML5 */}
+              {/* Video circular - Opción 1: Video HTML5 */}
             <div className="relative w-[300px] h-[300px] sm:w-[400px] sm:h-[400px] lg:w-[450px] lg:h-[450px]">
               {/* Fondo decorativo */}
               <div className="absolute inset-0 bg-[#83A98A]/20 rounded-full blur-3xl" aria-hidden="true" />
@@ -104,17 +105,11 @@ export function Hero() {
                   loop
                   muted
                   playsInline
-                  poster="/placeholder-avatar.jpg"
                   aria-label="Video de presentación de Tincadia"
                 >
-                  <source src="/videos/hero-animation.mp4" type="video/mp4" />
-                  <source src="/videos/hero-animation.webm" type="video/webm" />
+                  <source src="/media/videos/hero-animation.mp4" type="video/mp4" />
                   {/* Fallback para navegadores sin soporte de video */}
-                  <img 
-                    src="/images/hero-fallback.jpg" 
-                    alt="Persona representando a Tincadia"
-                    className="w-full h-full object-cover"
-                  />
+                  Tu navegador no soporta el elemento de video.
                 </video>
               </div>
             </div>
@@ -123,27 +118,86 @@ export function Hero() {
       </div>
 
       {/* Sección "En nosotros confían" */}
-      <div className="mt-20 lg:mt-32">
+      <div className="mt-20 lg:mt-32 py-12 bg-white border-y border-gray-100">
         <div className="mx-auto max-w-7xl px-6 lg:px-8">
-          <p className="text-center text-lg font-semibold text-gray-900 mb-8">
-            En nosotros confían
-          </p>
+          {/* Título estilizado */}
+          <h2 className="text-center text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-900 mb-12 tracking-tight">
+            En nosotros{' '}
+            <span className="text-[#83A98A] relative inline-block">
+              confían
+              <span className="absolute bottom-0 left-0 w-full h-1 bg-[#83A98A]/30" aria-hidden="true" />
+            </span>
+          </h2>
           
-          <div className="flex flex-wrap items-center justify-center gap-8 lg:gap-12 opacity-60">
-            {/* Logos placeholder - Reemplazar con logos reales */}
-            <div className="h-12 w-32 bg-gray-300 rounded flex items-center justify-center">
-              <span className="text-sm font-bold text-gray-600">EAFIT</span>
-            </div>
-            <div className="h-12 w-32 bg-gray-300 rounded flex items-center justify-center">
-              <span className="text-sm font-bold text-gray-600">almia</span>
-            </div>
-            <div className="h-12 w-32 bg-gray-300 rounded flex items-center justify-center">
-              <span className="text-sm font-bold text-gray-600">LOGO 3</span>
-            </div>
-            <div className="h-12 w-32 bg-gray-300 rounded flex items-center justify-center">
-              <span className="text-sm font-bold text-gray-600">LOGO 4</span>
+          {/* Carrusel infinito de logos */}
+          <div className="relative overflow-hidden">
+            <div className="flex items-center animate-scroll">
+              {/* Primera iteración de logos */}
+              <div className="flex items-center justify-around min-w-full gap-16 px-8">
+                <div className="relative h-16 w-40 md:h-20 md:w-48 lg:h-24 lg:w-56 flex-shrink-0 grayscale hover:grayscale-0 transition-all duration-300 opacity-70 hover:opacity-100">
+                  <Image
+                    src="/media/images/logo_almia.png"
+                    alt="Logo Almia - Cliente de Tincadia"
+                    fill
+                    className="object-contain"
+                  />
+                </div>
+                
+                <div className="relative h-16 w-40 md:h-20 md:w-48 lg:h-24 lg:w-56 flex-shrink-0 grayscale hover:grayscale-0 transition-all duration-300 opacity-70 hover:opacity-100">
+                  <Image
+                    src="/media/images/logo_daste.png"
+                    alt="Logo Daste - Cliente de Tincadia"
+                    fill
+                    className="object-contain"
+                  />
+                </div>
+                
+                <div className="relative h-16 w-40 md:h-20 md:w-48 lg:h-24 lg:w-56 flex-shrink-0 grayscale hover:grayscale-0 transition-all duration-300 opacity-70 hover:opacity-100">
+                  <Image
+                    src="/media/images/logo_educatics.png"
+                    alt="Logo Educatics - Cliente de Tincadia"
+                    fill
+                    className="object-contain"
+                  />
+                </div>
+              </div>
+              
+              {/* Segunda iteración de logos (para efecto infinito) */}
+              <div className="flex items-center justify-around min-w-full gap-16 px-8">
+                <div className="relative h-16 w-40 md:h-20 md:w-48 lg:h-24 lg:w-56 flex-shrink-0 grayscale hover:grayscale-0 transition-all duration-300 opacity-70 hover:opacity-100">
+                  <Image
+                    src="/media/images/logo_almia.png"
+                    alt="Logo Almia"
+                    fill
+                    className="object-contain"
+                  />
+                </div>
+                
+                <div className="relative h-16 w-40 md:h-20 md:w-48 lg:h-24 lg:w-56 flex-shrink-0 grayscale hover:grayscale-0 transition-all duration-300 opacity-70 hover:opacity-100">
+                  <Image
+                    src="/media/images/logo_daste.png"
+                    alt="Logo Daste"
+                    fill
+                    className="object-contain"
+                  />
+                </div>
+                
+                <div className="relative h-16 w-40 md:h-20 md:w-48 lg:h-24 lg:w-56 flex-shrink-0 grayscale hover:grayscale-0 transition-all duration-300 opacity-70 hover:opacity-100">
+                  <Image
+                    src="/media/images/logo_educatics.png"
+                    alt="Logo Educatics"
+                    fill
+                    className="object-contain"
+                  />
+                </div>
+              </div>
             </div>
           </div>
+          
+          {/* Indicador visual sutil */}
+          <p className="text-center text-sm text-gray-500 mt-8 italic">
+            Pasa el cursor sobre los logos para verlos a color
+          </p>
         </div>
       </div>
     </section>
