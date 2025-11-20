@@ -15,9 +15,6 @@ Antes de comenzar, asegúrate de tener instalado:
 
 1. Clona el repositorio:
 ```bash
-git clone <url-del-repositorio>
-cd tincadia-front
-```
 
 2. Instala las dependencias:
 ```bash
@@ -77,18 +74,7 @@ npm run lint
 - `npm run start` - Inicia el servidor de producción
 - `npm run lint` - Ejecuta el linter para verificar el código
 
-## Estructura del Proyecto
 
-```
-tincadia-front/
-├── src/
-│   ├── app/              # Páginas y rutas de Next.js
-│   ├── components/       # Componentes React reutilizables
-│   │   └── landing/     # Componentes de la página de inicio
-│   └── ...
-├── public/              # Archivos estáticos
-└── ...
-```
 
 ## Tecnologías Utilizadas
 
