@@ -165,12 +165,77 @@
     }
   }
 
+  @keyframes scroll-smooth {
+    from {
+      transform: translateX(0);
+    }
+    to {
+      transform: translateX(-33.333%);
+    }
+  }
+
   .animate-scroll {
-    animation: scroll 30s linear infinite;
+    animation: scroll 20s linear infinite;
+  }
+
+  .animate-scroll-smooth {
+    animation: scroll-smooth 20s linear infinite;
+    will-change: transform;
   }
 
   /* Pausar animación al hacer hover */
-  .animate-scroll:hover {
+  .animate-scroll:hover,
+  .animate-scroll-smooth:hover {
     animation-play-state: paused;
+  }
+
+  /* Animación de barrido (reveal) */
+  @keyframes reveal {
+    0% {
+      opacity: 0;
+      transform: translateY(20px);
+      clip-path: inset(0 100% 0 0);
+    }
+    100% {
+      opacity: 1;
+      transform: translateY(0);
+      clip-path: inset(0 0 0 0);
+    }
+  }
+
+  /* Animación de borrado (wipe out) */
+  @keyframes wipeOut {
+    0% {
+      opacity: 1;
+      clip-path: inset(0 0 0 0);
+    }
+    100% {
+      opacity: 0;
+      clip-path: inset(0 0 0 100%);
+    }
+  }
+
+  /* Animación de entrada suave */
+  @keyframes fadeInUp {
+    0% {
+      opacity: 0;
+      transform: translateY(30px);
+    }
+    100% {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  .animate-reveal {
+    animation: reveal 0.8s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+  }
+
+  .animate-wipe-out {
+    animation: wipeOut 0.5s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+  }
+
+  .animate-fade-in-up {
+    animation: fadeInUp 1s cubic-bezier(0.4, 0, 0.2, 1) forwards;
   }
 }

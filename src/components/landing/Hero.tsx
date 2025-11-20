@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import Image from 'next/image';
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 // Iconos flotantes de lenguaje de señas (simulados con emojis/letras por ahora)
 const floatingIcons = [
@@ -14,8 +14,24 @@ const floatingIcons = [
   { id: 6, char: '✋', top: '40%', right: '15%', delay: '2.5s' },
 ];
 
+// Palabras que rotan
+const rotatingWords = [
+  'barreras',
+  'exclusión',
+  'fronteras',
+  'distancias',
+  'límites',
+  'obstáculos',
+  'silencios',
+];
+
 export function Hero() {
   const videoRef = useRef<HTMLVideoElement>(null);
+  const [currentWordIndex, setCurrentWordIndex] = useState(0);
+  const [isAnimating, setIsAnimating] = useState(false);
+  const [showDescription, setShowDescription] = useState(false);
+  const [showStaticText, setShowStaticText] = useState(false);
+  const [showWord, setShowWord] = useState(false);
 
   // Asegurar que el video se reproduce en loop
   useEffect(() => {
@@ -25,6 +41,43 @@ export function Hero() {
         console.log('Video autoplay prevented:', error);
       });
     }
+  }, []);
+
+  // Animación inicial y rotación de palabras
+  useEffect(() => {
+    // Mostrar "Tecnología que rompe" primero
+    const showStaticTimer = setTimeout(() => {
+      setShowStaticText(true);
+    }, 300);
+
+    // Mostrar primera palabra después
+    const showWordTimer = setTimeout(() => {
+      setShowWord(true);
+    }, 1000);
+
+    // Mostrar descripción después de la primera palabra
+    const showDescTimer = setTimeout(() => {
+      setShowDescription(true);
+    }, 2000);
+
+    // Iniciar rotación de palabras
+    const rotationInterval = setInterval(() => {
+      setIsAnimating(true);
+      setShowWord(false);
+
+      setTimeout(() => {
+        setCurrentWordIndex((prev) => (prev + 1) % rotatingWords.length);
+        setIsAnimating(false);
+        setShowWord(true);
+      }, 600); // Tiempo para el wipe out
+    }, 3000); // Cambiar cada 3 segundos
+
+    return () => {
+      clearTimeout(showStaticTimer);
+      clearTimeout(showWordTimer);
+      clearTimeout(showDescTimer);
+      clearInterval(rotationInterval);
+    };
   }, []);
 
   return (
@@ -38,13 +91,34 @@ export function Hero() {
           <div className="text-center lg:text-left z-10">
             <h1 
               id="hero-heading"
-              className="text-4xl font-bold tracking-tight text-gray-900 sm:text-5xl lg:text-6xl"
+              className="text-4xl font-bold tracking-tight text-gray-900 sm:text-5xl lg:text-6xl min-h-[120px] sm:min-h-[140px] lg:min-h-[180px]"
             >
-              Tecnología que rompe{' '}
-              <span className="text-[#83A98A]">barreras</span>
+              <span 
+                className={`inline-block ${showStaticText ? 'animate-reveal' : 'opacity-0'}`}
+                style={{ animationDelay: '0s' }}
+              >
+                Tecnología que rompe{' '}
+              </span>
+              <br className="sm:hidden" />
+              <span 
+                className={`inline-block text-[#83A98A] ${
+                  showWord && !isAnimating 
+                    ? 'animate-reveal' 
+                    : isAnimating 
+                    ? 'animate-wipe-out' 
+                    : 'opacity-0'
+                }`}
+                key={currentWordIndex}
+              >
+                {rotatingWords[currentWordIndex]}
+              </span>
             </h1>
             
-            <p className="mt-6 text-lg leading-8 text-gray-600 max-w-2xl mx-auto lg:mx-0">
+            <p 
+              className={`mt-6 text-lg leading-8 text-gray-600 max-w-2xl mx-auto lg:mx-0 transition-all duration-1000 ${
+                showDescription ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
+              }`}
+            >
               En Tincadia creamos soluciones inclusivas que conectan a personas 
               sordas, oyentes y organizaciones. Desarrollamos tecnología accesible, 
               inteligencia artificial y herramientas de comunicación que hacen posible 
@@ -52,7 +126,11 @@ export function Hero() {
             </p>
 
             
-            <div className="mt-10 flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
+            <div 
+              className={`mt-10 flex flex-col sm:flex-row gap-4 justify-center lg:justify-start transition-all duration-1000 delay-300 ${
+                showDescription ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
+              }`}
+            >
               <Link
                 href="#nosotros"
                 className="rounded-lg bg-[#83A98A] px-8 py-3.5 text-base font-semibold text-white shadow-sm hover:bg-[#6D8F75] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#83A98A] transition-colors"
@@ -119,83 +197,64 @@ export function Hero() {
 
       {/* Sección "En nosotros confían" */}
       <div className="mt-16 lg:mt-20 py-12 bg-white border-y border-gray-100">
-        <div className="mx-auto max-w-7xl px-6 lg:px-8">
-          
-          <h2 className="text-center text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-900 mb-12 tracking-tight">
+        <div className="mx-auto max-w-7xl px-6 lg:px-8 mb-8">
+          <h2 className="text-center text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-900 tracking-tight">
             En nosotros{' '}
             <span className="text-[#83A98A] relative inline-block">
               confían
               <span className="absolute bottom-0 left-0 w-full h-1 bg-[#83A98A]/30" aria-hidden="true" />
             </span>
           </h2>
+        </div>
+        
+        {/* Carrusel infinito de logos - Full width con fade en los bordes */}
+        <div className="relative overflow-hidden w-full">
+          {/* Gradient fade izquierdo */}
+          <div className="absolute left-0 top-0 bottom-0 w-24 md:w-32 lg:w-40 bg-gradient-to-r from-white via-white/80 to-transparent z-10 pointer-events-none" aria-hidden="true" />
           
+          {/* Gradient fade derecho */}
+          <div className="absolute right-0 top-0 bottom-0 w-24 md:w-32 lg:w-40 bg-gradient-to-l from-white via-white/80 to-transparent z-10 pointer-events-none" aria-hidden="true" />
           
           <div className="relative overflow-hidden">
-            <div className="flex items-center animate-scroll">
-              
-              <div className="flex items-center justify-around min-w-full gap-16 px-8">
-                <div className="relative h-16 w-40 md:h-20 md:w-48 lg:h-24 lg:w-56 flex-shrink-0 grayscale hover:grayscale-0 transition-all duration-300 opacity-70 hover:opacity-100">
-                  <Image
-                    src="/media/images/logo_almia.png"
-                    alt="Logo Almia - Cliente de Tincadia"
-                    fill
-                    className="object-contain"
-                  />
+            <div className="flex items-center animate-scroll-smooth py-4 gap-12 md:gap-16">
+              {/* Repetimos los logos múltiples veces para loop sin costuras */}
+              {[...Array(6)].map((_, setIndex) => (
+                <div key={setIndex} className="flex items-center gap-12 md:gap-16 flex-shrink-0">
+                  <div className="relative h-10 w-28 md:h-12 md:w-32 lg:h-14 lg:w-36 flex-shrink-0 grayscale hover:grayscale-0 transition-all duration-300 opacity-60 hover:opacity-100">
+                    <Image
+                      src="/media/images/logo_almia.png"
+                      alt={setIndex === 0 ? "Logo Almia - Cliente de Tincadia" : ""}
+                      fill
+                      className="object-contain"
+                    />
+                  </div>
+                  
+                  <div className="relative h-10 w-28 md:h-12 md:w-32 lg:h-14 lg:w-36 flex-shrink-0 grayscale hover:grayscale-0 transition-all duration-300 opacity-60 hover:opacity-100">
+                    <Image
+                      src="/media/images/logo_daste.png"
+                      alt={setIndex === 0 ? "Logo Daste - Cliente de Tincadia" : ""}
+                      fill
+                      className="object-contain"
+                    />
+                  </div>
+                  
+                  <div className="relative h-10 w-28 md:h-12 md:w-32 lg:h-14 lg:w-36 flex-shrink-0 grayscale hover:grayscale-0 transition-all duration-300 opacity-60 hover:opacity-100">
+                    <Image
+                      src="/media/images/logo_educatics.png"
+                      alt={setIndex === 0 ? "Logo Educatics - Cliente de Tincadia" : ""}
+                      fill
+                      className="object-contain"
+                    />
+                  </div>
                 </div>
-                
-                <div className="relative h-16 w-40 md:h-20 md:w-48 lg:h-24 lg:w-56 flex-shrink-0 grayscale hover:grayscale-0 transition-all duration-300 opacity-70 hover:opacity-100">
-                  <Image
-                    src="/media/images/logo_daste.png"
-                    alt="Logo Daste - Cliente de Tincadia"
-                    fill
-                    className="object-contain"
-                  />
-                </div>
-                
-                <div className="relative h-16 w-40 md:h-20 md:w-48 lg:h-24 lg:w-56 flex-shrink-0 grayscale hover:grayscale-0 transition-all duration-300 opacity-70 hover:opacity-100">
-                  <Image
-                    src="/media/images/logo_educatics.png"
-                    alt="Logo Educatics - Cliente de Tincadia"
-                    fill
-                    className="object-contain"
-                  />
-                </div>
-              </div>
-              
-              
-              <div className="flex items-center justify-around min-w-full gap-16 px-8">
-                <div className="relative h-16 w-40 md:h-20 md:w-48 lg:h-24 lg:w-56 flex-shrink-0 grayscale hover:grayscale-0 transition-all duration-300 opacity-70 hover:opacity-100">
-                  <Image
-                    src="/media/images/logo_almia.png"
-                    alt="Logo Almia"
-                    fill
-                    className="object-contain"
-                  />
-                </div>
-                
-                <div className="relative h-16 w-40 md:h-20 md:w-48 lg:h-24 lg:w-56 flex-shrink-0 grayscale hover:grayscale-0 transition-all duration-300 opacity-70 hover:opacity-100">
-                  <Image
-                    src="/media/images/logo_daste.png"
-                    alt="Logo Daste"
-                    fill
-                    className="object-contain"
-                  />
-                </div>
-                
-                <div className="relative h-16 w-40 md:h-20 md:w-48 lg:h-24 lg:w-56 flex-shrink-0 grayscale hover:grayscale-0 transition-all duration-300 opacity-70 hover:opacity-100">
-                  <Image
-                    src="/media/images/logo_educatics.png"
-                    alt="Logo Educatics"
-                    fill
-                    className="object-contain"
-                  />
-                </div>
-              </div>
+              ))}
             </div>
           </div>
-          
-          
-          <p className="text-center text-sm text-gray-500 mt-8 italic">
+        </div>
+        
+        {/* Indicador visual sutil */}
+        <div className="mx-auto max-w-7xl px-6 lg:px-8 mt-6">
+          <p className="text-center text-sm text-gray-500 italic">
             Pasa el cursor sobre los logos para verlos a color
           </p>
         </div>
