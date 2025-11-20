@@ -4,15 +4,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { useEffect, useRef, useState } from 'react';
 
-// Iconos flotantes de lenguaje de señas (simulados con emojis/letras por ahora)
-const floatingIcons = [
-  { id: 1, char: '👋', top: '10%', left: '5%', delay: '0s' },
-  { id: 2, char: '🤙', top: '20%', right: '10%', delay: '0.5s' },
-  { id: 3, char: '✌️', top: '50%', left: '2%', delay: '1s' },
-  { id: 4, char: '👌', top: '70%', right: '5%', delay: '1.5s' },
-  { id: 5, char: '🤟', top: '85%', left: '8%', delay: '2s' },
-  { id: 6, char: '✋', top: '40%', right: '15%', delay: '2.5s' },
-];
+
 
 // Palabras que rotan
 const rotatingWords = [
@@ -32,6 +24,7 @@ export function Hero() {
   const [showDescription, setShowDescription] = useState(false);
   const [showStaticText, setShowStaticText] = useState(false);
   const [showWord, setShowWord] = useState(false);
+  const [showVideo, setShowVideo] = useState(false);
 
   // Asegurar que el video se reproduce en loop
   useEffect(() => {
@@ -48,6 +41,11 @@ export function Hero() {
     // Mostrar "Tecnología que rompe" primero
     const showStaticTimer = setTimeout(() => {
       setShowStaticText(true);
+    }, 300);
+
+    // Mostrar video al mismo tiempo que el texto
+    const showVideoTimer = setTimeout(() => {
+      setShowVideo(true);
     }, 300);
 
     // Mostrar primera palabra después
@@ -74,6 +72,7 @@ export function Hero() {
 
     return () => {
       clearTimeout(showStaticTimer);
+      clearTimeout(showVideoTimer);
       clearTimeout(showWordTimer);
       clearTimeout(showDescTimer);
       clearInterval(rotationInterval);
@@ -150,45 +149,65 @@ export function Hero() {
           </div>
 
           {/* Contenedor del video/imagen del lado derecho */}
-          <div className="relative lg:h-[500px] flex items-center justify-center">
+          <div className={`relative lg:h-[500px] flex items-center justify-center transition-all duration-1000 overflow-visible ${
+            showVideo ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
+          }`}>
             
-            <div className="absolute inset-0 pointer-events-none" aria-hidden="true">
-              {floatingIcons.map((icon) => (
-                <div
-                  key={icon.id}
-                  className="absolute text-2xl opacity-40 animate-float"
-                  style={{
-                    top: icon.top,
-                    left: icon.left,
-                    right: icon.right,
-                    animationDelay: icon.delay,
-                  }}
-                >
-                  {icon.char}
-                </div>
-              ))}
-            </div>
-
+            {/* Contenedor con letras rotativas - más grande para no cortar letras */}
+            <div className="relative w-[600px] h-[600px] sm:w-[700px] sm:h-[700px] lg:w-[750px] lg:h-[750px] flex items-center justify-center overflow-visible">
+              
               {/* Video circular - Opción 1: Video HTML5 */}
-            <div className="relative w-[300px] h-[300px] sm:w-[400px] sm:h-[400px] lg:w-[450px] lg:h-[450px]">
-              
-              <div className="absolute inset-0 bg-[#83A98A]/20 rounded-full blur-3xl" aria-hidden="true" />
-              
-              
-              <div className="relative w-full h-full rounded-full overflow-hidden bg-[#83A98A]/30 shadow-2xl ring-4 ring-white">
-                <video
-                  ref={videoRef}
-                  className="w-full h-full object-cover"
-                  autoPlay
-                  loop
-                  muted
-                  playsInline
-                  aria-label="Video de presentación de Tincadia"
-                >
-                  <source src="/media/videos/hero-animation.mp4" type="video/mp4" />
+              <div className="relative w-[300px] h-[300px] sm:w-[400px] sm:h-[400px] lg:w-[450px] lg:h-[450px] z-0">
+                
+                <div className="absolute inset-0 bg-[#83A98A]/20 rounded-full blur-3xl" aria-hidden="true" />
+                
+                
+                <div className="relative w-full h-full rounded-full overflow-hidden bg-[#83A98A] shadow-2xl ring-4 ring-white">
+                  <video
+                    ref={videoRef}
+                    className="w-full h-full object-cover scale-113"
+                    autoPlay
+                    loop
+                    muted
+                    playsInline
+                    aria-label="Video de presentación de Tincadia"
+                  >
+                    <source src="/media/videos/hero-animation.mp4" type="video/mp4" />
+                    
+                    Tu navegador no soporta el elemento de video.
+                  </video>
+                </div>
+              </div>
+
+              {/* Letras rotativas alrededor del círculo */}
+              <div className="absolute inset-0 z-10 overflow-visible" style={{ transformOrigin: '50% 50%' }}>
+                {['T', 'E', 'C', 'N', 'O', 'L', 'O', 'G', 'I', 'A'].map((letter, index) => {
+                  const totalLetters = 10;
+                  // Distribuir las letras uniformemente en 360 grados
+                  const initialAngle = (index * 360) / totalLetters - 90; // -90 para empezar desde arriba
+                  const radius = 220; // Radio en píxeles
+                  const animationDelay = (index * 20) / totalLetters; // Delay para que cada letra comience en su posición
                   
-                  Tu navegador no soporta el elemento de video.
-                </video>
+                  return (
+                    <span
+                      key={index}
+                      className="absolute text-2xl sm:text-3xl lg:text-4xl font-bold text-black animate-letter-circle"
+                      style={{
+                        left: '50%',
+                        top: '50%',
+                        width: '1em',
+                        height: '1em',
+                        marginLeft: '-0.5em',
+                        marginTop: '-0.5em',
+                        transform: `rotate(${initialAngle}deg) translateX(${radius}px) rotate(${-initialAngle}deg)`,
+                        transformOrigin: 'center center',
+                        animationDelay: `${-animationDelay}s`,
+                      } as React.CSSProperties}
+                    >
+                      {letter}
+                    </span>
+                  );
+                })}
               </div>
             </div>
           </div>

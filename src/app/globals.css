@@ -270,4 +270,33 @@
   .animate-slide-out-up {
     animation: slideOutUp 0.3s cubic-bezier(0.4, 0, 0.2, 1) forwards;
   }
+
+  /* Animación de rotación circular para letras */
+  @keyframes rotate-circle {
+    from {
+      transform: rotate(0deg);
+    }
+    to {
+      transform: rotate(360deg);
+    }
+  }
+
+  .animate-rotate-circle {
+    animation: rotate-circle 20s linear infinite;
+  }
+
+  /* Animación para cada letra individual rotando alrededor del círculo */
+  @keyframes rotate-letter-around-circle {
+    from {
+      transform: rotate(0deg) translateX(220px) rotate(0deg);
+    }
+    to {
+      transform: rotate(360deg) translateX(220px) rotate(-360deg);
+    }
+  }
+
+  .animate-letter-circle {
+    animation: rotate-letter-around-circle 20s linear infinite;
+    transform-origin: center center;
+  }
 }

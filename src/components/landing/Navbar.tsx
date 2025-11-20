@@ -56,7 +56,7 @@ export function Navbar() {
           >
             <span className="sr-only">Tincadia</span>
             <div className="flex items-center gap-2">
-              <div className="relative w-30 h-30 -my-20" aria-hidden="true">
+              <div className="relative w-40 h-40 -my-20" aria-hidden="true">
               <Image
                     src="/media/images/main_logo.png"
                     alt="Logo Tincadia"
@@ -130,7 +130,7 @@ export function Navbar() {
               >
                 <span className="sr-only">Tincadia</span>
                 <div className="flex items-center gap-2">
-                  <div className="relative w-10 h-10" aria-hidden="true" />
+                  <div className="relative w-16 h-16" aria-hidden="true" />
                   <Image
                         src="/media/images/main_logo.png"
                         alt="Logo Tincadia"
