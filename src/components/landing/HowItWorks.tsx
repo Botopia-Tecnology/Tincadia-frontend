@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { UserPlus, ShieldCheck, Zap } from 'lucide-react';
+import { UserPlus, ShieldCheck, Zap, ChevronDown } from 'lucide-react';
 
 const steps = [
   {
@@ -49,7 +49,8 @@ export function HowItWorks() {
 
   return (
     <section 
-      className="py-20 lg:py-28 bg-white relative overflow-hidden"
+      id="how-it-works"
+      className="py-12 lg:py-16 bg-white relative overflow-hidden"
       aria-labelledby="how-it-works-heading"
     >
       {/* Decoración de fondo */}
@@ -86,7 +87,7 @@ export function HowItWorks() {
 
             {/* Círculos de los pasos */}
             <div className="relative flex justify-between items-center">
-              {steps.map((step, index) => {
+              {steps.map((step) => {
                 const Icon = step.icon;
                 const isHovered = hoveredStep === step.id;
                 const isActive = activeStep === step.id;
@@ -241,6 +242,27 @@ export function HowItWorks() {
               );
             })}
           </div>
+        </div>
+
+        {/* Botón de scroll hacia siguiente sección */}
+        <div className="flex justify-center mt-12 lg:mt-16">
+          <button
+            onClick={() => {
+              const element = document.getElementById('how-to-start');
+              if (element) {
+                element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+              }
+            }}
+            className="group flex flex-col items-center gap-3 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#83A98A] rounded-lg p-4"
+            aria-label="Descubre cómo funciona"
+          >
+            <span className="text-base font-semibold text-gray-600 group-hover:text-[#83A98A] transition-colors duration-300">
+              Descubre cómo funciona
+            </span>
+            <div className="w-16 h-16 rounded-full bg-gradient-to-br from-[#83A98A] to-[#6D8F75] flex items-center justify-center shadow-xl group-hover:shadow-2xl group-hover:scale-110 transition-all duration-300 animate-bounce">
+              <ChevronDown className="text-white" size={32} strokeWidth={2.5} />
+            </div>
+          </button>
         </div>
       </div>
     </section>

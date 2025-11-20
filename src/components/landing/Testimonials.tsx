@@ -1,0 +1,231 @@
+'use client';
+
+import { useState } from 'react';
+import { ChevronLeft, ChevronRight, Star } from 'lucide-react';
+import Image from 'next/image';
+
+const testimonials = [
+  {
+    id: 1,
+    name: 'Almia',
+    role: 'Ingeniería de Software',
+    company: 'EAFIT',
+    rating: 5,
+    text: 'TINCADIA ha transformado la forma en que nuestros estudiantes sordos participan en las clases. Una herramienta indispensable.',
+    avatar: '/media/images/avatar-1.jpg', // Placeholder
+  },
+  {
+    id: 2,
+    name: 'Andrey',
+    role: 'Intérprete LSE',
+    company: 'Freelance',
+    rating: 5,
+    text: 'Hemos mejorado significativamente la atención a pacientes con discapacidad auditiva gracias a las soluciones de TINCADIA.',
+    avatar: '/media/images/avatar-2.jpg', // Placeholder
+  },
+  {
+    id: 3,
+    name: 'Elena R.',
+    role: 'Gerente de RRHH',
+    company: 'Corporación XYZ',
+    rating: 5,
+    text: 'La certificación en accesibilidad nos ha permitido ampliar nuestros servicios a un público más diverso.',
+    avatar: '/media/images/avatar-3.jpg', // Placeholder
+  },
+  {
+    id: 4,
+    name: 'Carlos M.',
+    role: 'Director de Inclusión',
+    company: 'Universidad Nacional',
+    rating: 5,
+    text: 'Las herramientas de TINCADIA han revolucionado la forma en que abordamos la educación inclusiva en nuestra institución.',
+    avatar: '/media/images/avatar-4.jpg', // Placeholder
+  },
+  {
+    id: 5,
+    name: 'María S.',
+    role: 'Coordinadora de Proyectos',
+    company: 'ONG Inclusión Total',
+    rating: 5,
+    text: 'Gracias a TINCADIA, hemos podido conectar talento sordo con oportunidades laborales reales. Un cambio impresionante.',
+    avatar: '/media/images/avatar-5.jpg', // Placeholder
+  },
+];
+
+export function Testimonials() {
+  const [currentIndex, setCurrentIndex] = useState(0);
+
+  const nextTestimonial = () => {
+    setCurrentIndex((prev) => (prev + 1) % testimonials.length);
+  };
+
+  const prevTestimonial = () => {
+    setCurrentIndex((prev) => (prev - 1 + testimonials.length) % testimonials.length);
+  };
+
+  const getCardStyle = (index: number) => {
+    const total = testimonials.length;
+    let position = (index - currentIndex + total) % total;
+
+    // Ajustar para mostrar: prev, current, next
+    if (position > total / 2) {
+      position = position - total;
+    }
+
+    if (position === 0) {
+      // Tarjeta central (activa)
+      return {
+        transform: 'translateX(0%) scale(1)',
+        opacity: 1,
+        zIndex: 30,
+        filter: 'blur(0px)',
+      };
+    } else if (position === 1) {
+      // Tarjeta derecha
+      return {
+        transform: 'translateX(60%) scale(0.85)',
+        opacity: 0.5,
+        zIndex: 20,
+        filter: 'blur(2px)',
+      };
+    } else if (position === -1) {
+      // Tarjeta izquierda
+      return {
+        transform: 'translateX(-60%) scale(0.85)',
+        opacity: 0.5,
+        zIndex: 20,
+        filter: 'blur(2px)',
+      };
+    } else {
+      // Tarjetas ocultas
+      return {
+        transform: position > 0 ? 'translateX(100%) scale(0.7)' : 'translateX(-100%) scale(0.7)',
+        opacity: 0,
+        zIndex: 10,
+        filter: 'blur(4px)',
+      };
+    }
+  };
+
+  return (
+    <section 
+      className="py-12 lg:py-16 bg-gray-50 relative overflow-hidden"
+      aria-labelledby="testimonials-heading"
+    >
+      <div className="mx-auto max-w-7xl px-6 lg:px-8">
+        {/* Encabezado */}
+        <div className="text-center mb-16">
+          <h2 
+            id="testimonials-heading"
+            className="text-3xl sm:text-4xl lg:text-5xl font-bold text-gray-900 mb-4 tracking-tight"
+          >
+            Casos de{' '}
+            <span className="text-[#83A98A]">éxito</span>
+          </h2>
+          <p className="text-lg text-gray-600 max-w-2xl mx-auto">
+            Mira cómo Tincadia está generando un impacto real.
+          </p>
+        </div>
+
+        {/* Carrusel de tarjetas */}
+        <div className="relative h-[500px] lg:h-[450px] flex items-center justify-center">
+          {/* Contenedor de tarjetas */}
+          <div className="relative w-full max-w-2xl h-full flex items-center justify-center">
+            {testimonials.map((testimonial, index) => {
+              const style = getCardStyle(index);
+              
+              return (
+                <div
+                  key={testimonial.id}
+                  className="absolute w-full max-w-md transition-all duration-700 ease-out"
+                  style={style}
+                >
+                  <article className="bg-white rounded-2xl shadow-xl overflow-hidden">
+                    {/* Contenido del testimonio */}
+                    <div className="p-8 pb-6">
+                      {/* Estrellas */}
+                      <div className="flex gap-1 mb-4" aria-label={`${testimonial.rating} de 5 estrellas`}>
+                        {[...Array(testimonial.rating)].map((_, i) => (
+                          <Star
+                            key={i}
+                            className="w-5 h-5 fill-[#83A98A] text-[#83A98A]"
+                            aria-hidden="true"
+                          />
+                        ))}
+                        <span className="ml-2 text-sm font-bold text-gray-900">
+                          {testimonial.rating}/5
+                        </span>
+                      </div>
+
+                      {/* Texto del testimonio */}
+                      <blockquote className="text-gray-700 text-base leading-relaxed mb-6">
+                        "{testimonial.text}"
+                      </blockquote>
+                    </div>
+
+                    {/* Footer con avatar y datos */}
+                    <div className="bg-gradient-to-r from-[#83A98A] to-[#6D8F75] px-8 py-6 flex items-center gap-4">
+                      {/* Avatar */}
+                      <div className="relative w-14 h-14 rounded-full overflow-hidden bg-white/20 flex-shrink-0">
+                        <div className="w-full h-full bg-white/30 flex items-center justify-center">
+                          <span className="text-white text-xl font-bold">
+                            {testimonial.name.charAt(0)}
+                          </span>
+                        </div>
+                      </div>
+
+                      {/* Info */}
+                      <div className="flex-1">
+                        <h4 className="text-white font-bold text-lg">
+                          {testimonial.name}
+                        </h4>
+                        <p className="text-white/90 text-sm">
+                          {testimonial.role}
+                        </p>
+                      </div>
+                    </div>
+                  </article>
+                </div>
+              );
+            })}
+          </div>
+
+          {/* Botones de navegación */}
+          <button
+            onClick={prevTestimonial}
+            className="absolute left-0 lg:left-4 z-40 w-12 h-12 rounded-full bg-white shadow-lg flex items-center justify-center hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#83A98A] transition-colors group"
+            aria-label="Testimonio anterior"
+          >
+            <ChevronLeft className="w-6 h-6 text-gray-600 group-hover:text-[#83A98A] transition-colors" strokeWidth={2.5} />
+          </button>
+
+          <button
+            onClick={nextTestimonial}
+            className="absolute right-0 lg:right-4 z-40 w-12 h-12 rounded-full bg-white shadow-lg flex items-center justify-center hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#83A98A] transition-colors group"
+            aria-label="Siguiente testimonio"
+          >
+            <ChevronRight className="w-6 h-6 text-gray-600 group-hover:text-[#83A98A] transition-colors" strokeWidth={2.5} />
+          </button>
+        </div>
+
+        {/* Indicadores de posición */}
+        <div className="flex justify-center gap-2 mt-8">
+          {testimonials.map((_, index) => (
+            <button
+              key={index}
+              onClick={() => setCurrentIndex(index)}
+              className={`
+                w-2 h-2 rounded-full transition-all duration-300
+                ${index === currentIndex 
+                  ? 'w-8 bg-[#83A98A]' 
+                  : 'bg-gray-300 hover:bg-gray-400'}
+              `}
+              aria-label={`Ir al testimonio ${index + 1}`}
+            />
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+

@@ -219,8 +219,8 @@ export function Hero() {
             <div className="flex items-center animate-scroll-smooth py-4 gap-12 md:gap-16">
               {/* Repetimos los logos múltiples veces para loop sin costuras */}
               {[...Array(6)].map((_, setIndex) => (
-                <div key={setIndex} className="flex items-center gap-12 md:gap-16 flex-shrink-0">
-                  <div className="relative h-10 w-28 md:h-12 md:w-32 lg:h-14 lg:w-36 flex-shrink-0 grayscale hover:grayscale-0 transition-all duration-300 opacity-60 hover:opacity-100">
+                <div key={setIndex} className="flex items-center gap-8 md:gap-10 flex-shrink-0">
+                  <div className="relative h-6 w-20 md:h-8 md:w-24 lg:h-10 lg:w-28 flex-shrink-0 grayscale hover:grayscale-0 transition-all duration-300 opacity-60 hover:opacity-100">
                     <Image
                       src="/media/images/logo_almia.png"
                       alt={setIndex === 0 ? "Logo Almia - Cliente de Tincadia" : ""}

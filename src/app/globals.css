@@ -238,4 +238,36 @@
   .animate-fade-in-up {
     animation: fadeInUp 1s cubic-bezier(0.4, 0, 0.2, 1) forwards;
   }
+
+  /* Animación de página vertical - Entrada */
+  @keyframes slideInUp {
+    0% {
+      opacity: 0;
+      transform: translateY(40px);
+    }
+    100% {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  /* Animación de página vertical - Salida */
+  @keyframes slideOutUp {
+    0% {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    100% {
+      opacity: 0;
+      transform: translateY(-40px);
+    }
+  }
+
+  .animate-slide-in-up {
+    animation: slideInUp 0.5s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+  }
+
+  .animate-slide-out-up {
+    animation: slideOutUp 0.3s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+  }
 }

@@ -40,7 +40,7 @@ const services = [
 export function Services() {
   return (
     <section 
-      className="pt-12 pb-20 lg:pt-16 lg:pb-28 bg-gray-50"
+      className="py-12 lg:py-16 bg-gray-50"
       aria-labelledby="services-heading"
     >
       <div className="mx-auto max-w-7xl px-6 lg:px-8">
