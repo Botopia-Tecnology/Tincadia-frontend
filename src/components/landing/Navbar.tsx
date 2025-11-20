@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { Menu, X } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import Image from 'next/image';
 
 const navigation = [
   { name: 'Nosotros', href: '#nosotros' },
@@ -55,10 +56,14 @@ export function Navbar() {
           >
             <span className="sr-only">Tincadia</span>
             <div className="flex items-center gap-2">
-              <div className="w-8 h-8 bg-gray-800 rounded" aria-hidden="true">
-                {/* Aquí iría tu logo SVG o imagen */}
+              <div className="relative w-30 h-30 -my-20" aria-hidden="true">
+              <Image
+                    src="/media/images/main_logo.png"
+                    alt="Logo Tincadia"
+                    fill
+                    className="object-contain"
+                  />
               </div>
-              <span className="text-xl font-bold text-gray-900">Tincadia</span>
             </div>
           </Link>
         </div>
@@ -89,7 +94,7 @@ export function Navbar() {
             <Link
               key={item.name}
               href={item.href}
-              className="text-sm font-medium text-gray-700 hover:text-gray-900 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#83A98A] rounded-md px-3 py-2 transition-colors"
+              className="text-base font-semibold text-gray-900 hover:text-gray-900 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#83A98A] rounded-md px-3 py-2 transition-colors"
             >
               {item.name}
             </Link>
@@ -125,8 +130,13 @@ export function Navbar() {
               >
                 <span className="sr-only">Tincadia</span>
                 <div className="flex items-center gap-2">
-                  <div className="w-8 h-8 bg-gray-800 rounded" aria-hidden="true" />
-                  <span className="text-xl font-bold text-gray-900">Tincadia</span>
+                  <div className="relative w-10 h-10" aria-hidden="true" />
+                  <Image
+                        src="/media/images/main_logo.png"
+                        alt="Logo Tincadia"
+                        fill
+                        className="object-contain"
+                      />
                 </div>
               </Link>
               <button

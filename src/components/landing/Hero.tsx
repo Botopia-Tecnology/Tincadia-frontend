@@ -34,7 +34,7 @@ export function Hero() {
     >
       <div className="mx-auto max-w-7xl px-6 lg:px-8">
         <div className="grid lg:grid-cols-2 gap-12 lg:gap-16 items-center">
-          {/* Contenido del lado izquierdo */}
+          
           <div className="text-center lg:text-left z-10">
             <h1 
               id="hero-heading"
@@ -51,7 +51,7 @@ export function Hero() {
               un mundo donde todos pueden participar sin límites.
             </p>
 
-            {/* Botones de acción */}
+            
             <div className="mt-10 flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
               <Link
                 href="#nosotros"
@@ -73,7 +73,7 @@ export function Hero() {
 
           {/* Contenedor del video/imagen del lado derecho */}
           <div className="relative lg:h-[500px] flex items-center justify-center">
-            {/* Iconos flotantes decorativos */}
+            
             <div className="absolute inset-0 pointer-events-none" aria-hidden="true">
               {floatingIcons.map((icon) => (
                 <div
@@ -93,10 +93,10 @@ export function Hero() {
 
               {/* Video circular - Opción 1: Video HTML5 */}
             <div className="relative w-[300px] h-[300px] sm:w-[400px] sm:h-[400px] lg:w-[450px] lg:h-[450px]">
-              {/* Fondo decorativo */}
+              
               <div className="absolute inset-0 bg-[#83A98A]/20 rounded-full blur-3xl" aria-hidden="true" />
               
-              {/* Video circular */}
+              
               <div className="relative w-full h-full rounded-full overflow-hidden bg-[#83A98A]/30 shadow-2xl ring-4 ring-white">
                 <video
                   ref={videoRef}
@@ -108,7 +108,7 @@ export function Hero() {
                   aria-label="Video de presentación de Tincadia"
                 >
                   <source src="/media/videos/hero-animation.mp4" type="video/mp4" />
-                  {/* Fallback para navegadores sin soporte de video */}
+                  
                   Tu navegador no soporta el elemento de video.
                 </video>
               </div>
@@ -118,9 +118,9 @@ export function Hero() {
       </div>
 
       {/* Sección "En nosotros confían" */}
-      <div className="mt-20 lg:mt-32 py-12 bg-white border-y border-gray-100">
+      <div className="mt-16 lg:mt-20 py-12 bg-white border-y border-gray-100">
         <div className="mx-auto max-w-7xl px-6 lg:px-8">
-          {/* Título estilizado */}
+          
           <h2 className="text-center text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-900 mb-12 tracking-tight">
             En nosotros{' '}
             <span className="text-[#83A98A] relative inline-block">
@@ -129,10 +129,10 @@ export function Hero() {
             </span>
           </h2>
           
-          {/* Carrusel infinito de logos */}
+          
           <div className="relative overflow-hidden">
             <div className="flex items-center animate-scroll">
-              {/* Primera iteración de logos */}
+              
               <div className="flex items-center justify-around min-w-full gap-16 px-8">
                 <div className="relative h-16 w-40 md:h-20 md:w-48 lg:h-24 lg:w-56 flex-shrink-0 grayscale hover:grayscale-0 transition-all duration-300 opacity-70 hover:opacity-100">
                   <Image
@@ -162,7 +162,7 @@ export function Hero() {
                 </div>
               </div>
               
-              {/* Segunda iteración de logos (para efecto infinito) */}
+              
               <div className="flex items-center justify-around min-w-full gap-16 px-8">
                 <div className="relative h-16 w-40 md:h-20 md:w-48 lg:h-24 lg:w-56 flex-shrink-0 grayscale hover:grayscale-0 transition-all duration-300 opacity-70 hover:opacity-100">
                   <Image
@@ -194,7 +194,7 @@ export function Hero() {
             </div>
           </div>
           
-          {/* Indicador visual sutil */}
+          
           <p className="text-center text-sm text-gray-500 mt-8 italic">
             Pasa el cursor sobre los logos para verlos a color
           </p>
