@@ -1,24 +1,90 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Tincadia Frontend
 
-## Getting Started
+Frontend de Tincadia, una plataforma de tecnología inclusiva que conecta a personas sordas, oyentes y organizaciones mediante soluciones accesibles, inteligencia artificial y herramientas de comunicación.
 
-First, run the development server:
+Este proyecto está construido con [Next.js](https://nextjs.org) y [React](https://react.dev).
+
+## Requisitos Previos
+
+Antes de comenzar, asegúrate de tener instalado:
+
+- [Node.js](https://nodejs.org/) (versión 18 o superior)
+- [npm](https://www.npmjs.com/), [yarn](https://yarnpkg.com/), [pnpm](https://pnpm.io/) o [bun](https://bun.sh/)
+
+## Instalación
+
+1. Clona el repositorio:
+```bash
+git clone (https://github.com/Botopia-Tecnology/Tincadia-frontend.git)
+cd tincadia-front
+```
+
+2. Instala las dependencias:
+```bash
+npm install
+# o
+yarn install
+# o
+pnpm install
+# o
+bun install
+```
+
+## Ejecutar el Proyecto
+
+### Modo Desarrollo
+
+Para ejecutar el servidor de desarrollo:
 
 ```bash
 npm run dev
-# or
+# o
 yarn dev
-# or
+# o
 pnpm dev
-# or
+# o
 bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Abre [http://localhost:3000](http://localhost:3000) en tu navegador para ver el resultado.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+La página se actualiza automáticamente cuando editas los archivos.
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+### Modo Producción
+
+Para construir y ejecutar en modo producción:
+
+```bash
+# Construir la aplicación
+npm run build
+
+# Iniciar el servidor de producción
+npm start
+```
+
+### Linting
+
+Para ejecutar el linter y verificar el código:
+
+```bash
+npm run lint
+```
+
+## Scripts Disponibles
+
+- `npm run dev` - Inicia el servidor de desarrollo
+- `npm run build` - Construye la aplicación para producción
+- `npm run start` - Inicia el servidor de producción
+- `npm run lint` - Ejecuta el linter para verificar el código
+
+
+## Tecnologías Utilizadas
+
+- **Next.js 16** - Framework de React para producción
+- **React 19** - Biblioteca de JavaScript para interfaces de usuario
+- **TypeScript** - Superset tipado de JavaScript
+- **Tailwind CSS** - Framework de CSS utility-first
+- **Lucide React** - Iconos SVG
 
 ## Learn More
 
