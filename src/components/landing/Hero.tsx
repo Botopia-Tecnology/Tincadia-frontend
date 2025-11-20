@@ -82,7 +82,7 @@ export function Hero() {
 
   return (
     <section 
-      className="relative bg-gray-50 pt-24 pb-16 lg:pt-32 lg:pb-24 overflow-hidden"
+      className="relative bg-gray-50 pt-24 pb-4 lg:pt-32 lg:pb-6 overflow-hidden"
       aria-labelledby="hero-heading"
     >
       <div className="mx-auto max-w-7xl px-6 lg:px-8">
