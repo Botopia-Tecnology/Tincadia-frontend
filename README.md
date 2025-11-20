@@ -15,9 +15,6 @@ Antes de comenzar, asegúrate de tener instalado:
 
 1. Clona el repositorio:
 ```bash
-git clone (https://github.com/Botopia-Tecnology/Tincadia-frontend.git)
-cd tincadia-front
-```
 
 2. Instala las dependencias:
 ```bash
@@ -76,6 +73,7 @@ npm run lint
 - `npm run build` - Construye la aplicación para producción
 - `npm run start` - Inicia el servidor de producción
 - `npm run lint` - Ejecuta el linter para verificar el código
+
 
 
 ## Tecnologías Utilizadas
