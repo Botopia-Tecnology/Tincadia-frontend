@@ -110,25 +110,25 @@ export function Hero() {
   useEffect(() => {
     const showTincadiaTimer = setTimeout(() => {
       setShowTincadia(true);
-    }, 300);
+    }, 150); // Reducido a la mitad: 300ms -> 150ms
 
     const showVideoTimer = setTimeout(() => {
       setShowVideo(true);
-    }, 300);
+    }, 150); // Reducido a la mitad: 300ms -> 150ms
 
     const showWordAndCycleTimer = setTimeout(() => {
       setShowWord(true);
       // Iniciar ciclo fluido de conceptos con transición suave
       const interval = setInterval(() => {
         setCurrentStep((prev) => (prev + 1) % CONCEPT_STEPS.length);
-      }, 3500); // cada 3.5s cambia concepto
+      }, 1750); // Reducido a la mitad: 3500ms -> 1750ms
 
       return () => clearInterval(interval);
-    }, 1500);
+    }, 750); // Reducido a la mitad: 1500ms -> 750ms
 
     const showDescTimer = setTimeout(() => {
       setShowDescription(true);
-    }, 3000);
+    }, 1500); // Reducido a la mitad: 3000ms -> 1500ms
 
     // IMPORTANTE: cleanup
     return () => {
@@ -167,13 +167,14 @@ export function Hero() {
                    return (
                      <span
                        key={index}
-                       className={`inline-block transition-all duration-700 ease-in-out ${
+                       className={`inline-block transition-all ease-in-out ${
                          isHighlighted
                            ? 'text-[#83A98A] scale-110'
                            : 'text-gray-900 scale-100'
                        }`}
                        style={{
                          transitionProperty: 'color, transform',
+                         transitionDuration: '350ms',
                        }}
                      >
                        {letter}
@@ -184,9 +185,10 @@ export function Hero() {
 
               {/* Palabra / concepto en verde, más pequeño */}
               <span
-                className={`block font-semibold text-[#83A98A] text-xl sm:text-2xl lg:text-3xl transition-all duration-500 ease-in-out ${
+                className={`block font-semibold text-[#83A98A] text-xl sm:text-2xl lg:text-3xl transition-all ease-in-out ${
                   showWord ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-2'
                 }`}
+                style={{ transitionDuration: '250ms' }}
                 key={currentStep}
               >
                 {currentConcept.label}

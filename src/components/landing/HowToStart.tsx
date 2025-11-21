@@ -75,20 +75,27 @@ export function HowToStart() {
   const [isTransitioning, setIsTransitioning] = useState(false);
   const [displayTab, setDisplayTab] = useState(1);
   const [progress, setProgress] = useState(0);
+  const [isManualChange, setIsManualChange] = useState(false);
   const sectionRef = useRef<HTMLElement>(null);
   const contentRef = useRef<HTMLDivElement>(null);
 
   const handleTabChange = (newTab: number) => {
     if (newTab === activeTab) return;
     
+    setIsManualChange(true);
     setIsTransitioning(true);
+    setProgress(0); // Reiniciar progreso inmediatamente
     
     // Después de la animación de salida, cambiar el contenido
     setTimeout(() => {
       setDisplayTab(newTab);
       setActiveTab(newTab);
-      setProgress(0); // Reiniciar progreso aquí
       setIsTransitioning(false);
+      
+      // Permitir que el scroll vuelva a controlar después de un tiempo
+      setTimeout(() => {
+        setIsManualChange(false);
+      }, 1000);
     }, 300);
   };
 
@@ -132,8 +139,8 @@ export function HowToStart() {
       const newActiveTab = currentFeatureIndex + 1;
       const newProgress = Math.max(0, Math.min(100, featureLocalProgress));
       
-      // Solo actualizar si cambió el tab
-      if (newActiveTab !== activeTab) {
+      // Solo actualizar si cambió el tab y no es un cambio manual
+      if (newActiveTab !== activeTab && !isManualChange) {
         setIsTransitioning(true);
         setTimeout(() => {
           setDisplayTab(newActiveTab);
@@ -142,8 +149,13 @@ export function HowToStart() {
         }, 300);
       }
       
-      // Actualizar progreso dinámicamente
-      setProgress(newProgress);
+      // Actualizar progreso dinámicamente solo si no es un cambio manual
+      if (!isManualChange) {
+        setProgress(newProgress);
+      } else {
+        // Si es cambio manual, mantener el progreso en 0
+        setProgress(0);
+      }
     };
 
     window.addEventListener('scroll', handleScroll, { passive: true });

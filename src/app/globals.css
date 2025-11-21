@@ -287,14 +287,14 @@
 
   /* Animación para cada letra individual rotando alrededor del círculo */
   @keyframes rotate-letter-around-circle {
-    from {
-      transform: rotate(0deg) translateX(220px) rotate(0deg);
+    from { 
+      transform: rotate(0deg);
     }
-    to {
-      transform: rotate(360deg) translateX(220px) rotate(-360deg);
+    to { 
+      transform: rotate(360deg);
     }
   }
-
+  
   .animate-letter-circle {
     animation: rotate-letter-around-circle 20s linear infinite;
     transform-origin: center center;
