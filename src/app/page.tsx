@@ -6,6 +6,7 @@ import { Testimonials } from '@/components/landing/Testimonials';
 import { SignUpForms } from '@/components/landing/SignUpForms';
 import { FAQ } from '@/components/landing/FAQ';
 import { TechBackground } from '@/components/landing/TechBackground';
+import { AccessibilityButton } from '@/components/landing/AccessibilityButton';
 
 
 export default function Home() {
@@ -13,7 +14,7 @@ export default function Home() {
     <div className="min-h-screen w-full relative">
       {/* Global Background with Tincadia Colors */}
       <div
-        className="fixed inset-0 z-0"
+        className="fixed inset-0 -z-20"
         style={{
           backgroundImage: `
             linear-gradient(to right, rgba(229,231,235,0.8) 1px, transparent 1px),
@@ -39,6 +40,9 @@ export default function Home() {
         <SignUpForms />
         <FAQ />
       </div>
+
+      {/* Accessibility Button */}
+      <AccessibilityButton />
     </div>
   );
 }

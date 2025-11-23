@@ -3,7 +3,7 @@
 import Link from 'next/link';
 import Image from 'next/image';
 import { useEffect, useRef, useState } from 'react';
-import { TechBackground } from './TechBackground';
+
 
 
 // Letras del título principal
