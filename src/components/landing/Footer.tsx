@@ -11,12 +11,12 @@ import {
   Twitter,
   MessageCircle,
   Youtube,
-  
+
 } from 'lucide-react';
 
 export function Footer() {
   return (
-    <footer className="bg-white border-t border-gray-200">
+    <footer className="bg-white/30 backdrop-blur-sm border-t border-gray-200">
       <div className="mx-auto max-w-7xl px-6 lg:px-8 py-12 lg:py-16">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 lg:gap-12">
           {/* Columna 1: Logo + Descarga app */}
@@ -30,7 +30,7 @@ export function Footer() {
                   className="object-contain"
                 />
               </div>
-              
+
             </Link>
 
             <p className="text-sm text-gray-600">
@@ -286,9 +286,9 @@ export function Footer() {
                */}
             </div>
           </div>
-          
+
         </div>
-        
+
 
         {/* Línea divisoria y footer inferior */}
         <div className="mt-12 pt-8 border-t border-gray-200">

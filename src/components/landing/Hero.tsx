@@ -3,6 +3,8 @@
 import Link from 'next/link';
 import Image from 'next/image';
 import { useEffect, useRef, useState } from 'react';
+import { TechBackground } from './TechBackground';
+
 
 // Letras del título principal
 const TINCADIA_LETTERS = ['T', 'I', 'N', 'C', 'A', 'D', 'I', 'A'];
@@ -110,25 +112,25 @@ export function Hero() {
   useEffect(() => {
     const showTincadiaTimer = setTimeout(() => {
       setShowTincadia(true);
-    }, 150); // Reducido a la mitad: 300ms -> 150ms
+    }, 150);
 
     const showVideoTimer = setTimeout(() => {
       setShowVideo(true);
-    }, 150); // Reducido a la mitad: 300ms -> 150ms
+    }, 150);
 
     const showWordAndCycleTimer = setTimeout(() => {
       setShowWord(true);
       // Iniciar ciclo fluido de conceptos con transición suave
       const interval = setInterval(() => {
         setCurrentStep((prev) => (prev + 1) % CONCEPT_STEPS.length);
-      }, 1750); // Reducido a la mitad: 3500ms -> 1750ms
+      }, 1750);
 
       return () => clearInterval(interval);
-    }, 750); // Reducido a la mitad: 1500ms -> 750ms
+    }, 750);
 
     const showDescTimer = setTimeout(() => {
       setShowDescription(true);
-    }, 1500); // Reducido a la mitad: 3000ms -> 1500ms
+    }, 1500);
 
     // IMPORTANTE: cleanup
     return () => {
@@ -143,51 +145,51 @@ export function Hero() {
 
   return (
     <section
-      className="relative bg-gray-50 pt-36 pb-4 lg:pt-32 lg:pb-6 overflow-hidden"
+      className="relative bg-transparent pt-36 pb-4 lg:pt-32 lg:pb-6 overflow-hidden"
       aria-labelledby="hero-heading"
     >
-      <div className="mx-auto max-w-7xl px-6 lg:px-8">
+      {/* Contenedor principal */}
+      <div className="mx-auto max-w-7xl px-6 lg:px-8 relative z-10">
+
         <div className="grid lg:grid-cols-2 gap-12 lg:gap-16 items-center">
           {/* Columna de texto */}
           <div className="text-center lg:text-left z-10">
+
             <h1
               id="hero-heading"
               className="flex flex-col items-center text-center gap-2 lg:block lg:text-left"
             >
               {/* TINCADIA en grande, negro, con letras resaltadas en verde */}
               <span
-                className={`block font-extrabold tracking-tight ${
-                  showTincadia ? 'animate-reveal' : 'opacity-0'
-                }
-                text-5xl sm:text-6xl lg:text-7xl`}
+                className={`block font-extrabold tracking-tight ${showTincadia ? 'animate-reveal' : 'opacity-0'
+                  }
+              text-5xl sm:text-6xl lg:text-7xl`}
                 style={{ animationDelay: '0s' }}
               >
-                 {TINCADIA_LETTERS.map((letter, index) => {
-                   const isHighlighted = currentConcept.highlights.includes(index);
-                   return (
-                     <span
-                       key={index}
-                       className={`inline-block transition-all ease-in-out ${
-                         isHighlighted
-                           ? 'text-[#83A98A] scale-110'
-                           : 'text-gray-900 scale-100'
-                       }`}
-                       style={{
-                         transitionProperty: 'color, transform',
-                         transitionDuration: '350ms',
-                       }}
-                     >
-                       {letter}
-                     </span>
-                   );
-                 })}
+                {TINCADIA_LETTERS.map((letter, index) => {
+                  const isHighlighted = currentConcept.highlights.includes(index);
+                  return (
+                    <span
+                      key={index}
+                      className={`inline-block transition-all ease-in-out ${isHighlighted
+                        ? 'text-[#83A98A] scale-110'
+                        : 'text-gray-900 scale-100'
+                        }`}
+                      style={{
+                        transitionProperty: 'color, transform',
+                        transitionDuration: '350ms',
+                      }}
+                    >
+                      {letter}
+                    </span>
+                  );
+                })}
               </span>
 
               {/* Palabra / concepto en verde, más pequeño */}
               <span
-                className={`block font-semibold text-[#83A98A] text-xl sm:text-2xl lg:text-3xl transition-all ease-in-out ${
-                  showWord ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-2'
-                }`}
+                className={`block font-semibold text-[#83A98A] text-xl sm:text-2xl lg:text-3xl transition-all ease-in-out ${showWord ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-2'
+                  }`}
                 style={{ transitionDuration: '250ms' }}
                 key={currentStep}
               >
@@ -196,11 +198,10 @@ export function Hero() {
             </h1>
 
             <p
-              className={`mt-6 text-lg leading-8 text-gray-600 max-w-2xl mx-auto lg:mx-0 transition-all duration-1000 ${
-                showDescription
-                  ? 'opacity-100 translate-y-0'
-                  : 'opacity-0 translate-y-8'
-              }`}
+              className={`mt-6 text-lg leading-8 text-gray-600 max-w-2xl mx-auto lg:mx-0 transition-all duration-1000 ${showDescription
+                ? 'opacity-100 translate-y-0'
+                : 'opacity-0 translate-y-8'
+                }`}
             >
               Somos <strong>TINCADIA</strong>, una empresa de{' '}
               <strong>tecnología inclusiva</strong>,{' '}
@@ -213,12 +214,12 @@ export function Hero() {
               diversos sectores, eliminando barreras.
             </p>
 
+            {/* BOTONES */}
             <div
-              className={`mt-10 flex flex-col sm:flex-row gap-4 justify-center lg:justify-start transition-all duration-1000 delay-300 ${
-                showDescription
-                  ? 'opacity-100 translate-y-0'
-                  : 'opacity-0 translate-y-8'
-              }`}
+              className={`mt-10 flex flex-col sm:flex-row gap-4 justify-center lg:justify-start transition-all duration-1000 delay-300 ${showDescription
+                ? 'opacity-100 translate-y-0'
+                : 'opacity-0 translate-y-8'
+                }`}
             >
               <Link
                 href="#nosotros"
@@ -240,9 +241,8 @@ export function Hero() {
 
           {/* Columna de video / círculo */}
           <div
-            className={`relative lg:h-[500px] flex items-center justify-center transition-all duration-1000 overflow-visible ${
-              showVideo ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
-            }`}
+            className={`relative lg:h-[500px] flex items-center justify-center transition-all duration-1000 overflow-visible ${showVideo ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
+              }`}
           >
             <div className="relative w-[300px] h-[300px] sm:w-[700px] sm:h-[700px] lg:w-[750px] lg:h-[750px] flex items-center justify-center overflow-visible">
               {/* Círculo del video */}
@@ -309,7 +309,7 @@ export function Hero() {
         </div>
       </div>
 
-      {/* Sección "En nosotros confían" */}
+      {/* Sección de Logos */}
       <div className="mt-16 lg:mt-20 py-12 bg-white border-y border-gray-100">
         <div className="mx-auto max-w-7xl px-6 lg:px-8 mb-8">
           <h2 className="text-center text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-900 tracking-tight">

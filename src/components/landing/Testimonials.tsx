@@ -108,14 +108,14 @@ export function Testimonials() {
   };
 
   return (
-    <section 
-      className="py-12 lg:py-16 bg-gray-50 relative overflow-hidden"
+    <section
+      className="py-12 lg:py-16 bg-transparent relative overflow-hidden"
       aria-labelledby="testimonials-heading"
     >
       <div className="mx-auto max-w-7xl px-6 lg:px-8">
         {/* Encabezado */}
         <div className="text-center mb-16">
-          <h2 
+          <h2
             id="testimonials-heading"
             className="text-3xl sm:text-4xl lg:text-5xl font-bold text-gray-900 mb-4 tracking-tight"
           >
@@ -133,7 +133,7 @@ export function Testimonials() {
           <div className="relative w-full max-w-2xl h-full flex items-center justify-center">
             {testimonials.map((testimonial, index) => {
               const style = getCardStyle(index);
-              
+
               return (
                 <div
                   key={testimonial.id}
@@ -216,8 +216,8 @@ export function Testimonials() {
               onClick={() => setCurrentIndex(index)}
               className={`
                 w-2 h-2 rounded-full transition-all duration-300
-                ${index === currentIndex 
-                  ? 'w-8 bg-[#83A98A]' 
+                ${index === currentIndex
+                  ? 'w-8 bg-[#83A98A]'
                   : 'bg-gray-300 hover:bg-gray-400'}
               `}
               aria-label={`Ir al testimonio ${index + 1}`}

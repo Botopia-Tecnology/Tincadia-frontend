@@ -29,17 +29,17 @@ export function SignUpForms() {
   };
 
   return (
-    <section 
-      className="py-16 lg:py-20 bg-gradient-to-b from-gray-50 to-white"
+    <section
+      className="py-16 lg:py-20 bg-transparent"
       aria-labelledby="signup-heading"
     >
       <div className="mx-auto max-w-7xl px-6 lg:px-8">
         {/* Grid de dos formularios */}
         <div className="grid lg:grid-cols-2 gap-8 lg:gap-12">
-          
+
           {/* Formulario 1: Conviértete en Intérprete */}
           <div className="bg-white rounded-2xl shadow-xl p-8 lg:p-10">
-            <h2 
+            <h2
               id="signup-heading"
               className="text-2xl lg:text-3xl font-bold text-gray-900 mb-3"
             >
@@ -52,8 +52,8 @@ export function SignUpForms() {
             <form onSubmit={handleInterpreterSubmit} className="space-y-6">
               {/* Nombre Completo */}
               <div>
-                <label 
-                  htmlFor="interpreter-name" 
+                <label
+                  htmlFor="interpreter-name"
                   className="block text-sm font-semibold text-gray-700 mb-2"
                 >
                   Nombre Completo
@@ -72,8 +72,8 @@ export function SignUpForms() {
 
               {/* Correo Electrónico */}
               <div>
-                <label 
-                  htmlFor="interpreter-email" 
+                <label
+                  htmlFor="interpreter-email"
                   className="block text-sm font-semibold text-gray-700 mb-2"
                 >
                   Correo Electrónico
@@ -92,8 +92,8 @@ export function SignUpForms() {
 
               {/* Certificaciones */}
               <div>
-                <label 
-                  htmlFor="certifications" 
+                <label
+                  htmlFor="certifications"
                   className="block text-sm font-semibold text-gray-700 mb-2"
                 >
                   Certificaciones (ej. ILSE, FESORD)
@@ -132,8 +132,8 @@ export function SignUpForms() {
             <form onSubmit={handleJobSeekerSubmit} className="space-y-6">
               {/* Nombre Completo */}
               <div>
-                <label 
-                  htmlFor="jobseeker-name" 
+                <label
+                  htmlFor="jobseeker-name"
                   className="block text-sm font-semibold text-gray-700 mb-2"
                 >
                   Nombre Completo
@@ -152,8 +152,8 @@ export function SignUpForms() {
 
               {/* Correo Electrónico */}
               <div>
-                <label 
-                  htmlFor="jobseeker-email" 
+                <label
+                  htmlFor="jobseeker-email"
                   className="block text-sm font-semibold text-gray-700 mb-2"
                 >
                   Correo Electrónico
@@ -172,8 +172,8 @@ export function SignUpForms() {
 
               {/* Subir CV */}
               <div>
-                <label 
-                  htmlFor="cv-upload" 
+                <label
+                  htmlFor="cv-upload"
                   className="block text-sm font-semibold text-gray-700 mb-2"
                 >
                   Subir CV (opcional)
@@ -196,8 +196,8 @@ export function SignUpForms() {
                   >
                     <Upload className="w-5 h-5 text-gray-400 group-hover:text-[#83A98A] transition-colors" />
                     <span className="text-sm text-gray-600 group-hover:text-[#83A98A] transition-colors">
-                      {jobSeekerForm.cv 
-                        ? jobSeekerForm.cv.name 
+                      {jobSeekerForm.cv
+                        ? jobSeekerForm.cv.name
                         : 'Elegir archivo'}
                     </span>
                   </label>

@@ -81,17 +81,17 @@ export function HowToStart() {
 
   const handleTabChange = (newTab: number) => {
     if (newTab === activeTab) return;
-    
+
     setIsManualChange(true);
     setIsTransitioning(true);
     setProgress(0); // Reiniciar progreso inmediatamente
-    
+
     // Después de la animación de salida, cambiar el contenido
     setTimeout(() => {
       setDisplayTab(newTab);
       setActiveTab(newTab);
       setIsTransitioning(false);
-      
+
       // Permitir que el scroll vuelva a controlar después de un tiempo
       setTimeout(() => {
         setIsManualChange(false);
@@ -105,28 +105,28 @@ export function HowToStart() {
       if (!sectionRef.current) return;
 
       const section = sectionRef.current;
-      
+
       // Obtener posición de la sección
       const rect = section.getBoundingClientRect();
       const windowHeight = window.innerHeight;
       const scrollY = window.scrollY;
-      
+
       // Calcular cuando la sección entra en viewport
       // Empezamos cuando el top de la sección está en el viewport
       const sectionTop = scrollY + rect.top;
       const sectionBottom = sectionTop + rect.height;
-      
+
       // Calcular el rango de scroll efectivo (desde que entra hasta que sale)
       const scrollStart = sectionTop - windowHeight * 0.5; // Empezar cuando está a mitad de pantalla
       const scrollEnd = sectionBottom - windowHeight * 0.5;
       const scrollRange = scrollEnd - scrollStart;
-      
+
       if (scrollRange <= 0) return;
-      
+
       // Calcular el progreso del scroll dentro de la sección
       const currentScroll = scrollY - scrollStart;
       const scrollProgress = Math.max(0, Math.min(1, currentScroll / scrollRange));
-      
+
       // Dividir el progreso entre las 4 features
       // Cada feature ocupa 1/4 del scroll total
       const featureProgress = scrollProgress * features.length;
@@ -135,10 +135,10 @@ export function HowToStart() {
         features.length - 1
       );
       const featureLocalProgress = (featureProgress - currentFeatureIndex) * 100;
-      
+
       const newActiveTab = currentFeatureIndex + 1;
       const newProgress = Math.max(0, Math.min(100, featureLocalProgress));
-      
+
       // Solo actualizar si cambió el tab y no es un cambio manual
       if (newActiveTab !== activeTab && !isManualChange) {
         setIsTransitioning(true);
@@ -148,7 +148,7 @@ export function HowToStart() {
           setIsTransitioning(false);
         }, 300);
       }
-      
+
       // Actualizar progreso dinámicamente solo si no es un cambio manual
       if (!isManualChange) {
         setProgress(newProgress);
@@ -169,16 +169,16 @@ export function HowToStart() {
   }, [activeTab]);
 
   return (
-    <section 
+    <section
       ref={sectionRef}
       id="how-to-start"
-      className="py-12 lg:py-16 bg-gray-50"
+      className="py-12 lg:py-16 bg-transparent"
       aria-labelledby="how-to-start-heading"
     >
       <div className="mx-auto max-w-7xl px-6 lg:px-8">
         {/* Encabezado */}
         <div className="text-center mb-16">
-          <h2 
+          <h2
             id="how-to-start-heading"
             className="text-3xl sm:text-4xl lg:text-5xl font-bold text-gray-900 mb-4 tracking-tight"
           >
@@ -186,7 +186,7 @@ export function HowToStart() {
             <span className="text-[#83A98A]">TINCADIA</span>
           </h2>
           <p className="text-lg text-gray-600 max-w-3xl mx-auto">
-            Explora nuestras funcionalidades principales y descubre cómo cada herramienta 
+            Explora nuestras funcionalidades principales y descubre cómo cada herramienta
             facilita la comunicación inclusiva.
           </p>
         </div>
@@ -196,7 +196,7 @@ export function HowToStart() {
           <div className="relative">
             {/* Línea de conexión horizontal */}
             <div className="absolute top-1/2 left-0 right-0 h-0.5 bg-gray-200 -translate-y-1/2" aria-hidden="true" />
-            <div 
+            <div
               className="absolute top-1/2 left-0 h-0.5 bg-gradient-to-r from-[#83A98A] to-[#6D8F75] transition-all duration-500 -translate-y-1/2"
               style={{ width: `${((activeTab - 1) / (features.length - 1)) * 100}%` }}
               aria-hidden="true"
@@ -221,19 +221,18 @@ export function HowToStart() {
                     <div
                       className={`
                         relative w-full max-w-[100px] h-20 rounded-xl flex flex-col items-center justify-center transition-all duration-300 mb-2
-                        ${isActive || isPassed 
-                          ? 'bg-gradient-to-br from-[#83A98A] to-[#6D8F75] shadow-xl scale-[1.02]' 
+                        ${isActive || isPassed
+                          ? 'bg-gradient-to-br from-[#83A98A] to-[#6D8F75] shadow-xl scale-[1.02]'
                           : 'bg-white border-2 border-gray-300 group-hover:border-[#83A98A] group-hover:shadow-md'}
                       `}
                     >
                       <FeatureIcon
-                        className={`transition-colors duration-300 mb-1 ${
-                          isActive || isPassed ? 'text-white' : 'text-gray-400 group-hover:text-[#83A98A]'
-                        }`}
+                        className={`transition-colors duration-300 mb-1 ${isActive || isPassed ? 'text-white' : 'text-gray-400 group-hover:text-[#83A98A]'
+                          }`}
                         size={24}
                         strokeWidth={2}
                       />
-                      
+
                       {/* Número del paso */}
                       <span
                         className={`
@@ -247,7 +246,7 @@ export function HowToStart() {
                       {/* Barra de progreso dentro del cuadrado (solo activa) */}
                       {isActive && (
                         <div className="absolute bottom-0 left-0 right-0 h-1 bg-white/30 overflow-hidden rounded-b-xl">
-                          <div 
+                          <div
                             className="h-full bg-white transition-all duration-100 ease-linear"
                             style={{ width: `${progress}%` }}
                           />
@@ -283,8 +282,8 @@ export function HowToStart() {
                 onClick={() => handleTabChange(feature.id)}
                 className={`
                   flex-shrink-0 px-4 py-3 rounded-lg font-semibold text-sm transition-all duration-300
-                  ${isActive 
-                    ? 'bg-gradient-to-r from-[#83A98A] to-[#6D8F75] text-white shadow-lg scale-105' 
+                  ${isActive
+                    ? 'bg-gradient-to-r from-[#83A98A] to-[#6D8F75] text-white shadow-lg scale-105'
                     : 'bg-gray-100 text-gray-600 hover:bg-gray-200'}
                 `}
                 aria-label={`Ver ${feature.title}`}
@@ -298,12 +297,12 @@ export function HowToStart() {
         </div>
 
         {/* Contenido con scroll parallax */}
-        <div 
+        <div
           ref={contentRef}
           className="grid lg:grid-cols-2 gap-12 items-start"
         >
           {/* Video placeholder - Sticky */}
-          <div 
+          <div
             className="lg:sticky lg:top-28 relative rounded-2xl overflow-hidden shadow-2xl h-[500px] lg:h-[550px] flex items-center justify-center transition-all duration-500"
           >
             {features.map((feature) => {
@@ -312,9 +311,8 @@ export function HowToStart() {
               return (
                 <div
                   key={feature.id}
-                  className={`absolute inset-0 rounded-2xl ${feature.bgColor} flex items-center justify-center transition-opacity duration-500 ${
-                    isActive ? 'opacity-100 z-10' : 'opacity-0 z-0'
-                  }`}
+                  className={`absolute inset-0 rounded-2xl ${feature.bgColor} flex items-center justify-center transition-opacity duration-500 ${isActive ? 'opacity-100 z-10' : 'opacity-0 z-0'
+                    }`}
                 >
                   <div className="absolute inset-0 flex items-center justify-center">
                     <FeatureIcon size={80} className="text-gray-300" strokeWidth={1.5} />
@@ -335,13 +333,12 @@ export function HowToStart() {
           <div className="space-y-0">
             {features.map((feature) => {
               const isActive = displayTab === feature.id;
-              
+
               return (
                 <div
                   key={feature.id}
-                  className={`min-h-[80vh] flex flex-col justify-center py-12 transition-opacity duration-500 ${
-                    isActive ? 'opacity-100' : 'opacity-30'
-                  }`}
+                  className={`min-h-[80vh] flex flex-col justify-center py-12 transition-opacity duration-500 ${isActive ? 'opacity-100' : 'opacity-30'
+                    }`}
                 >
                   <div className="space-y-6">
                     <div>

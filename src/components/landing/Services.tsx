@@ -39,14 +39,14 @@ const services = [
 
 export function Services() {
   return (
-    <section 
-      className="py-12 lg:py-16 bg-gray-50"
+    <section
+      className="py-12 lg:py-16 bg-transparent"
       aria-labelledby="services-heading"
     >
       <div className="mx-auto max-w-7xl px-6 lg:px-8">
         {/* Encabezado de la sección */}
         <div className="text-center mb-16">
-          <h2 
+          <h2
             id="services-heading"
             className="text-3xl sm:text-4xl lg:text-5xl font-bold text-gray-900 mb-6 tracking-tight"
           >
@@ -62,7 +62,7 @@ export function Services() {
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
           {services.map((service) => {
             const IconComponent = service.icon;
-            
+
             return (
               <article
                 key={service.id}
@@ -76,22 +76,22 @@ export function Services() {
                       {service.badge}
                     </span>
                   </div>
-                  
+
                   {/* Icono placeholder - Reemplazar con imagen */}
-                  <IconComponent 
-                    className="w-24 h-24 text-gray-400" 
+                  <IconComponent
+                    className="w-24 h-24 text-gray-400"
                     strokeWidth={1.5}
                     aria-hidden="true"
                   />
-                  
+
                   {/* Menú de opciones (tres puntos) */}
                   <button
                     className="absolute top-4 right-4 p-2 hover:bg-white/50 rounded-full transition-colors"
                     aria-label={`Más opciones para ${service.title}`}
                   >
-                    <svg 
-                      className="w-6 h-6 text-gray-700" 
-                      fill="currentColor" 
+                    <svg
+                      className="w-6 h-6 text-gray-700"
+                      fill="currentColor"
                       viewBox="0 0 20 20"
                       aria-hidden="true"
                     >
@@ -105,11 +105,11 @@ export function Services() {
                   <h3 className="text-xl font-bold text-gray-900 mb-2">
                     {service.title}
                   </h3>
-                  
+
                   <p className="text-sm font-medium text-gray-600 mb-3">
                     {service.subtitle}
                   </p>
-                  
+
                   <p className="text-gray-600 mb-6 flex-1">
                     {service.description}
                   </p>
@@ -123,7 +123,7 @@ export function Services() {
                     >
                       {service.secondaryAction.text}
                     </Link>
-                    
+
                     <Link
                       href={service.primaryAction.href}
                       className="flex-1 px-4 py-2.5 text-sm font-semibold text-white bg-[#83A98A] rounded-lg hover:bg-[#6D8F75] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#83A98A] transition-colors text-center"
