@@ -7,6 +7,7 @@ import { SignUpForms } from '@/components/landing/SignUpForms';
 import { FAQ } from '@/components/landing/FAQ';
 import { TechBackground } from '@/components/landing/TechBackground';
 import { AccessibilityButton } from '@/components/landing/AccessibilityButton';
+import { RegionalMap } from '@/components/landing/RegionalMap';
 
 
 export default function Home() {
@@ -33,6 +34,7 @@ export default function Home() {
       {/* Page Content */}
       <div className="relative z-10">
         <Hero />
+        <RegionalMap />
         <HowToStart />
         <HowItWorks />
         <Services />

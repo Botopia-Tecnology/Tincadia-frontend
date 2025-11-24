@@ -63,12 +63,9 @@ export function Hero() {
     const handleResize = () => {
       const width = window.innerWidth;
 
-      if (width < 640) {
-        // MÓVIL
+      if (width < 1024) {
+        // MÓVIL Y TABLET (hasta 921px)
         setCircleRadius(100);
-      } else if (width < 1024) {
-        // TABLET
-        setCircleRadius(180);
       } else {
         // DESKTOP
         setCircleRadius(220);
@@ -145,7 +142,7 @@ export function Hero() {
 
   return (
     <section
-      className="relative bg-transparent pt-36 pb-4 lg:pt-32 lg:pb-6 overflow-hidden"
+      className="relative bg-transparent pt-0 pb-4 lg:pt-20 lg:pb-6 overflow-hidden"
       aria-labelledby="hero-heading"
     >
       {/* Contenedor principal */}
@@ -153,7 +150,7 @@ export function Hero() {
 
         <div className="grid lg:grid-cols-2 gap-12 lg:gap-16 items-center">
           {/* Columna de texto */}
-          <div className="text-center lg:text-left z-10">
+          <div className="text-center lg:text-left z-10 order-2 lg:order-1">
 
             <h1
               id="hero-heading"
@@ -241,12 +238,12 @@ export function Hero() {
 
           {/* Columna de video / círculo */}
           <div
-            className={`relative lg:h-[500px] flex items-center justify-center transition-all duration-1000 overflow-visible ${showVideo ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
+            className={`relative lg:h-[500px] flex items-center justify-center transition-all duration-1000 overflow-visible order-1 lg:order-2 ${showVideo ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
               }`}
           >
-            <div className="relative w-[300px] h-[300px] sm:w-[700px] sm:h-[700px] lg:w-[750px] lg:h-[750px] flex items-center justify-center overflow-visible">
+            <div className="relative w-[300px] h-[300px] lg:w-[750px] lg:h-[750px] flex items-center justify-center overflow-visible">
               {/* Círculo del video */}
-              <div className="relative w-[160px] h-[160px] sm:w-[400px] sm:h-[400px] lg:w-[450px] lg:h-[450px] z-0">
+              <div className="relative w-[160px] h-[160px] lg:w-[450px] lg:h-[450px] z-0">
                 <div
                   className="absolute inset-0 bg-[#83A98A]/20 rounded-full blur-3xl"
                   aria-hidden="true"
