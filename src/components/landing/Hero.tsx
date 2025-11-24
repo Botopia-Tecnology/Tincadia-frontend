@@ -1,8 +1,8 @@
 'use client';
 
-import Link from 'next/link';
 import Image from 'next/image';
 import { useEffect, useRef, useState } from 'react';
+import { RegistrationPanel } from './RegistrationPanel';
 
 
 
@@ -41,6 +41,8 @@ export function Hero() {
   const [showTincadia, setShowTincadia] = useState(false);
   const [showWord, setShowWord] = useState(false);
   const [showVideo, setShowVideo] = useState(false);
+  const [registrationPanelOpen, setRegistrationPanelOpen] = useState(false);
+  const [email, setEmail] = useState('');
 
   // Radio del círculo de letras (responsive)
   const [circleRadius, setCircleRadius] = useState(100);
@@ -148,7 +150,7 @@ export function Hero() {
       {/* Contenedor principal */}
       <div className="mx-auto max-w-7xl px-6 lg:px-8 relative z-10">
 
-        <div className="grid lg:grid-cols-2 gap-12 lg:gap-16 items-center">
+        <div className="grid lg:grid-cols-2 gap-2 lg:gap-24 items-center">
           {/* Columna de texto */}
           <div className="text-center lg:text-left z-10 order-2 lg:order-1">
 
@@ -211,28 +213,28 @@ export function Hero() {
               diversos sectores, eliminando barreras.
             </p>
 
-            {/* BOTONES */}
+            {/* Input + Botón fusionado */}
             <div
-              className={`mt-10 flex flex-col sm:flex-row gap-4 justify-center lg:justify-start transition-all duration-1000 delay-300 ${showDescription
+              className={`mt-10 flex flex-col sm:flex-row gap-0 justify-center lg:justify-start transition-all duration-1000 delay-300 ${showDescription
                 ? 'opacity-100 translate-y-0'
                 : 'opacity-0 translate-y-8'
                 }`}
             >
-              <Link
-                href="#nosotros"
-                className="rounded-lg bg-[#83A98A] px-8 py-3.5 text-base font-semibold text-white shadow-sm hover:bg-[#6D8F75] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#83A98A] transition-colors"
-                aria-label="Conocer más sobre Tincadia"
+              <input
+                type="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                placeholder="Ingresa tu correo electrónico"
+                className="flex-1 px-4 py-3.5 text-base bg-white border border-gray-300 rounded-l-lg sm:rounded-r-none rounded-r-lg sm:border-r-0 focus:outline-none focus:ring-2 focus:ring-[#83A98A] focus:border-transparent transition-all"
+                aria-label="Correo electrónico"
+              />
+              <button
+                onClick={() => setRegistrationPanelOpen(true)}
+                className="rounded-r-lg sm:rounded-l-none rounded-l-lg sm:rounded-r-lg bg-white px-8 py-3.5 text-base font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#83A98A] transition-colors whitespace-nowrap"
+                aria-label="Comenzar registro"
               >
-                Conocer más
-              </Link>
-
-              <Link
-                href="#contacto"
-                className="rounded-lg bg-white px-8 py-3.5 text-base font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#83A98A] transition-colors"
-                aria-label="Contactar a Tincadia"
-              >
-                Contactar
-              </Link>
+                Comenzar
+              </button>
             </div>
           </div>
 
@@ -249,10 +251,11 @@ export function Hero() {
                   aria-hidden="true"
                 />
 
-                <div className="relative w-full h-full rounded-full overflow-hidden bg-[#83A98A] shadow-2xl ring-4 ring-white">
+                <div className="relative w-full h-full rounded-full overflow-hidden bg-[#83A98A] shadow-2xl ring-8 ring-white">
                   <video
                     ref={videoRef}
-                    className="w-full h-full object-cover scale-113"
+                    className="w-full h-full object-cover scale-100"
+                    style={{ objectPosition: 'center center' }}
                     autoPlay
                     loop
                     muted
@@ -260,7 +263,7 @@ export function Hero() {
                     aria-label="Video de presentación de Tincadia"
                   >
                     <source
-                      src="/media/videos/hero-animation.mp4"
+                      src="/media/videos/1.mp4"
                       type="video/mp4"
                     />
                     Tu navegador no soporta el elemento de video.
@@ -373,6 +376,13 @@ export function Hero() {
           </p>
         </div>
       </div>
+
+      {/* Registration Panel */}
+      <RegistrationPanel
+        isOpen={registrationPanelOpen}
+        onClose={() => setRegistrationPanelOpen(false)}
+        initialEmail={email}
+      />
     </section>
   );
 }
