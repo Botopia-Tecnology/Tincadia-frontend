@@ -6,7 +6,6 @@ import { Services } from '@/components/landing/Services';
 import { HowItWorks } from '@/components/landing/HowItWorks';
 import { HowToStart } from '@/components/landing/HowToStart';
 import { Testimonials } from '@/components/landing/Testimonials';
-import { SignUpForms } from '@/components/landing/SignUpForms';
 import { FAQ } from '@/components/landing/FAQ';
 import { TechBackground } from '@/components/landing/TechBackground';
 import { AccessibilityButton } from '@/components/landing/AccessibilityButton';
@@ -33,10 +32,10 @@ export default function Home() {
         className="fixed inset-0 -z-20"
         style={{
           backgroundImage: `
-            linear-gradient(to right, rgba(229,231,235,0.8) 1px, transparent 1px),
-            linear-gradient(to bottom, rgba(229,231,235,0.8) 1px, transparent 1px),
-            radial-gradient(circle 500px at 0% 20%, rgba(131,169,138,0.2), transparent),
-            radial-gradient(circle 500px at 100% 0%, rgba(109,143,117,0.25), transparent)
+            linear-gradient(to right, rgba(229,231,235,0.2) 1px, transparent 1px),
+            linear-gradient(to bottom, rgba(229,231,235,0.2) 1px, transparent 1px),
+            radial-gradient(circle 500px at 0% 20%, rgba(131,169,138,0.08), transparent),
+            radial-gradient(circle 500px at 100% 0%, rgba(109,143,117,0.1), transparent)
           `,
           backgroundSize: "48px 48px, 48px 48px, 100% 100%, 100% 100%",
           backgroundColor: "white",
@@ -47,20 +46,7 @@ export default function Home() {
       <TechBackground />
 
       {/* Page Content */}
-      <div className="relative z-10">
-        <Hero />
-        <RegionalMap />
-        <HowToStart />
-        <HowItWorks />
-        <Services />
-        <Testimonials />
-        <FAQ />
-      </div>
-
-        {/* Interactive Particles */}
-        <TechBackground />
-
-        {/* Page Content */}
+      <RegistrationPanelContext.Provider value={{ isOpen: isRegistrationPanelOpen, setIsOpen: setIsRegistrationPanelOpen }}>
         <div className="relative z-10">
           <Hero />
           <RegionalMap />
@@ -68,13 +54,12 @@ export default function Home() {
           <HowItWorks />
           <Services />
           <Testimonials />
-          <SignUpForms />
           <FAQ />
         </div>
 
         {/* Accessibility Button */}
         <AccessibilityButton isRegistrationPanelOpen={isRegistrationPanelOpen} />
-      </div>
-    </RegistrationPanelContext.Provider>
+      </RegistrationPanelContext.Provider>
+    </div>
   );
 }

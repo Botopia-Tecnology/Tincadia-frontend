@@ -194,64 +194,28 @@ export function AccessibilityButton({ isRegistrationPanelOpen = false }: Accessi
           aria-hidden="true"
         />
 
-    return (
-        <div className="fixed top-1/3 right-2 lg:right-3 z-50 font-sans">
-            <div className="w-9 lg:w-12 bg-[#1E4DD8] rounded-full py-2 lg:py-3 px-1 lg:px-1.5 shadow-2xl flex flex-col items-center gap-1 lg:gap-1.5 text-white">
-                <button
-                    onClick={() => setHighContrast(!highContrast)}
-                    className={`w-6 h-6 lg:w-9 lg:h-9 rounded-full flex items-center justify-center transition-colors ${
-                        highContrast ? 'bg-white text-[#1E4DD8]' : 'bg-white/25 hover:bg-white/40'
-                    }`}
-                    aria-pressed={highContrast}
-                    aria-label="Activar alto contraste"
-                >
-                    <Sun className="w-3.5 h-3.5 lg:w-[18px] lg:h-[18px]" />
-                </button>
-                <button
-                    onClick={() => setInverted(!inverted)}
-                    className={`w-6 h-6 lg:w-9 lg:h-9 rounded-full flex items-center justify-center transition-colors ${
-                        inverted ? 'bg-white text-[#1E4DD8]' : 'bg-white/25 hover:bg-white/40'
-                    }`}
-                    aria-pressed={inverted}
-                    aria-label="Invertir colores"
-                >
-                    <Moon className="w-3.5 h-3.5 lg:w-[18px] lg:h-[18px]" />
-                </button>
-                <button
-                    onClick={() => setGrayscale(!grayscale)}
-                    className={`w-6 h-6 lg:w-9 lg:h-9 rounded-full flex items-center justify-center transition-colors ${
-                        grayscale ? 'bg-white text-[#1E4DD8]' : 'bg-white/25 hover:bg-white/40'
-                    }`}
-                    aria-pressed={grayscale}
-                    aria-label="Activar escala de grises"
-                >
-                    <Eye className="w-3.5 h-3.5 lg:w-[18px] lg:h-[18px]" />
-                </button>
-                <div className="w-5 lg:w-7 h-px bg-white/40 my-0.5 lg:my-1" aria-hidden="true" />
-                <button
-                    onClick={decreaseZoom}
-                    className="w-6 h-6 lg:w-9 lg:h-9 rounded-full flex items-center justify-center bg-white/25 hover:bg-white/40 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-                    aria-label="Disminuir tamaño de texto"
-                    disabled={zoomLevel <= 70}
-                >
-                    <ZoomOut className="w-3.5 h-3.5 lg:w-[18px] lg:h-[18px]" />
-                </button>
-                <button
-                    onClick={() => setZoomLevel(100)}
-                    className="w-6 h-6 lg:w-9 lg:h-9 rounded-full flex items-center justify-center bg-white/25 hover:bg-white/40 transition-colors"
-                    aria-label="Restablecer tamaño de texto"
-                >
-                    <RotateCcw className="w-3.5 h-3.5 lg:w-[18px] lg:h-[18px]" />
-                </button>
-                <button
-                    onClick={increaseZoom}
-                    className="w-6 h-6 lg:w-9 lg:h-9 rounded-full flex items-center justify-center bg-white/25 hover:bg-white/40 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-                    aria-label="Aumentar tamaño de texto"
-                    disabled={zoomLevel >= 200}
-                >
-                    <ZoomIn className="w-3.5 h-3.5 lg:w-[18px] lg:h-[18px]" />
-                </button>
-            </div>
-        </div>
-    );
+        {/* Controles de zoom */}
+        <ZoomButton
+          icon={ZoomOut}
+          onClick={decreaseZoom}
+          label="Disminuir tamaño de texto"
+          disabled={zoomLevel <= ZOOM_CONFIG.MIN}
+          sizes={sizes}
+        />
+        <ZoomButton
+          icon={RotateCcw}
+          onClick={resetZoom}
+          label="Restablecer tamaño de texto"
+          sizes={sizes}
+        />
+        <ZoomButton
+          icon={ZoomIn}
+          onClick={increaseZoom}
+          label="Aumentar tamaño de texto"
+          disabled={zoomLevel >= ZOOM_CONFIG.MAX}
+          sizes={sizes}
+        />
+      </div>
+    </div>
+  );
 }
