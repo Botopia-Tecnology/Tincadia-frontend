@@ -47,20 +47,7 @@ export default function Home() {
       <TechBackground />
 
       {/* Page Content */}
-      <div className="relative z-10">
-        <Hero />
-        <RegionalMap />
-        <HowToStart />
-        <HowItWorks />
-        <Services />
-        <Testimonials />
-        <FAQ />
-      </div>
-
-        {/* Interactive Particles */}
-        <TechBackground />
-
-        {/* Page Content */}
+      <RegistrationPanelContext.Provider value={{ isOpen: isRegistrationPanelOpen, setIsOpen: setIsRegistrationPanelOpen }}>
         <div className="relative z-10">
           <Hero />
           <RegionalMap />
@@ -74,7 +61,7 @@ export default function Home() {
 
         {/* Accessibility Button */}
         <AccessibilityButton isRegistrationPanelOpen={isRegistrationPanelOpen} />
-      </div>
-    </RegistrationPanelContext.Provider>
+      </RegistrationPanelContext.Provider>
+    </div>
   );
 }
