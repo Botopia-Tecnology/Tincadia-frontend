@@ -287,16 +287,36 @@
 
   /* Animación para cada letra individual rotando alrededor del círculo */
   @keyframes rotate-letter-around-circle {
-    from {
-      transform: rotate(0deg) translateX(220px) rotate(0deg);
+    from { 
+      transform: rotate(0deg);
     }
-    to {
-      transform: rotate(360deg) translateX(220px) rotate(-360deg);
+    to { 
+      transform: rotate(360deg);
     }
   }
-
+  
   .animate-letter-circle {
     animation: rotate-letter-around-circle 20s linear infinite;
     transform-origin: center center;
   }
+
+  /* Animación de revelado de Colombia */
+  @keyframes colombiaReveal {
+    0% {
+      opacity: 0;
+      transform: scale(0.9) translateY(20px);
+      filter: blur(8px);
+    }
+    60% {
+      opacity: 1;
+      transform: scale(1.02) translateY(0px);
+      filter: blur(0px);
+    }
+    100% {
+      opacity: 1;
+      transform: scale(1) translateY(0px);
+      filter: blur(0px);
+    }
+  }
+
 }

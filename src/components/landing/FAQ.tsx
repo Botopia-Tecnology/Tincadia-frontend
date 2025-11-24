@@ -34,14 +34,14 @@ export function FAQ() {
   };
 
   return (
-    <section 
-      className="py-16 lg:py-20 bg-gray-50"
+    <section
+      className="py-16 lg:py-20 bg-transparent"
       aria-labelledby="faq-heading"
     >
       <div className="mx-auto max-w-4xl px-6 lg:px-8">
         {/* Encabezado */}
         <div className="text-center mb-12">
-          <h2 
+          <h2
             id="faq-heading"
             className="text-3xl sm:text-4xl lg:text-5xl font-bold text-gray-900 mb-4 tracking-tight"
           >

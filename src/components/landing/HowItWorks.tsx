@@ -48,18 +48,18 @@ export function HowItWorks() {
   };
 
   return (
-    <section 
+    <section
       id="how-it-works"
-      className="py-12 lg:py-16 bg-white relative overflow-hidden"
+      className="py-12 lg:py-16 bg-transparent relative overflow-hidden"
       aria-labelledby="how-it-works-heading"
     >
       {/* Decoración de fondo */}
-      <div className="absolute inset-0 bg-gradient-to-b from-gray-50/50 to-transparent pointer-events-none" aria-hidden="true" />
-      
+      {/* Decoración de fondo eliminada para usar fondo global */}
+
       <div className="mx-auto max-w-7xl px-6 lg:px-8 relative">
         {/* Encabezado */}
         <div className="text-center mb-16 lg:mb-20">
-          <h2 
+          <h2
             id="how-it-works-heading"
             className="text-3xl sm:text-4xl lg:text-5xl font-bold text-gray-900 mb-4 tracking-tight"
           >
@@ -77,9 +77,9 @@ export function HowItWorks() {
           <div className="hidden lg:block relative mb-16">
             {/* Línea de fondo (gris) */}
             <div className="absolute top-1/2 left-0 right-0 h-1 bg-gray-200 -translate-y-1/2 rounded-full" aria-hidden="true" />
-            
+
             {/* Línea de progreso (verde) */}
-            <div 
+            <div
               className="absolute top-1/2 left-0 h-1 bg-gradient-to-r from-[#83A98A] to-[#6D8F75] -translate-y-1/2 rounded-full transition-all duration-700 ease-out shadow-lg shadow-[#83A98A]/30"
               style={{ width: getProgressWidth() }}
               aria-hidden="true"
@@ -215,7 +215,7 @@ export function HowItWorks() {
                   >
                     {step.title}
                   </h3>
-                  
+
                   <p
                     className={`
                       text-gray-600 transition-all duration-500 overflow-hidden
