@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { X, Facebook, Chrome } from 'lucide-react';
 import Link from 'next/link';
 
@@ -11,8 +11,9 @@ interface RegistrationPanelProps {
 }
 
 export function RegistrationPanel({ isOpen, onClose, initialEmail = '' }: RegistrationPanelProps) {
-  const [email, setEmail] = useState(initialEmail);
-  const [showEmailForm, setShowEmailForm] = useState(true); // Mostrar formulario completo por defecto
+  // Si hay un email inicial, mostrar directamente el formulario completo
+  const [email, setEmail] = useState('');
+  const [showEmailForm, setShowEmailForm] = useState(false);
   const [formData, setFormData] = useState({
     nombre: '',
     apellido: '',
@@ -23,6 +24,42 @@ export function RegistrationPanel({ isOpen, onClose, initialEmail = '' }: Regist
     confirmPassword: '',
     aceptaPoliticas: false,
   });
+
+  useEffect(() => {
+    if (isOpen) {
+      if (initialEmail) {
+        setEmail(initialEmail);
+        setShowEmailForm(false); // Mostrar primero la pantalla inicial con el email prellenado
+      } else {
+        setEmail('');
+        setShowEmailForm(false);
+      }
+    }
+  }, [isOpen, initialEmail]);
+
+  // Función para resetear el formulario
+  const resetForm = () => {
+    setFormData({
+      nombre: '',
+      apellido: '',
+      tipoDocumento: '',
+      numeroDocumento: '',
+      telefono: '',
+      password: '',
+      confirmPassword: '',
+      aceptaPoliticas: false,
+    });
+    if (!initialEmail) {
+      setShowEmailForm(false);
+      setEmail('');
+    }
+  };
+
+  // Manejar el cierre del panel
+  const handleClose = () => {
+    resetForm();
+    onClose();
+  };
 
   const handleSocialLogin = (provider: 'facebook' | 'google' | 'microsoft') => {
     console.log(`Login con ${provider}`);
@@ -67,7 +104,7 @@ export function RegistrationPanel({ isOpen, onClose, initialEmail = '' }: Regist
       {isOpen && (
         <div
           className="fixed inset-0 bg-black/50 z-40 lg:bg-black/30 transition-opacity"
-          onClick={onClose}
+          onClick={handleClose}
           aria-hidden="true"
         />
       )}
@@ -82,7 +119,7 @@ export function RegistrationPanel({ isOpen, onClose, initialEmail = '' }: Regist
           {/* Header */}
           <div className="flex items-center justify-between p-6">
             <button
-              onClick={onClose}
+              onClick={handleClose}
               className="p-2 hover:bg-gray-100 rounded-full transition-colors"
               aria-label="Cerrar panel de registro"
             >

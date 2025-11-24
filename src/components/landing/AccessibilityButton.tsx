@@ -182,7 +182,7 @@ export function AccessibilityButton({ isRegistrationPanelOpen = false }: Accessi
     >
       <div
         className={`${sizes.barWidth} bg-[#1E4DD8] rounded-full ${sizes.padding} shadow-2xl flex flex-col items-center ${sizes.gap} text-white transition-all duration-300`}
-      >
+      > 
         {/* Características de accesibilidad */}
         {features.map((feature) => (
           <FeatureButton key={feature.id} feature={feature} sizes={sizes} />
