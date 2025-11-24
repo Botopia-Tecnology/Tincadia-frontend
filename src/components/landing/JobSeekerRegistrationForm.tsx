@@ -1,0 +1,481 @@
+'use client';
+
+import { useState } from 'react';
+import { FileText } from 'lucide-react';
+
+interface JobSeekerFormData {
+  // Información básica
+  nombreCompleto: string;
+  documentoIdentidad: string;
+  tipoDiscapacidad: string;
+  usaLSC: string;
+  ciudadResidencia: string;
+  telefonoWhatsapp: string;
+  correoElectronico: string;
+  
+  // Educación
+  nivelEducativo: string;
+  
+  // Áreas de interés
+  areaLaboralInteres: string[];
+  
+  // Experiencia y habilidades
+  experienciaLaboral: string;
+  habilidadesTecnicas: string;
+  habilidadesBlandas: string;
+  certificacionesCursos: string;
+  
+  // Documentos
+  hojaVida: File | null;
+  
+  // Opciones
+  recibirCapacitacion: 'si' | 'no' | '';
+  autorizaTratamientoDatos: 'si' | 'no' | '';
+}
+
+const tiposDiscapacidad = [
+  'Sorda',
+  'Hipoacusia',
+  'Visual',
+  'Física',
+  'Intelectual',
+  'Psicosocial',
+  'No tengo discapacidad',
+];
+
+const nivelesLSC = [
+  'Sí, fluido',
+  'Básico',
+  'No',
+];
+
+const nivelesEducativos = [
+  'Bachiller',
+  'Técnico',
+  'Tecnólogo',
+  'Profesional',
+  'Posgrado',
+  'En curso',
+];
+
+const areasLaborales = [
+  'Atención al cliente',
+  'Tecnología',
+  'Auxiliar administrativo',
+  'Producción',
+  'Marketing',
+  'Educación',
+  'Servicios generales',
+  'Logística',
+  'Otros',
+];
+
+export function JobSeekerRegistrationForm() {
+  const [formData, setFormData] = useState<JobSeekerFormData>({
+    nombreCompleto: '',
+    documentoIdentidad: '',
+    tipoDiscapacidad: '',
+    usaLSC: '',
+    ciudadResidencia: '',
+    telefonoWhatsapp: '',
+    correoElectronico: '',
+    nivelEducativo: '',
+    areaLaboralInteres: [],
+    experienciaLaboral: '',
+    habilidadesTecnicas: '',
+    habilidadesBlandas: '',
+    certificacionesCursos: '',
+    hojaVida: null,
+    recibirCapacitacion: '',
+    autorizaTratamientoDatos: '',
+  });
+
+  const [otraAreaLaboral, setOtraAreaLaboral] = useState('');
+
+  const handleInputChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>
+  ) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({ ...prev, [name]: value }));
+  };
+
+  const handleCheckboxChange = (value: string) => {
+    setFormData((prev) => {
+      const currentArray = prev.areaLaboralInteres;
+      if (currentArray.includes(value)) {
+        return { ...prev, areaLaboralInteres: currentArray.filter((item) => item !== value) };
+      }
+      return { ...prev, areaLaboralInteres: [...currentArray, value] };
+    });
+  };
+
+  const handleFileChange = (file: File | null) => {
+    setFormData((prev) => ({ ...prev, hojaVida: file }));
+  };
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    console.log('Formulario enviado:', formData);
+    // Aquí iría la lógica para enviar a la API
+  };
+
+  return (
+    <div className="bg-white rounded-2xl shadow-xl p-8 lg:p-10">
+      <div className="mb-8">
+        <h2 className="text-2xl lg:text-3xl font-bold text-gray-900 mb-3">
+          Formulario — Bolsa de Empleo Inclusiva
+        </h2>
+        <p className="text-gray-600">
+          Completa todos los campos para acceder a oportunidades laborales en empresas inclusivas.
+        </p>
+      </div>
+
+      <form onSubmit={handleSubmit} className="space-y-6">
+        {/* 1. Nombre completo */}
+        <div>
+          <label htmlFor="nombreCompleto" className="block text-sm font-semibold text-gray-700 mb-2">
+            1. Nombre completo <span className="text-red-500">*</span>
+          </label>
+          <input
+            id="nombreCompleto"
+            name="nombreCompleto"
+            type="text"
+            value={formData.nombreCompleto}
+            onChange={handleInputChange}
+            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#83A98A] focus:border-transparent"
+            required
+          />
+        </div>
+
+        {/* 2. Documento de identidad */}
+        <div>
+          <label htmlFor="documentoIdentidad" className="block text-sm font-semibold text-gray-700 mb-2">
+            2. Documento de identidad <span className="text-red-500">*</span>
+          </label>
+          <input
+            id="documentoIdentidad"
+            name="documentoIdentidad"
+            type="text"
+            value={formData.documentoIdentidad}
+            onChange={handleInputChange}
+            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#83A98A] focus:border-transparent"
+            required
+          />
+        </div>
+
+        {/* 3. Tipo de discapacidad */}
+        <div>
+          <label htmlFor="tipoDiscapacidad" className="block text-sm font-semibold text-gray-700 mb-2">
+            3. Tipo de discapacidad (si aplica) <span className="text-red-500">*</span>
+          </label>
+          <select
+            id="tipoDiscapacidad"
+            name="tipoDiscapacidad"
+            value={formData.tipoDiscapacidad}
+            onChange={handleInputChange}
+            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#83A98A] focus:border-transparent"
+            required
+          >
+            <option value="">Seleccione una opción</option>
+            {tiposDiscapacidad.map((tipo) => (
+              <option key={tipo} value={tipo}>
+                {tipo}
+              </option>
+            ))}
+          </select>
+        </div>
+
+        {/* 4. ¿Usas Lengua de Señas Colombiana (LSC)? */}
+        <div>
+          <label htmlFor="usaLSC" className="block text-sm font-semibold text-gray-700 mb-2">
+            4. ¿Usas Lengua de Señas Colombiana (LSC)? <span className="text-red-500">*</span>
+          </label>
+          <select
+            id="usaLSC"
+            name="usaLSC"
+            value={formData.usaLSC}
+            onChange={handleInputChange}
+            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#83A98A] focus:border-transparent"
+            required
+          >
+            <option value="">Seleccione una opción</option>
+            {nivelesLSC.map((nivel) => (
+              <option key={nivel} value={nivel}>
+                {nivel}
+              </option>
+            ))}
+          </select>
+        </div>
+
+        {/* 5. Ciudad de residencia */}
+        <div>
+          <label htmlFor="ciudadResidencia" className="block text-sm font-semibold text-gray-700 mb-2">
+            5. Ciudad de residencia <span className="text-red-500">*</span>
+          </label>
+          <input
+            id="ciudadResidencia"
+            name="ciudadResidencia"
+            type="text"
+            value={formData.ciudadResidencia}
+            onChange={handleInputChange}
+            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#83A98A] focus:border-transparent"
+            required
+          />
+        </div>
+
+        {/* 6. Teléfono / WhatsApp */}
+        <div>
+          <label htmlFor="telefonoWhatsapp" className="block text-sm font-semibold text-gray-700 mb-2">
+            6. Teléfono / WhatsApp <span className="text-red-500">*</span>
+          </label>
+          <input
+            id="telefonoWhatsapp"
+            name="telefonoWhatsapp"
+            type="tel"
+            value={formData.telefonoWhatsapp}
+            onChange={handleInputChange}
+            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#83A98A] focus:border-transparent"
+            required
+          />
+        </div>
+
+        {/* 7. Correo electrónico */}
+        <div>
+          <label htmlFor="correoElectronico" className="block text-sm font-semibold text-gray-700 mb-2">
+            7. Correo electrónico <span className="text-red-500">*</span>
+          </label>
+          <input
+            id="correoElectronico"
+            name="correoElectronico"
+            type="email"
+            value={formData.correoElectronico}
+            onChange={handleInputChange}
+            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#83A98A] focus:border-transparent"
+            required
+          />
+        </div>
+
+        {/* 8. Nivel educativo */}
+        <div>
+          <label htmlFor="nivelEducativo" className="block text-sm font-semibold text-gray-700 mb-2">
+            8. Nivel educativo <span className="text-red-500">*</span>
+          </label>
+          <select
+            id="nivelEducativo"
+            name="nivelEducativo"
+            value={formData.nivelEducativo}
+            onChange={handleInputChange}
+            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#83A98A] focus:border-transparent"
+            required
+          >
+            <option value="">Seleccione una opción</option>
+            {nivelesEducativos.map((nivel) => (
+              <option key={nivel} value={nivel}>
+                {nivel}
+              </option>
+            ))}
+          </select>
+        </div>
+
+        {/* 9. Área laboral de interés */}
+        <div>
+          <label className="block text-sm font-semibold text-gray-700 mb-3">
+            9. Área laboral de interés (selección múltiple) <span className="text-red-500">*</span>
+          </label>
+          <div className="space-y-2">
+            {areasLaborales.map((area) => (
+              <label key={area} className="flex items-center gap-2 cursor-pointer">
+                <input
+                  type="checkbox"
+                  checked={formData.areaLaboralInteres.includes(area)}
+                  onChange={() => handleCheckboxChange(area)}
+                  className="w-4 h-4 text-[#83A98A] focus:ring-[#83A98A] rounded"
+                />
+                <span className="text-gray-700">{area}</span>
+              </label>
+            ))}
+          </div>
+          {formData.areaLaboralInteres.includes('Otros') && (
+            <input
+              type="text"
+              value={otraAreaLaboral}
+              onChange={(e) => setOtraAreaLaboral(e.target.value)}
+              placeholder="Especifique otra área laboral"
+              className="w-full mt-3 px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#83A98A] focus:border-transparent"
+            />
+          )}
+        </div>
+
+        {/* 10. Experiencia laboral */}
+        <div>
+          <label htmlFor="experienciaLaboral" className="block text-sm font-semibold text-gray-700 mb-2">
+            10. Experiencia laboral <span className="text-red-500">*</span>
+          </label>
+          <textarea
+            id="experienciaLaboral"
+            name="experienciaLaboral"
+            value={formData.experienciaLaboral}
+            onChange={handleInputChange}
+            rows={4}
+            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#83A98A] focus:border-transparent resize-vertical"
+            placeholder="Describe tu experiencia laboral..."
+            required
+          />
+        </div>
+
+        {/* 11. Habilidades técnicas */}
+        <div>
+          <label htmlFor="habilidadesTecnicas" className="block text-sm font-semibold text-gray-700 mb-2">
+            11. Habilidades técnicas <span className="text-red-500">*</span>
+          </label>
+          <textarea
+            id="habilidadesTecnicas"
+            name="habilidadesTecnicas"
+            value={formData.habilidadesTecnicas}
+            onChange={handleInputChange}
+            rows={4}
+            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#83A98A] focus:border-transparent resize-vertical"
+            placeholder="Describe tus habilidades técnicas..."
+            required
+          />
+        </div>
+
+        {/* 12. Habilidades blandas */}
+        <div>
+          <label htmlFor="habilidadesBlandas" className="block text-sm font-semibold text-gray-700 mb-2">
+            12. Habilidades blandas <span className="text-red-500">*</span>
+          </label>
+          <textarea
+            id="habilidadesBlandas"
+            name="habilidadesBlandas"
+            value={formData.habilidadesBlandas}
+            onChange={handleInputChange}
+            rows={4}
+            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#83A98A] focus:border-transparent resize-vertical"
+            placeholder="Describe tus habilidades blandas..."
+            required
+          />
+        </div>
+
+        {/* 13. Certificaciones, cursos o talleres */}
+        <div>
+          <label htmlFor="certificacionesCursos" className="block text-sm font-semibold text-gray-700 mb-2">
+            13. Certificaciones, cursos o talleres
+          </label>
+          <textarea
+            id="certificacionesCursos"
+            name="certificacionesCursos"
+            value={formData.certificacionesCursos}
+            onChange={handleInputChange}
+            rows={4}
+            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#83A98A] focus:border-transparent resize-vertical"
+            placeholder="Lista tus certificaciones, cursos o talleres..."
+          />
+        </div>
+
+        {/* 14. Adjuntar hoja de vida (PDF) */}
+        <div>
+          <label className="block text-sm font-semibold text-gray-700 mb-2">
+            14. Adjuntar hoja de vida (PDF) <span className="text-red-500">*</span>
+          </label>
+          <div className="relative">
+            <input
+              type="file"
+              accept=".pdf"
+              onChange={(e) => handleFileChange(e.target.files?.[0] || null)}
+              className="hidden"
+              id="hojaVida"
+              required
+            />
+            <label
+              htmlFor="hojaVida"
+              className="flex items-center justify-center gap-2 w-full px-4 py-3 border-2 border-dashed border-gray-300 rounded-lg hover:border-[#83A98A] cursor-pointer transition-all group"
+            >
+              <FileText className="w-5 h-5 text-gray-400 group-hover:text-[#83A98A]" />
+              <span className="text-sm text-gray-600 group-hover:text-[#83A98A]">
+                {formData.hojaVida ? formData.hojaVida.name : 'Seleccionar archivo PDF'}
+              </span>
+            </label>
+          </div>
+        </div>
+
+        {/* 15. ¿Te gustaría recibir capacitación gratuita de TINCADIA? */}
+        <div>
+          <label className="block text-sm font-semibold text-gray-700 mb-3">
+            15. ¿Te gustaría recibir capacitación gratuita de TINCADIA?{' '}
+            <span className="text-red-500">*</span>
+          </label>
+          <div className="flex gap-6">
+            <label className="flex items-center gap-2 cursor-pointer">
+              <input
+                type="radio"
+                name="recibirCapacitacion"
+                value="si"
+                checked={formData.recibirCapacitacion === 'si'}
+                onChange={handleInputChange}
+                className="w-4 h-4 text-[#83A98A] focus:ring-[#83A98A]"
+                required
+              />
+              <span className="text-gray-700">Sí</span>
+            </label>
+            <label className="flex items-center gap-2 cursor-pointer">
+              <input
+                type="radio"
+                name="recibirCapacitacion"
+                value="no"
+                checked={formData.recibirCapacitacion === 'no'}
+                onChange={handleInputChange}
+                className="w-4 h-4 text-[#83A98A] focus:ring-[#83A98A]"
+                required
+              />
+              <span className="text-gray-700">No</span>
+            </label>
+          </div>
+        </div>
+
+        {/* 16. Autorizo tratamiento de datos personales */}
+        <div>
+          <label className="block text-sm font-semibold text-gray-700 mb-3">
+            16. Autorizo tratamiento de datos personales según la Ley 1581{' '}
+            <span className="text-red-500">*</span>
+          </label>
+          <div className="flex gap-6">
+            <label className="flex items-center gap-2 cursor-pointer">
+              <input
+                type="radio"
+                name="autorizaTratamientoDatos"
+                value="si"
+                checked={formData.autorizaTratamientoDatos === 'si'}
+                onChange={handleInputChange}
+                className="w-4 h-4 text-[#83A98A] focus:ring-[#83A98A]"
+                required
+              />
+              <span className="text-gray-700">Sí</span>
+            </label>
+            <label className="flex items-center gap-2 cursor-pointer">
+              <input
+                type="radio"
+                name="autorizaTratamientoDatos"
+                value="no"
+                checked={formData.autorizaTratamientoDatos === 'no'}
+                onChange={handleInputChange}
+                className="w-4 h-4 text-[#83A98A] focus:ring-[#83A98A]"
+                required
+              />
+              <span className="text-gray-700">No</span>
+            </label>
+          </div>
+        </div>
+
+        {/* Botón Submit */}
+        <button
+          type="submit"
+          className="w-full bg-[#83A98A] text-white font-semibold py-3.5 px-6 rounded-lg hover:bg-[#6D8F75] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#83A98A] transition-all duration-300 shadow-lg hover:shadow-xl mt-8"
+        >
+          Enviar Formulario
+        </button>
+      </form>
+    </div>
+  );
+}
+

@@ -1,16 +1,14 @@
-import { Hero } from '@/components/landing/Hero';
-import { Services } from '@/components/landing/Services';
-import { HowItWorks } from '@/components/landing/HowItWorks';
-import { HowToStart } from '@/components/landing/HowToStart';
-import { Testimonials } from '@/components/landing/Testimonials';
-import { SignUpForms } from '@/components/landing/SignUpForms';
-import { FAQ } from '@/components/landing/FAQ';
+import type { Metadata } from 'next';
+import { BecomeInterpreterSection } from '@/components/landing/BecomeInterpreterSection';
 import { TechBackground } from '@/components/landing/TechBackground';
 import { AccessibilityButton } from '@/components/landing/AccessibilityButton';
-import { RegionalMap } from '@/components/landing/RegionalMap';
 
+export const metadata: Metadata = {
+  title: 'Conviértete en Intérprete - Tincadia',
+  description: 'Únete a nuestra red de intérpretes profesionales certificados y marca la diferencia en la vida de las personas sordas e hipoacúsicas.',
+};
 
-export default function Home() {
+export default function BecomeInterpreterPage() {
   return (
     <div className="min-h-screen w-full relative">
       {/* Global Background with Tincadia Colors */}
@@ -33,13 +31,7 @@ export default function Home() {
 
       {/* Page Content */}
       <div className="relative z-10">
-        <Hero />
-        <RegionalMap />
-        <HowToStart />
-        <HowItWorks />
-        <Services />
-        <Testimonials />
-        <FAQ />
+        <BecomeInterpreterSection />
       </div>
 
       {/* Accessibility Button */}
@@ -47,3 +39,4 @@ export default function Home() {
     </div>
   );
 }
+

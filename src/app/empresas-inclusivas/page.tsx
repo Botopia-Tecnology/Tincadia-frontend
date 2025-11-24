@@ -1,16 +1,14 @@
-import { Hero } from '@/components/landing/Hero';
-import { Services } from '@/components/landing/Services';
-import { HowItWorks } from '@/components/landing/HowItWorks';
-import { HowToStart } from '@/components/landing/HowToStart';
-import { Testimonials } from '@/components/landing/Testimonials';
-import { SignUpForms } from '@/components/landing/SignUpForms';
-import { FAQ } from '@/components/landing/FAQ';
+import type { Metadata } from 'next';
+import { FindInclusiveCompanySection } from '@/components/landing/FindInclusiveCompanySection';
 import { TechBackground } from '@/components/landing/TechBackground';
 import { AccessibilityButton } from '@/components/landing/AccessibilityButton';
-import { RegionalMap } from '@/components/landing/RegionalMap';
 
+export const metadata: Metadata = {
+  title: 'Encuentra una Empresa Inclusiva - Tincadia',
+  description: 'Crea tu perfil y accede a oportunidades laborales en empresas comprometidas con la inclusión y la diversidad.',
+};
 
-export default function Home() {
+export default function FindInclusiveCompanyPage() {
   return (
     <div className="min-h-screen w-full relative">
       {/* Global Background with Tincadia Colors */}
@@ -33,13 +31,7 @@ export default function Home() {
 
       {/* Page Content */}
       <div className="relative z-10">
-        <Hero />
-        <RegionalMap />
-        <HowToStart />
-        <HowItWorks />
-        <Services />
-        <Testimonials />
-        <FAQ />
+        <FindInclusiveCompanySection />
       </div>
 
       {/* Accessibility Button */}
@@ -47,3 +39,4 @@ export default function Home() {
     </div>
   );
 }
+

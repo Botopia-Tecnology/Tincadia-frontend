@@ -1,18 +1,36 @@
 'use client';
 
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
-import { X } from 'lucide-react';
+import { X, ChevronDown, Building2, MessageSquare } from 'lucide-react';
 import { Logo } from '@/components/ui/Logo';
 
 interface MobileMenuProps {
   isOpen: boolean;
   onClose: () => void;
-  navigation: Array<{ name: string; href: string }>;
+  navigation: Array<{ name: string; href: string; hasDropdown?: boolean }>;
 }
+
+const servicesDropdownItems = [
+  {
+    name: 'Encontrar una empresa inclusiva',
+    description: 'Conecta con empresas comprometidas con la inclusión',
+    href: '/empresas-inclusivas',
+    icon: Building2,
+    iconColor: 'bg-blue-100 text-blue-600',
+  },
+  {
+    name: 'Convertirte en un intérprete',
+    description: 'Únete a nuestra red de intérpretes profesionales',
+    href: '/ser-interprete',
+    icon: MessageSquare,
+    iconColor: 'bg-purple-100 text-purple-600',
+  },
+];
 
 export function MobileMenu({ isOpen, onClose, navigation }: MobileMenuProps) {
   const menuRef = useRef<HTMLDivElement>(null);
+  const [servicesDropdownOpen, setServicesDropdownOpen] = useState(false);
 
   // Cerrar con Escape
   useEffect(() => {
@@ -75,20 +93,76 @@ export function MobileMenu({ isOpen, onClose, navigation }: MobileMenuProps) {
         {/* Links del menú */}
         <nav className="flex-1 overflow-y-auto" aria-label="Navegación móvil">
           <div className="px-6 py-8 space-y-6">
-            {navigation.map((item) => (
-              <div
-                key={item.name}
-                className="border-b border-dotted border-gray-200 last:border-0 pb-4"
-              >
-                <Link
-                  href={item.href}
-                  className="block text-2xl font-bold text-gray-900 hover:text-[#83A98A] text-center transition-colors focus:outline-none focus:ring-2 focus:ring-inset focus:ring-[#83A98A] rounded-lg"
-                  onClick={onClose}
+            {navigation.map((item) => {
+              if (item.hasDropdown) {
+                return (
+                  <div
+                    key={item.name}
+                    className="border-b border-dotted border-gray-200 last:border-0 pb-4"
+                  >
+                    <button
+                      type="button"
+                      onClick={() => setServicesDropdownOpen(!servicesDropdownOpen)}
+                      className="w-full flex items-center justify-between text-2xl font-bold text-gray-900 hover:text-[#83A98A] transition-colors focus:outline-none focus:ring-2 focus:ring-inset focus:ring-[#83A98A] rounded-lg"
+                    >
+                      {item.name}
+                      <ChevronDown
+                        className={`w-6 h-6 transition-transform ${
+                          servicesDropdownOpen ? 'rotate-180' : ''
+                        }`}
+                      />
+                    </button>
+                    {servicesDropdownOpen && (
+                      <div className="mt-4 space-y-3 pl-4">
+                        <h3 className="text-sm font-semibold text-gray-500 uppercase tracking-wide mb-2">
+                          Encuentra trabajo
+                        </h3>
+                        {servicesDropdownItems.map((service, index) => {
+                          const IconComponent = service.icon;
+                          return (
+                            <Link
+                              key={index}
+                              href={service.href}
+                              className="flex items-start gap-3 p-3 rounded-lg hover:bg-gray-50 transition-colors group"
+                              onClick={onClose}
+                            >
+                              <div
+                                className={`flex-shrink-0 w-10 h-10 rounded-lg flex items-center justify-center ${service.iconColor} transition-transform group-hover:scale-110`}
+                              >
+                                <IconComponent className="w-5 h-5" />
+                              </div>
+                              <div className="flex-1 min-w-0">
+                                <h4 className="font-semibold text-gray-900 mb-1 group-hover:text-[#83A98A] transition-colors">
+                                  {service.name}
+                                </h4>
+                                <p className="text-sm text-gray-600 leading-relaxed">
+                                  {service.description}
+                                </p>
+                              </div>
+                            </Link>
+                          );
+                        })}
+                      </div>
+                    )}
+                  </div>
+                );
+              }
+
+              return (
+                <div
+                  key={item.name}
+                  className="border-b border-dotted border-gray-200 last:border-0 pb-4"
                 >
-                  {item.name}
-                </Link>
-              </div>
-            ))}
+                  <Link
+                    href={item.href}
+                    className="block text-2xl font-bold text-gray-900 hover:text-[#83A98A] text-center transition-colors focus:outline-none focus:ring-2 focus:ring-inset focus:ring-[#83A98A] rounded-lg"
+                    onClick={onClose}
+                  >
+                    {item.name}
+                  </Link>
+                </div>
+              );
+            })}
 
             {/* CTA */}
             <div className="pt-4">

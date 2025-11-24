@@ -1,22 +1,41 @@
 'use client';
 
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useRef, useEffect } from 'react';
 import Link from 'next/link';
-import { Menu } from 'lucide-react';
+import { Menu, ChevronDown, Building2, MessageSquare } from 'lucide-react';
 import { Logo } from '@/components/ui/Logo';
 import { MobileMenu } from './MobileMenu';
 import { useScrollLock } from '@/hooks/useScrollLock';
 
-const navigation = [
+const navigation: Array<{ name: string; href: string; hasDropdown?: boolean }> = [
   { name: 'Nosotros', href: '#nosotros' },
-  { name: 'Servicios', href: '#servicios' },
+  { name: 'Servicios', href: '#servicios', hasDropdown: true },
   { name: 'Cursos', href: '#cursos' },
   { name: 'Precios', href: '/pricing' },
   { name: 'Contáctanos', href: '#contacto' },
 ];
 
+const servicesDropdownItems = [
+  {
+    name: 'Encontrar una empresa inclusiva',
+    description: 'Conecta con empresas comprometidas con la inclusión',
+    href: '/empresas-inclusivas',
+    icon: Building2,
+    iconColor: 'bg-blue-100 text-blue-600',
+  },
+  {
+    name: 'Convertirte en un intérprete',
+    description: 'Únete a nuestra red de intérpretes profesionales',
+    href: '/ser-interprete',
+    icon: MessageSquare,
+    iconColor: 'bg-purple-100 text-purple-600',
+  },
+];
+
 export function Navbar() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [servicesDropdownOpen, setServicesDropdownOpen] = useState(false);
+  const servicesDropdownRef = useRef<HTMLDivElement>(null);
 
   // Bloquear scroll cuando el menú está abierto
   useScrollLock(mobileMenuOpen);
@@ -28,6 +47,26 @@ export function Navbar() {
   const handleMenuClose = useCallback(() => {
     setMobileMenuOpen(false);
   }, []);
+
+  // Cerrar dropdown al hacer click fuera
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (
+        servicesDropdownRef.current &&
+        !servicesDropdownRef.current.contains(event.target as Node)
+      ) {
+        setServicesDropdownOpen(false);
+      }
+    };
+
+    if (servicesDropdownOpen) {
+      document.addEventListener('mousedown', handleClickOutside);
+    }
+
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [servicesDropdownOpen]);
 
   return (
     <>
@@ -59,15 +98,81 @@ export function Navbar() {
 
           {/* Navegación desktop */}
           <div className="hidden lg:flex lg:gap-x-8 lg:flex-1 lg:justify-center">
-            {navigation.map((item) => (
-              <Link
-                key={item.name}
-                href={item.href}
-                className="text-base font-semibold text-gray-900 hover:text-[#83A98A] transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#83A98A] rounded-md px-3 py-2"
-              >
-                {item.name}
-              </Link>
-            ))}
+            {navigation.map((item) => {
+              if (item.hasDropdown) {
+                return (
+                  <div
+                    key={item.name}
+                    ref={servicesDropdownRef}
+                    className="relative"
+                    onMouseEnter={() => setServicesDropdownOpen(true)}
+                    onMouseLeave={() => setServicesDropdownOpen(false)}
+                  >
+                    <button
+                      type="button"
+                      className="text-base font-semibold text-gray-900 hover:text-[#83A98A] transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#83A98A] rounded-md px-3 py-2 flex items-center gap-1"
+                      aria-expanded={servicesDropdownOpen}
+                      aria-haspopup="true"
+                    >
+                      {item.name}
+                      <ChevronDown
+                        className={`w-4 h-4 transition-transform ${
+                          servicesDropdownOpen ? 'rotate-180' : ''
+                        }`}
+                      />
+                    </button>
+
+                    {/* Dropdown menu */}
+                    {servicesDropdownOpen && (
+                      <div className="absolute top-full left-0 mt-2 w-80 bg-white rounded-xl shadow-xl border border-gray-200 py-4 z-50 animate-in fade-in slide-in-from-top-2 duration-200">
+                        <div className="px-4 mb-2">
+                          <h3 className="text-sm font-semibold text-gray-500 uppercase tracking-wide">
+                            Encuentra trabajo
+                          </h3>
+                        </div>
+                        <div className="space-y-1">
+                          {servicesDropdownItems.map((service, index) => {
+                            const IconComponent = service.icon;
+                            return (
+                              <Link
+                                key={index}
+                                href={service.href}
+                                className="flex items-start gap-3 px-4 py-3 hover:bg-gray-50 transition-colors group"
+                                onClick={() => setServicesDropdownOpen(false)}
+                              >
+                                <div
+                                  className={`flex-shrink-0 w-10 h-10 rounded-lg flex items-center justify-center ${service.iconColor} transition-transform group-hover:scale-110`}
+                                >
+                                  <IconComponent className="w-5 h-5" />
+                                </div>
+                                <div className="flex-1 min-w-0">
+                                  <h4 className="font-semibold text-gray-900 mb-1 group-hover:text-[#83A98A] transition-colors">
+                                    {service.name}
+                                  </h4>
+                                  <p className="text-sm text-gray-600 leading-relaxed">
+                                    {service.description}
+                                  </p>
+                                </div>
+                              </Link>
+                            );
+                          })}
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                );
+              }
+
+              return (
+                <Link
+                  key={item.name}
+                  href={item.href}
+                  className="text-base font-semibold text-gray-900 hover:text-[#83A98A] transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#83A98A] rounded-md px-3 py-2"
+                >
+                  {item.name}
+                </Link>
+              );
+            })}
           </div>
 
           {/* CTA desktop */}
