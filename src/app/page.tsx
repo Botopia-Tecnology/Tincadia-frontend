@@ -6,7 +6,6 @@ import { Services } from '@/components/landing/Services';
 import { HowItWorks } from '@/components/landing/HowItWorks';
 import { HowToStart } from '@/components/landing/HowToStart';
 import { Testimonials } from '@/components/landing/Testimonials';
-import { SignUpForms } from '@/components/landing/SignUpForms';
 import { FAQ } from '@/components/landing/FAQ';
 import { TechBackground } from '@/components/landing/TechBackground';
 import { AccessibilityButton } from '@/components/landing/AccessibilityButton';
@@ -55,7 +54,6 @@ export default function Home() {
           <HowItWorks />
           <Services />
           <Testimonials />
-          <SignUpForms />
           <FAQ />
         </div>
 
