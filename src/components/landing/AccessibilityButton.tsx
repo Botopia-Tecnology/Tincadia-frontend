@@ -8,10 +8,14 @@ import {
   RotateCcw,
   ZoomIn,
   ZoomOut,
+  MousePointer2,
+  Pause,
 } from 'lucide-react';
 
 interface AccessibilityButtonProps {
   isRegistrationPanelOpen?: boolean;
+  disableAnimations?: boolean;
+  setDisableAnimations?: (value: boolean) => void;
 }
 
 // Constantes de configuración
@@ -63,9 +67,8 @@ const FeatureButton = ({ feature, sizes }: FeatureButtonProps) => {
   return (
     <button
       onClick={feature.onClick}
-      className={`${sizes.buttonSize} rounded-full flex items-center justify-center transition-all duration-300 ${
-        feature.isActive ? ACCESSIBILITY_COLORS.BUTTON_ACTIVE : ACCESSIBILITY_COLORS.BUTTON_INACTIVE
-      }`}
+      className={`${sizes.buttonSize} rounded-full flex items-center justify-center transition-all duration-300 ${feature.isActive ? ACCESSIBILITY_COLORS.BUTTON_ACTIVE : ACCESSIBILITY_COLORS.BUTTON_INACTIVE
+        }`}
       aria-pressed={feature.isActive}
       aria-label={feature.label}
     >
@@ -102,16 +105,34 @@ interface AccessibilityFeature {
   onClick: () => void;
 }
 
-export function AccessibilityButton({ isRegistrationPanelOpen = false }: AccessibilityButtonProps) {
+export function AccessibilityButton({
+  isRegistrationPanelOpen = false,
+  disableAnimations: propDisableAnimations,
+  setDisableAnimations: propSetDisableAnimations
+}: AccessibilityButtonProps) {
   const [highContrast, setHighContrast] = useState(false);
   const [inverted, setInverted] = useState(false);
   const [grayscale, setGrayscale] = useState(false);
+  const [largeCursor, setLargeCursor] = useState(false);
   const [zoomLevel, setZoomLevel] = useState<number>(ZOOM_CONFIG.DEFAULT);
+
+  // Estado local para cuando no se pasan props
+  const [localDisableAnimations, setLocalDisableAnimations] = useState(false);
+
+  // Determinar el valor efectivo y la función de actualización
+  const disableAnimations = propDisableAnimations ?? localDisableAnimations;
+  const setDisableAnimations = (value: boolean) => {
+    if (propSetDisableAnimations) {
+      propSetDisableAnimations(value);
+    } else {
+      setLocalDisableAnimations(value);
+    }
+  };
 
   // Aplicar filtros de accesibilidad al documento
   useEffect(() => {
     const filters: string[] = [];
-    
+
     if (highContrast) filters.push('contrast(150%)');
     if (inverted) filters.push('invert(1) hue-rotate(180deg)');
     if (grayscale) filters.push('grayscale(100%)');
@@ -119,11 +140,25 @@ export function AccessibilityButton({ isRegistrationPanelOpen = false }: Accessi
     document.documentElement.style.filter = filters.join(' ') || 'none';
     document.documentElement.style.fontSize = `${zoomLevel}%`;
 
+    if (largeCursor) {
+      document.documentElement.classList.add('accessibility-large-cursor');
+    } else {
+      document.documentElement.classList.remove('accessibility-large-cursor');
+    }
+
+    if (disableAnimations) {
+      document.documentElement.classList.add('accessibility-no-animations');
+    } else {
+      document.documentElement.classList.remove('accessibility-no-animations');
+    }
+
     return () => {
       document.documentElement.style.filter = 'none';
       document.documentElement.style.fontSize = '100%';
+      document.documentElement.classList.remove('accessibility-large-cursor');
+      document.documentElement.classList.remove('accessibility-no-animations');
     };
-  }, [highContrast, inverted, grayscale, zoomLevel]);
+  }, [highContrast, inverted, grayscale, zoomLevel, largeCursor, disableAnimations]);
 
   // Funciones de control de zoom
   const increaseZoom = () => {
@@ -173,6 +208,20 @@ export function AccessibilityButton({ isRegistrationPanelOpen = false }: Accessi
       isActive: grayscale,
       onClick: () => setGrayscale(!grayscale),
     },
+    {
+      id: 'largeCursor',
+      icon: MousePointer2,
+      label: 'Cursor grande',
+      isActive: largeCursor,
+      onClick: () => setLargeCursor(!largeCursor),
+    },
+    {
+      id: 'disableAnimations',
+      icon: Pause,
+      label: 'Desactivar animaciones',
+      isActive: disableAnimations,
+      onClick: () => setDisableAnimations(!disableAnimations),
+    },
   ];
 
 
@@ -182,7 +231,7 @@ export function AccessibilityButton({ isRegistrationPanelOpen = false }: Accessi
     >
       <div
         className={`${sizes.barWidth} bg-[#1E4DD8] rounded-full ${sizes.padding} shadow-2xl flex flex-col items-center ${sizes.gap} text-white transition-all duration-300`}
-      > 
+      >
         {/* Características de accesibilidad */}
         {features.map((feature) => (
           <FeatureButton key={feature.id} feature={feature} sizes={sizes} />

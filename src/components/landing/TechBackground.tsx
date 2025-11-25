@@ -5,7 +5,11 @@ import Particles, { initParticlesEngine } from '@tsparticles/react';
 import { loadSlim } from '@tsparticles/slim';
 import type { Container, Engine } from '@tsparticles/engine';
 
-export function TechBackground() {
+interface TechBackgroundProps {
+  disableAnimations?: boolean;
+}
+
+export function TechBackground({ disableAnimations = false }: TechBackgroundProps) {
   const [init, setInit] = useState(false);
 
   useEffect(() => {
@@ -52,7 +56,7 @@ export function TechBackground() {
             },
             move: {
               direction: "none",
-              enable: true,
+              enable: !disableAnimations,
               outModes: { default: "bounce" },
               random: false,
               speed: 2,
