@@ -73,9 +73,9 @@ export function Navbar() {
 
   return (
     <>
-      <header className="bg-white/95 backdrop-blur-sm fixed top-0 left-0 right-0 z-50 border-b border-gray-200">
+      <header className="bg-white/95 backdrop-blur-sm fixed top-0 left-0 right-0 z-50 border-b border-gray-200 min-h-[64px] flex items-center">
         <nav
-          className="mx-auto flex max-w-7xl items-center justify-between p-2 lg:px-8"
+          className="mx-auto flex max-w-7xl items-center justify-between w-full p-2 lg:px-8"
           aria-label="Navegación principal"
         >
           {/* Logo */}
@@ -100,7 +100,7 @@ export function Navbar() {
           </div>
 
           {/* Navegación desktop */}
-          <div className="hidden lg:flex lg:gap-x-8 lg:flex-1 lg:justify-center">
+          <div className="hidden lg:flex lg:gap-x-4 xl:gap-x-6 lg:flex-1 lg:justify-center lg:items-center">
             {navigation.map((item) => {
               if (item.hasDropdown) {
                 return (
@@ -113,13 +113,13 @@ export function Navbar() {
                   >
                     <button
                       type="button"
-                      className="text-base font-semibold text-gray-900 hover:text-[#83A98A] transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#83A98A] rounded-md px-3 py-2 flex items-center gap-1"
+                      className="text-sm xl:text-base font-semibold text-gray-900 hover:text-[#83A98A] transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#83A98A] rounded-md px-2 xl:px-3 py-2 flex items-center gap-1 whitespace-nowrap"
                       aria-expanded={servicesDropdownOpen}
                       aria-haspopup="true"
                     >
                       {item.name}
                       <ChevronDown
-                        className={`w-4 h-4 transition-transform ${
+                        className={`w-4 h-4 flex-shrink-0 transition-transform ${
                           servicesDropdownOpen ? 'rotate-180' : ''
                         }`}
                       />
@@ -170,7 +170,7 @@ export function Navbar() {
                 <Link
                   key={item.name}
                   href={item.href}
-                  className="text-base font-semibold text-gray-900 hover:text-[#83A98A] transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#83A98A] rounded-md px-3 py-2"
+                  className="text-sm xl:text-base font-semibold text-gray-900 hover:text-[#83A98A] transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#83A98A] rounded-md px-2 xl:px-3 py-2 whitespace-nowrap"
                 >
                   {item.name}
                 </Link>
@@ -179,11 +179,11 @@ export function Navbar() {
           </div>
 
           {/* CTA desktop */}
-          <div className="hidden lg:flex lg:flex-1 lg:justify-end lg:items-center lg:gap-4">
+          <div className="hidden lg:flex lg:flex-1 lg:justify-end lg:items-center lg:gap-3 xl:gap-4">
             <LanguageSelector />
             <Link
               href="#cursos"
-              className="rounded-lg bg-[#83A98A] px-4 py-1.5 text-sm font-semibold text-white shadow-sm hover:bg-[#6D8F75] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#83A98A] transition-colors"
+              className="rounded-lg bg-[#83A98A] px-3 xl:px-4 py-1.5 text-xs xl:text-sm font-semibold text-white shadow-sm hover:bg-[#6D8F75] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#83A98A] transition-colors whitespace-nowrap"
             >
               {t('navbar.learnMore')}
             </Link>

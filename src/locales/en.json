@@ -16,16 +16,16 @@
     "reset": "Reset"
   },
   "navbar": {
-    "about": "About Us",
+    "about": "About",
     "services": "Services",
     "courses": "Courses",
     "pricing": "Pricing",
-    "contact": "Contact Us",
+    "contact": "Contact",
     "learnMore": "Learn More",
     "findJob": "Find a Job",
-    "findInclusiveCompany": "Find an Inclusive Company",
+    "findInclusiveCompany": "Find Inclusive Company",
     "findInclusiveCompanyDesc": "Connect with companies committed to inclusion",
-    "becomeInterpreter": "Become an Interpreter",
+    "becomeInterpreter": "Become Interpreter",
     "becomeInterpreterDesc": "Join our network of professional interpreters",
     "openMenu": "Open menu",
     "closeMenu": "Close menu"

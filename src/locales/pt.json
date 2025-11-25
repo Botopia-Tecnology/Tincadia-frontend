@@ -16,16 +16,16 @@
     "reset": "Redefinir"
   },
   "navbar": {
-    "about": "Sobre Nós",
+    "about": "Sobre",
     "services": "Serviços",
     "courses": "Cursos",
     "pricing": "Preços",
-    "contact": "Entre em Contato",
+    "contact": "Contato",
     "learnMore": "Saiba Mais",
     "findJob": "Encontrar Trabalho",
-    "findInclusiveCompany": "Encontrar uma Empresa Inclusiva",
+    "findInclusiveCompany": "Empresa Inclusiva",
     "findInclusiveCompanyDesc": "Conecte-se com empresas comprometidas com a inclusão",
-    "becomeInterpreter": "Tornar-se um Intérprete",
+    "becomeInterpreter": "Ser Intérprete",
     "becomeInterpreterDesc": "Junte-se à nossa rede de intérpretes profissionais",
     "openMenu": "Abrir menu",
     "closeMenu": "Fechar menu"
