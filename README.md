@@ -15,15 +15,12 @@ Antes de comenzar, asegúrate de tener instalado:
 
 1. Clona el repositorio:
 ```bash
+git clone <url-del-repositorio>
+cd tincadia-front
+```
 
 2. Instala las dependencias:
 ```bash
-npm install
-# o
-yarn install
-# o
-pnpm install
-# o
 bun install
 ```
 
@@ -34,12 +31,6 @@ bun install
 Para ejecutar el servidor de desarrollo:
 
 ```bash
-npm run dev
-# o
-yarn dev
-# o
-pnpm dev
-# o
 bun dev
 ```
 
@@ -53,10 +44,10 @@ Para construir y ejecutar en modo producción:
 
 ```bash
 # Construir la aplicación
-npm run build
+bun run build
 
 # Iniciar el servidor de producción
-npm start
+bun start
 ```
 
 ### Linting
@@ -64,15 +55,15 @@ npm start
 Para ejecutar el linter y verificar el código:
 
 ```bash
-npm run lint
+bun run lint
 ```
 
 ## Scripts Disponibles
 
-- `npm run dev` - Inicia el servidor de desarrollo
-- `npm run build` - Construye la aplicación para producción
-- `npm run start` - Inicia el servidor de producción
-- `npm run lint` - Ejecuta el linter para verificar el código
+- `bun dev` - Inicia el servidor de desarrollo
+- `bun run build` - Construye la aplicación para producción
+- `bun start` - Inicia el servidor de producción
+- `bun run lint` - Ejecuta el linter para verificar el código
 
 
 
