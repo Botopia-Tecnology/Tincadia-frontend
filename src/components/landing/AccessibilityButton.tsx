@@ -11,6 +11,7 @@ import {
   MousePointer2,
   Pause,
 } from 'lucide-react';
+import { useTranslation } from '@/hooks/useTranslation';
 
 interface AccessibilityButtonProps {
   isRegistrationPanelOpen?: boolean;
@@ -110,6 +111,7 @@ export function AccessibilityButton({
   disableAnimations: propDisableAnimations,
   setDisableAnimations: propSetDisableAnimations
 }: AccessibilityButtonProps) {
+  const t = useTranslation();
   const [highContrast, setHighContrast] = useState(false);
   const [inverted, setInverted] = useState(false);
   const [grayscale, setGrayscale] = useState(false);
@@ -186,43 +188,43 @@ export function AccessibilityButton({
   );
 
   // Características de accesibilidad
-  const features: AccessibilityFeature[] = [
+  const features: AccessibilityFeature[] = useMemo(() => [
     {
       id: 'highContrast',
       icon: Sun,
-      label: 'Activar alto contraste',
+      label: t('accessibility.highContrast'),
       isActive: highContrast,
       onClick: () => setHighContrast(!highContrast),
     },
     {
       id: 'inverted',
       icon: Moon,
-      label: 'Invertir colores',
+      label: t('accessibility.invertColors'),
       isActive: inverted,
       onClick: () => setInverted(!inverted),
     },
     {
       id: 'grayscale',
       icon: Eye,
-      label: 'Activar escala de grises',
+      label: t('accessibility.grayscale'),
       isActive: grayscale,
       onClick: () => setGrayscale(!grayscale),
     },
     {
       id: 'largeCursor',
       icon: MousePointer2,
-      label: 'Cursor grande',
+      label: t('accessibility.largeCursor'),
       isActive: largeCursor,
       onClick: () => setLargeCursor(!largeCursor),
     },
     {
       id: 'disableAnimations',
       icon: Pause,
-      label: 'Desactivar animaciones',
+      label: t('accessibility.disableAnimations'),
       isActive: disableAnimations,
       onClick: () => setDisableAnimations(!disableAnimations),
     },
-  ];
+  ], [t, highContrast, inverted, grayscale, largeCursor, disableAnimations]);
 
 
   return (
@@ -247,20 +249,20 @@ export function AccessibilityButton({
         <ZoomButton
           icon={ZoomOut}
           onClick={decreaseZoom}
-          label="Disminuir tamaño de texto"
+          label={t('accessibility.decreaseText')}
           disabled={zoomLevel <= ZOOM_CONFIG.MIN}
           sizes={sizes}
         />
         <ZoomButton
           icon={RotateCcw}
           onClick={resetZoom}
-          label="Restablecer tamaño de texto"
+          label={t('accessibility.resetText')}
           sizes={sizes}
         />
         <ZoomButton
           icon={ZoomIn}
           onClick={increaseZoom}
-          label="Aumentar tamaño de texto"
+          label={t('accessibility.increaseText')}
           disabled={zoomLevel >= ZOOM_CONFIG.MAX}
           sizes={sizes}
         />

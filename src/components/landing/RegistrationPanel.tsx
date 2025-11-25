@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import { X, Facebook, Chrome } from 'lucide-react';
 import Link from 'next/link';
+import { useTranslation } from '@/hooks/useTranslation';
 
 interface RegistrationPanelProps {
   isOpen: boolean;
@@ -11,6 +12,7 @@ interface RegistrationPanelProps {
 }
 
 export function RegistrationPanel({ isOpen, onClose, initialEmail = '' }: RegistrationPanelProps) {
+  const t = useTranslation();
   // Si hay un email inicial, mostrar directamente el formulario completo
   const [email, setEmail] = useState('');
   const [showEmailForm, setShowEmailForm] = useState(false);
@@ -81,13 +83,13 @@ export function RegistrationPanel({ isOpen, onClose, initialEmail = '' }: Regist
     
     // Validar que las contraseñas coincidan
     if (formData.password !== formData.confirmPassword) {
-      alert('Las contraseñas no coinciden');
+      alert(t('registration.panel.passwordMismatch'));
       return;
     }
 
     // Validar que acepte las políticas
     if (!formData.aceptaPoliticas) {
-      alert('Debes aceptar las políticas de Tincadia');
+      alert(t('registration.panel.acceptPolicies') + ' ' + t('registration.panel.policiesLink'));
       return;
     }
 
@@ -121,7 +123,7 @@ export function RegistrationPanel({ isOpen, onClose, initialEmail = '' }: Regist
             <button
               onClick={handleClose}
               className="p-2 hover:bg-gray-100 rounded-full transition-colors"
-              aria-label="Cerrar panel de registro"
+              aria-label={t('registration.panel.closeLabel')}
             >
               <X className="w-6 h-6 text-gray-600" />
             </button>
@@ -134,7 +136,7 @@ export function RegistrationPanel({ isOpen, onClose, initialEmail = '' }: Regist
                 {/* Title */}
                 <div>
                   <h2 className="text-2xl font-bold text-gray-900 mb-8">
-                    Únete a TINCADIA y descubre nuestras soluciones
+                    {t('registration.panel.title')}
                   </h2>
                 </div>
 
@@ -146,7 +148,7 @@ export function RegistrationPanel({ isOpen, onClose, initialEmail = '' }: Regist
                       value={email}
                       onChange={(e) => setEmail(e.target.value)}
                       className="w-full bg-transparent text-lg text-gray-900 placeholder-gray-400 border-0 border-b border-gray-300 focus:outline-none focus:border-gray-900 transition-colors pb-2"
-                      placeholder="Escribe tu correo electrónico"
+                      placeholder={t('registration.panel.emailPlaceholder')}
                     />
                   </div>
 
@@ -160,7 +162,7 @@ export function RegistrationPanel({ isOpen, onClose, initialEmail = '' }: Regist
                     disabled={!email}
                     className="w-full bg-[#83A98A] text-white font-semibold py-4 px-6 rounded-full hover:bg-[#6D8F75] transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
                   >
-                    Continuar
+                    {t('registration.panel.continueButton')}
                     <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
                     </svg>
@@ -169,12 +171,12 @@ export function RegistrationPanel({ isOpen, onClose, initialEmail = '' }: Regist
 
                 {/* Social Login Options */}
                 <div className="pt-6">
-                  <p className="text-sm text-gray-500 text-center mb-4">o continúa con</p>
+                  <p className="text-sm text-gray-500 text-center mb-4">{t('registration.panel.orContinueWith')}</p>
                   <div className="flex gap-3">
                     <button
                       onClick={() => handleSocialLogin('facebook')}
                       className="flex-1 flex items-center justify-center px-3 py-3 bg-[#1877F2] text-white rounded-lg font-semibold hover:bg-[#166FE5] transition-colors"
-                      title="Continuar con Facebook"
+                      title={t('registration.panel.facebook')}
                     >
                       <Facebook className="w-5 h-5" />
                     </button>
@@ -182,7 +184,7 @@ export function RegistrationPanel({ isOpen, onClose, initialEmail = '' }: Regist
                     <button
                       onClick={() => handleSocialLogin('google')}
                       className="flex-1 flex items-center justify-center px-3 py-3 bg-white text-gray-900 border border-gray-300 rounded-lg font-semibold hover:bg-gray-50 transition-colors"
-                      title="Continuar con Google"
+                      title={t('registration.panel.google')}
                     >
                       <Chrome className="w-5 h-5" />
                     </button>
@@ -190,7 +192,7 @@ export function RegistrationPanel({ isOpen, onClose, initialEmail = '' }: Regist
                     <button
                       onClick={() => handleSocialLogin('microsoft')}
                       className="flex-1 flex items-center justify-center px-3 py-3 bg-white text-gray-900 border border-gray-300 rounded-lg font-semibold hover:bg-gray-50 transition-colors"
-                      title="Continuar con Microsoft"
+                      title={t('registration.panel.microsoft')}
                     >
                       <svg className="w-5 h-5" viewBox="0 0 23 23" fill="currentColor">
                         <path fill="#F25022" d="M0 0h11v11H0z"/>
@@ -206,7 +208,7 @@ export function RegistrationPanel({ isOpen, onClose, initialEmail = '' }: Regist
               <form onSubmit={handleEmailSubmit} className="space-y-6">
                 <div>
                   <h2 className="text-2xl font-bold text-gray-900 mb-6">
-                    Crea tu cuenta
+                    {t('registration.panel.createAccount')}
                   </h2>
                 </div>
 
@@ -218,7 +220,7 @@ export function RegistrationPanel({ isOpen, onClose, initialEmail = '' }: Regist
                     value={formData.nombre}
                     onChange={handleInputChange}
                     className="w-full bg-transparent text-lg text-gray-900 placeholder-gray-400 border-0 border-b border-gray-300 focus:outline-none focus:border-gray-900 transition-colors pb-2"
-                    placeholder="Nombre"
+                    placeholder={t('registration.panel.fullName')}
                     required
                   />
                 </div>
@@ -231,7 +233,7 @@ export function RegistrationPanel({ isOpen, onClose, initialEmail = '' }: Regist
                     value={formData.apellido}
                     onChange={handleInputChange}
                     className="w-full bg-transparent text-lg text-gray-900 placeholder-gray-400 border-0 border-b border-gray-300 focus:outline-none focus:border-gray-900 transition-colors pb-2"
-                    placeholder="Apellido"
+                    placeholder={t('registration.panel.lastName')}
                     required
                   />
                 </div>
@@ -245,7 +247,7 @@ export function RegistrationPanel({ isOpen, onClose, initialEmail = '' }: Regist
                     className="bg-transparent text-lg text-gray-900 border-0 border-b border-gray-300 focus:outline-none focus:border-gray-900 transition-colors pb-2"
                     required
                   >
-                    <option value="">Tipo</option>
+                    <option value="">{t('registration.panel.documentType')}</option>
                     <option value="cc">Cédula de Ciudadanía</option>
                     <option value="ce">Cédula de Extranjería</option>
                     <option value="pasaporte">Pasaporte</option>
@@ -257,7 +259,7 @@ export function RegistrationPanel({ isOpen, onClose, initialEmail = '' }: Regist
                     value={formData.numeroDocumento}
                     onChange={handleInputChange}
                     className="bg-transparent text-lg text-gray-900 placeholder-gray-400 border-0 border-b border-gray-300 focus:outline-none focus:border-gray-900 transition-colors pb-2"
-                    placeholder="Número"
+                    placeholder={t('registration.panel.documentNumber')}
                     required
                   />
                 </div>
@@ -270,7 +272,7 @@ export function RegistrationPanel({ isOpen, onClose, initialEmail = '' }: Regist
                     value={formData.telefono}
                     onChange={handleInputChange}
                     className="w-full bg-transparent text-lg text-gray-900 placeholder-gray-400 border-0 border-b border-gray-300 focus:outline-none focus:border-gray-900 transition-colors pb-2"
-                    placeholder="Teléfono"
+                    placeholder={t('registration.panel.phone')}
                     required
                   />
                 </div>
@@ -282,7 +284,7 @@ export function RegistrationPanel({ isOpen, onClose, initialEmail = '' }: Regist
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                     className="w-full bg-transparent text-lg text-gray-900 placeholder-gray-400 border-0 border-b border-gray-300 focus:outline-none focus:border-gray-900 transition-colors pb-2"
-                    placeholder="Correo electrónico"
+                    placeholder={t('registration.panel.email')}
                     required
                   />
                 </div>
@@ -295,7 +297,7 @@ export function RegistrationPanel({ isOpen, onClose, initialEmail = '' }: Regist
                     value={formData.password}
                     onChange={handleInputChange}
                     className="w-full bg-transparent text-lg text-gray-900 placeholder-gray-400 border-0 border-b border-gray-300 focus:outline-none focus:border-gray-900 transition-colors pb-2"
-                    placeholder="Contraseña"
+                    placeholder={t('registration.panel.password')}
                     required
                   />
                 </div>
@@ -312,11 +314,11 @@ export function RegistrationPanel({ isOpen, onClose, initialEmail = '' }: Regist
                         ? 'border-red-400 focus:border-red-500'
                         : 'border-gray-300 focus:border-gray-900'
                     }`}
-                    placeholder="Confirmar contraseña"
+                    placeholder={t('registration.panel.confirmPassword')}
                     required
                   />
                   {formData.confirmPassword && formData.password !== formData.confirmPassword && (
-                    <p className="text-sm text-red-500 mt-1">Las contraseñas no coinciden</p>
+                    <p className="text-sm text-red-500 mt-1">{t('registration.panel.passwordMismatch')}</p>
                   )}
                 </div>
 
@@ -332,13 +334,13 @@ export function RegistrationPanel({ isOpen, onClose, initialEmail = '' }: Regist
                     required
                   />
                   <label htmlFor="aceptaPoliticas" className="text-sm text-gray-700 cursor-pointer">
-                    Acepto las{' '}
+                    {t('registration.panel.acceptPolicies')}{' '}
                     <Link href="#politicas" className="text-[#83A98A] hover:underline">
-                      políticas de Tincadia
+                      {t('registration.panel.policiesLink')}
                     </Link>{' '}
-                    y el{' '}
+                    {t('registration.panel.andDataUsage')}{' '}
                     <Link href="#datos" className="text-[#83A98A] hover:underline">
-                      uso de datos personales
+                      {t('registration.panel.dataUsageLink')}
                     </Link>
                   </label>
                 </div>
@@ -347,7 +349,7 @@ export function RegistrationPanel({ isOpen, onClose, initialEmail = '' }: Regist
                   type="submit"
                   className="w-full bg-[#83A98A] text-white font-semibold py-4 px-6 rounded-full hover:bg-[#6D8F75] transition-colors flex items-center justify-center gap-2 mt-4"
                 >
-                  Crear cuenta
+                  {t('registration.panel.createAccountButton')}
                   <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
                   </svg>
@@ -358,7 +360,7 @@ export function RegistrationPanel({ isOpen, onClose, initialEmail = '' }: Regist
                   onClick={() => setShowEmailForm(false)}
                   className="w-full text-sm text-gray-600 hover:text-gray-900 transition-colors text-center"
                 >
-                  ← Volver
+                  ← {t('common.back')}
                 </button>
               </form>
             )}
@@ -366,13 +368,13 @@ export function RegistrationPanel({ isOpen, onClose, initialEmail = '' }: Regist
             {/* Terms - Solo mostrar si no está en el formulario completo */}
             {!showEmailForm && (
               <p className="mt-8 text-xs text-gray-500 text-center">
-                Al continuar, aceptas nuestros{' '}
+                {t('registration.panel.terms')}{' '}
                 <Link href="#terminos" className="text-[#83A98A] hover:underline">
-                  Términos de servicio
+                  {t('registration.panel.termsLink')}
                 </Link>{' '}
-                y{' '}
+                {t('registration.panel.and')}{' '}
                 <Link href="#privacidad" className="text-[#83A98A] hover:underline">
-                  Política de privacidad
+                  {t('registration.panel.privacyLink')}
                 </Link>
               </p>
             )}

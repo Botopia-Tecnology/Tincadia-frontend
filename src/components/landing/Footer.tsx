@@ -13,8 +13,10 @@ import {
   Youtube,
 
 } from 'lucide-react';
+import { useTranslation } from '@/hooks/useTranslation';
 
 export function Footer() {
+  const t = useTranslation();
   return (
     <footer className="bg-white/30 backdrop-blur-sm border-t border-gray-200">
       <div className="mx-auto max-w-7xl px-6 lg:px-8 py-12 lg:py-16">
@@ -34,13 +36,12 @@ export function Footer() {
             </Link>
 
             <p className="text-sm text-gray-600">
-              Creando soluciones de tecnología inclusiva para conectar personas,
-              empresas y organizaciones.
+              {t('footer.description')}
             </p>
 
             <div className="mt-6">
               <p className="text-sm font-semibold text-gray-900 mb-3">
-                Descárgala gratis
+                {t('footer.downloadFree')}
               </p>
               <div className="space-y-3">
                 {/* Google Play */}
@@ -59,10 +60,10 @@ export function Footer() {
                   </div>
                   <div className="flex flex-col leading-tight">
                     <span className="text-[10px] uppercase tracking-wide text-gray-500">
-                      Get it on
+                      {t('footer.getItOn')}
                     </span>
                     <span className="text-sm font-semibold text-gray-900">
-                      Google Play
+                      {t('footer.googlePlay')}
                     </span>
                   </div>
                 </button>
@@ -83,17 +84,16 @@ export function Footer() {
                   </div>
                   <div className="flex flex-col leading-tight">
                     <span className="text-[10px] uppercase tracking-wide text-gray-500">
-                      Download on the
+                      {t('footer.downloadOnThe')}
                     </span>
                     <span className="text-sm font-semibold text-gray-900">
-                      App Store
+                      {t('footer.appStore')}
                     </span>
                   </div>
                 </button>
               </div>
               <p className="mt-3 text-xs text-gray-500">
-                Actualmente en actualización y desarrollo. Lanzamiento de la
-                nueva versión próximamente.
+                {t('footer.comingSoon')}
               </p>
             </div>
           </div>
@@ -101,23 +101,21 @@ export function Footer() {
           {/* Columna 2: Servicio / TINCADIA / Para negocios */}
           <div>
             <h3 className="text-sm font-semibold text-gray-900 uppercase tracking-wider mb-4">
-              Servicio
+              {t('footer.service')}
             </h3>
             <ul className="space-y-2 text-sm text-gray-600">
-              <li className="font-semibold text-gray-900">TINCADIA</li>
+              <li className="font-semibold text-gray-900">{t('footer.tincadia')}</li>
               <li>
-                Plataforma para conectar personas sordas, oyentes y
-                organizaciones a través de tecnología inclusiva.
+                {t('footer.tincadiaDesc')}
               </li>
             </ul>
 
             <div className="mt-6">
               <h4 className="text-sm font-semibold text-gray-900 uppercase tracking-wider mb-2">
-                Para negocios
+                {t('footer.forBusiness')}
               </h4>
               <p className="text-sm text-gray-600">
-                Soluciones para empresas, entidades educativas y
-                organizaciones que buscan hacer sus servicios más accesibles.
+                {t('footer.forBusinessDesc')}
               </p>
             </div>
           </div>
@@ -125,13 +123,13 @@ export function Footer() {
           {/* Columna 3: Contacto + Sitio web */}
           <div>
             <h3 className="text-sm font-semibold text-gray-900 uppercase tracking-wider mb-4">
-              Contacto
+              {t('footer.contact')}
             </h3>
             <div className="space-y-3 text-sm text-gray-600">
               <div className="flex items-start gap-2">
                 <Mail className="w-4 h-4 mt-0.5 text-[#83A98A]" />
                 <div>
-                  <p className="font-semibold text-gray-900">Correo</p>
+                  <p className="font-semibold text-gray-900">{t('footer.email')}</p>
                   <a
                     href="mailto:contacto@tincadia.com"
                     className="hover:text-[#83A98A] transition-colors"
@@ -144,11 +142,10 @@ export function Footer() {
               <div className="flex items-start gap-2">
                 <Globe className="w-4 h-4 mt-0.5 text-[#83A98A]" />
                 <div>
-                  <p className="font-semibold text-gray-900">Sitio web</p>
+                  <p className="font-semibold text-gray-900">{t('footer.website')}</p>
                   <p className="text-gray-700">www.tincadia.com</p>
                   <p className="mt-1 text-xs text-gray-500">
-                    Actualmente en actualización y desarrollo. Lanzamiento de la
-                    nueva versión próximamente.
+                    {t('footer.comingSoon')}
                   </p>
                 </div>
               </div>
@@ -158,7 +155,7 @@ export function Footer() {
           {/* Columna 4: Síguenos en redes */}
           <div>
             <h3 className="text-sm font-semibold text-gray-900 uppercase tracking-wider mb-4">
-              Síguenos en redes
+              {t('footer.followUs')}
             </h3>
 
             <div className="space-y-4 text-sm text-gray-600">
@@ -171,10 +168,9 @@ export function Footer() {
               >
                 <Linkedin className="w-5 h-5 mt-0.5 text-[#83A98A]" />
                 <div>
-                  <p className="font-semibold text-gray-900">LinkedIn</p>
+                  <p className="font-semibold text-gray-900">{t('footer.linkedin')}</p>
                   <p className="text-xs">
-                    Publicaciones sobre innovación, emprendimiento inclusivo y
-                    participación en eventos nacionales.
+                    {t('footer.linkedinDesc')}
                   </p>
                 </div>
               </a>
@@ -188,10 +184,9 @@ export function Footer() {
               >
                 <Instagram className="w-5 h-5 mt-0.5 text-[#83A98A]" />
                 <div>
-                  <p className="font-semibold text-gray-900">Instagram</p>
+                  <p className="font-semibold text-gray-900">{t('footer.instagram')}</p>
                   <p className="text-xs">
-                    Contenido visual sobre proyectos, capacitaciones y avances
-                    del equipo TINCADIA.
+                    {t('footer.instagramDesc')}
                   </p>
                 </div>
               </a>
@@ -205,10 +200,9 @@ export function Footer() {
               >
                 <Facebook className="w-5 h-5 mt-0.5 text-[#83A98A]" />
                 <div>
-                  <p className="font-semibold text-gray-900">Facebook</p>
+                  <p className="font-semibold text-gray-900">{t('footer.facebook')}</p>
                   <p className="text-xs">
-                    Difusión de actividades, convocatorias y colaboraciones con
-                    entidades aliadas.
+                    {t('footer.facebookDesc')}
                   </p>
                 </div>
               </a>
@@ -222,10 +216,9 @@ export function Footer() {
               >
                 <Twitter className="w-5 h-5 mt-0.5 text-[#83A98A]" />
                 <div>
-                  <p className="font-semibold text-gray-900">X (Twitter)</p>
+                  <p className="font-semibold text-gray-900">{t('footer.twitter')}</p>
                   <p className="text-xs">
-                    Noticias y actualizaciones breves sobre accesibilidad e
-                    innovación tecnológica.
+                    {t('footer.twitterDesc')}
                   </p>
                 </div>
               </a>
@@ -240,11 +233,10 @@ export function Footer() {
                 <MessageCircle className="w-5 h-5 mt-0.5 text-[#83A98A]" />
                 <div>
                   <p className="font-semibold text-gray-900">
-                    Canal de WhatsApp
+                    {t('footer.whatsapp')}
                   </p>
                   <p className="text-xs">
-                    Canal oficial para información, eventos y novedades de
-                    TINCADIA.
+                    {t('footer.whatsappDesc')}
                   </p>
                 </div>
               </a>
@@ -258,10 +250,9 @@ export function Footer() {
               >
                 <Youtube className="w-5 h-5 mt-0.5 text-[#83A98A]" />
                 <div>
-                  <p className="font-semibold text-gray-900">YouTube</p>
+                  <p className="font-semibold text-gray-900">{t('footer.youtube')}</p>
                   <p className="text-xs">
-                    Videos sobre inclusión, accesibilidad y testimonios de
-                    impacto.
+                    {t('footer.youtubeDesc')}
                   </p>
                 </div>
               </a>
@@ -293,7 +284,7 @@ export function Footer() {
         {/* Línea divisoria y footer inferior */}
         <div className="mt-12 pt-8 border-t border-gray-200">
           <p className="text-xs sm:text-sm text-gray-600 text-center">
-            © 2025 TINCADIA. Todos los derechos reservados.
+            {t('footer.copyright')}
           </p>
         </div>
       </div>

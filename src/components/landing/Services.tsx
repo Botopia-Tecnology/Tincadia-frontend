@@ -1,43 +1,48 @@
+'use client';
+
 import Link from 'next/link';
 import { GraduationCap, Languages, PenTool } from 'lucide-react';
-
-const services = [
-  {
-    id: 'clases-lengua-senas',
-    icon: GraduationCap,
-    badge: 'Welcome to class!',
-    title: 'Aprende Lengua de Señas',
-    subtitle: 'Clases guiadas por expertos',
-    description: 'Capacítate en Lengua de Señas Colombiana (LSC) sesiones didácticas, inclusivas y 100% prácticas.',
-    primaryAction: { text: 'Agendar clase', href: '#agendar' },
-    secondaryAction: { text: 'Más información', href: '#info-clases' },
-    bgColor: 'bg-orange-100',
-  },
-  {
-    id: 'traductor-senas',
-    icon: Languages,
-    badge: 'Tu celular interpretando señas',
-    title: 'Traducción en tiempo real',
-    subtitle: 'De señas a texto o voz',
-    description: 'Una app intérprete de Lengua de Señas en tiempo real convirtiendo en texto o voz, comunicación real',
-    primaryAction: { text: 'Probar ahora', href: '#probar-traductor' },
-    secondaryAction: { text: 'Ver demo', href: '#demo' },
-    bgColor: 'bg-teal-100',
-  },
-  {
-    id: 'asistente-redaccion',
-    icon: PenTool,
-    badge: 'Redacción asistida por IA',
-    title: 'Asistente de redacción inclusiva',
-    subtitle: 'Comunica tus ideas con claridad',
-    description: 'Escribe mensajes profesionales, claros y accesibles con apoyo de IA.',
-    primaryAction: { text: 'Usar asistente', href: '#usar-asistente' },
-    secondaryAction: { text: 'Cómo funciona', href: '#como-funciona' },
-    bgColor: 'bg-amber-100',
-  },
-];
+import { useTranslation } from '@/hooks/useTranslation';
+import { useMemo } from 'react';
 
 export function Services() {
+  const t = useTranslation();
+  
+  const services = useMemo(() => [
+    {
+      id: 'clases-lengua-senas',
+      icon: GraduationCap,
+      badge: t('services.signLanguage.badge'),
+      title: t('services.signLanguage.title'),
+      subtitle: t('services.signLanguage.subtitle'),
+      description: t('services.signLanguage.description'),
+      primaryAction: { text: t('services.signLanguage.primaryAction'), href: '#agendar' },
+      secondaryAction: { text: t('services.signLanguage.secondaryAction'), href: '#info-clases' },
+      bgColor: 'bg-orange-100',
+    },
+    {
+      id: 'traductor-senas',
+      icon: Languages,
+      badge: t('services.translator.badge'),
+      title: t('services.translator.title'),
+      subtitle: t('services.translator.subtitle'),
+      description: t('services.translator.description'),
+      primaryAction: { text: t('services.translator.primaryAction'), href: '#probar-traductor' },
+      secondaryAction: { text: t('services.translator.secondaryAction'), href: '#demo' },
+      bgColor: 'bg-teal-100',
+    },
+    {
+      id: 'asistente-redaccion',
+      icon: PenTool,
+      badge: t('services.writingAssistant.badge'),
+      title: t('services.writingAssistant.title'),
+      subtitle: t('services.writingAssistant.subtitle'),
+      description: t('services.writingAssistant.description'),
+      primaryAction: { text: t('services.writingAssistant.primaryAction'), href: '#usar-asistente' },
+      secondaryAction: { text: t('services.writingAssistant.secondaryAction'), href: '#como-funciona' },
+      bgColor: 'bg-amber-100',
+    },
+  ], [t]);
   return (
     <section
       className="py-12 lg:py-16 bg-transparent"
@@ -50,11 +55,10 @@ export function Services() {
             id="services-heading"
             className="text-3xl sm:text-4xl lg:text-5xl font-bold text-gray-900 mb-6 tracking-tight"
           >
-            Nuestros Servicios
+            {t('services.title')}
           </h2>
           <p className="text-lg text-gray-600 max-w-3xl mx-auto">
-            Ofrecemos soluciones integrales para hacer que la tecnología sea accesible para todas las
-            personas, independientemente de sus capacidades.
+            {t('services.subtitle')}
           </p>
         </div>
 

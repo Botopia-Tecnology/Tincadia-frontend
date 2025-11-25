@@ -1,39 +1,44 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import { UserPlus, ShieldCheck, Zap } from 'lucide-react';
-
-const steps = [
-  {
-    id: 1,
-    title: 'Crea tu Perfil',
-    description: 'Regístrate como solicitante de empleo o intérprete y cuéntanos tus metas.',
-    icon: UserPlus,
-    color: 'from-[#83A98A] to-[#6D8F75]',
-    bgColor: 'bg-[#83A98A]/10',
-    hoverBgColor: 'hover:bg-[#83A98A]/20',
-  },
-  {
-    id: 2,
-    title: 'Verifícate',
-    description: 'Completa nuestro proceso de verificación para garantizar una comunidad segura.',
-    icon: ShieldCheck,
-    color: 'from-[#83A98A] to-[#6D8F75]',
-    bgColor: 'bg-[#83A98A]/10',
-    hoverBgColor: 'hover:bg-[#83A98A]/20',
-  },
-  {
-    id: 3,
-    title: 'Empieza a Conectar',
-    description: 'Aplica a trabajos, ofrece servicios de interpretación y rompe barreras.',
-    icon: Zap,
-    color: 'from-[#83A98A] to-[#6D8F75]',
-    bgColor: 'bg-[#83A98A]/10',
-    hoverBgColor: 'hover:bg-[#83A98A]/20',
-  },
-];
+import { useTranslation } from '@/hooks/useTranslation';
 
 export function HowItWorks() {
+  const t = useTranslation();
+  
+  const steps = useMemo(() => {
+    const stepsData = t('howItWorks.steps') as unknown as Array<{ title: string; description: string }>;
+    return [
+      {
+        id: 1,
+        title: stepsData[0].title,
+        description: stepsData[0].description,
+        icon: UserPlus,
+        color: 'from-[#83A98A] to-[#6D8F75]',
+        bgColor: 'bg-[#83A98A]/10',
+        hoverBgColor: 'hover:bg-[#83A98A]/20',
+      },
+      {
+        id: 2,
+        title: stepsData[1].title,
+        description: stepsData[1].description,
+        icon: ShieldCheck,
+        color: 'from-[#83A98A] to-[#6D8F75]',
+        bgColor: 'bg-[#83A98A]/10',
+        hoverBgColor: 'hover:bg-[#83A98A]/20',
+      },
+      {
+        id: 3,
+        title: stepsData[2].title,
+        description: stepsData[2].description,
+        icon: Zap,
+        color: 'from-[#83A98A] to-[#6D8F75]',
+        bgColor: 'bg-[#83A98A]/10',
+        hoverBgColor: 'hover:bg-[#83A98A]/20',
+      },
+    ];
+  }, [t]);
   const [activeStep, setActiveStep] = useState<number | null>(null);
   const [hoveredStep, setHoveredStep] = useState<number | null>(null);
 
@@ -63,11 +68,11 @@ export function HowItWorks() {
             id="how-it-works-heading"
             className="text-3xl sm:text-4xl lg:text-5xl font-bold text-gray-900 mb-4 tracking-tight"
           >
-            Comienza en{' '}
-            <span className="text-[#83A98A]">3 Simples Pasos</span>
+            {t('howItWorks.title')}{' '}
+            <span className="text-[#83A98A]">{t('howItWorks.titleHighlight')}</span>
           </h2>
           <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-            Unirte a nuestra comunidad es rápido y fácil.
+            {t('howItWorks.subtitle')}
           </p>
         </div>
 

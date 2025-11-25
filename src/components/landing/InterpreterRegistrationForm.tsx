@@ -1,7 +1,8 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import { Upload, FileText } from 'lucide-react';
+import { useTranslation } from '@/hooks/useTranslation';
 
 interface InterpreterFormData {
   // Información básica
@@ -34,51 +35,16 @@ interface InterpreterFormData {
   autorizaInclusion: 'si' | 'no' | '';
 }
 
-const nivelesAcademicos = [
-  'Bachiller académico',
-  'Profesional (indique título recibido)',
-  'Posgrado (indique título recibido)',
-  'Certificado por FENASCOL (indique nivel)',
-  'Estudiante de pregrado (indique carrera)',
-  'Técnico (indique título)',
-  'Tecnólogo (indique título)',
-];
-
-const nivelesExperiencia = [
-  'Principiante (0–1 año)',
-  'Intermedio (1–3 años)',
-  'Avanzado (3–5 años)',
-  'Profesional (+5 años)',
-];
-
-const areasEspecialidad = [
-  'Educación',
-  'Medicina',
-  'Jurídico',
-  'Emprendimiento / negocios',
-  'Comunidad sorda',
-  'Tecnología',
-  'Eventos',
-  'Otro',
-];
-
-const disponibilidadesHorarias = [
-  'Mañana',
-  'Tarde',
-  'Noche',
-  'Fines de semana',
-  '24/7',
-];
-
-const tiposServicio = [
-  'Interpretación presencial',
-  'Interpretación virtual',
-  'Traducción de videos',
-  'Tutorías de LSC',
-  'Otros',
-];
 
 export function InterpreterRegistrationForm() {
+  const t = useTranslation();
+  
+  const nivelesAcademicos = useMemo(() => t('forms.interpreter.academicLevels') as string[], [t]);
+  const nivelesExperiencia = useMemo(() => t('forms.interpreter.experienceLevels') as string[], [t]);
+  const areasEspecialidad = useMemo(() => t('forms.interpreter.specialtyAreas') as string[], [t]);
+  const disponibilidadesHorarias = useMemo(() => t('forms.interpreter.availability') as string[], [t]);
+  const tiposServicio = useMemo(() => t('forms.interpreter.serviceTypes') as string[], [t]);
+  
   const [formData, setFormData] = useState<InterpreterFormData>({
     nombreCompleto: '',
     documentoIdentidad: '',
@@ -133,10 +99,10 @@ export function InterpreterRegistrationForm() {
     <div className="bg-white rounded-2xl shadow-xl p-8 lg:p-10">
       <div className="mb-8">
         <h2 className="text-2xl lg:text-3xl font-bold text-gray-900 mb-3">
-          Formulario — Registro de Intérpretes de Lengua de Señas
+          {t('registration.interpreterForm.formTitle')}
         </h2>
         <p className="text-gray-600">
-          Completa todos los campos para formar parte de nuestra red de intérpretes profesionales.
+          {t('registration.interpreterForm.formDescription')}
         </p>
       </div>
 
@@ -144,7 +110,7 @@ export function InterpreterRegistrationForm() {
         {/* 1. Nombre completo */}
         <div>
           <label htmlFor="nombreCompleto" className="block text-sm font-semibold text-gray-700 mb-2">
-            1. Nombre completo <span className="text-red-500">*</span>
+            1. {t('forms.interpreter.fields.fullName')} <span className="text-red-500">{t('forms.common.required')}</span>
           </label>
           <input
             id="nombreCompleto"
@@ -160,7 +126,7 @@ export function InterpreterRegistrationForm() {
         {/* 2. Documento de identidad */}
         <div>
           <label htmlFor="documentoIdentidad" className="block text-sm font-semibold text-gray-700 mb-2">
-            2. Documento de identidad <span className="text-red-500">*</span>
+            2. {t('forms.interpreter.fields.documentId')} <span className="text-red-500">{t('forms.common.required')}</span>
           </label>
           <input
             id="documentoIdentidad"
@@ -176,7 +142,7 @@ export function InterpreterRegistrationForm() {
         {/* 3. Ciudad de residencia */}
         <div>
           <label htmlFor="ciudadResidencia" className="block text-sm font-semibold text-gray-700 mb-2">
-            3. Ciudad de residencia <span className="text-red-500">*</span>
+            3. {t('forms.interpreter.fields.city')} <span className="text-red-500">{t('forms.common.required')}</span>
           </label>
           <input
             id="ciudadResidencia"
@@ -192,7 +158,7 @@ export function InterpreterRegistrationForm() {
         {/* 4. Teléfono / WhatsApp */}
         <div>
           <label htmlFor="telefonoWhatsapp" className="block text-sm font-semibold text-gray-700 mb-2">
-            4. Teléfono / WhatsApp <span className="text-red-500">*</span>
+            4. {t('forms.interpreter.fields.phone')} <span className="text-red-500">{t('forms.common.required')}</span>
           </label>
           <input
             id="telefonoWhatsapp"
@@ -208,7 +174,7 @@ export function InterpreterRegistrationForm() {
         {/* 5. Correo electrónico */}
         <div>
           <label htmlFor="correoElectronico" className="block text-sm font-semibold text-gray-700 mb-2">
-            5. Correo electrónico <span className="text-red-500">*</span>
+            5. {t('forms.interpreter.fields.email')} <span className="text-red-500">{t('forms.common.required')}</span>
           </label>
           <input
             id="correoElectronico"
@@ -224,7 +190,7 @@ export function InterpreterRegistrationForm() {
         {/* 6. ¿Eres intérprete certificado? */}
         <div>
           <label className="block text-sm font-semibold text-gray-700 mb-3">
-            6. ¿Eres intérprete certificado? <span className="text-red-500">*</span>
+            6. {t('forms.interpreter.fields.isCertified')} <span className="text-red-500">{t('forms.common.required')}</span>
           </label>
           <div className="flex gap-6">
             <label className="flex items-center gap-2 cursor-pointer">
@@ -237,7 +203,7 @@ export function InterpreterRegistrationForm() {
                 className="w-4 h-4 text-[#83A98A] focus:ring-[#83A98A]"
                 required
               />
-              <span className="text-gray-700">Sí</span>
+              <span className="text-gray-700">{t('forms.common.yes')}</span>
             </label>
             <label className="flex items-center gap-2 cursor-pointer">
               <input
@@ -249,7 +215,7 @@ export function InterpreterRegistrationForm() {
                 className="w-4 h-4 text-[#83A98A] focus:ring-[#83A98A]"
                 required
               />
-              <span className="text-gray-700">No</span>
+              <span className="text-gray-700">{t('forms.common.no')}</span>
             </label>
           </div>
         </div>
@@ -257,7 +223,7 @@ export function InterpreterRegistrationForm() {
         {/* 7. Nivel académico */}
         <div>
           <label htmlFor="nivelAcademico" className="block text-sm font-semibold text-gray-700 mb-2">
-            7. Indique nivel académico alcanzado <span className="text-red-500">*</span>
+            7. {t('forms.interpreter.fields.academicLevel')} <span className="text-red-500">{t('forms.common.required')}</span>
           </label>
           <select
             id="nivelAcademico"
@@ -267,7 +233,7 @@ export function InterpreterRegistrationForm() {
             className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#83A98A] focus:border-transparent"
             required
           >
-            <option value="">Seleccione una opción</option>
+            <option value="">{t('forms.common.selectOption')}</option>
             {nivelesAcademicos.map((nivel) => (
               <option key={nivel} value={nivel}>
                 {nivel}
@@ -282,7 +248,7 @@ export function InterpreterRegistrationForm() {
               name="nivelAcademicoDetalle"
               value={formData.nivelAcademicoDetalle}
               onChange={handleInputChange}
-              placeholder="Especifique el título, nivel o carrera"
+              placeholder={t('forms.interpreter.fields.academicDetail')}
               className="w-full mt-3 px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#83A98A] focus:border-transparent"
               required
             />
@@ -292,7 +258,7 @@ export function InterpreterRegistrationForm() {
         {/* 8. Nivel de experiencia */}
         <div>
           <label htmlFor="nivelExperiencia" className="block text-sm font-semibold text-gray-700 mb-2">
-            8. Nivel de experiencia <span className="text-red-500">*</span>
+            8. {t('forms.interpreter.fields.experienceLevel')} <span className="text-red-500">{t('forms.common.required')}</span>
           </label>
           <select
             id="nivelExperiencia"
@@ -302,7 +268,7 @@ export function InterpreterRegistrationForm() {
             className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#83A98A] focus:border-transparent"
             required
           >
-            <option value="">Seleccione una opción</option>
+            <option value="">{t('forms.common.selectOption')}</option>
             {nivelesExperiencia.map((nivel) => (
               <option key={nivel} value={nivel}>
                 {nivel}
@@ -314,7 +280,7 @@ export function InterpreterRegistrationForm() {
         {/* 9. Áreas de especialidad */}
         <div>
           <label className="block text-sm font-semibold text-gray-700 mb-3">
-            9. Áreas de especialidad (selección múltiple) <span className="text-red-500">*</span>
+            9. {t('forms.interpreter.fields.specialtyAreas')} <span className="text-red-500">{t('forms.common.required')}</span>
           </label>
           <div className="space-y-2">
             {areasEspecialidad.map((area) => (
@@ -329,12 +295,12 @@ export function InterpreterRegistrationForm() {
               </label>
             ))}
           </div>
-          {formData.areasEspecialidad.includes('Otro') && (
+          {formData.areasEspecialidad.includes(areasEspecialidad[areasEspecialidad.length - 1]) && (
             <input
               type="text"
               value={otraAreaEspecialidad}
               onChange={(e) => setOtraAreaEspecialidad(e.target.value)}
-              placeholder="Especifique otra área"
+              placeholder={t('forms.interpreter.fields.specifyOtherArea')}
               className="w-full mt-3 px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#83A98A] focus:border-transparent"
             />
           )}
@@ -343,7 +309,7 @@ export function InterpreterRegistrationForm() {
         {/* 10. Disponibilidad horaria */}
         <div>
           <label className="block text-sm font-semibold text-gray-700 mb-3">
-            10. Disponibilidad horaria <span className="text-red-500">*</span>
+            10. {t('forms.interpreter.fields.availability')} <span className="text-red-500">{t('forms.common.required')}</span>
           </label>
           <div className="space-y-2">
             {disponibilidadesHorarias.map((disponibilidad) => (
@@ -363,7 +329,7 @@ export function InterpreterRegistrationForm() {
         {/* 11. Tipo de servicio */}
         <div>
           <label className="block text-sm font-semibold text-gray-700 mb-3">
-            11. Tipo de servicio que ofrece (selección múltiple) <span className="text-red-500">*</span>
+            11. {t('forms.interpreter.fields.serviceType')} <span className="text-red-500">{t('forms.common.required')}</span>
           </label>
           <div className="space-y-2">
             {tiposServicio.map((tipo) => (
@@ -378,12 +344,12 @@ export function InterpreterRegistrationForm() {
               </label>
             ))}
           </div>
-          {formData.tipoServicio.includes('Otros') && (
+          {formData.tipoServicio.includes(tiposServicio[tiposServicio.length - 1]) && (
             <input
               type="text"
               value={otroTipoServicio}
               onChange={(e) => setOtroTipoServicio(e.target.value)}
-              placeholder="Especifique otro tipo de servicio"
+              placeholder={t('forms.interpreter.fields.specifyOtherService')}
               className="w-full mt-3 px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#83A98A] focus:border-transparent"
             />
           )}
@@ -392,7 +358,7 @@ export function InterpreterRegistrationForm() {
         {/* 12. Tarifas por hora */}
         <div>
           <label htmlFor="tarifasPorHora" className="block text-sm font-semibold text-gray-700 mb-2">
-            12. Tarifas por hora <span className="text-red-500">*</span>
+            12. {t('forms.interpreter.fields.hourlyRates')} <span className="text-red-500">{t('forms.common.required')}</span>
           </label>
           <input
             id="tarifasPorHora"
@@ -400,7 +366,7 @@ export function InterpreterRegistrationForm() {
             type="text"
             value={formData.tarifasPorHora}
             onChange={handleInputChange}
-            placeholder="Ej: $50.000 COP"
+            placeholder={t('forms.interpreter.fields.ratesPlaceholder')}
             className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#83A98A] focus:border-transparent"
             required
           />
@@ -409,7 +375,7 @@ export function InterpreterRegistrationForm() {
         {/* 13. Hoja de vida (PDF) */}
         <div>
           <label className="block text-sm font-semibold text-gray-700 mb-2">
-            13. Hoja de vida (PDF) <span className="text-red-500">*</span>
+            13. {t('forms.interpreter.fields.uploadCV')} <span className="text-red-500">{t('forms.common.required')}</span>
           </label>
           <div className="relative">
             <input
@@ -426,7 +392,7 @@ export function InterpreterRegistrationForm() {
             >
               <FileText className="w-5 h-5 text-gray-400 group-hover:text-[#83A98A]" />
               <span className="text-sm text-gray-600 group-hover:text-[#83A98A]">
-                {formData.hojaVida ? formData.hojaVida.name : 'Seleccionar archivo PDF'}
+                {formData.hojaVida ? formData.hojaVida.name : t('forms.interpreter.fields.selectFilePDF')}
               </span>
             </label>
           </div>
@@ -435,7 +401,7 @@ export function InterpreterRegistrationForm() {
         {/* 14. Certificaciones (opcional) */}
         <div>
           <label className="block text-sm font-semibold text-gray-700 mb-2">
-            14. Certificaciones (opcional)
+            14. {t('forms.interpreter.fields.certifications')}
           </label>
           <div className="relative">
             <input
@@ -453,7 +419,7 @@ export function InterpreterRegistrationForm() {
               <span className="text-sm text-gray-600 group-hover:text-[#83A98A]">
                 {formData.certificaciones
                   ? formData.certificaciones.name
-                  : 'Seleccionar archivo (PDF, JPG, PNG)'}
+                  : t('forms.interpreter.fields.selectFileCert')}
               </span>
             </label>
           </div>
@@ -462,7 +428,7 @@ export function InterpreterRegistrationForm() {
         {/* 15. Redes sociales o portafolio */}
         <div>
           <label htmlFor="redesSocialesPortafolio" className="block text-sm font-semibold text-gray-700 mb-2">
-            15. Redes sociales o portafolio
+            15. {t('forms.interpreter.fields.socialMedia')}
           </label>
           <input
             id="redesSocialesPortafolio"
@@ -470,7 +436,7 @@ export function InterpreterRegistrationForm() {
             type="url"
             value={formData.redesSocialesPortafolio}
             onChange={handleInputChange}
-            placeholder="https://..."
+            placeholder={t('forms.interpreter.fields.socialPlaceholder')}
             className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#83A98A] focus:border-transparent"
           />
         </div>
@@ -478,8 +444,8 @@ export function InterpreterRegistrationForm() {
         {/* 16. Autorización */}
         <div>
           <label className="block text-sm font-semibold text-gray-700 mb-3">
-            16. Autorizo a TINCADIA a incluirme en la base de datos y contactarme laboralmente{' '}
-            <span className="text-red-500">*</span>
+            16. {t('forms.interpreter.fields.authorization')}{' '}
+            <span className="text-red-500">{t('forms.common.required')}</span>
           </label>
           <div className="flex gap-6">
             <label className="flex items-center gap-2 cursor-pointer">
@@ -492,7 +458,7 @@ export function InterpreterRegistrationForm() {
                 className="w-4 h-4 text-[#83A98A] focus:ring-[#83A98A]"
                 required
               />
-              <span className="text-gray-700">Sí</span>
+              <span className="text-gray-700">{t('forms.common.yes')}</span>
             </label>
             <label className="flex items-center gap-2 cursor-pointer">
               <input
@@ -504,7 +470,7 @@ export function InterpreterRegistrationForm() {
                 className="w-4 h-4 text-[#83A98A] focus:ring-[#83A98A]"
                 required
               />
-              <span className="text-gray-700">No</span>
+              <span className="text-gray-700">{t('forms.common.no')}</span>
             </label>
           </div>
         </div>
@@ -514,7 +480,7 @@ export function InterpreterRegistrationForm() {
           type="submit"
           className="w-full bg-[#83A98A] text-white font-semibold py-3.5 px-6 rounded-lg hover:bg-[#6D8F75] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#83A98A] transition-all duration-300 shadow-lg hover:shadow-xl mt-8"
         >
-          Enviar Formulario
+          {t('registration.interpreterForm.submitForm')}
         </button>
       </form>
     </div>

@@ -1,7 +1,8 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import { FileText } from 'lucide-react';
+import { useTranslation } from '@/hooks/useTranslation';
 
 interface JobSeekerFormData {
   // Información básica
@@ -33,44 +34,15 @@ interface JobSeekerFormData {
   autorizaTratamientoDatos: 'si' | 'no' | '';
 }
 
-const tiposDiscapacidad = [
-  'Sorda',
-  'Hipoacusia',
-  'Visual',
-  'Física',
-  'Intelectual',
-  'Psicosocial',
-  'No tengo discapacidad',
-];
-
-const nivelesLSC = [
-  'Sí, fluido',
-  'Básico',
-  'No',
-];
-
-const nivelesEducativos = [
-  'Bachiller',
-  'Técnico',
-  'Tecnólogo',
-  'Profesional',
-  'Posgrado',
-  'En curso',
-];
-
-const areasLaborales = [
-  'Atención al cliente',
-  'Tecnología',
-  'Auxiliar administrativo',
-  'Producción',
-  'Marketing',
-  'Educación',
-  'Servicios generales',
-  'Logística',
-  'Otros',
-];
 
 export function JobSeekerRegistrationForm() {
+  const t = useTranslation();
+  
+  const tiposDiscapacidad = useMemo(() => t('forms.jobSeeker.disabilityTypes') as string[], [t]);
+  const nivelesLSC = useMemo(() => t('forms.jobSeeker.lscLevels') as string[], [t]);
+  const nivelesEducativos = useMemo(() => t('forms.jobSeeker.educationLevels') as string[], [t]);
+  const areasLaborales = useMemo(() => t('forms.jobSeeker.workAreas') as string[], [t]);
+  
   const [formData, setFormData] = useState<JobSeekerFormData>({
     nombreCompleto: '',
     documentoIdentidad: '',
@@ -123,10 +95,10 @@ export function JobSeekerRegistrationForm() {
     <div className="bg-white rounded-2xl shadow-xl p-8 lg:p-10">
       <div className="mb-8">
         <h2 className="text-2xl lg:text-3xl font-bold text-gray-900 mb-3">
-          Formulario — Bolsa de Empleo Inclusiva
+          {t('registration.jobSeeker.formTitle')}
         </h2>
         <p className="text-gray-600">
-          Completa todos los campos para acceder a oportunidades laborales en empresas inclusivas.
+          {t('registration.jobSeeker.formDescription')}
         </p>
       </div>
 
@@ -134,7 +106,7 @@ export function JobSeekerRegistrationForm() {
         {/* 1. Nombre completo */}
         <div>
           <label htmlFor="nombreCompleto" className="block text-sm font-semibold text-gray-700 mb-2">
-            1. Nombre completo <span className="text-red-500">*</span>
+            1. {t('forms.jobSeeker.fields.fullName')} <span className="text-red-500">{t('forms.common.required')}</span>
           </label>
           <input
             id="nombreCompleto"
@@ -150,7 +122,7 @@ export function JobSeekerRegistrationForm() {
         {/* 2. Documento de identidad */}
         <div>
           <label htmlFor="documentoIdentidad" className="block text-sm font-semibold text-gray-700 mb-2">
-            2. Documento de identidad <span className="text-red-500">*</span>
+            2. {t('forms.jobSeeker.fields.documentId')} <span className="text-red-500">{t('forms.common.required')}</span>
           </label>
           <input
             id="documentoIdentidad"
@@ -166,7 +138,7 @@ export function JobSeekerRegistrationForm() {
         {/* 3. Tipo de discapacidad */}
         <div>
           <label htmlFor="tipoDiscapacidad" className="block text-sm font-semibold text-gray-700 mb-2">
-            3. Tipo de discapacidad (si aplica) <span className="text-red-500">*</span>
+            3. {t('forms.jobSeeker.fields.disabilityType')} <span className="text-red-500">{t('forms.common.required')}</span>
           </label>
           <select
             id="tipoDiscapacidad"
@@ -176,7 +148,7 @@ export function JobSeekerRegistrationForm() {
             className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#83A98A] focus:border-transparent"
             required
           >
-            <option value="">Seleccione una opción</option>
+            <option value="">{t('forms.common.selectOption')}</option>
             {tiposDiscapacidad.map((tipo) => (
               <option key={tipo} value={tipo}>
                 {tipo}
@@ -188,7 +160,7 @@ export function JobSeekerRegistrationForm() {
         {/* 4. ¿Usas Lengua de Señas Colombiana (LSC)? */}
         <div>
           <label htmlFor="usaLSC" className="block text-sm font-semibold text-gray-700 mb-2">
-            4. ¿Usas Lengua de Señas Colombiana (LSC)? <span className="text-red-500">*</span>
+            4. {t('forms.jobSeeker.fields.usesLSC')} <span className="text-red-500">{t('forms.common.required')}</span>
           </label>
           <select
             id="usaLSC"
@@ -198,7 +170,7 @@ export function JobSeekerRegistrationForm() {
             className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#83A98A] focus:border-transparent"
             required
           >
-            <option value="">Seleccione una opción</option>
+            <option value="">{t('forms.common.selectOption')}</option>
             {nivelesLSC.map((nivel) => (
               <option key={nivel} value={nivel}>
                 {nivel}
@@ -210,7 +182,7 @@ export function JobSeekerRegistrationForm() {
         {/* 5. Ciudad de residencia */}
         <div>
           <label htmlFor="ciudadResidencia" className="block text-sm font-semibold text-gray-700 mb-2">
-            5. Ciudad de residencia <span className="text-red-500">*</span>
+            5. {t('forms.jobSeeker.fields.city')} <span className="text-red-500">{t('forms.common.required')}</span>
           </label>
           <input
             id="ciudadResidencia"
@@ -226,7 +198,7 @@ export function JobSeekerRegistrationForm() {
         {/* 6. Teléfono / WhatsApp */}
         <div>
           <label htmlFor="telefonoWhatsapp" className="block text-sm font-semibold text-gray-700 mb-2">
-            6. Teléfono / WhatsApp <span className="text-red-500">*</span>
+            6. {t('forms.jobSeeker.fields.phone')} <span className="text-red-500">{t('forms.common.required')}</span>
           </label>
           <input
             id="telefonoWhatsapp"
@@ -242,7 +214,7 @@ export function JobSeekerRegistrationForm() {
         {/* 7. Correo electrónico */}
         <div>
           <label htmlFor="correoElectronico" className="block text-sm font-semibold text-gray-700 mb-2">
-            7. Correo electrónico <span className="text-red-500">*</span>
+            7. {t('forms.jobSeeker.fields.email')} <span className="text-red-500">{t('forms.common.required')}</span>
           </label>
           <input
             id="correoElectronico"
@@ -258,7 +230,7 @@ export function JobSeekerRegistrationForm() {
         {/* 8. Nivel educativo */}
         <div>
           <label htmlFor="nivelEducativo" className="block text-sm font-semibold text-gray-700 mb-2">
-            8. Nivel educativo <span className="text-red-500">*</span>
+            8. {t('forms.jobSeeker.fields.educationLevel')} <span className="text-red-500">{t('forms.common.required')}</span>
           </label>
           <select
             id="nivelEducativo"
@@ -268,7 +240,7 @@ export function JobSeekerRegistrationForm() {
             className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#83A98A] focus:border-transparent"
             required
           >
-            <option value="">Seleccione una opción</option>
+            <option value="">{t('forms.common.selectOption')}</option>
             {nivelesEducativos.map((nivel) => (
               <option key={nivel} value={nivel}>
                 {nivel}
@@ -280,7 +252,7 @@ export function JobSeekerRegistrationForm() {
         {/* 9. Área laboral de interés */}
         <div>
           <label className="block text-sm font-semibold text-gray-700 mb-3">
-            9. Área laboral de interés (selección múltiple) <span className="text-red-500">*</span>
+            9. {t('forms.jobSeeker.fields.workArea')} <span className="text-red-500">{t('forms.common.required')}</span>
           </label>
           <div className="space-y-2">
             {areasLaborales.map((area) => (
@@ -295,12 +267,12 @@ export function JobSeekerRegistrationForm() {
               </label>
             ))}
           </div>
-          {formData.areaLaboralInteres.includes('Otros') && (
+          {formData.areaLaboralInteres.includes(areasLaborales[areasLaborales.length - 1]) && (
             <input
               type="text"
               value={otraAreaLaboral}
               onChange={(e) => setOtraAreaLaboral(e.target.value)}
-              placeholder="Especifique otra área laboral"
+              placeholder={t('forms.jobSeeker.fields.specifyOther')}
               className="w-full mt-3 px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#83A98A] focus:border-transparent"
             />
           )}
@@ -309,7 +281,7 @@ export function JobSeekerRegistrationForm() {
         {/* 10. Experiencia laboral */}
         <div>
           <label htmlFor="experienciaLaboral" className="block text-sm font-semibold text-gray-700 mb-2">
-            10. Experiencia laboral <span className="text-red-500">*</span>
+            10. {t('forms.jobSeeker.fields.workExperience')} <span className="text-red-500">{t('forms.common.required')}</span>
           </label>
           <textarea
             id="experienciaLaboral"
@@ -318,7 +290,7 @@ export function JobSeekerRegistrationForm() {
             onChange={handleInputChange}
             rows={4}
             className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#83A98A] focus:border-transparent resize-vertical"
-            placeholder="Describe tu experiencia laboral..."
+            placeholder={t('forms.jobSeeker.fields.describeExperience')}
             required
           />
         </div>
@@ -326,7 +298,7 @@ export function JobSeekerRegistrationForm() {
         {/* 11. Habilidades técnicas */}
         <div>
           <label htmlFor="habilidadesTecnicas" className="block text-sm font-semibold text-gray-700 mb-2">
-            11. Habilidades técnicas <span className="text-red-500">*</span>
+            11. {t('forms.jobSeeker.fields.technicalSkills')} <span className="text-red-500">{t('forms.common.required')}</span>
           </label>
           <textarea
             id="habilidadesTecnicas"
@@ -335,7 +307,7 @@ export function JobSeekerRegistrationForm() {
             onChange={handleInputChange}
             rows={4}
             className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#83A98A] focus:border-transparent resize-vertical"
-            placeholder="Describe tus habilidades técnicas..."
+            placeholder={t('forms.jobSeeker.fields.describeTechnical')}
             required
           />
         </div>
@@ -343,7 +315,7 @@ export function JobSeekerRegistrationForm() {
         {/* 12. Habilidades blandas */}
         <div>
           <label htmlFor="habilidadesBlandas" className="block text-sm font-semibold text-gray-700 mb-2">
-            12. Habilidades blandas <span className="text-red-500">*</span>
+            12. {t('forms.jobSeeker.fields.softSkills')} <span className="text-red-500">{t('forms.common.required')}</span>
           </label>
           <textarea
             id="habilidadesBlandas"
@@ -352,7 +324,7 @@ export function JobSeekerRegistrationForm() {
             onChange={handleInputChange}
             rows={4}
             className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#83A98A] focus:border-transparent resize-vertical"
-            placeholder="Describe tus habilidades blandas..."
+            placeholder={t('forms.jobSeeker.fields.describeSoft')}
             required
           />
         </div>
@@ -360,7 +332,7 @@ export function JobSeekerRegistrationForm() {
         {/* 13. Certificaciones, cursos o talleres */}
         <div>
           <label htmlFor="certificacionesCursos" className="block text-sm font-semibold text-gray-700 mb-2">
-            13. Certificaciones, cursos o talleres
+            13. {t('forms.jobSeeker.fields.certifications')}
           </label>
           <textarea
             id="certificacionesCursos"
@@ -369,14 +341,14 @@ export function JobSeekerRegistrationForm() {
             onChange={handleInputChange}
             rows={4}
             className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#83A98A] focus:border-transparent resize-vertical"
-            placeholder="Lista tus certificaciones, cursos o talleres..."
+            placeholder={t('forms.jobSeeker.fields.listCertifications')}
           />
         </div>
 
         {/* 14. Adjuntar hoja de vida (PDF) */}
         <div>
           <label className="block text-sm font-semibold text-gray-700 mb-2">
-            14. Adjuntar hoja de vida (PDF) <span className="text-red-500">*</span>
+            14. {t('forms.jobSeeker.fields.uploadCV')} <span className="text-red-500">{t('forms.common.required')}</span>
           </label>
           <div className="relative">
             <input
@@ -393,7 +365,7 @@ export function JobSeekerRegistrationForm() {
             >
               <FileText className="w-5 h-5 text-gray-400 group-hover:text-[#83A98A]" />
               <span className="text-sm text-gray-600 group-hover:text-[#83A98A]">
-                {formData.hojaVida ? formData.hojaVida.name : 'Seleccionar archivo PDF'}
+                {formData.hojaVida ? formData.hojaVida.name : t('forms.jobSeeker.fields.selectFile')}
               </span>
             </label>
           </div>
@@ -402,8 +374,8 @@ export function JobSeekerRegistrationForm() {
         {/* 15. ¿Te gustaría recibir capacitación gratuita de TINCADIA? */}
         <div>
           <label className="block text-sm font-semibold text-gray-700 mb-3">
-            15. ¿Te gustaría recibir capacitación gratuita de TINCADIA?{' '}
-            <span className="text-red-500">*</span>
+            15. {t('forms.jobSeeker.fields.training')}{' '}
+            <span className="text-red-500">{t('forms.common.required')}</span>
           </label>
           <div className="flex gap-6">
             <label className="flex items-center gap-2 cursor-pointer">
@@ -416,7 +388,7 @@ export function JobSeekerRegistrationForm() {
                 className="w-4 h-4 text-[#83A98A] focus:ring-[#83A98A]"
                 required
               />
-              <span className="text-gray-700">Sí</span>
+              <span className="text-gray-700">{t('forms.common.yes')}</span>
             </label>
             <label className="flex items-center gap-2 cursor-pointer">
               <input
@@ -428,7 +400,7 @@ export function JobSeekerRegistrationForm() {
                 className="w-4 h-4 text-[#83A98A] focus:ring-[#83A98A]"
                 required
               />
-              <span className="text-gray-700">No</span>
+              <span className="text-gray-700">{t('forms.common.no')}</span>
             </label>
           </div>
         </div>
@@ -436,8 +408,8 @@ export function JobSeekerRegistrationForm() {
         {/* 16. Autorizo tratamiento de datos personales */}
         <div>
           <label className="block text-sm font-semibold text-gray-700 mb-3">
-            16. Autorizo tratamiento de datos personales según la Ley 1581{' '}
-            <span className="text-red-500">*</span>
+            16. {t('forms.jobSeeker.fields.dataAuthorization')}{' '}
+            <span className="text-red-500">{t('forms.common.required')}</span>
           </label>
           <div className="flex gap-6">
             <label className="flex items-center gap-2 cursor-pointer">
@@ -450,7 +422,7 @@ export function JobSeekerRegistrationForm() {
                 className="w-4 h-4 text-[#83A98A] focus:ring-[#83A98A]"
                 required
               />
-              <span className="text-gray-700">Sí</span>
+              <span className="text-gray-700">{t('forms.common.yes')}</span>
             </label>
             <label className="flex items-center gap-2 cursor-pointer">
               <input
@@ -462,7 +434,7 @@ export function JobSeekerRegistrationForm() {
                 className="w-4 h-4 text-[#83A98A] focus:ring-[#83A98A]"
                 required
               />
-              <span className="text-gray-700">No</span>
+              <span className="text-gray-700">{t('forms.common.no')}</span>
             </label>
           </div>
         </div>
@@ -472,7 +444,7 @@ export function JobSeekerRegistrationForm() {
           type="submit"
           className="w-full bg-[#83A98A] text-white font-semibold py-3.5 px-6 rounded-lg hover:bg-[#6D8F75] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#83A98A] transition-all duration-300 shadow-lg hover:shadow-xl mt-8"
         >
-          Enviar Formulario
+          {t('registration.jobSeeker.submitForm')}
         </button>
       </form>
     </div>
