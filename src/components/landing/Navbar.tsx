@@ -1,41 +1,44 @@
 'use client';
 
-import { useState, useCallback, useRef, useEffect } from 'react';
+import { useState, useCallback, useRef, useEffect, useMemo } from 'react';
 import Link from 'next/link';
 import { Menu, ChevronDown, Building2, MessageSquare } from 'lucide-react';
 import { Logo } from '@/components/ui/Logo';
 import { MobileMenu } from './MobileMenu';
 import { useScrollLock } from '@/hooks/useScrollLock';
-
-const navigation: Array<{ name: string; href: string; hasDropdown?: boolean }> = [
-  { name: 'Nosotros', href: '#nosotros' },
-  { name: 'Servicios', href: '#servicios', hasDropdown: true },
-  { name: 'Cursos', href: '#cursos' },
-  { name: 'Precios', href: '/pricing' },
-  { name: 'Contáctanos', href: '#contacto' },
-];
-
-const servicesDropdownItems = [
-  {
-    name: 'Encontrar una empresa inclusiva',
-    description: 'Conecta con empresas comprometidas con la inclusión',
-    href: '/empresas-inclusivas',
-    icon: Building2,
-    iconColor: 'bg-blue-100 text-blue-600',
-  },
-  {
-    name: 'Convertirte en un intérprete',
-    description: 'Únete a nuestra red de intérpretes profesionales',
-    href: '/ser-interprete',
-    icon: MessageSquare,
-    iconColor: 'bg-purple-100 text-purple-600',
-  },
-];
+import { useTranslation } from '@/hooks/useTranslation';
+import { LanguageSelector } from '@/components/ui/LanguageSelector';
 
 export function Navbar() {
+  const t = useTranslation();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [servicesDropdownOpen, setServicesDropdownOpen] = useState(false);
   const servicesDropdownRef = useRef<HTMLDivElement>(null);
+  
+  const navigation = useMemo(() => [
+    { name: t('navbar.about'), href: '#nosotros' },
+    { name: t('navbar.services'), href: '#servicios', hasDropdown: true },
+    { name: t('navbar.courses'), href: '#cursos' },
+    { name: t('navbar.pricing'), href: '/pricing' },
+    { name: t('navbar.contact'), href: '#contacto' },
+  ], [t]);
+
+  const servicesDropdownItems = useMemo(() => [
+    {
+      name: t('navbar.findInclusiveCompany'),
+      description: t('navbar.findInclusiveCompanyDesc'),
+      href: '/empresas-inclusivas',
+      icon: Building2,
+      iconColor: 'bg-blue-100 text-blue-600',
+    },
+    {
+      name: t('navbar.becomeInterpreter'),
+      description: t('navbar.becomeInterpreterDesc'),
+      href: '/ser-interprete',
+      icon: MessageSquare,
+      iconColor: 'bg-purple-100 text-purple-600',
+    },
+  ], [t]);
 
   // Bloquear scroll cuando el menú está abierto
   useScrollLock(mobileMenuOpen);
@@ -86,11 +89,11 @@ export function Navbar() {
               type="button"
               className="-m-2.5 inline-flex items-center justify-center rounded-md p-2.5 text-gray-700 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-[#83A98A] transition-colors"
               onClick={handleMenuToggle}
-              aria-label={mobileMenuOpen ? 'Cerrar menú' : 'Abrir menú'}
+              aria-label={mobileMenuOpen ? t('navbar.closeMenu') : t('navbar.openMenu')}
               aria-expanded={mobileMenuOpen}
             >
               <span className="sr-only">
-                {mobileMenuOpen ? 'Cerrar menú' : 'Abrir menú'}
+                {mobileMenuOpen ? t('navbar.closeMenu') : t('navbar.openMenu')}
               </span>
               <Menu className="h-6 w-6" aria-hidden="true" />
             </button>
@@ -127,7 +130,7 @@ export function Navbar() {
                       <div className="absolute top-full left-0 mt-2 w-80 bg-white rounded-xl shadow-xl border border-gray-200 py-4 z-50 animate-in fade-in slide-in-from-top-2 duration-200">
                         <div className="px-4 mb-2">
                           <h3 className="text-sm font-semibold text-gray-500 uppercase tracking-wide">
-                            Encuentra trabajo
+                            {t('navbar.findJob')}
                           </h3>
                         </div>
                         <div className="space-y-1">
@@ -176,12 +179,13 @@ export function Navbar() {
           </div>
 
           {/* CTA desktop */}
-          <div className="hidden lg:flex lg:flex-1 lg:justify-end">
+          <div className="hidden lg:flex lg:flex-1 lg:justify-end lg:items-center lg:gap-4">
+            <LanguageSelector />
             <Link
               href="#cursos"
               className="rounded-lg bg-[#83A98A] px-4 py-1.5 text-sm font-semibold text-white shadow-sm hover:bg-[#6D8F75] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#83A98A] transition-colors"
             >
-              Aprende más
+              {t('navbar.learnMore')}
             </Link>
           </div>
         </nav>

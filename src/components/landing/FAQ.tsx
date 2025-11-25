@@ -1,33 +1,21 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import { ChevronDown } from 'lucide-react';
-
-const faqs = [
-  {
-    id: 1,
-    question: '¿Cómo garantiza Tincadia la calidad de los intérpretes?',
-    answer: 'Todos nuestros intérpretes pasan por un riguroso proceso de verificación que incluye validación de certificaciones (ILSE, FESORD), pruebas prácticas de interpretación y evaluaciones continuas de calidad. Además, contamos con un sistema de calificaciones y retroalimentación de usuarios que nos permite mantener los más altos estándares de servicio.',
-  },
-  {
-    id: 2,
-    question: '¿Están seguros mis datos en la plataforma?',
-    answer: 'La seguridad de tus datos es nuestra prioridad. Utilizamos encriptación de extremo a extremo, cumplimos con normativas de protección de datos (GDPR, LOPD), y realizamos auditorías de seguridad periódicas. Tus datos personales nunca son compartidos con terceros sin tu consentimiento explícito.',
-  },
-  {
-    id: 3,
-    question: '¿Qué coste tiene el servicio para personas sordas?',
-    answer: 'Ofrecemos diferentes planes adaptados a cada necesidad. El Plan Básico es gratuito e incluye funcionalidades esenciales como transcripción de voz a texto y traducción automática. Los planes Profesional y Premium ofrecen características avanzadas con precios competitivos y opciones de pago flexibles.',
-  },
-  {
-    id: 4,
-    question: '¿Cómo se seleccionan las empresas en la bolsa de trabajo?',
-    answer: 'Las empresas pasan por un proceso de validación que verifica su compromiso real con la inclusión. Evaluamos sus políticas de accesibilidad, cultura organizacional y experiencia previa con talento diverso. Solo empresas certificadas como inclusivas pueden publicar ofertas en nuestra plataforma.',
-  },
-];
+import { useTranslation } from '@/hooks/useTranslation';
 
 export function FAQ() {
+  const t = useTranslation();
   const [openId, setOpenId] = useState<number | null>(null);
+
+  const faqs = useMemo(() => {
+    const questions = t('faq.questions');
+    // Verificar que sea un array
+    if (Array.isArray(questions)) {
+      return questions as Array<{ question: string; answer: string }>;
+    }
+    return [];
+  }, [t]);
 
   const toggleQuestion = (id: number) => {
     setOpenId(openId === id ? null : id);
@@ -45,28 +33,28 @@ export function FAQ() {
             id="faq-heading"
             className="text-3xl sm:text-4xl lg:text-5xl font-bold text-gray-900 mb-4 tracking-tight"
           >
-            Preguntas Frecuentes
+            {t('faq.title')}
           </h2>
           <p className="text-lg text-gray-600">
-            ¿Tienes preguntas? Tenemos respuestas.
+            {t('faq.subtitle')}
           </p>
         </div>
 
         {/* Acordeón de preguntas */}
         <div className="space-y-4">
-          {faqs.map((faq) => {
-            const isOpen = openId === faq.id;
+          {faqs.map((faq, index) => {
+            const isOpen = openId === index + 1;
 
             return (
               <div
-                key={faq.id}
+                key={index}
                 className="bg-white rounded-xl shadow-md hover:shadow-lg transition-shadow duration-300 overflow-hidden"
               >
                 <button
-                  onClick={() => toggleQuestion(faq.id)}
+                  onClick={() => toggleQuestion(index + 1)}
                   className="w-full px-6 py-5 flex items-center justify-between text-left focus:outline-none focus:ring-2 focus:ring-inset focus:ring-[#83A98A] transition-colors hover:bg-gray-50"
                   aria-expanded={isOpen}
-                  aria-controls={`faq-answer-${faq.id}`}
+                  aria-controls={`faq-answer-${index + 1}`}
                 >
                   <span className="text-base lg:text-lg font-semibold text-gray-900 pr-8">
                     {faq.question}
@@ -82,7 +70,7 @@ export function FAQ() {
 
                 {/* Respuesta (expandible) */}
                 <div
-                  id={`faq-answer-${faq.id}`}
+                  id={`faq-answer-${index + 1}`}
                   className={`
                     px-6 overflow-hidden transition-all duration-300 ease-in-out
                     ${isOpen ? 'max-h-96 pb-5' : 'max-h-0'}
@@ -101,13 +89,13 @@ export function FAQ() {
         {/* Sección de contacto adicional */}
         <div className="mt-12 text-center">
           <p className="text-gray-600 mb-4">
-            ¿No encuentras lo que buscas?
+            {t('faq.notFound')}
           </p>
           <a
             href="#contacto"
             className="inline-block px-6 py-3 bg-[#83A98A] text-white font-semibold rounded-lg hover:bg-[#6D8F75] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#83A98A] transition-all duration-300"
           >
-            Contáctanos directamente
+            {t('faq.contactButton')}
           </a>
         </div>
       </div>

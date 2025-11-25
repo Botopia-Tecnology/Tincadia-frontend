@@ -1,0 +1,570 @@
+{
+  "common": {
+    "loading": "Loading...",
+    "error": "Error",
+    "success": "Success",
+    "close": "Close",
+    "cancel": "Cancel",
+    "save": "Save",
+    "delete": "Delete",
+    "edit": "Edit",
+    "back": "Back",
+    "continue": "Continue",
+    "submit": "Submit",
+    "search": "Search",
+    "filter": "Filter",
+    "reset": "Reset"
+  },
+  "navbar": {
+    "about": "About Us",
+    "services": "Services",
+    "courses": "Courses",
+    "pricing": "Pricing",
+    "contact": "Contact Us",
+    "learnMore": "Learn More",
+    "findJob": "Find a Job",
+    "findInclusiveCompany": "Find an Inclusive Company",
+    "findInclusiveCompanyDesc": "Connect with companies committed to inclusion",
+    "becomeInterpreter": "Become an Interpreter",
+    "becomeInterpreterDesc": "Join our network of professional interpreters",
+    "openMenu": "Open menu",
+    "closeMenu": "Close menu"
+  },
+  "hero": {
+    "title": "TINCADIA",
+    "concepts": {
+      "technology": "Technology",
+      "inclusion": "Inclusion",
+      "accessibility": "Accessibility",
+      "disability": "Disability",
+      "ai": "Artificial Intelligence"
+    },
+    "description": "We are <strong>TINCADIA</strong>, a company focused on <strong>inclusive technology</strong>, <strong>accessibility</strong>, <strong>disability</strong>, and <strong>artificial intelligence</strong>. We are dedicated to promoting social inclusion of people with hearing disabilities and other disabilities in strategic sectors, through innovative solutions that foster equal opportunities. Additionally, we seek to connect companies and establish partnerships across various sectors, eliminating barriers.",
+    "emailPlaceholder": "Enter your email address",
+    "emailLabel": "Email address",
+    "startButton": "Get Started",
+    "startButtonLabel": "Start registration"
+  },
+  "services": {
+    "title": "Our Services",
+    "subtitle": "We offer comprehensive solutions to make technology accessible to all people, regardless of their abilities.",
+    "signLanguage": {
+      "badge": "Welcome to class!",
+      "title": "Learn Sign Language",
+      "subtitle": "Expert-guided classes",
+      "description": "Train in Colombian Sign Language (LSC) through didactic, inclusive, and 100% practical sessions.",
+      "primaryAction": "Schedule class",
+      "secondaryAction": "More information"
+    },
+    "translator": {
+      "badge": "Your phone interpreting signs",
+      "title": "Real-time Translation",
+      "subtitle": "From signs to text or voice",
+      "description": "A real-time Sign Language interpreter app converting to text or voice, real communication",
+      "primaryAction": "Try now",
+      "secondaryAction": "View demo"
+    },
+    "writingAssistant": {
+      "badge": "AI-assisted writing",
+      "title": "Inclusive Writing Assistant",
+      "subtitle": "Communicate your ideas clearly",
+      "description": "Write professional, clear, and accessible messages with AI support.",
+      "primaryAction": "Use assistant",
+      "secondaryAction": "How it works"
+    }
+  },
+  "howToStart": {
+    "title": "How",
+    "titleHighlight": "TINCADIA",
+    "subtitle": "Explore our main features and discover how each tool facilitates inclusive communication.",
+    "features": {
+      "voiceToText": {
+        "title": "Voice to text transcription",
+        "subtitle": "Convert conversations in real time",
+        "description": "Capture any conversation and automatically convert it to text. Actively participate in classes, meetings, or everyday conversations without missing a detail.",
+        "steps": [
+          "Activate the microphone in the app",
+          "AI starts transcribing automatically",
+          "Read the text in real time on your screen",
+          "Save and share transcriptions"
+        ]
+      },
+      "translation": {
+        "title": "Automatic translation",
+        "subtitle": "Access content in any format",
+        "description": "Automatically translate news, videos, movies, and documents. Access CC subtitles and accessible content on multiple platforms.",
+        "steps": [
+          "Upload or select content to translate",
+          "Choose output format (text or subtitles)",
+          "AI processes and translates the content",
+          "Enjoy fully accessible content"
+        ]
+      },
+      "interpretation": {
+        "title": "LSC Interpretation",
+        "subtitle": "Connect with professional interpreters",
+        "description": "Access Colombian Sign Language interpreters via video call or scan QR codes at companies, hospitals, and universities.",
+        "steps": [
+          "Scan the QR code or open the video call",
+          "Connect with an available interpreter",
+          "Communicate in real time in LSC",
+          "End the session and rate the service"
+        ]
+      },
+      "writingAssistant": {
+        "title": "AI Writing Assistant",
+        "subtitle": "Improve your written communication",
+        "description": "Write with confidence using our intelligent assistant that corrects grammar, tone, and style for any context: social media, work, or studies.",
+        "steps": [
+          "Write your message or document",
+          "The assistant suggests improvements in real time",
+          "Accept or adjust suggestions",
+          "Publish or send your perfected text"
+        ]
+      }
+    }
+  },
+  "registration": {
+    "panel": {
+      "title": "Join TINCADIA and discover our solutions",
+      "emailPlaceholder": "Enter your email address",
+      "continueButton": "Continue",
+      "orContinueWith": "or continue with",
+      "facebook": "Continue with Facebook",
+      "google": "Continue with Google",
+      "microsoft": "Continue with Microsoft",
+      "terms": "By continuing, you accept our",
+      "termsLink": "Terms of Service",
+      "and": "and",
+      "privacyLink": "Privacy Policy",
+      "createAccount": "Create your account",
+      "fullName": "First Name",
+      "lastName": "Last Name",
+      "documentType": "Type",
+      "documentNumber": "Number",
+      "phone": "Phone",
+      "email": "Email address",
+      "password": "Password",
+      "confirmPassword": "Confirm password",
+      "passwordMismatch": "Passwords do not match",
+      "acceptPolicies": "I accept the",
+      "policiesLink": "Tincadia policies",
+      "andDataUsage": "and the",
+      "dataUsageLink": "use of personal data",
+      "createAccountButton": "Create account",
+      "closeLabel": "Close registration panel"
+    },
+    "interpreter": {
+      "title": "Become an Interpreter",
+      "subtitle": "Join our network of certified professional interpreters and make a difference in the lives of deaf and hard of hearing people.",
+      "fullName": "Full Name",
+      "fullNamePlaceholder": "Enter your full name",
+      "email": "Email Address",
+      "emailPlaceholder": "email@example.com",
+      "certifications": "Certifications (e.g. ILSE, FESORD)",
+      "certificationsPlaceholder": "E.g: ILSE Level 3, FESORD",
+      "submitButton": "Apply Now"
+    },
+    "jobSeeker": {
+      "title": "Find Your Next Opportunity",
+      "subtitle": "Create a profile and let inclusive employers find you.",
+      "formTitle": "Form — Inclusive Job Board",
+      "formDescription": "Complete all fields to access job opportunities at inclusive companies.",
+      "fullName": "Full Name",
+      "fullNamePlaceholder": "Enter your full name",
+      "email": "Email Address",
+      "emailPlaceholder": "email@example.com",
+      "uploadCV": "Upload CV (optional)",
+      "chooseFile": "Choose file",
+      "submitButton": "Create Profile",
+      "submitForm": "Submit Form"
+    },
+    "interpreterForm": {
+      "formTitle": "Form — Sign Language Interpreter Registration",
+      "formDescription": "Complete all fields to join our network of professional interpreters.",
+      "submitForm": "Submit Form"
+    }
+  },
+  "faq": {
+    "title": "Frequently Asked Questions",
+    "subtitle": "Have questions? We have answers.",
+    "questions": [
+      {
+        "question": "How does Tincadia guarantee the quality of interpreters?",
+        "answer": "All our interpreters go through a rigorous verification process that includes validation of certifications (ILSE, FESORD), practical interpretation tests, and continuous quality assessments. Additionally, we have a rating and user feedback system that allows us to maintain the highest service standards."
+      },
+      {
+        "question": "Is my data safe on the platform?",
+        "answer": "The security of your data is our priority. We use end-to-end encryption, comply with data protection regulations (GDPR, LOPD), and conduct periodic security audits. Your personal data is never shared with third parties without your explicit consent."
+      },
+      {
+        "question": "What is the cost of the service for deaf people?",
+        "answer": "We offer different plans adapted to each need. The Basic Plan is free and includes essential features such as voice-to-text transcription and automatic translation. The Professional and Premium plans offer advanced features with competitive prices and flexible payment options."
+      },
+      {
+        "question": "How are companies selected in the job board?",
+        "answer": "Companies go through a validation process that verifies their real commitment to inclusion. We evaluate their accessibility policies, organizational culture, and previous experience with diverse talent. Only companies certified as inclusive can post job offers on our platform."
+      }
+    ],
+    "notFound": "Can't find what you're looking for?",
+    "contactButton": "Contact us directly"
+  },
+  "footer": {
+    "description": "Creating inclusive technology solutions to connect people, companies, and organizations.",
+    "downloadFree": "Download for free",
+    "getItOn": "Get it on",
+    "googlePlay": "Google Play",
+    "downloadOnThe": "Download on the",
+    "appStore": "App Store",
+    "comingSoon": "Currently under update and development. Launch of the new version coming soon.",
+    "service": "Service",
+    "tincadia": "TINCADIA",
+    "tincadiaDesc": "Platform to connect deaf people, hearing people, and organizations through inclusive technology.",
+    "forBusiness": "For Business",
+    "forBusinessDesc": "Solutions for companies, educational entities, and organizations seeking to make their services more accessible.",
+    "contact": "Contact",
+    "email": "Email",
+    "website": "Website",
+    "followUs": "Follow us on social media",
+    "linkedin": "LinkedIn",
+    "linkedinDesc": "Publications about innovation, inclusive entrepreneurship, and participation in national events.",
+    "instagram": "Instagram",
+    "instagramDesc": "Visual content about projects, training, and advances of the TINCADIA team.",
+    "facebook": "Facebook",
+    "facebookDesc": "Dissemination of activities, calls, and collaborations with partner entities.",
+    "twitter": "X (Twitter)",
+    "twitterDesc": "News and brief updates on accessibility and technological innovation.",
+    "whatsapp": "WhatsApp Channel",
+    "whatsappDesc": "Official channel for information, events, and news from TINCADIA.",
+    "youtube": "YouTube",
+    "youtubeDesc": "Videos about inclusion, accessibility, and impact testimonials.",
+    "copyright": "© 2025 TINCADIA. All rights reserved."
+  },
+  "accessibility": {
+    "highContrast": "Activate high contrast",
+    "invertColors": "Invert colors",
+    "grayscale": "Activate grayscale",
+    "decreaseText": "Decrease text size",
+    "resetText": "Reset text size",
+    "increaseText": "Increase text size"
+  },
+  "findInclusiveCompany": {
+    "title": "Find an Inclusive Company",
+    "subtitle": "Create your profile and access job opportunities at companies committed to inclusion and diversity."
+  },
+  "becomeInterpreter": {
+    "title": "Become an Interpreter",
+    "subtitle": "Join our network of certified professional interpreters and make a difference in the lives of deaf and hard of hearing people."
+  },
+  "howItWorks": {
+    "title": "Get Started in",
+    "titleHighlight": "3 Simple Steps",
+    "subtitle": "Joining our community is quick and easy.",
+    "steps": [
+      {
+        "title": "Create Your Profile",
+        "description": "Register as a job seeker or interpreter and tell us about your goals."
+      },
+      {
+        "title": "Get Verified",
+        "description": "Complete our verification process to ensure a safe community."
+      },
+      {
+        "title": "Start Connecting",
+        "description": "Apply for jobs, offer interpretation services, and break barriers."
+      }
+    ]
+  },
+  "testimonials": {
+    "title": "Success",
+    "titleHighlight": "Stories",
+    "subtitle": "See how Tincadia is making a real impact.",
+    "previous": "Previous testimonial",
+    "next": "Next testimonial",
+    "goTo": "Go to testimonial",
+    "testimonials": [
+      {
+        "name": "Almia",
+        "role": "Software Engineering",
+        "company": "EAFIT",
+        "text": "TINCADIA has transformed how our deaf students participate in classes. An indispensable tool."
+      },
+      {
+        "name": "Andrey",
+        "role": "LSE Interpreter",
+        "company": "Freelance",
+        "text": "We have significantly improved care for patients with hearing disabilities thanks to TINCADIA's solutions."
+      },
+      {
+        "name": "Elena R.",
+        "role": "HR Manager",
+        "company": "XYZ Corporation",
+        "text": "Accessibility certification has allowed us to expand our services to a more diverse audience."
+      },
+      {
+        "name": "Carlos M.",
+        "role": "Inclusion Director",
+        "company": "National University",
+        "text": "TINCADIA's tools have revolutionized how we approach inclusive education at our institution."
+      },
+      {
+        "name": "María S.",
+        "role": "Project Coordinator",
+        "company": "Total Inclusion NGO",
+        "text": "Thanks to TINCADIA, we have been able to connect deaf talent with real job opportunities. An impressive change."
+      }
+    ]
+  },
+  "pricing": {
+    "title": "Plans and Pricing",
+    "subtitle": "Choose the plan that best fits your needs",
+    "personal": "Personal",
+    "empresa": "Business",
+    "mensual": "Monthly",
+    "anual": "Annual",
+    "save20": "Save 20%",
+    "free": "Free",
+    "perMonth": "/month",
+    "perYear": "/year",
+    "includes": "Includes",
+    "notIncludes": "Not included",
+    "plans": {
+      "personal": {
+        "free": {
+          "name": "Free Plan",
+          "description": "For individual users seeking to improve accessibility",
+          "buttonText": "Get started free",
+          "includes": [
+            "Access to free content and educational resources.",
+            "Basic LSC course materials.",
+            "Community support and inclusive forums.",
+            "Participation certificate.",
+            "Access to inclusive community forums."
+          ],
+          "excludes": [
+            "Advanced AI features",
+            "Multiple profiles",
+            "Unlimited usage",
+            "Priority support"
+          ]
+        },
+        "premium": {
+          "name": "Premium Plan",
+          "description": "For users needing more features and usage time",
+          "buttonText": "Subscribe now",
+          "includes": [
+            "Complete automatic translation",
+            "3 accessible digital profiles",
+            "Up to 3 hours daily usage",
+            "Email and chat support",
+            "Advanced AI features"
+          ],
+          "excludes": [
+            "Unlimited multiple profiles",
+            "Unlimited usage",
+            "Priority support"
+          ]
+        },
+        "corporate": {
+          "name": "Premium",
+          "description": "For users requiring full access without restrictions",
+          "buttonText": "Get Premium",
+          "includes": [
+            "Premium automatic translation",
+            "Unlimited digital profiles",
+            "Unlimited usage",
+            "24/7 priority support",
+            "All advanced AI features",
+            "Early access to new features"
+          ],
+          "excludes": []
+        }
+      },
+      "empresa": {
+        "free": {
+          "name": "Free Plan",
+          "description": "For individual users seeking to improve accessibility",
+          "buttonText": "Get started free",
+          "includes": [
+            "Access to free content and educational resources.",
+            "Basic LSC course materials.",
+            "Community support and inclusive forums.",
+            "Participation certificate.",
+            "Access to inclusive community forums."
+          ],
+          "excludes": [
+            "Advanced AI features",
+            "Multiple profiles",
+            "Unlimited usage",
+            "Priority support"
+          ]
+        },
+        "business": {
+          "name": "Business Plan",
+          "description": "For companies seeking scalable accessibility solutions",
+          "buttonText": "Subscribe now",
+          "includes": [
+            "Complete automatic translation",
+            "3 accessible digital profiles",
+            "Up to 3 hours daily usage",
+            "Email and chat support",
+            "Advanced AI features"
+          ],
+          "excludes": [
+            "Unlimited multiple profiles",
+            "Unlimited usage",
+            "Priority support"
+          ]
+        },
+        "corporate": {
+          "name": "Corporate Plan",
+          "description": "For corporations requiring complete solutions and dedicated support",
+          "buttonText": "Get Premium",
+          "includes": [
+            "Premium automatic translation",
+            "Unlimited digital profiles",
+            "Unlimited usage",
+            "24/7 priority support",
+            "All advanced AI features",
+            "Early access to new features"
+          ],
+          "excludes": []
+        }
+      }
+    }
+  },
+  "forms": {
+    "common": {
+      "selectOption": "Select an option",
+      "yes": "Yes",
+      "no": "No",
+      "required": "*"
+    },
+    "jobSeeker": {
+      "fields": {
+        "fullName": "Full name",
+        "documentId": "Identity document",
+        "disabilityType": "Disability type (if applicable)",
+        "usesLSC": "Do you use Colombian Sign Language (LSC)?",
+        "city": "City of residence",
+        "phone": "Phone / WhatsApp",
+        "email": "Email address",
+        "educationLevel": "Education level",
+        "workArea": "Work area of interest (multiple selection)",
+        "workExperience": "Work experience",
+        "technicalSkills": "Technical skills",
+        "softSkills": "Soft skills",
+        "certifications": "Certifications, courses or workshops",
+        "uploadCV": "Attach resume (PDF)",
+        "selectFile": "Select PDF file",
+        "training": "Would you like to receive free training from TINCADIA?",
+        "dataAuthorization": "I authorize personal data processing under Law 1581",
+        "specifyOther": "Specify other work area",
+        "describeExperience": "Describe your work experience...",
+        "describeTechnical": "Describe your technical skills...",
+        "describeSoft": "Describe your soft skills...",
+        "listCertifications": "List your certifications, courses or workshops..."
+      },
+      "disabilityTypes": [
+        "Deaf",
+        "Hard of hearing",
+        "Visual",
+        "Physical",
+        "Intellectual",
+        "Psychosocial",
+        "I do not have a disability"
+      ],
+      "lscLevels": [
+        "Yes, fluent",
+        "Basic",
+        "No"
+      ],
+      "educationLevels": [
+        "High school",
+        "Technical",
+        "Technologist",
+        "Professional",
+        "Graduate",
+        "In progress"
+      ],
+      "workAreas": [
+        "Customer service",
+        "Technology",
+        "Administrative assistant",
+        "Production",
+        "Marketing",
+        "Education",
+        "General services",
+        "Logistics",
+        "Others"
+      ]
+    },
+    "interpreter": {
+      "fields": {
+        "fullName": "Full name",
+        "documentId": "Identity document",
+        "city": "City of residence",
+        "phone": "Phone / WhatsApp",
+        "email": "Email address",
+        "isCertified": "Are you a certified interpreter?",
+        "academicLevel": "Indicate academic level achieved",
+        "academicDetail": "Specify degree, level or major",
+        "experienceLevel": "Experience level",
+        "specialtyAreas": "Specialty areas (multiple selection)",
+        "availability": "Time availability",
+        "serviceType": "Type of service offered (multiple selection)",
+        "hourlyRates": "Hourly rates",
+        "ratesPlaceholder": "E.g: $50,000 COP",
+        "uploadCV": "Resume (PDF)",
+        "selectFilePDF": "Select PDF file",
+        "certifications": "Certifications (optional)",
+        "selectFileCert": "Select file (PDF, JPG, PNG)",
+        "socialMedia": "Social media or portfolio",
+        "socialPlaceholder": "https://...",
+        "authorization": "I authorize TINCADIA to include me in the database and contact me for work",
+        "specifyOtherArea": "Specify other area",
+        "specifyOtherService": "Specify other service type"
+      },
+      "academicLevels": [
+        "Academic high school",
+        "Professional (indicate degree received)",
+        "Graduate (indicate degree received)",
+        "Certified by FENASCOL (indicate level)",
+        "Undergraduate student (indicate major)",
+        "Technical (indicate degree)",
+        "Technologist (indicate degree)"
+      ],
+      "experienceLevels": [
+        "Beginner (0–1 year)",
+        "Intermediate (1–3 years)",
+        "Advanced (3–5 years)",
+        "Professional (+5 years)"
+      ],
+      "specialtyAreas": [
+        "Education",
+        "Medicine",
+        "Legal",
+        "Entrepreneurship / business",
+        "Deaf community",
+        "Technology",
+        "Events",
+        "Other"
+      ],
+      "availability": [
+        "Morning",
+        "Afternoon",
+        "Night",
+        "Weekends",
+        "24/7"
+      ],
+      "serviceTypes": [
+        "In-person interpretation",
+        "Virtual interpretation",
+        "Video translation",
+        "LSC tutoring",
+        "Others"
+      ]
+    }
+  }
+}
+

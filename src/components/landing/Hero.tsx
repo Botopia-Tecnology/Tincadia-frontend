@@ -1,39 +1,15 @@
 'use client';
 
 import Image from 'next/image';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState, useMemo } from 'react';
 import { RegistrationPanel } from './RegistrationPanel';
-
-
+import { useTranslation } from '@/hooks/useTranslation';
 
 // Letras del título principal
 const TINCADIA_LETTERS = ['T', 'I', 'N', 'C', 'A', 'D', 'I', 'A'];
 
-// Pasos de animación: qué letras resaltar y qué palabra mostrar
-const CONCEPT_STEPS = [
-  {
-    highlights: [0], // T
-    label: 'Tecnología',
-  },
-  {
-    highlights: [1, 2, 3], // INC
-    label: 'Inclusión',
-  },
-  {
-    highlights: [4], // A
-    label: 'Accesibilidad',
-  },
-  {
-    highlights: [5], // D
-    label: 'Discapacidad',
-  },
-  {
-    highlights: [6, 7], // IA (segunda I y segunda A)
-    label: 'Inteligencia artificial',
-  },
-];
-
 export function Hero() {
+  const t = useTranslation();
   const videoRef = useRef<HTMLVideoElement>(null);
 
   const [currentStep, setCurrentStep] = useState(0);
@@ -49,6 +25,30 @@ export function Hero() {
 
   // Ángulo global para la órbita de las letras
   const [orbitAngle, setOrbitAngle] = useState(0);
+
+  // Pasos de animación: qué letras resaltar y qué palabra mostrar
+  const CONCEPT_STEPS = useMemo(() => [
+    {
+      highlights: [0], // T
+      label: t('hero.concepts.technology'),
+    },
+    {
+      highlights: [1, 2, 3], // INC
+      label: t('hero.concepts.inclusion'),
+    },
+    {
+      highlights: [4], // A
+      label: t('hero.concepts.accessibility'),
+    },
+    {
+      highlights: [5], // D
+      label: t('hero.concepts.disability'),
+    },
+    {
+      highlights: [6, 7], // IA (segunda I y segunda A)
+      label: t('hero.concepts.ai'),
+    },
+  ], [t]);
 
   // Asegurar que el video se reproduce en loop
   useEffect(() => {
@@ -201,17 +201,8 @@ export function Hero() {
                 ? 'opacity-100 translate-y-0'
                 : 'opacity-0 translate-y-8'
                 }`}
-            >
-              Somos <strong>TINCADIA</strong>, una empresa de{' '}
-              <strong>tecnología inclusiva</strong>,{' '}
-              <strong>accesibilidad</strong>, <strong>discapacidad</strong> e{' '}
-              <strong>inteligencia artificial</strong>. Nos dedicamos a promover
-              la inclusión social de las personas con discapacidad auditiva y
-              otras discapacidades en sectores estratégicos, a través de
-              soluciones innovadoras que fomentan la igualdad de oportunidades.
-              Además, buscamos conectar empresas y establecer alianzas entre
-              diversos sectores, eliminando barreras.
-            </p>
+              dangerouslySetInnerHTML={{ __html: t('hero.description') }}
+            />
 
             {/* Input + Botón fusionado */}
             <div
@@ -224,16 +215,16 @@ export function Hero() {
                 type="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                placeholder="Ingresa tu correo electrónico"
+                placeholder={t('hero.emailPlaceholder')}
                 className="flex-1 px-4 py-3.5 text-base bg-white border border-gray-300 rounded-l-lg sm:rounded-r-none rounded-r-lg sm:border-r-0 focus:outline-none focus:ring-2 focus:ring-[#83A98A] focus:border-transparent transition-all"
-                aria-label="Correo electrónico"
+                aria-label={t('hero.emailLabel')}
               />
               <button
                 onClick={() => setRegistrationPanelOpen(true)}
                 className="rounded-r-lg sm:rounded-l-none rounded-l-lg sm:rounded-r-lg bg-white px-8 py-3.5 text-base font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#83A98A] transition-colors whitespace-nowrap"
-                aria-label="Comenzar registro"
+                aria-label={t('hero.startButtonLabel')}
               >
-                Comenzar
+                {t('hero.startButton')}
               </button>
             </div>
           </div>
