@@ -9,7 +9,12 @@ export function Testimonials() {
   const t = useTranslation();
   
   const testimonials = useMemo(() => {
-    const testimonialsData = t('testimonials.testimonials') as Array<{ name: string; role: string; company: string; text: string }>;
+    const getTestimonials = (): Array<{ name: string; role: string; company: string; text: string }> => {
+      const value = t('testimonials.testimonials');
+      return Array.isArray(value) ? value : [];
+    };
+    
+    const testimonialsData = getTestimonials();
     return testimonialsData.map((testimonial, index) => ({
       id: index + 1,
       name: testimonial.name,

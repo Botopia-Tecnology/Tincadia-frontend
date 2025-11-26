@@ -7,52 +7,59 @@ import { useTranslation } from '@/hooks/useTranslation';
 export function HowToStart() {
   const t = useTranslation();
   
-  const features = useMemo(() => [
-    {
-      id: 1,
-      title: t('howToStart.features.voiceToText.title'),
-      subtitle: t('howToStart.features.voiceToText.subtitle'),
-      description: t('howToStart.features.voiceToText.description'),
-      icon: Mic,
-      videoLabel: t('howToStart.features.voiceToText.title'),
-      steps: t('howToStart.features.voiceToText.steps') as string[],
-      color: 'from-blue-500 to-blue-600',
-      bgColor: 'bg-blue-50',
-    },
-    {
-      id: 2,
-      title: t('howToStart.features.translation.title'),
-      subtitle: t('howToStart.features.translation.subtitle'),
-      description: t('howToStart.features.translation.description'),
-      icon: FileText,
-      videoLabel: t('howToStart.features.translation.title'),
-      steps: t('howToStart.features.translation.steps') as string[],
-      color: 'from-green-500 to-green-600',
-      bgColor: 'bg-green-50',
-    },
-    {
-      id: 3,
-      title: t('howToStart.features.interpretation.title'),
-      subtitle: t('howToStart.features.interpretation.subtitle'),
-      description: t('howToStart.features.interpretation.description'),
-      icon: Video,
-      videoLabel: t('howToStart.features.interpretation.title'),
-      steps: t('howToStart.features.interpretation.steps') as string[],
-      color: 'from-purple-500 to-purple-600',
-      bgColor: 'bg-purple-50',
-    },
-    {
-      id: 4,
-      title: t('howToStart.features.writingAssistant.title'),
-      subtitle: t('howToStart.features.writingAssistant.subtitle'),
-      description: t('howToStart.features.writingAssistant.description'),
-      icon: PenTool,
-      videoLabel: t('howToStart.features.writingAssistant.title'),
-      steps: t('howToStart.features.writingAssistant.steps') as string[],
-      color: 'from-orange-500 to-orange-600',
-      bgColor: 'bg-orange-50',
-    },
-  ], [t]);
+  const features = useMemo(() => {
+    const getSteps = (key: string): string[] => {
+      const steps = t(key);
+      return Array.isArray(steps) ? steps : [];
+    };
+
+    return [
+      {
+        id: 1,
+        title: t('howToStart.features.voiceToText.title'),
+        subtitle: t('howToStart.features.voiceToText.subtitle'),
+        description: t('howToStart.features.voiceToText.description'),
+        icon: Mic,
+        videoLabel: t('howToStart.features.voiceToText.title'),
+        steps: getSteps('howToStart.features.voiceToText.steps'),
+        color: 'from-blue-500 to-blue-600',
+        bgColor: 'bg-blue-50',
+      },
+      {
+        id: 2,
+        title: t('howToStart.features.translation.title'),
+        subtitle: t('howToStart.features.translation.subtitle'),
+        description: t('howToStart.features.translation.description'),
+        icon: FileText,
+        videoLabel: t('howToStart.features.translation.title'),
+        steps: getSteps('howToStart.features.translation.steps'),
+        color: 'from-green-500 to-green-600',
+        bgColor: 'bg-green-50',
+      },
+      {
+        id: 3,
+        title: t('howToStart.features.interpretation.title'),
+        subtitle: t('howToStart.features.interpretation.subtitle'),
+        description: t('howToStart.features.interpretation.description'),
+        icon: Video,
+        videoLabel: t('howToStart.features.interpretation.title'),
+        steps: getSteps('howToStart.features.interpretation.steps'),
+        color: 'from-purple-500 to-purple-600',
+        bgColor: 'bg-purple-50',
+      },
+      {
+        id: 4,
+        title: t('howToStart.features.writingAssistant.title'),
+        subtitle: t('howToStart.features.writingAssistant.subtitle'),
+        description: t('howToStart.features.writingAssistant.description'),
+        icon: PenTool,
+        videoLabel: t('howToStart.features.writingAssistant.title'),
+        steps: getSteps('howToStart.features.writingAssistant.steps'),
+        color: 'from-orange-500 to-orange-600',
+        bgColor: 'bg-orange-50',
+      },
+    ];
+  }, [t]);
   const [activeTab, setActiveTab] = useState(1);
   const [isTransitioning, setIsTransitioning] = useState(false);
   const [displayTab, setDisplayTab] = useState(1);

@@ -24,7 +24,13 @@ export function Pricing() {
   const [userType, setUserType] = useState<UserType>('personal');
   const [billingCycle, setBillingCycle] = useState<BillingCycle>('mensual');
   
-  const plans: Record<UserType, Plan[]> = useMemo(() => ({
+  const plans: Record<UserType, Plan[]> = useMemo(() => {
+    const getArray = (key: string): string[] => {
+      const value = t(key);
+      return Array.isArray(value) ? value : [];
+    };
+    
+    return {
     personal: [
       {
         name: t('pricing.plans.personal.free.name'),
@@ -32,8 +38,8 @@ export function Pricing() {
         description: t('pricing.plans.personal.free.description'),
         buttonText: t('pricing.plans.personal.free.buttonText'),
         buttonIcon: <Users className="w-4 h-4" />,
-        includes: t('pricing.plans.personal.free.includes') as string[],
-        excludes: t('pricing.plans.personal.free.excludes') as string[],
+        includes: getArray('pricing.plans.personal.free.includes'),
+        excludes: getArray('pricing.plans.personal.free.excludes'),
       },
       {
         name: t('pricing.plans.personal.premium.name'),
@@ -42,8 +48,8 @@ export function Pricing() {
         description: t('pricing.plans.personal.premium.description'),
         buttonText: t('pricing.plans.personal.premium.buttonText'),
         buttonIcon: <CreditCard className="w-4 h-4" />,
-        includes: t('pricing.plans.personal.premium.includes') as string[],
-        excludes: t('pricing.plans.personal.premium.excludes') as string[],
+        includes: getArray('pricing.plans.personal.premium.includes'),
+        excludes: getArray('pricing.plans.personal.premium.excludes'),
       },
       {
         name: t('pricing.plans.personal.corporate.name'),
@@ -52,8 +58,8 @@ export function Pricing() {
         description: t('pricing.plans.personal.corporate.description'),
         buttonText: t('pricing.plans.personal.corporate.buttonText'),
         buttonIcon: <Crown className="w-4 h-4" />,
-        includes: t('pricing.plans.personal.corporate.includes') as string[],
-        excludes: t('pricing.plans.personal.corporate.excludes') as string[],
+        includes: getArray('pricing.plans.personal.corporate.includes'),
+        excludes: getArray('pricing.plans.personal.corporate.excludes'),
       },
     ],
     empresa: [
@@ -63,8 +69,8 @@ export function Pricing() {
         description: t('pricing.plans.empresa.free.description'),
         buttonText: t('pricing.plans.empresa.free.buttonText'),
         buttonIcon: <Users className="w-4 h-4" />,
-        includes: t('pricing.plans.empresa.free.includes') as string[],
-        excludes: t('pricing.plans.empresa.free.excludes') as string[],
+        includes: getArray('pricing.plans.empresa.free.includes'),
+        excludes: getArray('pricing.plans.empresa.free.excludes'),
       },
       {
         name: t('pricing.plans.empresa.business.name'),
@@ -73,8 +79,8 @@ export function Pricing() {
         description: t('pricing.plans.empresa.business.description'),
         buttonText: t('pricing.plans.empresa.business.buttonText'),
         buttonIcon: <CreditCard className="w-4 h-4" />,
-        includes: t('pricing.plans.empresa.business.includes') as string[],
-        excludes: t('pricing.plans.empresa.business.excludes') as string[],
+        includes: getArray('pricing.plans.empresa.business.includes'),
+        excludes: getArray('pricing.plans.empresa.business.excludes'),
       },
       {
         name: t('pricing.plans.empresa.corporate.name'),
@@ -83,11 +89,12 @@ export function Pricing() {
         description: t('pricing.plans.empresa.corporate.description'),
         buttonText: t('pricing.plans.empresa.corporate.buttonText'),
         buttonIcon: <Crown className="w-4 h-4" />,
-        includes: t('pricing.plans.empresa.corporate.includes') as string[],
-        excludes: t('pricing.plans.empresa.corporate.excludes') as string[],
+        includes: getArray('pricing.plans.empresa.corporate.includes'),
+        excludes: getArray('pricing.plans.empresa.corporate.excludes'),
       },
     ],
-  }), [t]);
+    };
+  }, [t]);
 
   const currentPlans = plans[userType];
 

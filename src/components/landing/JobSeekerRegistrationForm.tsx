@@ -38,10 +38,15 @@ interface JobSeekerFormData {
 export function JobSeekerRegistrationForm() {
   const t = useTranslation();
   
-  const tiposDiscapacidad = useMemo(() => t('forms.jobSeeker.disabilityTypes') as string[], [t]);
-  const nivelesLSC = useMemo(() => t('forms.jobSeeker.lscLevels') as string[], [t]);
-  const nivelesEducativos = useMemo(() => t('forms.jobSeeker.educationLevels') as string[], [t]);
-  const areasLaborales = useMemo(() => t('forms.jobSeeker.workAreas') as string[], [t]);
+  const getArray = (key: string): string[] => {
+    const value = t(key);
+    return Array.isArray(value) ? value : [];
+  };
+  
+  const tiposDiscapacidad = useMemo(() => getArray('forms.jobSeeker.disabilityTypes'), [t]);
+  const nivelesLSC = useMemo(() => getArray('forms.jobSeeker.lscLevels'), [t]);
+  const nivelesEducativos = useMemo(() => getArray('forms.jobSeeker.educationLevels'), [t]);
+  const areasLaborales = useMemo(() => getArray('forms.jobSeeker.workAreas'), [t]);
   
   const [formData, setFormData] = useState<JobSeekerFormData>({
     nombreCompleto: '',

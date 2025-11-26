@@ -39,11 +39,16 @@ interface InterpreterFormData {
 export function InterpreterRegistrationForm() {
   const t = useTranslation();
   
-  const nivelesAcademicos = useMemo(() => t('forms.interpreter.academicLevels') as string[], [t]);
-  const nivelesExperiencia = useMemo(() => t('forms.interpreter.experienceLevels') as string[], [t]);
-  const areasEspecialidad = useMemo(() => t('forms.interpreter.specialtyAreas') as string[], [t]);
-  const disponibilidadesHorarias = useMemo(() => t('forms.interpreter.availability') as string[], [t]);
-  const tiposServicio = useMemo(() => t('forms.interpreter.serviceTypes') as string[], [t]);
+    const getArray = (key: string): string[] => {
+    const value = t(key);
+    return Array.isArray(value) ? value : [];
+  };
+  
+  const nivelesAcademicos = useMemo(() => getArray('forms.interpreter.academicLevels'), [t]);
+  const nivelesExperiencia = useMemo(() => getArray('forms.interpreter.experienceLevels'), [t]);
+  const areasEspecialidad = useMemo(() => getArray('forms.interpreter.specialtyAreas'), [t]);
+  const disponibilidadesHorarias = useMemo(() => getArray('forms.interpreter.availability'), [t]);
+  const tiposServicio = useMemo(() => getArray('forms.interpreter.serviceTypes'), [t]);
   
   const [formData, setFormData] = useState<InterpreterFormData>({
     nombreCompleto: '',
