@@ -10,6 +10,7 @@ import { FAQ } from '@/components/landing/FAQ';
 import { TechBackground } from '@/components/landing/TechBackground';
 import { AccessibilityButton } from '@/components/landing/AccessibilityButton';
 import { RegionalMap } from '@/components/landing/RegionalMap';
+import { DownloadAppSection } from '@/components/landing/DownloadAppSection';
 
 // Contexto para compartir el estado del panel de registro
 const RegistrationPanelContext = createContext<{
@@ -54,6 +55,7 @@ export default function Home() {
           <HowToStart />
           <HowItWorks />
           <Services />
+          <DownloadAppSection />
           <Testimonials />
           <FAQ />
         </div>

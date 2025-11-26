@@ -140,7 +140,7 @@ export function Navbar() {
                               <Link
                                 key={index}
                                 href={service.href}
-                                className="flex items-start gap-3 px-4 py-3 hover:bg-gray-50 transition-colors group"
+                                className="flex items-start gap-3 px-4 py-3 hover:bg-gray-50 transition-all duration-300 group hover:translate-x-2"
                                 onClick={() => setServicesDropdownOpen(false)}
                               >
                                 <div

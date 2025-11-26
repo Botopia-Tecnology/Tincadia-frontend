@@ -20,6 +20,7 @@
     "services": "Services",
     "courses": "Courses",
     "pricing": "Pricing",
+    "download": "Download",
     "contact": "Contact",
     "learnMore": "Learn More",
     "findJob": "Find a Job",
@@ -208,6 +209,18 @@
     ],
     "notFound": "Can't find what you're looking for?",
     "contactButton": "Contact us directly"
+  },
+  "download": {
+    "title": "Get the TINCADIA app",
+    "description": "TINCADIA is always available. Whether you're heading to your usual destination or exploring new places, just open the TINCADIA app and access all accessibility tools. Download and get started now.",
+    "downloadOnThe": "Download on the",
+    "appStore": "App Store",
+    "getItOn": "Get it on",
+    "googlePlay": "Google Play",
+    "appStoreLabel": "Download on App Store",
+    "googlePlayLabel": "Download on Google Play",
+    "comingSoon": "Currently under update and development. Launch of the new version coming soon.",
+    "scanToDownload": "Scan to download"
   },
   "footer": {
     "description": "Creating inclusive technology solutions to connect people, companies, and organizations.",

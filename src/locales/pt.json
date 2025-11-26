@@ -20,6 +20,7 @@
     "services": "Serviços",
     "courses": "Cursos",
     "pricing": "Preços",
+    "download": "Baixar",
     "contact": "Contato",
     "learnMore": "Saiba Mais",
     "findJob": "Encontrar Trabalho",
@@ -208,6 +209,18 @@
     ],
     "notFound": "Não encontrou o que procura?",
     "contactButton": "Entre em contato conosco diretamente"
+  },
+  "download": {
+    "title": "Baixe o aplicativo TINCADIA",
+    "description": "A TINCADIA está sempre disponível. Seja para ir ao seu destino habitual ou explorar novos lugares, basta abrir o app TINCADIA e acessar todas as ferramentas de acessibilidade. Baixe e comece agora.",
+    "downloadOnThe": "Baixe na",
+    "appStore": "App Store",
+    "getItOn": "Disponível no",
+    "googlePlay": "Google Play",
+    "appStoreLabel": "Baixar na App Store",
+    "googlePlayLabel": "Baixar no Google Play",
+    "comingSoon": "Atualmente em atualização e desenvolvimento. Lançamento da nova versão em breve.",
+    "scanToDownload": "Escaneie para baixar"
   },
   "footer": {
     "description": "Criando soluções de tecnologia inclusiva para conectar pessoas, empresas e organizações.",
