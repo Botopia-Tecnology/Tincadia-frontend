@@ -17,13 +17,14 @@ const RegistrationPanelContext = createContext<{
   setIsOpen: (isOpen: boolean) => void;
 }>({
   isOpen: false,
-  setIsOpen: () => {},
+  setIsOpen: () => { },
 });
 
 export const useRegistrationPanel = () => useContext(RegistrationPanelContext);
 
 export default function Home() {
   const [isRegistrationPanelOpen, setIsRegistrationPanelOpen] = useState(false);
+  const [disableAnimations, setDisableAnimations] = useState(false);
 
   return (
     <div className="min-h-screen w-full relative">
@@ -43,12 +44,12 @@ export default function Home() {
       />
 
       {/* Interactive Particles */}
-      <TechBackground />
+      <TechBackground disableAnimations={disableAnimations} />
 
       {/* Page Content */}
       <RegistrationPanelContext.Provider value={{ isOpen: isRegistrationPanelOpen, setIsOpen: setIsRegistrationPanelOpen }}>
         <div className="relative z-10">
-          <Hero />
+          <Hero disableAnimations={disableAnimations} />
           <RegionalMap />
           <HowToStart />
           <HowItWorks />
@@ -58,7 +59,11 @@ export default function Home() {
         </div>
 
         {/* Accessibility Button */}
-        <AccessibilityButton isRegistrationPanelOpen={isRegistrationPanelOpen} />
+        <AccessibilityButton
+          isRegistrationPanelOpen={isRegistrationPanelOpen}
+          disableAnimations={disableAnimations}
+          setDisableAnimations={setDisableAnimations}
+        />
       </RegistrationPanelContext.Provider>
     </div>
   );

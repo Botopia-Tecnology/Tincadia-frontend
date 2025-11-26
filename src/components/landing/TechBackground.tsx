@@ -5,7 +5,11 @@ import Particles, { initParticlesEngine } from '@tsparticles/react';
 import { loadSlim } from '@tsparticles/slim';
 import type { Container, Engine } from '@tsparticles/engine';
 
-export function TechBackground() {
+interface TechBackgroundProps {
+  disableAnimations?: boolean;
+}
+
+export function TechBackground({ disableAnimations = false }: TechBackgroundProps) {
   const [init, setInit] = useState(false);
 
   useEffect(() => {
@@ -38,7 +42,7 @@ export function TechBackground() {
             },
             modes: {
               push: { quantity: 4 },
-              grab: { distance: 140, links: { opacity: 1 } },
+              grab: { distance: 140, links: { opacity: 0.2 } },
             },
           },
           particles: {
@@ -47,12 +51,12 @@ export function TechBackground() {
               color: "#83A98A",
               distance: 150,
               enable: true,
-              opacity: 0.8, // increased opacity for links
+              opacity: 0.4, // Reducida opacidad para que no estorben
               width: 1,
             },
             move: {
               direction: "none",
-              enable: true,
+              enable: !disableAnimations,
               outModes: { default: "bounce" },
               random: false,
               speed: 2,
@@ -62,7 +66,7 @@ export function TechBackground() {
               density: { enable: true },
               value: 80,
             },
-            opacity: { value: 0.8 }, // increased particle opacity
+            opacity: { value: 0.3 }, // Reducida opacidad para que no estorben
             shape: { type: "circle" },
             size: { value: { min: 1, max: 5 } },
           },

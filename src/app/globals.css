@@ -115,6 +115,7 @@
   * {
     @apply border-border outline-ring/50;
   }
+
   body {
     @apply bg-background text-foreground;
   }
@@ -137,15 +138,20 @@
 
   /* Animación de flotación para iconos decorativos */
   @keyframes float {
-    0%, 100% {
+
+    0%,
+    100% {
       transform: translateY(0px) rotate(0deg);
     }
+
     25% {
       transform: translateY(-10px) rotate(5deg);
     }
+
     50% {
       transform: translateY(-20px) rotate(0deg);
     }
+
     75% {
       transform: translateY(-10px) rotate(-5deg);
     }
@@ -160,6 +166,7 @@
     0% {
       transform: translateX(0);
     }
+
     100% {
       transform: translateX(-50%);
     }
@@ -169,6 +176,7 @@
     from {
       transform: translateX(0);
     }
+
     to {
       transform: translateX(-33.333%);
     }
@@ -196,6 +204,7 @@
       transform: translateY(20px);
       clip-path: inset(0 100% 0 0);
     }
+
     100% {
       opacity: 1;
       transform: translateY(0);
@@ -209,6 +218,7 @@
       opacity: 1;
       clip-path: inset(0 0 0 0);
     }
+
     100% {
       opacity: 0;
       clip-path: inset(0 0 0 100%);
@@ -221,6 +231,7 @@
       opacity: 0;
       transform: translateY(30px);
     }
+
     100% {
       opacity: 1;
       transform: translateY(0);
@@ -245,6 +256,7 @@
       opacity: 0;
       transform: translateY(40px);
     }
+
     100% {
       opacity: 1;
       transform: translateY(0);
@@ -257,6 +269,7 @@
       opacity: 1;
       transform: translateY(0);
     }
+
     100% {
       opacity: 0;
       transform: translateY(-40px);
@@ -276,6 +289,7 @@
     from {
       transform: rotate(0deg);
     }
+
     to {
       transform: rotate(360deg);
     }
@@ -287,14 +301,15 @@
 
   /* Animación para cada letra individual rotando alrededor del círculo */
   @keyframes rotate-letter-around-circle {
-    from { 
+    from {
       transform: rotate(0deg);
     }
-    to { 
+
+    to {
       transform: rotate(360deg);
     }
   }
-  
+
   .animate-letter-circle {
     animation: rotate-letter-around-circle 20s linear infinite;
     transform-origin: center center;
@@ -307,11 +322,13 @@
       transform: scale(0.9) translateY(20px);
       filter: blur(8px);
     }
+
     60% {
       opacity: 1;
       transform: scale(1.02) translateY(0px);
       filter: blur(0px);
     }
+
     100% {
       opacity: 1;
       transform: scale(1) translateY(0px);
@@ -319,4 +336,17 @@
     }
   }
 
+  .accessibility-large-cursor,
+  .accessibility-large-cursor * {
+    cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="black" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3l7.07 16.97 2.51-7.39 7.39-2.51L3 3z"/></svg>') 10 10, auto !important;
+  }
+
+  .accessibility-no-animations,
+  .accessibility-no-animations *,
+  .accessibility-no-animations *::before,
+  .accessibility-no-animations *::after {
+    animation: none !important;
+    transition: none !important;
+    scroll-behavior: auto !important;
+  }
 }

@@ -33,7 +33,11 @@ const CONCEPT_STEPS = [
   },
 ];
 
-export function Hero() {
+interface HeroProps {
+  disableAnimations?: boolean;
+}
+
+export function Hero({ disableAnimations = false }: HeroProps) {
   const videoRef = useRef<HTMLVideoElement>(null);
 
   const [currentStep, setCurrentStep] = useState(0);
@@ -81,6 +85,8 @@ export function Hero() {
 
   // Animación de la órbita de las letras usando requestAnimationFrame para máxima fluidez
   useEffect(() => {
+    if (disableAnimations) return;
+
     let animationFrameId: number;
     let lastTime = 0;
     const targetFPS = 60;
@@ -105,10 +111,12 @@ export function Hero() {
         cancelAnimationFrame(animationFrameId);
       }
     };
-  }, []);
+  }, [disableAnimations]);
 
   // Animación inicial: mostrar TINCADIA, video, texto y arrancar ciclo de conceptos
   useEffect(() => {
+    let intervalId: NodeJS.Timeout;
+
     const showTincadiaTimer = setTimeout(() => {
       setShowTincadia(true);
     }, 150);
@@ -119,12 +127,13 @@ export function Hero() {
 
     const showWordAndCycleTimer = setTimeout(() => {
       setShowWord(true);
+
+      if (disableAnimations) return;
+
       // Iniciar ciclo fluido de conceptos con transición suave
-      const interval = setInterval(() => {
+      intervalId = setInterval(() => {
         setCurrentStep((prev) => (prev + 1) % CONCEPT_STEPS.length);
       }, 1750);
-
-      return () => clearInterval(interval);
     }, 750);
 
     const showDescTimer = setTimeout(() => {
@@ -137,8 +146,9 @@ export function Hero() {
       clearTimeout(showVideoTimer);
       clearTimeout(showWordAndCycleTimer);
       clearTimeout(showDescTimer);
+      if (intervalId) clearInterval(intervalId);
     };
-  }, []);
+  }, [disableAnimations]);
 
   const currentConcept = CONCEPT_STEPS[currentStep];
 
