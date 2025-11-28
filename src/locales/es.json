@@ -595,5 +595,56 @@
     "microsoft": "Continuar con Microsoft",
     "noAccount": "¿No tienes una cuenta?",
     "signUp": "Regístrate"
+  },
+  "impact": {
+    "title": "¿Por qué elegirnos?",
+    "subtitle": "TINCADIA no solo conecta talento: educa, sensibiliza y mide el impacto social para transformar la inclusión en acciones reales.",
+    "tabs": {
+      "companies": "Para las empresas",
+      "deafPeople": "Para las personas sordas",
+      "society": "Para la sociedad"
+    },
+    "companies": {
+      "items": [
+        "Cumplimiento de políticas de inclusión y Objetivos de Desarrollo Sostenible (ODS 8, 10 y 17).",
+        "Mejora en la reputación corporativa y en el clima laboral.",
+        "Acompañamiento en accesibilidad comunicativa y procesos inclusivos.",
+        "Acceso a herramientas tecnológicas que facilitan la comunicación con colaboradores sordos."
+      ]
+    },
+    "deafPeople": {
+      "items": [
+        "Mayor acceso a oportunidades laborales y educativas.",
+        "Entornos de comunicación accesibles.",
+        "Formación en Lengua de Señas Colombiana, tecnología e inteligencia artificial.",
+        "Conexión directa con empresas inclusivas."
+      ]
+    },
+    "society": {
+      "items": [
+        "Reducción de desigualdades.",
+        "Promoción de espacios inclusivos y accesibles.",
+        "Fomento del respeto, la diversidad y la eliminación de barreras de comunicación."
+      ]
+    },
+    "ods": {
+      "title": "ODS que impulsamos",
+      "items": {
+        "education": "Educación de calidad",
+        "work": "Trabajo decente",
+        "inequality": "Reducción de desigualdades",
+        "peace": "Paz y justicia institucionales",
+        "alliances": "Alianzas para lograr los objetivos"
+      }
+    },
+    "businessImpact": {
+      "title": "Impacto empresarial",
+      "items": [
+        "Transformación real de los procesos internos hacia la inclusión.",
+        "Medición y seguimiento del impacto social.",
+        "Implementación de herramientas accesibles para equipos diversos.",
+        "Contribución directa a la empleabilidad de personas sordas en Colombia."
+      ]
+    }
   }
 }

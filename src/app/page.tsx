@@ -12,6 +12,7 @@ import { AccessibilityButton } from '@/components/landing/AccessibilityButton';
 import { RegionalMap } from '@/components/landing/RegionalMap';
 import { DownloadAppSection } from '@/components/landing/DownloadAppSection';
 import { LoginPanel } from '@/components/landing/LoginPanel';
+import { ImpactSection } from '@/components/landing/ImpactSection';
 
 // Contexto para compartir el estado del panel de registro
 const RegistrationPanelContext = createContext<{
@@ -62,6 +63,7 @@ export default function Home() {
         <div className="relative z-10">
           <Hero disableAnimations={disableAnimations} />
           <RegionalMap />
+          <ImpactSection />
           <HowToStart />
           <HowItWorks />
           <Services />
