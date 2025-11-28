@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, createContext, useContext } from 'react';
+import { useState, createContext, useContext, useEffect } from 'react';
 import { Hero } from '@/components/landing/Hero';
 import { Services } from '@/components/landing/Services';
 import { HowItWorks } from '@/components/landing/HowItWorks';
@@ -11,6 +11,7 @@ import { TechBackground } from '@/components/landing/TechBackground';
 import { AccessibilityButton } from '@/components/landing/AccessibilityButton';
 import { RegionalMap } from '@/components/landing/RegionalMap';
 import { DownloadAppSection } from '@/components/landing/DownloadAppSection';
+import { LoginPanel } from '@/components/landing/LoginPanel';
 
 // Contexto para compartir el estado del panel de registro
 const RegistrationPanelContext = createContext<{
@@ -25,7 +26,16 @@ export const useRegistrationPanel = () => useContext(RegistrationPanelContext);
 
 export default function Home() {
   const [isRegistrationPanelOpen, setIsRegistrationPanelOpen] = useState(false);
+  const [isLoginPanelOpen, setIsLoginPanelOpen] = useState(false);
   const [disableAnimations, setDisableAnimations] = useState(false);
+
+  // Expose login panel function globally for Navbar
+  useEffect(() => {
+    (window as any).openLoginPanel = () => setIsLoginPanelOpen(true);
+    return () => {
+      delete (window as any).openLoginPanel;
+    };
+  }, []);
 
   return (
     <div className="min-h-screen w-full relative">
@@ -65,6 +75,16 @@ export default function Home() {
           isRegistrationPanelOpen={isRegistrationPanelOpen}
           disableAnimations={disableAnimations}
           setDisableAnimations={setDisableAnimations}
+        />
+
+        {/* Login Panel */}
+        <LoginPanel
+          isOpen={isLoginPanelOpen}
+          onClose={() => setIsLoginPanelOpen(false)}
+          onSignUpClick={() => {
+            setIsLoginPanelOpen(false);
+            setIsRegistrationPanelOpen(true);
+          }}
         />
       </RegistrationPanelContext.Provider>
     </div>

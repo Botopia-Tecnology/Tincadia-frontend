@@ -1,0 +1,19 @@
+{
+    "login": {
+        "title": "Welcome back",
+        "subtitle": "Login to your account",
+        "email": "Email address",
+        "emailPlaceholder": "Enter your email address",
+        "password": "Password",
+        "passwordPlaceholder": "Enter your password",
+        "forgotPassword": "Forgot password?",
+        "loginButton": "Login",
+        "orContinueWith": "or continue with",
+        "noAccount": "Don't have an account?",
+        "signUp": "Sign up",
+        "closeLabel": "Close login panel",
+        "google": "Continue with Google",
+        "apple": "Continue with Apple",
+        "microsoft": "Continue with Microsoft"
+    }
+}

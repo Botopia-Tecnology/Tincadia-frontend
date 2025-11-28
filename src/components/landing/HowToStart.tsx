@@ -6,7 +6,7 @@ import { useTranslation } from '@/hooks/useTranslation';
 
 export function HowToStart() {
   const t = useTranslation();
-  
+
   const features = useMemo(() => {
     const getSteps = (key: string): string[] => {
       const steps = t(key);
@@ -333,7 +333,7 @@ export function HowToStart() {
                       <h3 className="text-3xl font-bold text-gray-900 mb-2">
                         {feature.title}
                       </h3>
-                      <p className="text-xl text-[#83A98A] font-semibold mb-4">
+                      <p className="text-xl text-[#5A7A62] font-semibold mb-4">
                         {feature.subtitle}
                       </p>
                       <p className="text-lg text-gray-600 leading-relaxed">

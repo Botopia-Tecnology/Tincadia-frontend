@@ -14,7 +14,7 @@ export function Navbar() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [servicesDropdownOpen, setServicesDropdownOpen] = useState(false);
   const servicesDropdownRef = useRef<HTMLDivElement>(null);
-  
+
   const navigation = useMemo(() => [
     { name: t('navbar.about'), href: '#nosotros' },
     { name: t('navbar.services'), href: '#servicios', hasDropdown: true },
@@ -119,9 +119,8 @@ export function Navbar() {
                     >
                       {item.name}
                       <ChevronDown
-                        className={`w-4 h-4 flex-shrink-0 transition-transform ${
-                          servicesDropdownOpen ? 'rotate-180' : ''
-                        }`}
+                        className={`w-4 h-4 flex-shrink-0 transition-transform ${servicesDropdownOpen ? 'rotate-180' : ''
+                          }`}
                       />
                     </button>
 
@@ -181,12 +180,17 @@ export function Navbar() {
           {/* CTA desktop */}
           <div className="hidden lg:flex lg:flex-1 lg:justify-end lg:items-center lg:gap-3 xl:gap-4">
             <LanguageSelector />
-            <Link
-              href="#cursos"
+            <button
+              onClick={() => {
+                // This will be passed as a prop
+                if (typeof window !== 'undefined' && (window as any).openLoginPanel) {
+                  (window as any).openLoginPanel();
+                }
+              }}
               className="rounded-lg bg-[#83A98A] px-3 xl:px-4 py-1.5 text-xs xl:text-sm font-semibold text-white shadow-sm hover:bg-[#6D8F75] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#83A98A] transition-colors whitespace-nowrap"
             >
-              {t('navbar.learnMore')}
-            </Link>
+              Login
+            </button>
           </div>
         </nav>
       </header>
@@ -200,3 +204,4 @@ export function Navbar() {
     </>
   );
 }
+

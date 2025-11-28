@@ -315,10 +315,10 @@ export function Hero({ disableAnimations = false }: HeroProps) {
         <div className="mx-auto max-w-7xl px-6 lg:px-8 mb-8">
           <h2 className="text-center text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-900 tracking-tight">
             En nosotros{' '}
-            <span className="text-[#83A98A] relative inline-block">
+            <span className="text-[#5A7A62] relative inline-block">
               confían
               <span
-                className="absolute bottom-0 left-0 w-full h-1 bg-[#83A98A]/30"
+                className="absolute bottom-0 left-0 w-full h-1 bg-[#5A7A62]/30"
                 aria-hidden="true"
               />
             </span>
@@ -347,6 +347,7 @@ export function Hero({ disableAnimations = false }: HeroProps) {
                       alt=""
                       fill
                       className="object-contain"
+                      sizes="(max-width: 768px) 80px, (max-width: 1024px) 96px, 112px"
                     />
                   </div>
                   <div className="relative h-10 w-28 md:h-12 md:w-32 lg:h-14 lg:w-36 flex-shrink-0 grayscale hover:grayscale-0 transition-all duration-300 opacity-60 hover:opacity-100">
@@ -355,6 +356,7 @@ export function Hero({ disableAnimations = false }: HeroProps) {
                       alt=""
                       fill
                       className="object-contain"
+                      sizes="(max-width: 768px) 112px, (max-width: 1024px) 128px, 144px"
                     />
                   </div>
                   <div className="relative h-10 w-28 md:h-12 md:w-32 lg:h-14 lg:w-36 flex-shrink-0 grayscale hover:grayscale-0 transition-all duration-300 opacity-60 hover:opacity-100">
@@ -363,6 +365,7 @@ export function Hero({ disableAnimations = false }: HeroProps) {
                       alt=""
                       fill
                       className="object-contain"
+                      sizes="(max-width: 768px) 112px, (max-width: 1024px) 128px, 144px"
                     />
                   </div>
                 </div>

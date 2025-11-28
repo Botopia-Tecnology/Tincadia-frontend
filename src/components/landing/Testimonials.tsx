@@ -7,13 +7,13 @@ import { useTranslation } from '@/hooks/useTranslation';
 
 export function Testimonials() {
   const t = useTranslation();
-  
+
   const testimonials = useMemo(() => {
     const getTestimonials = (): Array<{ name: string; role: string; company: string; text: string }> => {
       const value = t('testimonials.testimonials');
       return Array.isArray(value) ? value : [];
     };
-    
+
     const testimonialsData = getTestimonials();
     return testimonialsData.map((testimonial, index) => ({
       id: index + 1,
@@ -148,9 +148,9 @@ export function Testimonials() {
 
                       {/* Info */}
                       <div className="flex-1">
-                        <h4 className="text-white font-bold text-lg">
+                        <p className="text-white font-bold text-lg">
                           {testimonial.name}
-                        </h4>
+                        </p>
                         <p className="text-white/90 text-sm">
                           {testimonial.role}
                         </p>
@@ -187,9 +187,9 @@ export function Testimonials() {
               key={index}
               onClick={() => setCurrentIndex(index)}
               className={`
-                w-2 h-2 rounded-full transition-all duration-300
+                p-2 w-3 h-3 rounded-full transition-all duration-300
                 ${index === currentIndex
-                  ? 'w-8 bg-[#83A98A]'
+                  ? 'w-10 bg-[#83A98A]'
                   : 'bg-gray-300 hover:bg-gray-400'}
               `}
               aria-label={`${t('testimonials.goTo')} ${index + 1}`}
