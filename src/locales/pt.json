@@ -16,17 +16,17 @@
     "reset": "Redefinir"
   },
   "navbar": {
-    "about": "Sobre",
+    "about": "Sobre Nós",
     "services": "Serviços",
     "courses": "Cursos",
     "pricing": "Preços",
     "download": "Baixar",
     "contact": "Contato",
-    "learnMore": "Saiba Mais",
-    "findJob": "Encontrar Trabalho",
+    "learnMore": "Saiba mais",
+    "findJob": "Encontrar Emprego",
     "findInclusiveCompany": "Empresa Inclusiva",
     "findInclusiveCompanyDesc": "Conecte-se com empresas comprometidas com a inclusão",
-    "becomeInterpreter": "Ser Intérprete",
+    "becomeInterpreter": "Seja um Intérprete",
     "becomeInterpreterDesc": "Junte-se à nossa rede de intérpretes profissionais",
     "openMenu": "Abrir menu",
     "closeMenu": "Fechar menu"
@@ -40,47 +40,47 @@
       "disability": "Deficiência",
       "ai": "Inteligência Artificial"
     },
-    "description": "Somos <strong>TINCADIA</strong>, uma empresa focada em <strong>tecnologia inclusiva</strong>, <strong>acessibilidade</strong>, <strong>deficiência</strong> e <strong>inteligência artificial</strong>. Dedicamo-nos a promover a inclusão social de pessoas com deficiência auditiva e outras deficiências em setores estratégicos, por meio de soluções inovadoras que promovem a igualdade de oportunidades. Além disso, buscamos conectar empresas e estabelecer parcerias entre diversos setores, eliminando barreiras.",
-    "emailPlaceholder": "Digite seu endereço de e-mail",
+    "description": "Somos a <strong>TINCADIA</strong>, uma empresa focada em <strong>tecnologia inclusiva</strong>, <strong>acessibilidade</strong>, <strong>deficiência</strong> e <strong>inteligência artificial</strong>. Dedicamo-nos a promover a inclusão social de pessoas com deficiência auditiva e outras deficiências em setores estratégicos, através de soluções inovadoras que fomentam a igualdade de oportunidades. Além disso, buscamos conectar empresas e estabelecer alianças entre diversos setores, eliminando barreiras.",
+    "emailPlaceholder": "Digite seu e-mail",
     "emailLabel": "Endereço de e-mail",
     "startButton": "Começar",
-    "startButtonLabel": "Iniciar registro"
+    "startButtonLabel": "Iniciar cadastro"
   },
   "services": {
     "title": "Nossos Serviços",
-    "subtitle": "Oferecemos soluções abrangentes para tornar a tecnologia acessível a todas as pessoas, independentemente de suas habilidades.",
+    "subtitle": "Oferecemos soluções completas para tornar a tecnologia acessível a todos, independentemente de suas capacidades.",
     "signLanguage": {
       "badge": "Bem-vindo à aula!",
       "title": "Aprenda Língua de Sinais",
       "subtitle": "Aulas guiadas por especialistas",
-      "description": "Treine em Língua de Sinais Colombiana (LSC) através de sessões didáticas, inclusivas e 100% práticas.",
+      "description": "Capacite-se em Língua de Sinais Colombiana (LSC) com sessões didáticas, inclusivas e 100% práticas.",
       "primaryAction": "Agendar aula",
       "secondaryAction": "Mais informações"
     },
     "translator": {
       "badge": "Seu celular interpretando sinais",
-      "title": "Tradução em tempo real",
+      "title": "Tradução em Tempo Real",
       "subtitle": "De sinais para texto ou voz",
-      "description": "Um aplicativo intérprete de Língua de Sinais em tempo real convertendo em texto ou voz, comunicação real",
-      "primaryAction": "Experimentar agora",
-      "secondaryAction": "Ver demonstração"
+      "description": "Um app intérprete de Língua de Sinais em tempo real convertendo para texto ou voz, comunicação real",
+      "primaryAction": "Testar agora",
+      "secondaryAction": "Ver demo"
     },
     "writingAssistant": {
       "badge": "Redação assistida por IA",
-      "title": "Assistente de Redação Inclusiva",
+      "title": "Assistente de Escrita Inclusiva",
       "subtitle": "Comunique suas ideias com clareza",
-      "description": "Escreva mensagens profissionais, claras e acessíveis com suporte de IA.",
+      "description": "Escreva mensagens profissionais, claras e acessíveis com apoio de IA.",
       "primaryAction": "Usar assistente",
       "secondaryAction": "Como funciona"
     }
   },
   "howToStart": {
-    "title": "Como",
+    "title": "Como funciona",
     "titleHighlight": "TINCADIA",
-    "subtitle": "Explore nossos principais recursos e descubra como cada ferramenta facilita a comunicação inclusiva.",
+    "subtitle": "Explore nossas principais funcionalidades e descubra como cada ferramenta facilita a comunicação inclusiva.",
     "features": {
       "voiceToText": {
-        "title": "Transcrição de voz para texto",
+        "title": "Transcrição de Voz para Texto",
         "subtitle": "Converta conversas em tempo real",
         "description": "Capture qualquer conversa e converta-a automaticamente em texto. Participe ativamente de aulas, reuniões ou conversas cotidianas sem perder detalhes.",
         "steps": [
@@ -91,22 +91,22 @@
         ]
       },
       "translation": {
-        "title": "Tradução automática",
+        "title": "Tradução Automática",
         "subtitle": "Acesse conteúdo em qualquer formato",
-        "description": "Traduza notícias, vídeos, filmes e documentos automaticamente. Acesse legendas CC e conteúdo acessível em várias plataformas.",
+        "description": "Traduza notícias, vídeos, filmes e documentos automaticamente. Acesse legendas CC e conteúdo acessível em múltiplas plataformas.",
         "steps": [
           "Envie ou selecione o conteúdo para traduzir",
           "Escolha o formato de saída (texto ou legendas)",
           "A IA processa e traduz o conteúdo",
-          "Desfrute do conteúdo totalmente acessível"
+          "Aproveite o conteúdo totalmente acessível"
         ]
       },
       "interpretation": {
         "title": "Interpretação em LSC",
         "subtitle": "Conecte-se com intérpretes profissionais",
-        "description": "Acesse intérpretes de Língua de Sinais Colombiana por vide chamada ou escaneie códigos QR em empresas, hospitais e universidades.",
+        "description": "Acesse intérpretes de Língua de Sinais Colombiana por videochamada ou escaneie códigos QR em empresas, hospitais e universidades.",
         "steps": [
-          "Escaneie o código QR ou abra a vide chamada",
+          "Escaneie o código QR ou abra a videochamada",
           "Conecte-se com um intérprete disponível",
           "Comunique-se em tempo real em LSC",
           "Finalize a sessão e avalie o serviço"
@@ -128,7 +128,7 @@
   "registration": {
     "panel": {
       "title": "Junte-se à TINCADIA e descubra nossas soluções",
-      "emailPlaceholder": "Digite seu endereço de e-mail",
+      "emailPlaceholder": "Digite seu e-mail",
       "continueButton": "Continuar",
       "orContinueWith": "ou continue com",
       "facebook": "Continuar com Facebook",
@@ -144,78 +144,78 @@
       "documentType": "Tipo",
       "documentNumber": "Número",
       "phone": "Telefone",
-      "email": "Endereço de e-mail",
+      "email": "E-mail",
       "password": "Senha",
-      "confirmPassword": "Confirmar senha",
+      "confirmPassword": "Confirmar Senha",
       "passwordMismatch": "As senhas não coincidem",
       "acceptPolicies": "Aceito as",
       "policiesLink": "políticas da Tincadia",
       "andDataUsage": "e o",
       "dataUsageLink": "uso de dados pessoais",
-      "createAccountButton": "Criar conta",
-      "closeLabel": "Fechar painel de registro"
+      "createAccountButton": "Criar Conta",
+      "closeLabel": "Fechar painel de cadastro"
     },
     "interpreter": {
-      "title": "Tornar-se um Intérprete",
+      "title": "Torne-se um Intérprete",
       "subtitle": "Junte-se à nossa rede de intérpretes profissionais certificados e faça a diferença na vida de pessoas surdas e com deficiência auditiva.",
       "fullName": "Nome Completo",
       "fullNamePlaceholder": "Digite seu nome completo",
       "email": "Endereço de E-mail",
       "emailPlaceholder": "email@exemplo.com",
-      "certifications": "Certificações (ex. ILSE, FESORD)",
+      "certifications": "Certificações (ex: ILSE, FESORD)",
       "certificationsPlaceholder": "Ex: ILSE Nível 3, FESORD",
       "submitButton": "Candidatar-se Agora"
     },
     "jobSeeker": {
-      "title": "Encontre sua Próxima Oportunidade",
-      "subtitle": "Crie um perfil e deixe empregadores inclusivos encontrarem você.",
-      "formTitle": "Formulário — Bolsa de Emprego Inclusiva",
+      "title": "Encontre Sua Próxima Oportunidade",
+      "subtitle": "Crie um perfil e deixe que empregadores inclusivos encontrem você.",
+      "formTitle": "Formulário — Banco de Empregos Inclusivo",
       "formDescription": "Preencha todos os campos para acessar oportunidades de trabalho em empresas inclusivas.",
       "fullName": "Nome Completo",
       "fullNamePlaceholder": "Digite seu nome completo",
       "email": "Endereço de E-mail",
       "emailPlaceholder": "email@exemplo.com",
-      "uploadCV": "Enviar CV (opcional)",
+      "uploadCV": "Enviar Currículo (opcional)",
       "chooseFile": "Escolher arquivo",
       "submitButton": "Criar Perfil",
       "submitForm": "Enviar Formulário"
     },
     "interpreterForm": {
-      "formTitle": "Formulário — Registro de Intérpretes de Língua de Sinais",
-      "formDescription": "Preencha todos os campos para fazer parte de nossa rede de intérpretes profissionais.",
+      "formTitle": "Formulário — Cadastro de Intérpretes de Língua de Sinais",
+      "formDescription": "Preencha todos os campos para fazer parte da nossa rede de intérpretes profissionais.",
       "submitForm": "Enviar Formulário"
     }
   },
   "faq": {
     "title": "Perguntas Frequentes",
-    "subtitle": "Tem perguntas? Temos respostas.",
+    "subtitle": "Tem dúvidas? Nós temos as respostas.",
     "questions": [
       {
         "question": "Como a Tincadia garante a qualidade dos intérpretes?",
-        "answer": "Todos os nossos intérpretes passam por um rigoroso processo de verificação que inclui validação de certificações (ILSE, FESORD), testes práticos de interpretação e avaliações contínuas de qualidade. Além disso, temos um sistema de classificação e feedback dos usuários que nos permite manter os mais altos padrões de serviço."
+        "answer": "Todos os nossos intérpretes passam por um rigoroso processo de verificação que inclui validação de certificações (ILSE, FESORD), testes práticos de interpretação e avaliações contínuas de qualidade. Além disso, contamos com um sistema de avaliações e feedback dos usuários que nos permite manter os mais altos padrões de serviço."
       },
       {
         "question": "Meus dados estão seguros na plataforma?",
-        "answer": "A segurança dos seus dados é nossa prioridade. Usamos criptografia de ponta a ponta, cumprimos regulamentações de proteção de dados (GDPR, LOPD) e realizamos auditorias de segurança periódicas. Seus dados pessoais nunca são compartilhados com terceiros sem seu consentimento explícito."
+        "answer": "A segurança dos seus dados é nossa prioridade. Utilizamos criptografia de ponta a ponta, cumprimos com regulamentações de proteção de dados (GDPR, LOPD) e realizamos auditorias de segurança periódicas. Seus dados pessoais nunca são compartilhados com terceiros sem seu consentimento explícito."
       },
       {
-        "question": "Qual é o custo do serviço para pessoas surdas?",
+        "question": "Qual o custo do serviço para pessoas surdas?",
         "answer": "Oferecemos diferentes planos adaptados a cada necessidade. O Plano Básico é gratuito e inclui funcionalidades essenciais como transcrição de voz para texto e tradução automática. Os planos Profissional e Premium oferecem recursos avançados com preços competitivos e opções de pagamento flexíveis."
       },
       {
-        "question": "Como as empresas são selecionadas no quadro de empregos?",
-        "answer": "As empresas passam por um processo de validação que verifica seu compromisso real com a inclusão. Avaliamos suas políticas de acessibilidade, cultura organizacional e experiência prévia com talentos diversos. Apenas empresas certificadas como inclusivas podem publicar ofertas de emprego em nossa plataforma."
+        "question": "Como as empresas são selecionadas no banco de empregos?",
+        "answer": "As empresas passam por um processo de validação que verifica seu compromisso real com a inclusão. Avaliamos suas políticas de acessibilidade, cultura organizacional e experiência anterior com talentos diversos. Apenas empresas certificadas como inclusivas podem publicar ofertas em nossa plataforma."
       }
     ],
     "notFound": "Não encontrou o que procura?",
-    "contactButton": "Entre em contato conosco diretamente"
+    "contactButton": "Contate-nos diretamente"
   },
   "download": {
     "title": "Baixe o aplicativo TINCADIA",
-    "description": "A TINCADIA está sempre disponível. Seja para ir ao seu destino habitual ou explorar novos lugares, basta abrir o app TINCADIA e acessar todas as ferramentas de acessibilidade. Baixe e comece agora.",
-    "downloadOnThe": "Baixe na",
+    "description": "A TINCADIA está sempre disponível. Seja indo para seu destino habitual ou explorando novos lugares, basta abrir o app TINCADIA e acessar todas as ferramentas de acessibilidade. Baixe e comece agora.",
+    "downloadOnThe": "Download on the",
     "appStore": "App Store",
-    "getItOn": "Disponível no",
+    "getItOn": "Get it on",
     "googlePlay": "Google Play",
     "appStoreLabel": "Baixar na App Store",
     "googlePlayLabel": "Baixar no Google Play",
@@ -225,29 +225,29 @@
   "footer": {
     "description": "Criando soluções de tecnologia inclusiva para conectar pessoas, empresas e organizações.",
     "downloadFree": "Baixe grátis",
-    "getItOn": "Disponível no",
+    "getItOn": "Get it on",
     "googlePlay": "Google Play",
-    "downloadOnThe": "Baixe na",
+    "downloadOnThe": "Download on the",
     "appStore": "App Store",
     "comingSoon": "Atualmente em atualização e desenvolvimento. Lançamento da nova versão em breve.",
     "service": "Serviço",
     "tincadia": "TINCADIA",
-    "tincadiaDesc": "Plataforma para conectar pessoas surdas, ouvintes e organizações por meio de tecnologia inclusiva.",
-    "forBusiness": "Para Empresas",
+    "tincadiaDesc": "Plataforma para conectar pessoas surdas, ouvintes e organizações através de tecnologia inclusiva.",
+    "forBusiness": "Para Negócios",
     "forBusinessDesc": "Soluções para empresas, entidades educacionais e organizações que buscam tornar seus serviços mais acessíveis.",
     "contact": "Contato",
     "email": "E-mail",
     "website": "Site",
-    "followUs": "Siga-nos nas redes sociais",
+    "followUs": "Siga-nos",
     "linkedin": "LinkedIn",
-    "linkedinDesc": "Publicações sobre inovação, empreendedorismo inclusivo e participação em eventos nacionais.",
+    "linkedinDesc": "Postagens sobre inovação, empreendedorismo inclusivo e participação em eventos nacionais.",
     "instagram": "Instagram",
-    "instagramDesc": "Conteúdo visual sobre projetos, treinamentos e avanços da equipe TINCADIA.",
+    "instagramDesc": "Conteúdo visual sobre projetos, treinamentos e progresso da equipe TINCADIA.",
     "facebook": "Facebook",
-    "facebookDesc": "Divulgação de atividades, chamadas e colaborações com entidades parceiras.",
+    "facebookDesc": "Divulgação de atividades, chamadas e colaborações com entidades aliadas.",
     "twitter": "X (Twitter)",
     "twitterDesc": "Notícias e atualizações breves sobre acessibilidade e inovação tecnológica.",
-    "whatsapp": "Canal do WhatsApp",
+    "whatsapp": "Canal WhatsApp",
     "whatsappDesc": "Canal oficial para informações, eventos e novidades da TINCADIA.",
     "youtube": "YouTube",
     "youtubeDesc": "Vídeos sobre inclusão, acessibilidade e depoimentos de impacto.",
@@ -268,7 +268,7 @@
     "subtitle": "Crie seu perfil e acesse oportunidades de trabalho em empresas comprometidas com a inclusão e diversidade."
   },
   "becomeInterpreter": {
-    "title": "Tornar-se um Intérprete",
+    "title": "Torne-se um Intérprete",
     "subtitle": "Junte-se à nossa rede de intérpretes profissionais certificados e faça a diferença na vida de pessoas surdas e com deficiência auditiva."
   },
   "howItWorks": {
@@ -278,25 +278,25 @@
     "steps": [
       {
         "title": "Crie seu Perfil",
-        "description": "Registre-se como candidato a emprego ou intérprete e conte-nos sobre seus objetivos."
+        "description": "Cadastre-se como candidato a emprego ou intérprete e conte-nos seus objetivos."
       },
       {
-        "title": "Verifique-se",
+        "title": "Seja Verificado",
         "description": "Complete nosso processo de verificação para garantir uma comunidade segura."
       },
       {
         "title": "Comece a Conectar",
-        "description": "Candidate-se a empregos, ofereça serviços de interpretação e quebre barreiras."
+        "description": "Candidate-se a vagas, ofereça serviços de interpretação e quebre barreiras."
       }
     ]
   },
   "testimonials": {
-    "title": "Casos de",
+    "title": "Histórias de",
     "titleHighlight": "Sucesso",
-    "subtitle": "Veja como a Tincadia está gerando um impacto real.",
+    "subtitle": "Veja como a Tincadia está gerando impacto real.",
     "previous": "Depoimento anterior",
     "next": "Próximo depoimento",
-    "goTo": "Ir ao depoimento",
+    "goTo": "Ir para depoimento",
     "testimonials": [
       {
         "name": "Almia",
@@ -306,15 +306,15 @@
       },
       {
         "name": "Andrey",
-        "role": "Intérprete LSE",
-        "company": "Freelance",
+        "role": "Intérprete de LSE",
+        "company": "Freelancer",
         "text": "Melhoramos significativamente o atendimento a pacientes com deficiência auditiva graças às soluções da TINCADIA."
       },
       {
         "name": "Elena R.",
         "role": "Gerente de RH",
         "company": "Corporação XYZ",
-        "text": "A certificação em acessibilidade nos permitiu ampliar nossos serviços para um público mais diverso."
+        "text": "A certificação em acessibilidade nos permitiu expandir nossos serviços para um público mais diverso."
       },
       {
         "name": "Carlos M.",
@@ -326,7 +326,7 @@
         "name": "María S.",
         "role": "Coordenadora de Projetos",
         "company": "ONG Inclusão Total",
-        "text": "Graças à TINCADIA, conseguimos conectar talentos surdos com oportunidades de trabalho reais. Uma mudança impressionante."
+        "text": "Graças à TINCADIA, conseguimos conectar talentos surdos com oportunidades reais de trabalho. Uma mudança impressionante."
       }
     ]
   },
@@ -334,7 +334,7 @@
     "title": "Planos e Preços",
     "subtitle": "Escolha o plano que melhor se adapta às suas necessidades",
     "personal": "Pessoal",
-    "empresa": "Empresa",
+    "empresa": "Empresarial",
     "mensual": "Mensal",
     "anual": "Anual",
     "save20": "Economize 20%",
@@ -347,18 +347,18 @@
       "personal": {
         "free": {
           "name": "Plano Gratuito",
-          "description": "Para usuários individuais que buscam melhorar acessibilidade",
+          "description": "Para usuários individuais que buscam melhorar sua acessibilidade",
           "buttonText": "Começar grátis",
           "includes": [
             "Acesso a conteúdos gratuitos e recursos educacionais.",
             "Material básico do curso de LSC.",
-            "Suporte comunitário e fóruns inclusivos.",
+            "Apoio comunitário e fóruns inclusivos.",
             "Certificado de participação.",
             "Acesso a fóruns inclusivos da comunidade."
           ],
           "excludes": [
             "Recursos avançados de IA",
-            "Múltiplos perfis",
+            "Perfis múltiplos",
             "Uso ilimitado",
             "Suporte prioritário"
           ]
@@ -375,7 +375,7 @@
             "Recursos avançados de IA"
           ],
           "excludes": [
-            "Múltiplos perfis ilimitados",
+            "Perfiles múltiplos ilimitados",
             "Uso ilimitado",
             "Suporte prioritário"
           ]
@@ -398,18 +398,18 @@
       "empresa": {
         "free": {
           "name": "Plano Gratuito",
-          "description": "Para usuários individuais que buscam melhorar acessibilidade",
+          "description": "Para usuários individuais que buscam melhorar sua acessibilidade",
           "buttonText": "Começar grátis",
           "includes": [
             "Acesso a conteúdos gratuitos e recursos educacionais.",
             "Material básico do curso de LSC.",
-            "Suporte comunitário e fóruns inclusivos.",
+            "Apoio comunitário e fóruns inclusivos.",
             "Certificado de participação.",
             "Acesso a fóruns inclusivos da comunidade."
           ],
           "excludes": [
             "Recursos avançados de IA",
-            "Múltiplos perfis",
+            "Perfis múltiplos",
             "Uso ilimitado",
             "Suporte prioritário"
           ]
@@ -426,7 +426,7 @@
             "Recursos avançados de IA"
           ],
           "excludes": [
-            "Múltiplos perfis ilimitados",
+            "Perfis múltiplos ilimitados",
             "Uso ilimitado",
             "Suporte prioritário"
           ]
@@ -580,6 +580,71 @@
         "Outros"
       ]
     }
+  },
+  "login": {
+    "closeLabel": "Fechar painel de login",
+    "title": "Bem-vindo de volta",
+    "subtitle": "Faça login na sua conta",
+    "emailPlaceholder": "Digite seu e-mail",
+    "passwordPlaceholder": "Digite sua senha",
+    "forgotPassword": "Esqueceu a senha?",
+    "loginButton": "Entrar",
+    "orContinueWith": "ou continue com",
+    "google": "Continuar com Google",
+    "apple": "Continuar com Apple",
+    "microsoft": "Continuar com Microsoft",
+    "noAccount": "Não tem uma conta?",
+    "signUp": "Cadastre-se"
+  },
+  "impact": {
+    "title": "Por que nos escolher?",
+    "subtitle": "A TINCADIA não apenas conecta talentos: educa, conscientiza e mede o impacto social para transformar a inclusão em ações reais.",
+    "tabs": {
+      "companies": "Para Empresas",
+      "deafPeople": "Para Pessoas Surdas",
+      "society": "Para a Sociedade"
+    },
+    "companies": {
+      "items": [
+        "Conformidade com políticas de inclusão e Objetivos de Desenvolvimento Sustentável (ODS 8, 10 e 17).",
+        "Melhoria na reputação corporativa e no clima organizacional.",
+        "Acompanhamento em acessibilidade comunicativa e processos inclusivos.",
+        "Acesso a ferramentas tecnológicas que facilitam a comunicação com colaboradores surdos."
+      ]
+    },
+    "deafPeople": {
+      "items": [
+        "Maior acesso a oportunidades de trabalho e educação.",
+        "Ambientes de comunicação acessíveis.",
+        "Formação em Língua de Sinais Colombiana, tecnologia e inteligência artificial.",
+        "Conexão direta com empresas inclusivas."
+      ]
+    },
+    "society": {
+      "items": [
+        "Redução das desigualdades.",
+        "Promoção de espaços inclusivos e acessíveis.",
+        "Fomento ao respeito, diversidade e eliminação de barreiras de comunicação."
+      ]
+    },
+    "ods": {
+      "title": "ODS que impulsionamos",
+      "items": {
+        "education": "Educação de Qualidade",
+        "work": "Trabalho Decente",
+        "inequality": "Redução das Desigualdades",
+        "peace": "Paz e Justiça",
+        "alliances": "Parcerias para os Objetivos"
+      }
+    },
+    "businessImpact": {
+      "title": "Impacto Empresarial",
+      "items": [
+        "Transformação real dos processos internos em direção à inclusão.",
+        "Medição e monitoramento do impacto social.",
+        "Implementação de ferramentas acessíveis para equipes diversas.",
+        "Contribuição direta para a empregabilidade de pessoas surdas na Colômbia."
+      ]
+    }
   }
 }
-

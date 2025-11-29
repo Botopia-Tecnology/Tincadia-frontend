@@ -189,7 +189,7 @@ export function Navbar() {
               }}
               className="rounded-lg bg-[#83A98A] px-3 xl:px-4 py-1.5 text-xs xl:text-sm font-semibold text-white shadow-sm hover:bg-[#6D8F75] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#83A98A] transition-colors whitespace-nowrap"
             >
-              Login
+              {t('login.loginButton')}
             </button>
           </div>
         </nav>
@@ -204,4 +204,3 @@ export function Navbar() {
     </>
   );
 }
-

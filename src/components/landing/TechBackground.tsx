@@ -46,9 +46,9 @@ export function TechBackground({ disableAnimations = false }: TechBackgroundProp
             },
           },
           particles: {
-            color: { value: "#83A98A" },
+            color: { value: "#ffffff" },
             links: {
-              color: "#83A98A",
+              color: "#ffffff",
               distance: 150,
               enable: true,
               opacity: 0.4, // Reducida opacidad para que no estorben
