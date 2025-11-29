@@ -1,0 +1,14 @@
+/* Importar todas las animaciones */
+@import './animations/float.css';
+@import './animations/scroll.css';
+@import './animations/reveal.css';
+@import './animations/slide.css';
+@import './animations/rotate.css';
+@import './animations/colombia-reveal.css';
+
+/* Importar componentes */
+@import './components/services-card.css';
+
+/* Importar utilidades */
+@import './utilities/accessibility.css';
+

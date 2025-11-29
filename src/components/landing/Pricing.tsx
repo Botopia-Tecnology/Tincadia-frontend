@@ -1,8 +1,9 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import Link from 'next/link';
 import { Users, CreditCard, Crown, Check, X } from 'lucide-react';
+import { useTranslation } from '@/hooks/useTranslation';
 
 type UserType = 'personal' | 'empresa';
 type BillingCycle = 'mensual' | 'anual';
@@ -18,130 +19,82 @@ interface Plan {
   excludes: string[];
 }
 
-const plans: Record<UserType, Plan[]> = {
-  personal: [
-    {
-      name: 'Plan Gratuito',
-      price: 'Gratis',
-      description: 'Para usuarios individuales que buscan mejorar su accesibilidad',
-      buttonText: 'Comenzar gratis',
-      buttonIcon: <Users className="w-4 h-4" />,
-      includes: [
-        'Acceso a contenidos gratuitos y recursos educativos.',
-        'Material básico del curso de LSC.',
-        'Apoyo comunitario y foros inclusivos.',
-        'Certificado de participación.',
-        'Acceso a foros inclusivos de la comunidad.',
-      ],
-      excludes: [
-        'Funciones avanzadas de IA',
-        'Perfiles múltiples',
-        'Uso sin límites',
-        'Soporte prioritario',
-      ],
-    },
-    {
-      name: 'Plan Premium',
-      price: '0',
-      priceAnnual: '0',
-      description: 'Para usuarios que necesitan más funcionalidades y tiempo de uso',
-      buttonText: 'Suscribirse ahora',
-      buttonIcon: <CreditCard className="w-4 h-4" />,
-      includes: [
-        'Traducción automática completa',
-        '3 perfiles digitales accesibles',
-        'Uso de hasta 3 horas diarias',
-        'Soporte por correo y chat',
-        'Funciones avanzadas de IA',
-      ],
-      excludes: [
-        'Perfiles múltiples ilimitados',
-        'Uso sin límites',
-        'Soporte prioritario',
-      ],
-    },
-    {
-      name: 'Premium',
-      price: '0',
-      priceAnnual: '0',
-      description: 'Para usuarios que requieren acceso completo y sin restricciones',
-      buttonText: 'Obtener Premium',
-      buttonIcon: <Crown className="w-4 h-4" />,
-      includes: [
-        'Traducción automática premium',
-        'Perfiles digitales ilimitados',
-        'Uso sin límites',
-        'Soporte prioritario 24/7',
-        'Todas las funciones avanzadas de IA',
-        'Acceso anticipado a nuevas funciones',
-      ],
-      excludes: [],
-    },
-  ],
-  empresa: [
-    {
-      name: 'Plan Gratuito',
-      price: 'Gratis',
-      description: 'Para usuarios individuales que buscan mejorar su accesibilidad',
-      buttonText: 'Comenzar gratis',
-      buttonIcon: <Users className="w-4 h-4" />,
-      includes: [
-        'Acceso a contenidos gratuitos y recursos educativos.',
-        'Material básico del curso de LSC.',
-        'Apoyo comunitario y foros inclusivos.',
-        'Certificado de participación.',
-        'Acceso a foros inclusivos de la comunidad.',
-      ],
-      excludes: [
-        'Funciones avanzadas de IA',
-        'Perfiles múltiples',
-        'Uso sin límites',
-        'Soporte prioritario',
-      ],
-    },
-    {
-      name: 'Plan Empresarial',
-      price: '0',
-      priceAnnual: '0',
-      description: 'Para empresas que buscan soluciones escalables de accesibilidad',
-      buttonText: 'Suscribirse ahora',
-      buttonIcon: <CreditCard className="w-4 h-4" />,
-      includes: [
-        'Traducción automática completa',
-        '3 perfiles digitales accesibles',
-        'Uso de hasta 3 horas diarias',
-        'Soporte por correo y chat',
-        'Funciones avanzadas de IA',
-      ],
-      excludes: [
-        'Perfiles múltiples ilimitados',
-        'Uso sin límites',
-        'Soporte prioritario',
-      ],
-    },
-    {
-      name: 'Plan Corporativo',
-      price: '0',
-      priceAnnual: '0',
-      description: 'Para corporaciones que requieren soluciones completas y soporte dedicado',
-      buttonText: 'Obtener Premium',
-      buttonIcon: <Crown className="w-4 h-4" />,
-      includes: [
-        'Traducción automática premium',
-        'Perfiles digitales ilimitados',
-        'Uso sin límites',
-        'Soporte prioritario 24/7',
-        'Todas las funciones avanzadas de IA',
-        'Acceso anticipado a nuevas funciones',
-      ],
-      excludes: [],
-    },
-  ],
-};
-
 export function Pricing() {
+  const t = useTranslation();
   const [userType, setUserType] = useState<UserType>('personal');
   const [billingCycle, setBillingCycle] = useState<BillingCycle>('mensual');
+  
+  const plans: Record<UserType, Plan[]> = useMemo(() => {
+    const getArray = (key: string): string[] => {
+      const value = t(key);
+      return Array.isArray(value) ? value : [];
+    };
+    
+    return {
+    personal: [
+      {
+        name: t('pricing.plans.personal.free.name'),
+        price: t('pricing.free'),
+        description: t('pricing.plans.personal.free.description'),
+        buttonText: t('pricing.plans.personal.free.buttonText'),
+        buttonIcon: <Users className="w-4 h-4" />,
+        includes: getArray('pricing.plans.personal.free.includes'),
+        excludes: getArray('pricing.plans.personal.free.excludes'),
+      },
+      {
+        name: t('pricing.plans.personal.premium.name'),
+        price: '0',
+        priceAnnual: '0',
+        description: t('pricing.plans.personal.premium.description'),
+        buttonText: t('pricing.plans.personal.premium.buttonText'),
+        buttonIcon: <CreditCard className="w-4 h-4" />,
+        includes: getArray('pricing.plans.personal.premium.includes'),
+        excludes: getArray('pricing.plans.personal.premium.excludes'),
+      },
+      {
+        name: t('pricing.plans.personal.corporate.name'),
+        price: '0',
+        priceAnnual: '0',
+        description: t('pricing.plans.personal.corporate.description'),
+        buttonText: t('pricing.plans.personal.corporate.buttonText'),
+        buttonIcon: <Crown className="w-4 h-4" />,
+        includes: getArray('pricing.plans.personal.corporate.includes'),
+        excludes: getArray('pricing.plans.personal.corporate.excludes'),
+      },
+    ],
+    empresa: [
+      {
+        name: t('pricing.plans.empresa.free.name'),
+        price: t('pricing.free'),
+        description: t('pricing.plans.empresa.free.description'),
+        buttonText: t('pricing.plans.empresa.free.buttonText'),
+        buttonIcon: <Users className="w-4 h-4" />,
+        includes: getArray('pricing.plans.empresa.free.includes'),
+        excludes: getArray('pricing.plans.empresa.free.excludes'),
+      },
+      {
+        name: t('pricing.plans.empresa.business.name'),
+        price: '0',
+        priceAnnual: '0',
+        description: t('pricing.plans.empresa.business.description'),
+        buttonText: t('pricing.plans.empresa.business.buttonText'),
+        buttonIcon: <CreditCard className="w-4 h-4" />,
+        includes: getArray('pricing.plans.empresa.business.includes'),
+        excludes: getArray('pricing.plans.empresa.business.excludes'),
+      },
+      {
+        name: t('pricing.plans.empresa.corporate.name'),
+        price: '0',
+        priceAnnual: '0',
+        description: t('pricing.plans.empresa.corporate.description'),
+        buttonText: t('pricing.plans.empresa.corporate.buttonText'),
+        buttonIcon: <Crown className="w-4 h-4" />,
+        includes: getArray('pricing.plans.empresa.corporate.includes'),
+        excludes: getArray('pricing.plans.empresa.corporate.excludes'),
+      },
+    ],
+    };
+  }, [t]);
 
   const currentPlans = plans[userType];
 
@@ -151,10 +104,10 @@ export function Pricing() {
         {/* Header */}
         <div className="text-center mb-16">
           <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-white mb-4">
-            Planes y Precios
+            {t('pricing.title')}
           </h1>
           <p className="text-xl text-gray-300 max-w-2xl mx-auto">
-            Elige el plan que mejor se adapte a tus necesidades
+            {t('pricing.subtitle')}
           </p>
         </div>
 
@@ -170,7 +123,7 @@ export function Pricing() {
                   : 'text-gray-300 hover:text-white'
               }`}
             >
-              Personal
+              {t('pricing.personal')}
             </button>
             <button
               type="button"
@@ -181,7 +134,7 @@ export function Pricing() {
                   : 'text-gray-300 hover:text-white'
               }`}
             >
-              Empresa
+              {t('pricing.empresa')}
             </button>
           </div>
         </div>
@@ -193,7 +146,7 @@ export function Pricing() {
               billingCycle === 'mensual' ? 'text-white' : 'text-gray-400'
             }`}
           >
-            Mensual
+            {t('pricing.mensual')}
           </span>
           <button
             type="button"
@@ -216,11 +169,11 @@ export function Pricing() {
                 billingCycle === 'anual' ? 'text-white' : 'text-gray-400'
               }`}
             >
-              Anual
+              {t('pricing.anual')}
             </span>
             {billingCycle === 'anual' && (
               <span className="absolute left-full ml-2 px-2 py-0.5 text-xs font-semibold text-white bg-[#83A98A] rounded whitespace-nowrap">
-                Ahorra 20%
+                {t('pricing.save20')}
               </span>
             )}
           </div>
@@ -233,7 +186,7 @@ export function Pricing() {
               billingCycle === 'anual' && plan.priceAnnual
                 ? plan.priceAnnual
                 : plan.price;
-            const isFree = plan.price === 'Gratis';
+            const isFree = plan.price === t('pricing.free');
 
             return (
               <div
@@ -247,16 +200,16 @@ export function Pricing() {
                   </h3>
                   <div className="mb-4">
                     {isFree ? (
-                      <p className="text-3xl font-bold text-white">Gratis</p>
+                      <p className="text-3xl font-bold text-white">{t('pricing.free')}</p>
                     ) : (
                       <div>
                         <span className="text-4xl font-bold text-white">
                           {displayPrice.split(' ')[1] || displayPrice}
                         </span>
                         {billingCycle === 'anual' ? (
-                          <span className="text-gray-400 ml-2">/año</span>
+                          <span className="text-gray-400 ml-2">{t('pricing.perYear')}</span>
                         ) : (
-                          <span className="text-gray-400 ml-2">/mes</span>
+                          <span className="text-gray-400 ml-2">{t('pricing.perMonth')}</span>
                         )}
                       </div>
                     )}
@@ -276,7 +229,7 @@ export function Pricing() {
                 {/* Incluye */}
                 <div className="mb-6">
                   <h4 className="text-sm font-semibold text-gray-400 mb-3 uppercase tracking-wide">
-                    Incluye
+                    {t('pricing.includes')}
                   </h4>
                   <ul className="space-y-3">
                     {plan.includes.map((item, idx) => (
@@ -292,7 +245,7 @@ export function Pricing() {
                 {plan.excludes.length > 0 && (
                   <div>
                     <h4 className="text-sm font-semibold text-gray-400 mb-3 uppercase tracking-wide">
-                      No incluye
+                      {t('pricing.notIncludes')}
                     </h4>
                     <ul className="space-y-3">
                       {plan.excludes.map((item, idx) => (

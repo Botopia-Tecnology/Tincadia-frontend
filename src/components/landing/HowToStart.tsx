@@ -1,76 +1,65 @@
 'use client';
 
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, useMemo } from 'react';
 import { Mic, FileText, Video, PenTool } from 'lucide-react';
-
-const features = [
-  {
-    id: 1,
-    title: 'Transcripción de voz a texto',
-    subtitle: 'Convierte conversaciones en tiempo real',
-    description: 'Captura cualquier conversación y conviértela automáticamente en texto. Participa activamente en clases, reuniones o conversaciones cotidianas sin perder detalle.',
-    icon: Mic,
-    videoLabel: 'Explicación 1',
-    steps: [
-      'Activa el micrófono en la aplicación',
-      'La IA comienza a transcribir automáticamente',
-      'Lee el texto en tiempo real en tu pantalla',
-      'Guarda y comparte las transcripciones'
-    ],
-    color: 'from-blue-500 to-blue-600',
-    bgColor: 'bg-blue-50',
-  },
-  {
-    id: 2,
-    title: 'Traducción automática',
-    subtitle: 'Accede a contenidos en cualquier formato',
-    description: 'Traduce noticias, videos, películas y documentos automáticamente. Accede a subtítulos CC y contenido accesible en múltiples plataformas.',
-    icon: FileText,
-    videoLabel: 'Explicación 2',
-    steps: [
-      'Sube o selecciona el contenido a traducir',
-      'Elige el formato de salida (texto o subtítulos)',
-      'La IA procesa y traduce el contenido',
-      'Disfruta del contenido totalmente accesible'
-    ],
-    color: 'from-green-500 to-green-600',
-    bgColor: 'bg-green-50',
-  },
-  {
-    id: 3,
-    title: 'Interpretación en LSC',
-    subtitle: 'Conéctate con intérpretes profesionales',
-    description: 'Accede a intérpretes de Lengua de Señas Colombiana por videollamada o escanea códigos QR en empresas, hospitales y universidades.',
-    icon: Video,
-    videoLabel: 'Explicación 3',
-    steps: [
-      'Escanea el código QR o abre la videollamada',
-      'Conecta con un intérprete disponible',
-      'Comunícate en tiempo real en LSC',
-      'Finaliza la sesión y califica el servicio'
-    ],
-    color: 'from-purple-500 to-purple-600',
-    bgColor: 'bg-purple-50',
-  },
-  {
-    id: 4,
-    title: 'Asistente de escritura IA',
-    subtitle: 'Mejora tu comunicación escrita',
-    description: 'Escribe con confianza usando nuestro asistente inteligente que corrige gramática, tono y estilo para cualquier contexto: redes sociales, trabajo o estudios.',
-    icon: PenTool,
-    videoLabel: 'Explicación 4',
-    steps: [
-      'Escribe tu mensaje o documento',
-      'El asistente sugiere mejoras en tiempo real',
-      'Acepta o ajusta las sugerencias',
-      'Publica o envía tu texto perfeccionado'
-    ],
-    color: 'from-orange-500 to-orange-600',
-    bgColor: 'bg-orange-50',
-  },
-];
+import { useTranslation } from '@/hooks/useTranslation';
 
 export function HowToStart() {
+  const t = useTranslation();
+
+  const features = useMemo(() => {
+    const getSteps = (key: string): string[] => {
+      const steps = t(key);
+      return Array.isArray(steps) ? steps : [];
+    };
+
+    return [
+      {
+        id: 1,
+        title: t('howToStart.features.voiceToText.title'),
+        subtitle: t('howToStart.features.voiceToText.subtitle'),
+        description: t('howToStart.features.voiceToText.description'),
+        icon: Mic,
+        videoLabel: t('howToStart.features.voiceToText.title'),
+        steps: getSteps('howToStart.features.voiceToText.steps'),
+        color: 'from-blue-500 to-blue-600',
+        bgColor: 'bg-blue-50',
+      },
+      {
+        id: 2,
+        title: t('howToStart.features.translation.title'),
+        subtitle: t('howToStart.features.translation.subtitle'),
+        description: t('howToStart.features.translation.description'),
+        icon: FileText,
+        videoLabel: t('howToStart.features.translation.title'),
+        steps: getSteps('howToStart.features.translation.steps'),
+        color: 'from-green-500 to-green-600',
+        bgColor: 'bg-green-50',
+      },
+      {
+        id: 3,
+        title: t('howToStart.features.interpretation.title'),
+        subtitle: t('howToStart.features.interpretation.subtitle'),
+        description: t('howToStart.features.interpretation.description'),
+        icon: Video,
+        videoLabel: t('howToStart.features.interpretation.title'),
+        steps: getSteps('howToStart.features.interpretation.steps'),
+        color: 'from-purple-500 to-purple-600',
+        bgColor: 'bg-purple-50',
+      },
+      {
+        id: 4,
+        title: t('howToStart.features.writingAssistant.title'),
+        subtitle: t('howToStart.features.writingAssistant.subtitle'),
+        description: t('howToStart.features.writingAssistant.description'),
+        icon: PenTool,
+        videoLabel: t('howToStart.features.writingAssistant.title'),
+        steps: getSteps('howToStart.features.writingAssistant.steps'),
+        color: 'from-orange-500 to-orange-600',
+        bgColor: 'bg-orange-50',
+      },
+    ];
+  }, [t]);
   const [activeTab, setActiveTab] = useState(1);
   const [isTransitioning, setIsTransitioning] = useState(false);
   const [displayTab, setDisplayTab] = useState(1);
@@ -127,8 +116,8 @@ export function HowToStart() {
       const currentScroll = scrollY - scrollStart;
       const scrollProgress = Math.max(0, Math.min(1, currentScroll / scrollRange));
 
-      // Dividir el progreso entre las 4 features
-      // Cada feature ocupa 1/4 del scroll total
+      // Dividir el progreso entre las features
+      // Cada feature ocupa 1/n del scroll total
       const featureProgress = scrollProgress * features.length;
       const currentFeatureIndex = Math.min(
         Math.floor(featureProgress),
@@ -166,7 +155,7 @@ export function HowToStart() {
       window.removeEventListener('scroll', handleScroll);
       window.removeEventListener('resize', handleScroll);
     };
-  }, [activeTab]);
+  }, [activeTab, features.length, isManualChange]);
 
   return (
     <section
@@ -182,12 +171,11 @@ export function HowToStart() {
             id="how-to-start-heading"
             className="text-3xl sm:text-4xl lg:text-5xl font-bold text-gray-900 mb-4 tracking-tight"
           >
-            Cómo funciona{' '}
-            <span className="text-[#83A98A]">TINCADIA</span>
+            {t('howToStart.title')}{' '}
+            <span className="text-[#83A98A]">{t('howToStart.titleHighlight')}</span>
           </h2>
           <p className="text-lg text-gray-600 max-w-3xl mx-auto">
-            Explora nuestras funcionalidades principales y descubre cómo cada herramienta
-            facilita la comunicación inclusiva.
+            {t('howToStart.subtitle')}
           </p>
         </div>
 
@@ -345,7 +333,7 @@ export function HowToStart() {
                       <h3 className="text-3xl font-bold text-gray-900 mb-2">
                         {feature.title}
                       </h3>
-                      <p className="text-xl text-[#83A98A] font-semibold mb-4">
+                      <p className="text-xl text-[#5A7A62] font-semibold mb-4">
                         {feature.subtitle}
                       </p>
                       <p className="text-lg text-gray-600 leading-relaxed">

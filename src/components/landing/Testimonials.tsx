@@ -1,58 +1,30 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import { ChevronLeft, ChevronRight, Star } from 'lucide-react';
 import Image from 'next/image';
-
-const testimonials = [
-  {
-    id: 1,
-    name: 'Almia',
-    role: 'Ingeniería de Software',
-    company: 'EAFIT',
-    rating: 5,
-    text: 'TINCADIA ha transformado la forma en que nuestros estudiantes sordos participan en las clases. Una herramienta indispensable.',
-    avatar: '/media/images/avatar-1.jpg', // Placeholder
-  },
-  {
-    id: 2,
-    name: 'Andrey',
-    role: 'Intérprete LSE',
-    company: 'Freelance',
-    rating: 5,
-    text: 'Hemos mejorado significativamente la atención a pacientes con discapacidad auditiva gracias a las soluciones de TINCADIA.',
-    avatar: '/media/images/avatar-2.jpg', // Placeholder
-  },
-  {
-    id: 3,
-    name: 'Elena R.',
-    role: 'Gerente de RRHH',
-    company: 'Corporación XYZ',
-    rating: 5,
-    text: 'La certificación en accesibilidad nos ha permitido ampliar nuestros servicios a un público más diverso.',
-    avatar: '/media/images/avatar-3.jpg', // Placeholder
-  },
-  {
-    id: 4,
-    name: 'Carlos M.',
-    role: 'Director de Inclusión',
-    company: 'Universidad Nacional',
-    rating: 5,
-    text: 'Las herramientas de TINCADIA han revolucionado la forma en que abordamos la educación inclusiva en nuestra institución.',
-    avatar: '/media/images/avatar-4.jpg', // Placeholder
-  },
-  {
-    id: 5,
-    name: 'María S.',
-    role: 'Coordinadora de Proyectos',
-    company: 'ONG Inclusión Total',
-    rating: 5,
-    text: 'Gracias a TINCADIA, hemos podido conectar talento sordo con oportunidades laborales reales. Un cambio impresionante.',
-    avatar: '/media/images/avatar-5.jpg', // Placeholder
-  },
-];
+import { useTranslation } from '@/hooks/useTranslation';
 
 export function Testimonials() {
+  const t = useTranslation();
+
+  const testimonials = useMemo(() => {
+    const getTestimonials = (): Array<{ name: string; role: string; company: string; text: string }> => {
+      const value = t('testimonials.testimonials');
+      return Array.isArray(value) ? value : [];
+    };
+
+    const testimonialsData = getTestimonials();
+    return testimonialsData.map((testimonial, index) => ({
+      id: index + 1,
+      name: testimonial.name,
+      role: testimonial.role,
+      company: testimonial.company,
+      rating: 5,
+      text: testimonial.text,
+      avatar: `/media/images/avatar-${index + 1}.jpg`,
+    }));
+  }, [t]);
   const [currentIndex, setCurrentIndex] = useState(0);
 
   const nextTestimonial = () => {
@@ -119,11 +91,11 @@ export function Testimonials() {
             id="testimonials-heading"
             className="text-3xl sm:text-4xl lg:text-5xl font-bold text-gray-900 mb-4 tracking-tight"
           >
-            Casos de{' '}
-            <span className="text-[#83A98A]">éxito</span>
+            {t('testimonials.title')}{' '}
+            <span className="text-[#83A98A]">{t('testimonials.titleHighlight')}</span>
           </h2>
           <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-            Mira cómo Tincadia está generando un impacto real.
+            {t('testimonials.subtitle')}
           </p>
         </div>
 
@@ -176,9 +148,9 @@ export function Testimonials() {
 
                       {/* Info */}
                       <div className="flex-1">
-                        <h4 className="text-white font-bold text-lg">
+                        <p className="text-white font-bold text-lg">
                           {testimonial.name}
-                        </h4>
+                        </p>
                         <p className="text-white/90 text-sm">
                           {testimonial.role}
                         </p>
@@ -194,7 +166,7 @@ export function Testimonials() {
           <button
             onClick={prevTestimonial}
             className="absolute left-0 lg:left-4 z-40 w-12 h-12 rounded-full bg-white shadow-lg flex items-center justify-center hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#83A98A] transition-colors group"
-            aria-label="Testimonio anterior"
+            aria-label={t('testimonials.previous')}
           >
             <ChevronLeft className="w-6 h-6 text-gray-600 group-hover:text-[#83A98A] transition-colors" strokeWidth={2.5} />
           </button>
@@ -202,7 +174,7 @@ export function Testimonials() {
           <button
             onClick={nextTestimonial}
             className="absolute right-0 lg:right-4 z-40 w-12 h-12 rounded-full bg-white shadow-lg flex items-center justify-center hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#83A98A] transition-colors group"
-            aria-label="Siguiente testimonio"
+            aria-label={t('testimonials.next')}
           >
             <ChevronRight className="w-6 h-6 text-gray-600 group-hover:text-[#83A98A] transition-colors" strokeWidth={2.5} />
           </button>
@@ -215,12 +187,12 @@ export function Testimonials() {
               key={index}
               onClick={() => setCurrentIndex(index)}
               className={`
-                w-2 h-2 rounded-full transition-all duration-300
+                p-2 w-3 h-3 rounded-full transition-all duration-300
                 ${index === currentIndex
-                  ? 'w-8 bg-[#83A98A]'
+                  ? 'w-10 bg-[#83A98A]'
                   : 'bg-gray-300 hover:bg-gray-400'}
               `}
-              aria-label={`Ir al testimonio ${index + 1}`}
+              aria-label={`${t('testimonials.goTo')} ${index + 1}`}
             />
           ))}
         </div>

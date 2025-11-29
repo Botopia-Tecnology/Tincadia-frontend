@@ -1,8 +1,10 @@
 'use client';
 
 import { InterpreterRegistrationForm } from './InterpreterRegistrationForm';
+import { useTranslation } from '@/hooks/useTranslation';
 
 export function BecomeInterpreterSection() {
+  const t = useTranslation();
   return (
     <section
       id="ser-interprete"
@@ -16,11 +18,10 @@ export function BecomeInterpreterSection() {
             id="interpreter-heading"
             className="text-3xl sm:text-4xl lg:text-5xl font-bold text-gray-900 mb-6 tracking-tight"
           >
-            Conviértete en un Intérprete
+            {t('becomeInterpreter.title')}
           </h2>
           <p className="text-lg text-gray-600 max-w-3xl mx-auto">
-            Únete a nuestra red de intérpretes profesionales certificados y marca la diferencia
-            en la vida de las personas sordas e hipoacúsicas.
+            {t('becomeInterpreter.subtitle')}
           </p>
         </div>
 

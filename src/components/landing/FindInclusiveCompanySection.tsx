@@ -1,8 +1,10 @@
 'use client';
 
 import { JobSeekerRegistrationForm } from './JobSeekerRegistrationForm';
+import { useTranslation } from '@/hooks/useTranslation';
 
 export function FindInclusiveCompanySection() {
+  const t = useTranslation();
   return (
     <section
       id="empresas-inclusivas"
@@ -16,11 +18,10 @@ export function FindInclusiveCompanySection() {
             id="job-seeker-heading"
             className="text-3xl sm:text-4xl lg:text-5xl font-bold text-gray-900 mb-6 tracking-tight"
           >
-            Encuentra una Empresa Inclusiva
+            {t('findInclusiveCompany.title')}
           </h2>
           <p className="text-lg text-gray-600 max-w-3xl mx-auto">
-            Crea tu perfil y accede a oportunidades laborales en empresas comprometidas con la
-            inclusión y la diversidad.
+            {t('findInclusiveCompany.subtitle')}
           </p>
         </div>
 

@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, useMemo } from 'react';
+import { useMemo } from 'react';
 import {
   Eye,
   Moon,
@@ -10,21 +10,16 @@ import {
   ZoomOut,
   MousePointer2,
   Pause,
+  Droplet,
 } from 'lucide-react';
+import { useTranslation } from '@/hooks/useTranslation';
+import { useAccessibility } from '@/hooks/useAccessibility';
 
 interface AccessibilityButtonProps {
   isRegistrationPanelOpen?: boolean;
   disableAnimations?: boolean;
   setDisableAnimations?: (value: boolean) => void;
 }
-
-// Constantes de configuración
-const ZOOM_CONFIG = {
-  MIN: 70,
-  MAX: 200,
-  DEFAULT: 100,
-  STEP: 10,
-} as const;
 
 const ACCESSIBILITY_COLORS = {
   BAR: '#1E4DD8',
@@ -55,6 +50,14 @@ const SIZE_CONFIG = {
 
 // Tipo para los tamaños
 type SizeConfig = typeof SIZE_CONFIG.NORMAL | typeof SIZE_CONFIG.COMPACT;
+
+interface AccessibilityFeature {
+  id: string;
+  icon: React.ComponentType<{ size: number }>;
+  label: string;
+  isActive: boolean;
+  onClick: () => void;
+}
 
 // Componente de botón de característica reutilizable
 interface FeatureButtonProps {
@@ -97,81 +100,44 @@ const ZoomButton = ({ icon: Icon, onClick, label, disabled = false, sizes }: Zoo
   </button>
 );
 
-interface AccessibilityFeature {
-  id: string;
-  icon: React.ComponentType<{ size: number }>;
-  label: string;
-  isActive: boolean;
-  onClick: () => void;
-}
-
 export function AccessibilityButton({
   isRegistrationPanelOpen = false,
-  disableAnimations: propDisableAnimations,
-  setDisableAnimations: propSetDisableAnimations
+  disableAnimations,
+  setDisableAnimations
 }: AccessibilityButtonProps) {
-  const [highContrast, setHighContrast] = useState(false);
-  const [inverted, setInverted] = useState(false);
-  const [grayscale, setGrayscale] = useState(false);
-  const [largeCursor, setLargeCursor] = useState(false);
-  const [zoomLevel, setZoomLevel] = useState<number>(ZOOM_CONFIG.DEFAULT);
+  const t = useTranslation();
 
-  // Estado local para cuando no se pasan props
-  const [localDisableAnimations, setLocalDisableAnimations] = useState(false);
+  const { state, actions, config } = useAccessibility({
+    disableAnimations,
+    setDisableAnimations
+  });
 
-  // Determinar el valor efectivo y la función de actualización
-  const disableAnimations = propDisableAnimations ?? localDisableAnimations;
-  const setDisableAnimations = (value: boolean) => {
-    if (propSetDisableAnimations) {
-      propSetDisableAnimations(value);
-    } else {
-      setLocalDisableAnimations(value);
-    }
-  };
+  const {
+    highContrast,
+    inverted,
+    grayscale,
+    largeCursor,
+    zoomLevel,
+    textColor,
+    showColorPicker,
+    disableAnimations: effectiveDisableAnimations,
+  } = state;
 
-  // Aplicar filtros de accesibilidad al documento
-  useEffect(() => {
-    const filters: string[] = [];
+  const {
+    setHighContrast,
+    setInverted,
+    setGrayscale,
+    setLargeCursor,
+    setDisableAnimations: setEffectiveDisableAnimations,
+    setTextColor,
+    increaseZoom,
+    decreaseZoom,
+    resetZoom,
+    handleMouseEnter,
+    handleMouseLeave,
+  } = actions;
 
-    if (highContrast) filters.push('contrast(150%)');
-    if (inverted) filters.push('invert(1) hue-rotate(180deg)');
-    if (grayscale) filters.push('grayscale(100%)');
-
-    document.documentElement.style.filter = filters.join(' ') || 'none';
-    document.documentElement.style.fontSize = `${zoomLevel}%`;
-
-    if (largeCursor) {
-      document.documentElement.classList.add('accessibility-large-cursor');
-    } else {
-      document.documentElement.classList.remove('accessibility-large-cursor');
-    }
-
-    if (disableAnimations) {
-      document.documentElement.classList.add('accessibility-no-animations');
-    } else {
-      document.documentElement.classList.remove('accessibility-no-animations');
-    }
-
-    return () => {
-      document.documentElement.style.filter = 'none';
-      document.documentElement.style.fontSize = '100%';
-      document.documentElement.classList.remove('accessibility-large-cursor');
-      document.documentElement.classList.remove('accessibility-no-animations');
-    };
-  }, [highContrast, inverted, grayscale, zoomLevel, largeCursor, disableAnimations]);
-
-  // Funciones de control de zoom
-  const increaseZoom = () => {
-    setZoomLevel((prev) => Math.min(prev + ZOOM_CONFIG.STEP, ZOOM_CONFIG.MAX));
-  };
-
-  const decreaseZoom = () => {
-    setZoomLevel((prev) => Math.max(prev - ZOOM_CONFIG.STEP, ZOOM_CONFIG.MIN));
-  };
-
-  const resetZoom = () => {
-    setZoomLevel(ZOOM_CONFIG.DEFAULT);
-  };
+  const { ZOOM_CONFIG } = config;
 
   // Configuración de tamaños según el estado del panel
   const sizes = useMemo(
@@ -186,84 +152,150 @@ export function AccessibilityButton({
   );
 
   // Características de accesibilidad
-  const features: AccessibilityFeature[] = [
+  const features: AccessibilityFeature[] = useMemo(() => [
     {
       id: 'highContrast',
       icon: Sun,
-      label: 'Activar alto contraste',
+      label: t('accessibility.highContrast'),
       isActive: highContrast,
       onClick: () => setHighContrast(!highContrast),
     },
     {
       id: 'inverted',
       icon: Moon,
-      label: 'Invertir colores',
+      label: t('accessibility.invertColors'),
       isActive: inverted,
       onClick: () => setInverted(!inverted),
     },
     {
       id: 'grayscale',
       icon: Eye,
-      label: 'Activar escala de grises',
+      label: t('accessibility.grayscale'),
       isActive: grayscale,
       onClick: () => setGrayscale(!grayscale),
     },
     {
       id: 'largeCursor',
       icon: MousePointer2,
-      label: 'Cursor grande',
+      label: t('accessibility.largeCursor'),
       isActive: largeCursor,
       onClick: () => setLargeCursor(!largeCursor),
     },
     {
       id: 'disableAnimations',
       icon: Pause,
-      label: 'Desactivar animaciones',
-      isActive: disableAnimations,
-      onClick: () => setDisableAnimations(!disableAnimations),
+      label: t('accessibility.disableAnimations'),
+      isActive: effectiveDisableAnimations,
+      onClick: () => setEffectiveDisableAnimations(!effectiveDisableAnimations),
     },
-  ];
+  ], [t, highContrast, inverted, grayscale, largeCursor, effectiveDisableAnimations, setHighContrast, setInverted, setGrayscale, setLargeCursor, setEffectiveDisableAnimations]);
 
 
   return (
     <div
       className={`fixed top-1/3 right-3 z-50 font-sans transition-all duration-300 ${positionClass}`}
     >
-      <div
-        className={`${sizes.barWidth} bg-[#1E4DD8] rounded-full ${sizes.padding} shadow-2xl flex flex-col items-center ${sizes.gap} text-white transition-all duration-300`}
-      >
-        {/* Características de accesibilidad */}
-        {features.map((feature) => (
-          <FeatureButton key={feature.id} feature={feature} sizes={sizes} />
-        ))}
-
-        {/* Divisor */}
+      <div className="relative flex items-center gap-3">
+        {/* Main Accessibility Bar */}
         <div
-          className={`${sizes.dividerWidth} h-px bg-white/40 ${sizes.dividerMargin}`}
-          aria-hidden="true"
-        />
+          className={`${sizes.barWidth} bg-[#1E4DD8] rounded-full ${sizes.padding} shadow-2xl flex flex-col items-center ${sizes.gap} text-white transition-all duration-300`}
+        >
+          {/* Características de accesibilidad */}
+          {features.map((feature) => (
+            <div
+              key={feature.id}
+              className="relative flex items-center justify-center"
+              onMouseEnter={() => {
+                if (feature.id === 'inverted') {
+                  handleMouseEnter();
+                }
+              }}
+              onMouseLeave={() => {
+                if (feature.id === 'inverted') {
+                  handleMouseLeave();
+                }
+              }}
+            >
+              {/* Color Picker Popup - Positioned next to the inverted button */}
+              {feature.id === 'inverted' && showColorPicker && (
+                <div
+                  className="absolute right-full mr-3 bg-white rounded-lg shadow-xl p-1.5 flex gap-1.5 animate-in fade-in slide-in-from-right-2 duration-200 z-50"
+                  onMouseEnter={handleMouseEnter}
+                  onMouseLeave={handleMouseLeave}
+                  style={{ marginRight: '12px' }}
+                >
+                  <button
+                    onClick={() => setTextColor('yellow')}
+                    className={`w-8 h-8 rounded-full flex items-center justify-center transition-all duration-300 ${textColor === 'yellow' ? 'scale-110 ring-2 ring-offset-1 ring-yellow-500' : 'hover:scale-105'
+                      }`}
+                    style={{ backgroundColor: '#FFFF00' }}
+                    aria-label="Texto amarillo brillante"
+                    title="Texto amarillo brillante"
+                  >
+                    <Droplet size={16} className="text-black" fill="currentColor" />
+                  </button>
+                  <button
+                    onClick={() => setTextColor('blue')}
+                    className={`w-8 h-8 rounded-full flex items-center justify-center transition-all duration-300 ${textColor === 'blue' ? 'bg-blue-500 scale-110 ring-2 ring-offset-1 ring-blue-500' : 'bg-blue-500/80 hover:bg-blue-500'
+                      }`}
+                    aria-label="Texto azul brillante"
+                    title="Texto azul brillante"
+                  >
+                    <Droplet size={16} className="text-white" fill="currentColor" />
+                  </button>
+                  <button
+                    onClick={() => setTextColor('red')}
+                    className={`w-8 h-8 rounded-full flex items-center justify-center transition-all duration-300 ${textColor === 'red' ? 'bg-red-500 scale-110 ring-2 ring-offset-1 ring-red-500' : 'bg-red-500/80 hover:bg-red-500'
+                      }`}
+                    aria-label="Texto rojo brillante"
+                    title="Texto rojo brillante"
+                  >
+                    <Droplet size={16} className="text-white" fill="currentColor" />
+                  </button>
+                  {textColor !== 'none' && (
+                    <button
+                      onClick={() => setTextColor('none')}
+                      className="w-8 h-8 rounded-full flex items-center justify-center bg-gray-100 hover:bg-gray-200 transition-all duration-300 text-gray-600"
+                      aria-label="Restablecer color"
+                      title="Restablecer color"
+                    >
+                      <RotateCcw size={14} />
+                    </button>
+                  )}
+                </div>
+              )}
+              <FeatureButton feature={feature} sizes={sizes} />
+            </div>
+          ))}
 
-        {/* Controles de zoom */}
-        <ZoomButton
-          icon={ZoomOut}
-          onClick={decreaseZoom}
-          label="Disminuir tamaño de texto"
-          disabled={zoomLevel <= ZOOM_CONFIG.MIN}
-          sizes={sizes}
-        />
-        <ZoomButton
-          icon={RotateCcw}
-          onClick={resetZoom}
-          label="Restablecer tamaño de texto"
-          sizes={sizes}
-        />
-        <ZoomButton
-          icon={ZoomIn}
-          onClick={increaseZoom}
-          label="Aumentar tamaño de texto"
-          disabled={zoomLevel >= ZOOM_CONFIG.MAX}
-          sizes={sizes}
-        />
+          {/* Divisor */}
+          <div
+            className={`${sizes.dividerWidth} h-px bg-white/40 ${sizes.dividerMargin}`}
+            aria-hidden="true"
+          />
+
+          {/* Controles de zoom */}
+          <ZoomButton
+            icon={ZoomOut}
+            onClick={decreaseZoom}
+            label={t('accessibility.decreaseText')}
+            disabled={zoomLevel <= ZOOM_CONFIG.MIN}
+            sizes={sizes}
+          />
+          <ZoomButton
+            icon={RotateCcw}
+            onClick={resetZoom}
+            label={t('accessibility.resetText')}
+            sizes={sizes}
+          />
+          <ZoomButton
+            icon={ZoomIn}
+            onClick={increaseZoom}
+            label={t('accessibility.increaseText')}
+            disabled={zoomLevel >= ZOOM_CONFIG.MAX}
+            sizes={sizes}
+          />
+        </div>
       </div>
     </div>
   );

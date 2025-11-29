@@ -1,0 +1,223 @@
+/* Estilos para las tarjetas de servicios con efecto hover */
+.service-card {
+  width: 100%;
+  cursor: pointer;
+  overflow: hidden;
+  position: relative;
+  border-radius: 1rem; /* rounded-2xl */
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05); /* shadow-lg */
+  transition: all 0.5s;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  height: 24rem; /* h-96 */
+  padding: 1rem; /* p-4 */
+  border: 1px solid transparent;
+}
+
+.service-card:hover {
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04); /* shadow-xl */
+}
+
+@media (prefers-color-scheme: dark) {
+  .service-card {
+    border-color: rgb(38 38 38); /* dark:border-neutral-800 */
+  }
+}
+
+/* Preload de imagen hover usando pseudo-elemento con variable CSS */
+.service-card::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  opacity: 0;
+  z-index: -1;
+  background-image: var(--service-hover-image);
+}
+
+/* Efecto hover - cambia a imagen de fondo */
+.service-card:hover {
+  background-image: var(--service-hover-image);
+  background-size: cover;
+  background-position: center;
+}
+
+/* Overlay oscuro en hover para mejor contraste del texto */
+.service-card:hover::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+}
+
+/* Badge superior */
+.service-card-badge {
+  position: absolute;
+  top: 1rem; /* top-4 */
+  left: 1rem; /* left-4 */
+  background-color: white;
+  padding: 0.25rem 0.75rem; /* px-3 py-1 */
+  border-radius: 9999px; /* rounded-full */
+  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05); /* shadow-sm */
+  z-index: 10;
+  transition: background-color 0.15s;
+}
+
+.service-card-badge:hover {
+  background-color: rgba(255, 255, 255, 0.9); /* bg-white/90 */
+}
+
+.service-card-badge-text {
+  font-size: 0.875rem; /* text-sm */
+  font-weight: 500; /* font-medium */
+  color: rgb(55 65 81); /* text-gray-700 */
+}
+
+.service-card:hover .service-card-badge-text {
+  color: rgb(17 24 39); /* text-gray-900 */
+}
+
+/* Icono - se oculta en hover */
+.service-card-icon {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 6rem; /* w-24 */
+  height: 6rem; /* h-24 */
+  color: rgb(156 163 175); /* text-gray-400 */
+  z-index: 10;
+  transition: opacity 0.5s;
+}
+
+.service-card:hover .service-card-icon {
+  opacity: 0;
+}
+
+/* Menú de opciones (tres puntos) */
+.service-card-menu-button {
+  position: absolute;
+  top: 1rem; /* top-4 */
+  right: 1rem; /* right-4 */
+  padding: 0.5rem; /* p-2 */
+  border-radius: 9999px; /* rounded-full */
+  transition: background-color 0.15s;
+  z-index: 10;
+}
+
+.service-card-menu-button:hover {
+  background-color: rgba(255, 255, 255, 0.5); /* bg-white/50 */
+}
+
+.service-card:hover .service-card-menu-button {
+  background-color: rgba(255, 255, 255, 0.8); /* bg-white/80 */
+}
+
+.service-card-menu-icon {
+  width: 1.5rem; /* w-6 */
+  height: 1.5rem; /* h-6 */
+  color: rgb(55 65 81); /* text-gray-700 */
+}
+
+.service-card:hover .service-card-menu-icon {
+  color: white;
+}
+
+/* Contenedor de texto */
+.service-card-text {
+  position: relative;
+  z-index: 50;
+}
+
+/* Título de la tarjeta */
+.service-card-title {
+  font-weight: 700; /* font-bold */
+  font-size: 1.25rem; /* text-xl */
+  line-height: 1.75rem;
+  color: rgb(17 24 39); /* text-gray-900 */
+  position: relative;
+  margin-bottom: 1rem; /* mb-4 */
+  transition: color 0.5s;
+}
+
+@media (min-width: 768px) {
+  .service-card-title {
+    font-size: 1.875rem; /* md:text-3xl */
+    line-height: 2.25rem;
+  }
+}
+
+.service-card:hover .service-card-title {
+  color: rgb(249 250 251); /* text-gray-50 */
+}
+
+/* Descripción de la tarjeta */
+.service-card-description {
+  font-weight: 400; /* font-normal */
+  font-size: 1rem; /* text-base */
+  color: rgb(75 85 99); /* text-gray-600 */
+  position: relative;
+  margin-bottom: 1rem; /* mb-4 */
+  transition: color 0.5s;
+}
+
+.service-card:hover .service-card-description {
+  color: rgb(249 250 251); /* text-gray-50 */
+}
+
+/* Botones de acción */
+.service-card-actions {
+  display: flex;
+  gap: 0.75rem; /* gap-3 */
+  margin-top: 1rem; /* mt-4 */
+}
+
+.service-card-button-secondary {
+  padding: 0.625rem 1rem; /* px-4 py-2.5 */
+  font-size: 0.875rem; /* text-sm */
+  font-weight: 600; /* font-semibold */
+  color: rgb(55 65 81); /* text-gray-700 */
+  background-color: white;
+  border: 1px solid rgb(209 213 219); /* border-gray-300 */
+  border-radius: 0.5rem; /* rounded-lg */
+  transition: background-color 0.15s, color 0.15s;
+  text-align: center;
+}
+
+.service-card-button-secondary:hover {
+  background-color: rgb(249 250 251); /* bg-gray-50 */
+}
+
+.service-card-button-secondary:focus {
+  outline: none;
+  outline: 2px solid transparent;
+  outline-offset: 2px;
+  box-shadow: 0 0 0 2px #83A98A;
+}
+
+.service-card:hover .service-card-button-secondary {
+  background-color: rgba(255, 255, 255, 0.9); /* bg-white/90 */
+  color: rgb(17 24 39); /* text-gray-900 */
+}
+
+.service-card-button-primary {
+  padding: 0.625rem 1rem; /* px-4 py-2.5 */
+  font-size: 0.875rem; /* text-sm */
+  font-weight: 600; /* font-semibold */
+  color: white;
+  background-color: #83A98A;
+  border-radius: 0.5rem; /* rounded-lg */
+  transition: background-color 0.15s;
+  text-align: center;
+}
+
+.service-card-button-primary:hover {
+  background-color: #6D8F75;
+}
+
+.service-card-button-primary:focus {
+  outline: none;
+  outline: 2px solid transparent;
+  outline-offset: 2px;
+  box-shadow: 0 0 0 2px #83A98A;
+}

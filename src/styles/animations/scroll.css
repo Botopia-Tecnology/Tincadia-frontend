@@ -1,0 +1,36 @@
+/* Animación de scroll infinito para logos */
+@keyframes scroll {
+  0% {
+    transform: translateX(0);
+  }
+
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
+@keyframes scroll-smooth {
+  from {
+    transform: translateX(0);
+  }
+
+  to {
+    transform: translateX(-33.333%);
+  }
+}
+
+.animate-scroll {
+  animation: scroll 20s linear infinite;
+}
+
+.animate-scroll-smooth {
+  animation: scroll-smooth 20s linear infinite;
+  will-change: transform;
+}
+
+/* Pausar animación al hacer hover */
+.animate-scroll:hover,
+.animate-scroll-smooth:hover {
+  animation-play-state: paused;
+}
+

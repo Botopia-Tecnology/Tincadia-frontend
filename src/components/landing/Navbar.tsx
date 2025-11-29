@@ -1,41 +1,44 @@
 'use client';
 
-import { useState, useCallback, useRef, useEffect } from 'react';
+import { useState, useCallback, useRef, useEffect, useMemo } from 'react';
 import Link from 'next/link';
 import { Menu, ChevronDown, Building2, MessageSquare } from 'lucide-react';
 import { Logo } from '@/components/ui/Logo';
 import { MobileMenu } from './MobileMenu';
 import { useScrollLock } from '@/hooks/useScrollLock';
-
-const navigation: Array<{ name: string; href: string; hasDropdown?: boolean }> = [
-  { name: 'Nosotros', href: '#nosotros' },
-  { name: 'Servicios', href: '#servicios', hasDropdown: true },
-  { name: 'Cursos', href: '#cursos' },
-  { name: 'Precios', href: '/pricing' },
-  { name: 'Contáctanos', href: '#contacto' },
-];
-
-const servicesDropdownItems = [
-  {
-    name: 'Encontrar una empresa inclusiva',
-    description: 'Conecta con empresas comprometidas con la inclusión',
-    href: '/empresas-inclusivas',
-    icon: Building2,
-    iconColor: 'bg-blue-100 text-blue-600',
-  },
-  {
-    name: 'Convertirte en un intérprete',
-    description: 'Únete a nuestra red de intérpretes profesionales',
-    href: '/ser-interprete',
-    icon: MessageSquare,
-    iconColor: 'bg-purple-100 text-purple-600',
-  },
-];
+import { useTranslation } from '@/hooks/useTranslation';
+import { LanguageSelector } from '@/components/ui/LanguageSelector';
 
 export function Navbar() {
+  const t = useTranslation();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [servicesDropdownOpen, setServicesDropdownOpen] = useState(false);
   const servicesDropdownRef = useRef<HTMLDivElement>(null);
+
+  const navigation = useMemo(() => [
+    { name: t('navbar.about'), href: '#nosotros' },
+    { name: t('navbar.services'), href: '#servicios', hasDropdown: true },
+    { name: t('navbar.courses'), href: '#cursos' },
+    { name: t('navbar.pricing'), href: '/pricing' },
+    { name: t('navbar.contact'), href: '#contacto' },
+  ], [t]);
+
+  const servicesDropdownItems = useMemo(() => [
+    {
+      name: t('navbar.findInclusiveCompany'),
+      description: t('navbar.findInclusiveCompanyDesc'),
+      href: '/empresas-inclusivas',
+      icon: Building2,
+      iconColor: 'bg-blue-100 text-blue-600',
+    },
+    {
+      name: t('navbar.becomeInterpreter'),
+      description: t('navbar.becomeInterpreterDesc'),
+      href: '/ser-interprete',
+      icon: MessageSquare,
+      iconColor: 'bg-purple-100 text-purple-600',
+    },
+  ], [t]);
 
   // Bloquear scroll cuando el menú está abierto
   useScrollLock(mobileMenuOpen);
@@ -70,9 +73,9 @@ export function Navbar() {
 
   return (
     <>
-      <header className="bg-white/95 backdrop-blur-sm fixed top-0 left-0 right-0 z-50 border-b border-gray-200">
+      <header className="bg-white/95 backdrop-blur-sm fixed top-0 left-0 right-0 z-50 border-b border-gray-200 min-h-[64px] flex items-center">
         <nav
-          className="mx-auto flex max-w-7xl items-center justify-between p-2 lg:px-8"
+          className="mx-auto flex max-w-7xl items-center justify-between w-full p-2 lg:px-8"
           aria-label="Navegación principal"
         >
           {/* Logo */}
@@ -86,18 +89,18 @@ export function Navbar() {
               type="button"
               className="-m-2.5 inline-flex items-center justify-center rounded-md p-2.5 text-gray-700 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-[#83A98A] transition-colors"
               onClick={handleMenuToggle}
-              aria-label={mobileMenuOpen ? 'Cerrar menú' : 'Abrir menú'}
+              aria-label={mobileMenuOpen ? t('navbar.closeMenu') : t('navbar.openMenu')}
               aria-expanded={mobileMenuOpen}
             >
               <span className="sr-only">
-                {mobileMenuOpen ? 'Cerrar menú' : 'Abrir menú'}
+                {mobileMenuOpen ? t('navbar.closeMenu') : t('navbar.openMenu')}
               </span>
               <Menu className="h-6 w-6" aria-hidden="true" />
             </button>
           </div>
 
           {/* Navegación desktop */}
-          <div className="hidden lg:flex lg:gap-x-8 lg:flex-1 lg:justify-center">
+          <div className="hidden lg:flex lg:gap-x-4 xl:gap-x-6 lg:flex-1 lg:justify-center lg:items-center">
             {navigation.map((item) => {
               if (item.hasDropdown) {
                 return (
@@ -110,15 +113,14 @@ export function Navbar() {
                   >
                     <button
                       type="button"
-                      className="text-base font-semibold text-gray-900 hover:text-[#83A98A] transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#83A98A] rounded-md px-3 py-2 flex items-center gap-1"
+                      className="text-sm xl:text-base font-semibold text-gray-900 hover:text-[#83A98A] transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#83A98A] rounded-md px-2 xl:px-3 py-2 flex items-center gap-1 whitespace-nowrap"
                       aria-expanded={servicesDropdownOpen}
                       aria-haspopup="true"
                     >
                       {item.name}
                       <ChevronDown
-                        className={`w-4 h-4 transition-transform ${
-                          servicesDropdownOpen ? 'rotate-180' : ''
-                        }`}
+                        className={`w-4 h-4 flex-shrink-0 transition-transform ${servicesDropdownOpen ? 'rotate-180' : ''
+                          }`}
                       />
                     </button>
 
@@ -127,7 +129,7 @@ export function Navbar() {
                       <div className="absolute top-full left-0 mt-2 w-80 bg-white rounded-xl shadow-xl border border-gray-200 py-4 z-50 animate-in fade-in slide-in-from-top-2 duration-200">
                         <div className="px-4 mb-2">
                           <h3 className="text-sm font-semibold text-gray-500 uppercase tracking-wide">
-                            Encuentra trabajo
+                            {t('navbar.findJob')}
                           </h3>
                         </div>
                         <div className="space-y-1">
@@ -137,7 +139,7 @@ export function Navbar() {
                               <Link
                                 key={index}
                                 href={service.href}
-                                className="flex items-start gap-3 px-4 py-3 hover:bg-gray-50 transition-colors group"
+                                className="flex items-start gap-3 px-4 py-3 hover:bg-gray-50 transition-all duration-300 group hover:translate-x-2"
                                 onClick={() => setServicesDropdownOpen(false)}
                               >
                                 <div
@@ -167,7 +169,7 @@ export function Navbar() {
                 <Link
                   key={item.name}
                   href={item.href}
-                  className="text-base font-semibold text-gray-900 hover:text-[#83A98A] transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#83A98A] rounded-md px-3 py-2"
+                  className="text-sm xl:text-base font-semibold text-gray-900 hover:text-[#83A98A] transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#83A98A] rounded-md px-2 xl:px-3 py-2 whitespace-nowrap"
                 >
                   {item.name}
                 </Link>
@@ -176,13 +178,19 @@ export function Navbar() {
           </div>
 
           {/* CTA desktop */}
-          <div className="hidden lg:flex lg:flex-1 lg:justify-end">
-            <Link
-              href="#cursos"
-              className="rounded-lg bg-[#83A98A] px-4 py-1.5 text-sm font-semibold text-white shadow-sm hover:bg-[#6D8F75] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#83A98A] transition-colors"
+          <div className="hidden lg:flex lg:flex-1 lg:justify-end lg:items-center lg:gap-3 xl:gap-4">
+            <LanguageSelector />
+            <button
+              onClick={() => {
+                // This will be passed as a prop
+                if (typeof window !== 'undefined' && (window as any).openLoginPanel) {
+                  (window as any).openLoginPanel();
+                }
+              }}
+              className="rounded-lg bg-[#83A98A] px-3 xl:px-4 py-1.5 text-xs xl:text-sm font-semibold text-white shadow-sm hover:bg-[#6D8F75] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#83A98A] transition-colors whitespace-nowrap"
             >
-              Aprende más
-            </Link>
+              Login
+            </button>
           </div>
         </nav>
       </header>
@@ -196,3 +204,4 @@ export function Navbar() {
     </>
   );
 }
+

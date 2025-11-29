@@ -1,0 +1,42 @@
+/* Clase para lectores de pantalla (Screen Reader Only) */
+/* Oculta visualmente pero mantiene accesible para tecnologías asistivas */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border-width: 0;
+}
+
+.accessibility-large-cursor,
+.accessibility-large-cursor * {
+  cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="black" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3l7.07 16.97 2.51-7.39 7.39-2.51L3 3z"/></svg>') 10 10, auto !important;
+}
+
+.accessibility-no-animations,
+.accessibility-no-animations *,
+.accessibility-no-animations *::before,
+.accessibility-no-animations *::after {
+  animation: none !important;
+  transition: none !important;
+  scroll-behavior: auto !important;
+}
+
+/* Clase para cambiar el color del texto */
+.accessibility-text-color,
+.accessibility-text-color *:not(input):not(textarea):not(select),
+.accessibility-text-color *::before,
+.accessibility-text-color *::after {
+  color: var(--accessibility-text-color) !important;
+}
+
+/* Forzar color normal en inputs para evitar herencia y lag */
+.accessibility-text-color input,
+.accessibility-text-color textarea,
+.accessibility-text-color select {
+  color: var(--foreground) !important;
+}

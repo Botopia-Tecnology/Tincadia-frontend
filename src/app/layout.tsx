@@ -4,6 +4,7 @@ import "./globals.css";
 import { Navbar } from "@/components/landing/Navbar";
 import { Footer } from "@/components/landing/Footer";
 import { SignLanguageTooltip } from "@/components/landing/SignLanguageTooltip";
+import { I18nProvider } from "@/contexts/I18nContext";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -27,15 +28,22 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="es" suppressHydrationWarning>
+      <head>
+        {/* Preconnect to external resources for better performance */}
+        <link rel="preconnect" href="https://images.unsplash.com" />
+        <link rel="preconnect" href="https://media.giphy.com" />
+      </head>
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        <Navbar />
-        <main className="pt-20">
-          {children}
-        </main>
-        <Footer />
-        <SignLanguageTooltip />
+        <I18nProvider defaultLocale="es">
+          <Navbar />
+          <main className="pt-20">
+            {children}
+          </main>
+          <Footer />
+          <SignLanguageTooltip />
+        </I18nProvider>
       </body>
     </html>
   );
