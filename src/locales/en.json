@@ -469,7 +469,7 @@
         "workExperience": "Work experience",
         "technicalSkills": "Technical skills",
         "softSkills": "Soft skills",
-        "certifications": "Certificaciones, cursos o talleres",
+        "certifications": "Certifications, courses or workshops",
         "uploadCV": "Attach resume (PDF)",
         "selectFile": "Select PDF file",
         "training": "Would you like to receive free training from TINCADIA?",
@@ -580,5 +580,20 @@
         "Others"
       ]
     }
+  },
+  "login": {
+    "closeLabel": "Close login panel",
+    "title": "Welcome back",
+    "subtitle": "Login to your account",
+    "emailPlaceholder": "Enter your email address",
+    "passwordPlaceholder": "Enter your password",
+    "forgotPassword": "Forgot password?",
+    "loginButton": "Sign In",
+    "orContinueWith": "or continue with",
+    "google": "Continue with Google",
+    "apple": "Continue with Apple",
+    "microsoft": "Continue with Microsoft",
+    "noAccount": "Don't have an account?",
+    "signUp": "Sign up"
   }
 }
