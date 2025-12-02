@@ -17,9 +17,9 @@ export function Navbar() {
   const timeoutRef = useRef<NodeJS.Timeout | null>(null);
 
   const navigation = useMemo(() => [
-    { name: t('navbar.about'), href: '#nosotros' },
+    { name: t('navbar.about'), href: '/nosotros' },
     { name: t('navbar.services'), href: '#servicios', hasDropdown: true },
-    { name: t('navbar.courses'), href: '#cursos' },
+    { name: t('navbar.courses'), href: '/cursos' },
     { name: t('navbar.pricing'), href: '/pricing' },
     { name: t('navbar.contact'), href: '#contacto' },
   ], [t]);

@@ -12,21 +12,26 @@ import { AccessibilityButton } from '@/components/landing/AccessibilityButton';
 import { RegionalMap } from '@/components/landing/RegionalMap';
 import { DownloadAppSection } from '@/components/landing/DownloadAppSection';
 import { LoginPanel } from '@/components/landing/LoginPanel';
-import { ImpactSection } from '@/components/landing/ImpactSection';
+import { RegistrationPanel } from '@/components/landing/RegistrationPanel';
 
 // Contexto para compartir el estado del panel de registro
 const RegistrationPanelContext = createContext<{
   isOpen: boolean;
   setIsOpen: (isOpen: boolean) => void;
+  email: string;
+  setEmail: (email: string) => void;
 }>({
   isOpen: false,
   setIsOpen: () => { },
+  email: '',
+  setEmail: () => { },
 });
 
 export const useRegistrationPanel = () => useContext(RegistrationPanelContext);
 
 export default function Home() {
   const [isRegistrationPanelOpen, setIsRegistrationPanelOpen] = useState(false);
+  const [registrationEmail, setRegistrationEmail] = useState('');
   const [isLoginPanelOpen, setIsLoginPanelOpen] = useState(false);
   const [disableAnimations, setDisableAnimations] = useState(false);
 
@@ -59,11 +64,15 @@ export default function Home() {
       <TechBackground disableAnimations={disableAnimations} />
 
       {/* Page Content */}
-      <RegistrationPanelContext.Provider value={{ isOpen: isRegistrationPanelOpen, setIsOpen: setIsRegistrationPanelOpen }}>
+      <RegistrationPanelContext.Provider value={{
+        isOpen: isRegistrationPanelOpen,
+        setIsOpen: setIsRegistrationPanelOpen,
+        email: registrationEmail,
+        setEmail: setRegistrationEmail
+      }}>
         <div className="relative z-10">
           <Hero disableAnimations={disableAnimations} />
           <RegionalMap />
-          <ImpactSection />
           <HowToStart />
           <HowItWorks />
           <Services />
@@ -83,10 +92,18 @@ export default function Home() {
         <LoginPanel
           isOpen={isLoginPanelOpen}
           onClose={() => setIsLoginPanelOpen(false)}
-          onSignUpClick={() => {
+          onSignUpClick={(email) => {
             setIsLoginPanelOpen(false);
+            if (email) setRegistrationEmail(email);
             setIsRegistrationPanelOpen(true);
           }}
+        />
+
+        {/* Registration Panel */}
+        <RegistrationPanel
+          isOpen={isRegistrationPanelOpen}
+          onClose={() => setIsRegistrationPanelOpen(false)}
+          initialEmail={registrationEmail}
         />
       </RegistrationPanelContext.Provider>
     </div>
