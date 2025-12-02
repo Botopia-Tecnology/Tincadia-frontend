@@ -646,5 +646,9 @@
         "Contribución directa a la empleabilidad de personas sordas en Colombia."
       ]
     }
+  },
+  "regionalMap": {
+    "currentlyInColombia": "Actualmente en Colombia...",
+    "comingSoonWorld": "Muy pronto, en el mundo"
   }
 }

@@ -646,5 +646,9 @@
         "Contribuição direta para a empregabilidade de pessoas surdas na Colômbia."
       ]
     }
+  },
+  "regionalMap": {
+    "currentlyInColombia": "Atualmente na Colômbia...",
+    "comingSoonWorld": "Em breve, no mundo"
   }
 }

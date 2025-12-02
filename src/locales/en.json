@@ -646,5 +646,9 @@
         "Direct contribution to the employability of deaf people in Colombia."
       ]
     }
+  },
+  "regionalMap": {
+    "currentlyInColombia": "Currently in Colombia...",
+    "comingSoonWorld": "Coming soon, worldwide"
   }
 }

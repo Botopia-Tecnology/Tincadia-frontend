@@ -44,40 +44,35 @@ export function ImpactSection() {
     ] as const;
 
     const odsItems = [
-        { id: '4', label: t('impact.ods.items.education'), icon: BookOpen, color: 'text-red-400', bg: 'bg-red-400/10', border: 'border-red-400/20' },
-        { id: '8', label: t('impact.ods.items.work'), icon: Briefcase, color: 'text-amber-400', bg: 'bg-amber-400/10', border: 'border-amber-400/20' },
-        { id: '10', label: t('impact.ods.items.inequality'), icon: Scale, color: 'text-pink-400', bg: 'bg-pink-400/10', border: 'border-pink-400/20' },
-        { id: '16', label: t('impact.ods.items.peace'), icon: Globe, color: 'text-blue-400', bg: 'bg-blue-400/10', border: 'border-blue-400/20' },
-        { id: '17', label: t('impact.ods.items.alliances'), icon: Handshake, color: 'text-indigo-400', bg: 'bg-indigo-400/10', border: 'border-indigo-400/20' },
+        { id: '4', label: t('impact.ods.items.education'), icon: BookOpen, color: 'text-[#83A98A]', bg: 'bg-[#83A98A]/10', border: 'border-[#83A98A]/20' },
+        { id: '8', label: t('impact.ods.items.work'), icon: Briefcase, color: 'text-[#83A98A]', bg: 'bg-[#83A98A]/10', border: 'border-[#83A98A]/20' },
+        { id: '10', label: t('impact.ods.items.inequality'), icon: Scale, color: 'text-[#83A98A]', bg: 'bg-[#83A98A]/10', border: 'border-[#83A98A]/20' },
+        { id: '16', label: t('impact.ods.items.peace'), icon: Globe, color: 'text-[#83A98A]', bg: 'bg-[#83A98A]/10', border: 'border-[#83A98A]/20' },
+        { id: '17', label: t('impact.ods.items.alliances'), icon: Handshake, color: 'text-[#83A98A]', bg: 'bg-[#83A98A]/10', border: 'border-[#83A98A]/20' },
     ];
 
     return (
-        <section id="nosotros" className="relative py-72 overflow-hidden text-white">
+        <section id="nosotros" className="relative py-12 lg:py-16 overflow-hidden bg-white">
 
-            {/* Contenedor de fondo con Máscara de Desvanecimiento (Fade Mask) */}
-            {/* Esto crea una transición perfecta usando transparencia en lugar de superposición de colores */}
-            <div className="absolute inset-0 -z-20 [mask-image:linear-gradient(to_bottom,transparent,black_10%,black_90%,transparent)]">
-                {/* Fondo oscuro base */}
-                <div className="absolute inset-0 bg-[#0B0F19]/95" />
-
-                {/* Grid y Efectos Visuales */}
-                <div className="absolute inset-0 bg-[linear-gradient(to_right,#1f293720_1px,transparent_1px),linear-gradient(to_bottom,#1f293720_1px,transparent_1px)] bg-[size:4rem_4rem] [mask-image:radial-gradient(ellipse_60%_50%_at_50%_0%,#000_70%,transparent_100%)]" />
-                <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[1000px] h-[400px] bg-[#83A98A]/20 blur-[120px] rounded-full pointer-events-none" />
+            {/* Fondo sutil con patrón suave */}
+            <div className="absolute inset-0 -z-20">
+                <div className="absolute inset-0 bg-gray-50" />
+                <div className="absolute inset-0 bg-[linear-gradient(to_right,#e5e7eb08_1px,transparent_1px),linear-gradient(to_bottom,#e5e7eb08_1px,transparent_1px)] bg-[size:4rem_4rem]" />
             </div>
 
             <div className="relative z-10 mx-auto max-w-7xl px-6 lg:px-8">
 
                 {/* Header */}
                 <ScrollReveal>
-                    <div className="text-center mb-20 px-4">
+                    <div className="text-center mb-12 lg:mb-16 px-4">
                         <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#83A98A]/10 border border-[#83A98A]/20 text-[#83A98A] text-sm font-medium mb-6">
                             <Network className="w-4 h-4" />
                             <span>Impacto Social & Tecnología</span>
                         </div>
-                        <h2 className="text-4xl md:text-5xl font-bold tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-white via-gray-200 to-gray-400 mb-6 py-2 leading-tight">
+                        <h2 className="text-4xl md:text-5xl font-bold tracking-tight text-gray-900 mb-6 py-2 leading-tight">
                             {t('impact.title')}
                         </h2>
-                        <p className="text-lg text-gray-400 max-w-2xl mx-auto leading-relaxed">
+                        <p className="text-lg text-gray-600 max-w-2xl mx-auto leading-relaxed">
                             {t('impact.subtitle')}
                         </p>
                     </div>
@@ -89,7 +84,7 @@ export function ImpactSection() {
                     <div className="space-y-8">
                         {/* Tabs Navigation */}
                         <ScrollReveal delay={200}>
-                            <div className="grid grid-cols-1 md:grid-cols-3 gap-2 p-1.5 bg-gray-900/50 backdrop-blur-sm rounded-2xl border border-gray-800/50 w-full">
+                            <div className="grid grid-cols-1 md:grid-cols-3 gap-2 p-1.5 bg-gray-100 rounded-2xl border border-gray-200 w-full">
                                 {tabs.map((tab) => {
                                     const Icon = tab.icon;
                                     const isActive = activeTab === tab.id;
@@ -99,7 +94,7 @@ export function ImpactSection() {
                                             onClick={() => setActiveTab(tab.id)}
                                             className={`flex items-center justify-center gap-2 px-3 py-2.5 rounded-xl text-sm font-medium transition-all duration-300 whitespace-nowrap ${isActive
                                                     ? 'bg-[#83A98A] text-white shadow-lg shadow-[#83A98A]/20'
-                                                    : 'text-gray-400 hover:text-white hover:bg-gray-800'
+                                                    : 'text-gray-600 hover:text-gray-900 hover:bg-gray-200'
                                                 }`}
                                         >
                                             <Icon className="w-4 h-4 flex-shrink-0" />
@@ -111,7 +106,7 @@ export function ImpactSection() {
                         </ScrollReveal>
 
                         <ScrollReveal delay={300}>
-                            <div className="bg-gray-900/50 backdrop-blur-md rounded-3xl border border-gray-800 p-8 relative overflow-hidden group min-h-[300px]">
+                            <div className="bg-white rounded-3xl border border-gray-200 shadow-sm p-8 relative overflow-hidden group min-h-[300px]">
                                 <div className="absolute inset-0 bg-gradient-to-br from-[#83A98A]/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
 
                                 <div className="relative z-10 space-y-6">
@@ -120,7 +115,7 @@ export function ImpactSection() {
                                             <div className="flex-shrink-0 w-6 h-6 rounded-full bg-[#83A98A]/10 border border-[#83A98A]/20 flex items-center justify-center mt-0.5 group-hover/item:bg-[#83A98A] group-hover/item:text-white transition-colors duration-300">
                                                 <ArrowRight className="w-3 h-3 text-[#83A98A] group-hover/item:text-white" />
                                             </div>
-                                            <p className="text-gray-300 group-hover/item:text-white transition-colors duration-300">
+                                            <p className="text-gray-700 group-hover/item:text-gray-900 transition-colors duration-300">
                                                 {item}
                                             </p>
                                         </div>
@@ -131,23 +126,21 @@ export function ImpactSection() {
 
                         {/* Business Impact - Redesigned */}
                         <ScrollReveal delay={400}>
-                            <div className="relative overflow-hidden rounded-2xl border border-[#83A98A]/30 bg-gradient-to-br from-gray-900 to-[#0B0F19] p-1">
-                                <div className="absolute inset-0 bg-[#83A98A]/5 animate-pulse" />
-                                <div className="relative bg-gray-900/80 backdrop-blur-xl rounded-xl p-6 flex flex-col sm:flex-row items-center gap-6 text-center sm:text-left">
+                            <div className="relative overflow-hidden rounded-2xl border border-[#83A98A]/30 bg-gradient-to-br from-[#83A98A]/5 to-white p-1">
+                                <div className="relative bg-white rounded-xl p-6 flex flex-col sm:flex-row items-center gap-6 text-center sm:text-left">
                                     <div className="relative">
-                                        <div className="absolute inset-0 bg-[#83A98A] blur-xl opacity-20" />
                                         <div className="relative w-14 h-14 rounded-2xl bg-gradient-to-br from-[#83A98A] to-[#6D8F75] flex items-center justify-center shadow-lg shadow-[#83A98A]/20">
                                             <Zap className="w-7 h-7 text-white" />
                                         </div>
                                     </div>
                                     <div className="flex-1">
-                                        <h4 className="text-lg font-bold text-white mb-2 flex items-center justify-center sm:justify-start gap-2">
+                                        <h4 className="text-lg font-bold text-gray-900 mb-2 flex items-center justify-center sm:justify-start gap-2">
                                             Impacto Empresarial Real
-                                            <span className="px-2 py-0.5 rounded text-[10px] font-bold bg-[#83A98A]/20 text-[#83A98A] border border-[#83A98A]/20 uppercase tracking-wider">
+                                            <span className="px-2 py-0.5 rounded text-[10px] font-bold bg-[#83A98A]/10 text-[#83A98A] border border-[#83A98A]/20 uppercase tracking-wider">
                                                 ROI
                                             </span>
                                         </h4>
-                                        <p className="text-sm text-gray-400 leading-relaxed">
+                                        <p className="text-sm text-gray-600 leading-relaxed">
                                             Transformamos el cumplimiento normativo en una ventaja competitiva, mejorando la reputación y el clima laboral de tu organización.
                                         </p>
                                     </div>
@@ -161,12 +154,12 @@ export function ImpactSection() {
                         <div className="relative w-full" ref={containerRef}>
                             {/* Central Hub */}
                             <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-20">
-                                <div className="relative w-24 h-24 bg-gray-900 rounded-full border-2 border-[#83A98A] shadow-[0_0_30px_rgba(131,169,138,0.3)] flex items-center justify-center z-20 group cursor-default">
+                                <div className="relative w-24 h-24 bg-white rounded-full border-2 border-[#83A98A] shadow-[0_0_30px_rgba(131,169,138,0.2)] flex items-center justify-center z-20 group cursor-default">
                                     <div className="absolute inset-0 rounded-full border border-[#83A98A]/30 animate-ping opacity-20" />
-                                    <span className="font-bold text-2xl text-white tracking-tighter">TN</span>
+                                    <span className="font-bold text-2xl text-[#83A98A] tracking-tighter">TN</span>
 
                                     {/* Tooltip */}
-                                    <div className="absolute -bottom-10 left-1/2 -translate-x-1/2 opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap text-xs text-[#83A98A] font-mono">
+                                    <div className="absolute -bottom-10 left-1/2 -translate-x-1/2 opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap text-xs text-[#83A98A] font-mono bg-white px-2 py-1 rounded border border-gray-200 shadow-sm">
                                         TINCADIA NETWORK
                                     </div>
                                 </div>
@@ -196,7 +189,7 @@ export function ImpactSection() {
                                                 <line
                                                     x1={center} y1={center}
                                                     x2={x} y2={y}
-                                                    stroke="#374151"
+                                                    stroke="#e5e7eb"
                                                     strokeWidth="1"
                                                     strokeDasharray="4 4"
                                                 />
@@ -234,9 +227,9 @@ export function ImpactSection() {
                                             <Icon className={`w-7 h-7 ${ods.color}`} />
 
                                             {/* Hover Card */}
-                                            <div className="absolute top-full mt-4 left-1/2 -translate-x-1/2 w-48 bg-gray-900 border border-gray-800 p-3 rounded-xl shadow-xl opacity-0 group-hover:opacity-100 transition-all duration-300 pointer-events-none z-30 translate-y-2 group-hover:translate-y-0">
+                                            <div className="absolute top-full mt-4 left-1/2 -translate-x-1/2 w-48 bg-white border border-gray-200 p-3 rounded-xl shadow-xl opacity-0 group-hover:opacity-100 transition-all duration-300 pointer-events-none z-30 translate-y-2 group-hover:translate-y-0">
                                                 <div className="text-xs font-bold text-gray-500 mb-1">ODS {ods.id}</div>
-                                                <div className="text-sm font-semibold text-white">{ods.label}</div>
+                                                <div className="text-sm font-semibold text-gray-900">{ods.label}</div>
                                             </div>
                                         </div>
                                     );
