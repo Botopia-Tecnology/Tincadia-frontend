@@ -92,7 +92,7 @@ export function FAQ() {
             {t('faq.notFound')}
           </p>
           <a
-            href="#contacto"
+            href="contacto"
             className="inline-block px-6 py-3 bg-[#83A98A] text-white font-semibold rounded-lg hover:bg-[#6D8F75] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#83A98A] transition-all duration-300"
           >
             {t('faq.contactButton')}

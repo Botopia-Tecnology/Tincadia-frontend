@@ -8,6 +8,7 @@ import { MobileMenu } from './MobileMenu';
 import { useScrollLock } from '@/hooks/useScrollLock';
 import { useTranslation } from '@/hooks/useTranslation';
 import { LanguageSelector } from '@/components/ui/LanguageSelector';
+import { useUI } from '@/contexts/UIContext';
 
 export function Navbar() {
   const t = useTranslation();
@@ -15,6 +16,7 @@ export function Navbar() {
   const [servicesDropdownOpen, setServicesDropdownOpen] = useState(false);
   const servicesDropdownRef = useRef<HTMLDivElement>(null);
   const timeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const { openLoginPanel } = useUI();
 
   const navigation = useMemo(() => [
     { name: t('navbar.about'), href: '/nosotros' },
@@ -196,12 +198,7 @@ export function Navbar() {
           <div className="hidden lg:flex lg:flex-1 lg:justify-end lg:items-center lg:gap-3 xl:gap-4">
             <LanguageSelector />
             <button
-              onClick={() => {
-                // This will be passed as a prop
-                if (typeof window !== 'undefined' && (window as any).openLoginPanel) {
-                  (window as any).openLoginPanel();
-                }
-              }}
+              onClick={openLoginPanel}
               className="rounded-lg bg-[#83A98A] px-3 xl:px-4 py-1.5 text-xs xl:text-sm font-semibold text-white shadow-sm hover:bg-[#6D8F75] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#83A98A] transition-colors whitespace-nowrap"
             >
               {t('login.loginButton')}

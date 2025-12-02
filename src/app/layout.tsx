@@ -5,6 +5,9 @@ import { Navbar } from "@/components/landing/Navbar";
 import { Footer } from "@/components/landing/Footer";
 import { SignLanguageTooltip } from "@/components/landing/SignLanguageTooltip";
 import { I18nProvider } from "@/contexts/I18nContext";
+import { UIProvider } from "@/contexts/UIContext";
+import { AccessibilityProvider } from "@/contexts/AccessibilityContext";
+import { AccessibilityButton } from "@/components/landing/AccessibilityButton";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -37,12 +40,17 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
         <I18nProvider defaultLocale="es">
-          <Navbar />
-          <main className="pt-20">
-            {children}
-          </main>
-          <Footer />
-          <SignLanguageTooltip />
+          <UIProvider>
+            <AccessibilityProvider>
+              <Navbar />
+              <main className="pt-20">
+                {children}
+              </main>
+              <AccessibilityButton />
+              <Footer />
+              <SignLanguageTooltip />
+            </AccessibilityProvider>
+          </UIProvider>
         </I18nProvider>
       </body>
     </html>
