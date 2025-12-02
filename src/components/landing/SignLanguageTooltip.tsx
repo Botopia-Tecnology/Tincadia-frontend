@@ -15,8 +15,8 @@ export function SignLanguageTooltip() {
     useEffect(() => {
         const handleMouseOver = (e: MouseEvent) => {
             const target = e.target as HTMLElement;
-            // Buscar si el elemento o sus padres son interactivos
-            const interactiveElement = target.closest('a, button');
+            // Buscar si el elemento o sus padres son interactivos y tienen la clase específica
+            const interactiveElement = target.closest('.sign-language-target');
 
             if (interactiveElement) {
                 const text = interactiveElement.textContent?.trim() || interactiveElement.getAttribute('aria-label') || '';
@@ -40,7 +40,7 @@ export function SignLanguageTooltip() {
 
         const handleMouseOut = (e: MouseEvent) => {
             const target = e.target as HTMLElement;
-            const interactiveElement = target.closest('a, button');
+            const interactiveElement = target.closest('.sign-language-target');
 
             if (interactiveElement) {
                 if (timeoutRef.current) clearTimeout(timeoutRef.current);

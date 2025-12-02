@@ -43,28 +43,33 @@ export function ImpactSection() {
         { id: 'society', label: t('impact.tabs.society'), icon: Heart },
     ] as const;
 
+    // ODS Colors restored
     const odsItems = [
-        { id: '4', label: t('impact.ods.items.education'), icon: BookOpen, color: 'text-[#83A98A]', bg: 'bg-[#83A98A]/10', border: 'border-[#83A98A]/20' },
-        { id: '8', label: t('impact.ods.items.work'), icon: Briefcase, color: 'text-[#83A98A]', bg: 'bg-[#83A98A]/10', border: 'border-[#83A98A]/20' },
-        { id: '10', label: t('impact.ods.items.inequality'), icon: Scale, color: 'text-[#83A98A]', bg: 'bg-[#83A98A]/10', border: 'border-[#83A98A]/20' },
-        { id: '16', label: t('impact.ods.items.peace'), icon: Globe, color: 'text-[#83A98A]', bg: 'bg-[#83A98A]/10', border: 'border-[#83A98A]/20' },
-        { id: '17', label: t('impact.ods.items.alliances'), icon: Handshake, color: 'text-[#83A98A]', bg: 'bg-[#83A98A]/10', border: 'border-[#83A98A]/20' },
+        { id: '4', label: t('impact.ods.items.education'), icon: BookOpen, color: 'text-[#C5192D]', bg: 'bg-[#C5192D]/10', border: 'border-[#C5192D]/20', ring: 'ring-[#C5192D]/20' },
+        { id: '8', label: t('impact.ods.items.work'), icon: Briefcase, color: 'text-[#A21942]', bg: 'bg-[#A21942]/10', border: 'border-[#A21942]/20', ring: 'ring-[#A21942]/20' },
+        { id: '10', label: t('impact.ods.items.inequality'), icon: Scale, color: 'text-[#DD1367]', bg: 'bg-[#DD1367]/10', border: 'border-[#DD1367]/20', ring: 'ring-[#DD1367]/20' },
+        { id: '16', label: t('impact.ods.items.peace'), icon: Globe, color: 'text-[#00689D]', bg: 'bg-[#00689D]/10', border: 'border-[#00689D]/20', ring: 'ring-[#00689D]/20' },
+        { id: '17', label: t('impact.ods.items.alliances'), icon: Handshake, color: 'text-[#19486A]', bg: 'bg-[#19486A]/10', border: 'border-[#19486A]/20', ring: 'ring-[#19486A]/20' },
     ];
 
-    return (
-        <section id="nosotros" className="relative py-12 lg:py-16 overflow-hidden bg-white">
+    // Icons for the cards (cycling through them for variety)
+    const cardIcons = [Target, Zap, Network, ArrowRight];
 
-            {/* Fondo sutil con patrón suave */}
+    return (
+        <section id="nosotros" className="relative py-20 lg:py-24 overflow-hidden bg-gray-50/50">
+
+            {/* Background Pattern */}
             <div className="absolute inset-0 -z-20">
-                <div className="absolute inset-0 bg-gray-50" />
                 <div className="absolute inset-0 bg-[linear-gradient(to_right,#e5e7eb08_1px,transparent_1px),linear-gradient(to_bottom,#e5e7eb08_1px,transparent_1px)] bg-[size:4rem_4rem]" />
+                <div className="absolute top-0 left-0 right-0 h-32 bg-gradient-to-b from-white to-transparent" />
+                <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-white to-transparent" />
             </div>
 
             <div className="relative z-10 mx-auto max-w-7xl px-6 lg:px-8">
 
                 {/* Header */}
                 <ScrollReveal>
-                    <div className="text-center mb-12 lg:mb-16 px-4">
+                    <div className="text-center mb-16 lg:mb-20 px-4">
                         <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#83A98A]/10 border border-[#83A98A]/20 text-[#83A98A] text-sm font-medium mb-6">
                             <Network className="w-4 h-4" />
                             <span>Impacto Social & Tecnología</span>
@@ -78,13 +83,14 @@ export function ImpactSection() {
                     </div>
                 </ScrollReveal>
 
-                <div className="grid lg:grid-cols-2 gap-16 items-start">
+                {/* Main Content Grid */}
+                <div className="flex flex-col lg:flex-row gap-16 lg:gap-24 items-start">
 
-                    {/* Left Column: Interactive Tabs */}
-                    <div className="space-y-8">
+                    {/* Left Column: Interactive Tabs & Cards */}
+                    <div className="w-full lg:w-1/2 space-y-10">
                         {/* Tabs Navigation */}
                         <ScrollReveal delay={200}>
-                            <div className="grid grid-cols-1 md:grid-cols-3 gap-2 p-1.5 bg-gray-100 rounded-2xl border border-gray-200 w-full">
+                            <div className="flex flex-wrap justify-center lg:justify-start gap-3 w-full">
                                 {tabs.map((tab) => {
                                     const Icon = tab.icon;
                                     const isActive = activeTab === tab.id;
@@ -92,113 +98,106 @@ export function ImpactSection() {
                                         <button
                                             key={tab.id}
                                             onClick={() => setActiveTab(tab.id)}
-                                            className={`flex items-center justify-center gap-2 px-3 py-2.5 rounded-xl text-sm font-medium transition-all duration-300 whitespace-nowrap ${isActive
-                                                    ? 'bg-[#83A98A] text-white shadow-lg shadow-[#83A98A]/20'
-                                                    : 'text-gray-600 hover:text-gray-900 hover:bg-gray-200'
+                                            className={`flex items-center gap-2.5 px-5 py-3 rounded-xl text-sm font-semibold transition-all duration-300 ${isActive
+                                                ? 'bg-white text-[#83A98A] shadow-md ring-1 ring-[#83A98A]/20 scale-105'
+                                                : 'bg-transparent text-gray-500 hover:bg-gray-100 hover:text-gray-900'
                                                 }`}
                                         >
-                                            <Icon className="w-4 h-4 flex-shrink-0" />
-                                            <span className="truncate">{tab.label}</span>
+                                            <Icon className={`w-5 h-5 ${isActive ? 'text-[#83A98A]' : 'text-gray-400'}`} />
+                                            {tab.label}
                                         </button>
                                     );
                                 })}
                             </div>
                         </ScrollReveal>
 
+                        {/* Cards Grid */}
                         <ScrollReveal delay={300}>
-                            <div className="bg-white rounded-3xl border border-gray-200 shadow-sm p-8 relative overflow-hidden group min-h-[300px]">
-                                <div className="absolute inset-0 bg-gradient-to-br from-[#83A98A]/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-
-                                <div className="relative z-10 space-y-6">
-                                    {(t(`impact.${activeTab}.items`) as unknown as string[]).map((item, index) => (
-                                        <div key={index} className="flex gap-4 items-start group/item">
-                                            <div className="flex-shrink-0 w-6 h-6 rounded-full bg-[#83A98A]/10 border border-[#83A98A]/20 flex items-center justify-center mt-0.5 group-hover/item:bg-[#83A98A] group-hover/item:text-white transition-colors duration-300">
-                                                <ArrowRight className="w-3 h-3 text-[#83A98A] group-hover/item:text-white" />
+                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
+                                {(t(`impact.${activeTab}.items`) as unknown as string[]).map((item, index) => {
+                                    const CardIcon = cardIcons[index % cardIcons.length];
+                                    return (
+                                        <div
+                                            key={index}
+                                            className="group bg-white rounded-2xl p-6 shadow-sm border border-gray-100 hover:shadow-xl hover:-translate-y-1 transition-all duration-300 flex flex-col gap-4"
+                                        >
+                                            <div className="w-10 h-10 rounded-lg bg-gray-50 flex items-center justify-center group-hover:bg-[#83A98A]/10 transition-colors duration-300">
+                                                <CardIcon className="w-5 h-5 text-gray-400 group-hover:text-[#83A98A] transition-colors duration-300" />
                                             </div>
-                                            <p className="text-gray-700 group-hover/item:text-gray-900 transition-colors duration-300">
+                                            <p className="text-gray-700 font-medium leading-relaxed">
                                                 {item}
                                             </p>
                                         </div>
-                                    ))}
-                                </div>
+                                    );
+                                })}
                             </div>
                         </ScrollReveal>
 
-                        {/* Business Impact - Redesigned */}
+                        {/* Business Impact Highlight */}
                         <ScrollReveal delay={400}>
-                            <div className="relative overflow-hidden rounded-2xl border border-[#83A98A]/30 bg-gradient-to-br from-[#83A98A]/5 to-white p-1">
-                                <div className="relative bg-white rounded-xl p-6 flex flex-col sm:flex-row items-center gap-6 text-center sm:text-left">
-                                    <div className="relative">
-                                        <div className="relative w-14 h-14 rounded-2xl bg-gradient-to-br from-[#83A98A] to-[#6D8F75] flex items-center justify-center shadow-lg shadow-[#83A98A]/20">
-                                            <Zap className="w-7 h-7 text-white" />
-                                        </div>
-                                    </div>
-                                    <div className="flex-1">
-                                        <h4 className="text-lg font-bold text-gray-900 mb-2 flex items-center justify-center sm:justify-start gap-2">
-                                            Impacto Empresarial Real
-                                            <span className="px-2 py-0.5 rounded text-[10px] font-bold bg-[#83A98A]/10 text-[#83A98A] border border-[#83A98A]/20 uppercase tracking-wider">
-                                                ROI
-                                            </span>
-                                        </h4>
-                                        <p className="text-sm text-gray-600 leading-relaxed">
-                                            Transformamos el cumplimiento normativo en una ventaja competitiva, mejorando la reputación y el clima laboral de tu organización.
-                                        </p>
-                                    </div>
+                            <div className="mt-8 p-6 rounded-2xl bg-[#83A98A]/5 border border-[#83A98A]/10 flex items-center gap-5">
+                                <div className="w-12 h-12 rounded-xl bg-[#83A98A] flex items-center justify-center flex-shrink-0 shadow-lg shadow-[#83A98A]/20">
+                                    <Zap className="w-6 h-6 text-white" />
+                                </div>
+                                <div>
+                                    <h4 className="text-base font-bold text-gray-900 mb-1">
+                                        Impacto Empresarial Real
+                                    </h4>
+                                    <p className="text-sm text-gray-600">
+                                        Transformamos el cumplimiento normativo en una ventaja competitiva.
+                                    </p>
                                 </div>
                             </div>
                         </ScrollReveal>
                     </div>
 
                     {/* Right Column: ODS Network Visualization */}
-                    <ScrollReveal delay={500} className="h-full flex items-center">
-                        <div className="relative w-full" ref={containerRef}>
-                            {/* Central Hub */}
-                            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-20">
-                                <div className="relative w-24 h-24 bg-white rounded-full border-2 border-[#83A98A] shadow-[0_0_30px_rgba(131,169,138,0.2)] flex items-center justify-center z-20 group cursor-default">
-                                    <div className="absolute inset-0 rounded-full border border-[#83A98A]/30 animate-ping opacity-20" />
-                                    <span className="font-bold text-2xl text-[#83A98A] tracking-tighter">TN</span>
+                    <div className="w-full lg:w-1/2 flex items-center justify-center lg:h-[600px]">
+                        <ScrollReveal delay={500} className="w-full">
+                            <div className="relative w-full aspect-square max-w-[500px] mx-auto" ref={containerRef}>
 
-                                    {/* Tooltip */}
-                                    <div className="absolute -bottom-10 left-1/2 -translate-x-1/2 opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap text-xs text-[#83A98A] font-mono bg-white px-2 py-1 rounded border border-gray-200 shadow-sm">
-                                        TINCADIA NETWORK
-                                    </div>
-                                </div>
-                            </div>
-
-                            {/* Orbiting ODS Nodes */}
-                            <div className="relative w-full aspect-square max-w-[500px] mx-auto">
-                                {/* Connecting Lines (SVG) */}
+                                {/* Connecting Lines - Static & Clean */}
                                 <svg className="absolute inset-0 w-full h-full pointer-events-none z-0">
                                     <defs>
-                                        <linearGradient id="beam-gradient" x1="0%" y1="0%" x2="100%" y2="0%">
-                                            <stop offset="0%" stopColor="#83A98A" stopOpacity="0" />
-                                            <stop offset="50%" stopColor="#83A98A" stopOpacity="0.5" />
-                                            <stop offset="100%" stopColor="#83A98A" stopOpacity="0" />
-                                        </linearGradient>
+                                        <filter id="glow" x="-20%" y="-20%" width="140%" height="140%">
+                                            <feGaussianBlur stdDeviation="2" result="blur" />
+                                            <feComposite in="SourceGraphic" in2="blur" operator="over" />
+                                        </filter>
                                     </defs>
-                                    {odsItems.map((_, i) => {
+                                    {odsItems.map((ods, i) => {
+                                        // Calculate positions for a cleaner layout (semi-circle or distributed)
+                                        // Let's stick to the radial layout but with cleaner lines
                                         const angle = (i * (360 / odsItems.length)) - 90;
-                                        const radius = 160; // Distance from center
+                                        const radius = 180; // Distance from center
                                         const center = 250; // SVG center (500/2)
+
+                                        // Control points for curved lines (Bezier)
                                         const x = center + radius * Math.cos((angle * Math.PI) / 180);
                                         const y = center + radius * Math.sin((angle * Math.PI) / 180);
 
+                                        // Midpoint for curve
+                                        const midX = center + (radius * 0.5) * Math.cos((angle * Math.PI) / 180);
+                                        const midY = center + (radius * 0.5) * Math.sin((angle * Math.PI) / 180);
+
                                         return (
                                             <g key={i}>
-                                                {/* Static Line */}
-                                                <line
-                                                    x1={center} y1={center}
-                                                    x2={x} y2={y}
-                                                    stroke="#e5e7eb"
-                                                    strokeWidth="1"
-                                                    strokeDasharray="4 4"
+                                                {/* Dashed Connector */}
+                                                <path
+                                                    d={`M${center},${center} Q${midX},${midY} ${x},${y}`}
+                                                    fill="none"
+                                                    stroke={ods.color.replace('text-[', '').replace(']', '')}
+                                                    strokeWidth="1.5"
+                                                    strokeDasharray="6 6"
+                                                    className="opacity-30"
                                                 />
-                                                {/* Animated Beam */}
-                                                <circle r="2" fill="#83A98A">
+                                                {/* Animated Pulse on Line */}
+                                                <circle r="3" fill={ods.color.replace('text-[', '').replace(']', '')} className="opacity-60">
                                                     <animateMotion
-                                                        dur={`${3 + i}s`}
+                                                        dur={`${4 + i}s`}
                                                         repeatCount="indefinite"
-                                                        path={`M${center},${center} L${x},${y}`}
+                                                        path={`M${center},${center} Q${midX},${midY} ${x},${y}`}
+                                                        keyPoints="0;1"
+                                                        keyTimes="0;1"
                                                     />
                                                 </circle>
                                             </g>
@@ -206,37 +205,47 @@ export function ImpactSection() {
                                     })}
                                 </svg>
 
-                                {/* Nodes */}
+                                {/* Central Hub */}
+                                <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-20">
+                                    <div className="relative w-28 h-28 bg-white rounded-3xl shadow-2xl flex items-center justify-center z-20 group cursor-default border border-gray-100">
+                                        <div className="absolute inset-0 rounded-3xl bg-gray-50/50 -z-10 transform rotate-6 scale-95 transition-transform group-hover:rotate-12" />
+                                        <div className="absolute inset-0 rounded-3xl bg-gray-50/50 -z-10 transform -rotate-6 scale-95 transition-transform group-hover:-rotate-12" />
+
+                                        <div className="flex flex-col items-center">
+                                            <span className="font-bold text-3xl text-gray-900 tracking-tighter">TN</span>
+                                            <span className="text-[10px] font-bold text-gray-400 tracking-widest mt-1">NETWORK</span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                {/* ODS Nodes */}
                                 {odsItems.map((ods, i) => {
                                     const angle = (i * (360 / odsItems.length)) - 90;
-                                    const radius = 160; // Match SVG radius
-                                    const x = 50 + (radius / 500) * 100 * Math.cos((angle * Math.PI) / 180) * 2; // Approximate % position
-                                    const y = 50 + (radius / 500) * 100 * Math.sin((angle * Math.PI) / 180) * 2;
-
-                                    const Icon = ods.icon;
+                                    const radius = 180;
 
                                     return (
                                         <div
                                             key={ods.id}
-                                            className={`absolute w-16 h-16 -ml-8 -mt-8 rounded-2xl ${ods.bg} ${ods.border} border backdrop-blur-sm flex items-center justify-center group hover:scale-110 transition-transform duration-300 cursor-pointer z-10`}
+                                            className={`absolute w-20 h-20 -ml-10 -mt-10 rounded-2xl bg-white shadow-lg border-2 ${ods.border} flex flex-col items-center justify-center gap-1 group hover:scale-110 transition-all duration-300 cursor-pointer z-30`}
                                             style={{
                                                 left: `calc(50% + ${radius * Math.cos((angle * Math.PI) / 180)}px)`,
                                                 top: `calc(50% + ${radius * Math.sin((angle * Math.PI) / 180)}px)`,
                                             }}
                                         >
-                                            <Icon className={`w-7 h-7 ${ods.color}`} />
+                                            <ods.icon className={`w-8 h-8 ${ods.color} transition-transform duration-300 group-hover:scale-110`} />
+                                            <span className={`text-xs font-bold ${ods.color}`}>ODS {ods.id}</span>
 
                                             {/* Hover Card */}
-                                            <div className="absolute top-full mt-4 left-1/2 -translate-x-1/2 w-48 bg-white border border-gray-200 p-3 rounded-xl shadow-xl opacity-0 group-hover:opacity-100 transition-all duration-300 pointer-events-none z-30 translate-y-2 group-hover:translate-y-0">
-                                                <div className="text-xs font-bold text-gray-500 mb-1">ODS {ods.id}</div>
-                                                <div className="text-sm font-semibold text-gray-900">{ods.label}</div>
+                                            <div className="absolute top-full mt-3 left-1/2 -translate-x-1/2 w-48 bg-white border border-gray-100 p-4 rounded-xl shadow-xl opacity-0 translate-y-2 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-300 pointer-events-none z-40">
+                                                <div className={`w-8 h-1 rounded mb-2 ${ods.bg.replace('/10', '')}`} />
+                                                <div className="text-sm font-bold text-gray-900 leading-tight">{ods.label}</div>
                                             </div>
                                         </div>
                                     );
                                 })}
                             </div>
-                        </div>
-                    </ScrollReveal>
+                        </ScrollReveal>
+                    </div>
                 </div>
             </div>
         </section>

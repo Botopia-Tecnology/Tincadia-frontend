@@ -169,9 +169,6 @@ export function Footer() {
                 <Linkedin className="w-5 h-5 mt-0.5 text-[#83A98A]" />
                 <div>
                   <p className="font-semibold text-gray-900">{t('footer.linkedin')}</p>
-                  <p className="text-xs">
-                    {t('footer.linkedinDesc')}
-                  </p>
                 </div>
               </a>
 
@@ -185,9 +182,6 @@ export function Footer() {
                 <Instagram className="w-5 h-5 mt-0.5 text-[#83A98A]" />
                 <div>
                   <p className="font-semibold text-gray-900">{t('footer.instagram')}</p>
-                  <p className="text-xs">
-                    {t('footer.instagramDesc')}
-                  </p>
                 </div>
               </a>
 
@@ -201,9 +195,6 @@ export function Footer() {
                 <Facebook className="w-5 h-5 mt-0.5 text-[#83A98A]" />
                 <div>
                   <p className="font-semibold text-gray-900">{t('footer.facebook')}</p>
-                  <p className="text-xs">
-                    {t('footer.facebookDesc')}
-                  </p>
                 </div>
               </a>
 
@@ -217,9 +208,6 @@ export function Footer() {
                 <Twitter className="w-5 h-5 mt-0.5 text-[#83A98A]" />
                 <div>
                   <p className="font-semibold text-gray-900">{t('footer.twitter')}</p>
-                  <p className="text-xs">
-                    {t('footer.twitterDesc')}
-                  </p>
                 </div>
               </a>
 
@@ -235,9 +223,6 @@ export function Footer() {
                   <p className="font-semibold text-gray-900">
                     {t('footer.whatsapp')}
                   </p>
-                  <p className="text-xs">
-                    {t('footer.whatsappDesc')}
-                  </p>
                 </div>
               </a>
 
@@ -251,9 +236,6 @@ export function Footer() {
                 <Youtube className="w-5 h-5 mt-0.5 text-[#83A98A]" />
                 <div>
                   <p className="font-semibold text-gray-900">{t('footer.youtube')}</p>
-                  <p className="text-xs">
-                    {t('footer.youtubeDesc')}
-                  </p>
                 </div>
               </a>
 

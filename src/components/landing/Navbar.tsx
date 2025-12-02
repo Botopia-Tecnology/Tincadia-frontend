@@ -14,6 +14,7 @@ export function Navbar() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [servicesDropdownOpen, setServicesDropdownOpen] = useState(false);
   const servicesDropdownRef = useRef<HTMLDivElement>(null);
+  const timeoutRef = useRef<NodeJS.Timeout | null>(null);
 
   const navigation = useMemo(() => [
     { name: t('navbar.about'), href: '#nosotros' },
@@ -71,6 +72,20 @@ export function Navbar() {
     };
   }, [servicesDropdownOpen]);
 
+  const handleMouseEnter = () => {
+    if (timeoutRef.current) {
+      clearTimeout(timeoutRef.current);
+      timeoutRef.current = null;
+    }
+    setServicesDropdownOpen(true);
+  };
+
+  const handleMouseLeave = () => {
+    timeoutRef.current = setTimeout(() => {
+      setServicesDropdownOpen(false);
+    }, 200); // 200ms delay
+  };
+
   return (
     <>
       <header className="bg-white/95 backdrop-blur-sm fixed top-0 left-0 right-0 z-50 border-b border-gray-200 min-h-[64px] flex items-center">
@@ -108,8 +123,8 @@ export function Navbar() {
                     key={item.name}
                     ref={servicesDropdownRef}
                     className="relative"
-                    onMouseEnter={() => setServicesDropdownOpen(true)}
-                    onMouseLeave={() => setServicesDropdownOpen(false)}
+                    onMouseEnter={handleMouseEnter}
+                    onMouseLeave={handleMouseLeave}
                   >
                     <button
                       type="button"
