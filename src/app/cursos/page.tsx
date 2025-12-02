@@ -3,12 +3,14 @@
 import { useTranslation } from '@/hooks/useTranslation';
 import { Construction, ArrowLeft } from 'lucide-react';
 import Link from 'next/link';
+import { GridBackground } from '@/components/ui/GridBackground';
 
 export default function CoursesPage() {
     const t = useTranslation();
 
     return (
-        <main className="min-h-screen bg-white flex flex-col items-center justify-center px-6 text-center">
+        <main className="min-h-screen relative flex flex-col items-center justify-center px-6 text-center">
+            <GridBackground className="fixed inset-0 -z-10" />
             <div className="bg-[#83A98A]/10 p-6 rounded-full mb-8 animate-bounce">
                 <Construction className="w-16 h-16 text-[#83A98A]" />
             </div>

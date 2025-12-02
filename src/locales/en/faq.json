@@ -1,0 +1,24 @@
+{
+    "title": "Frequently Asked Questions",
+    "subtitle": "Have questions? We have answers.",
+    "questions": [
+        {
+            "question": "How does Tincadia ensure interpreter quality?",
+            "answer": "All our interpreters go through a rigorous verification process including certification validation (ILSE, FESORD), practical interpretation tests, and continuous quality evaluations. Additionally, we have a rating and user feedback system that allows us to maintain the highest service standards."
+        },
+        {
+            "question": "Are my data safe on the platform?",
+            "answer": "Your data security is our priority. We use end-to-end encryption, comply with data protection regulations (GDPR, LOPD), and conduct periodic security audits. Your personal data is never shared with third parties without your explicit consent."
+        },
+        {
+            "question": "What is the cost of service for deaf people?",
+            "answer": "We offer different plans adapted to each need. The Basic Plan is free and includes essential features like voice-to-text transcription and automatic translation. Professional and Premium plans offer advanced features with competitive pricing and flexible payment options."
+        },
+        {
+            "question": "How are companies selected for the job board?",
+            "answer": "Companies go through a validation process verifying their real commitment to inclusion. We evaluate their accessibility policies, organizational culture, and previous experience with diverse talent. Only companies certified as inclusive can publish offers on our platform."
+        }
+    ],
+    "notFound": "Can't find what you're looking for?",
+    "contactButton": "Contact us directly"
+}

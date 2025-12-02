@@ -13,6 +13,8 @@ import { RegionalMap } from '@/components/landing/RegionalMap';
 import { DownloadAppSection } from '@/components/landing/DownloadAppSection';
 import { LoginPanel } from '@/components/landing/LoginPanel';
 import { RegistrationPanel } from '@/components/landing/RegistrationPanel';
+import { GridBackground } from '@/components/ui/GridBackground';
+
 
 // Contexto para compartir el estado del panel de registro
 const RegistrationPanelContext = createContext<{
@@ -46,19 +48,8 @@ export default function Home() {
   return (
     <div className="min-h-screen w-full relative">
       {/* Global Background with Tincadia Colors */}
-      <div
-        className="fixed inset-0 -z-20"
-        style={{
-          backgroundImage: `
-            linear-gradient(to right, rgba(229,231,235,0.2) 1px, transparent 1px),
-            linear-gradient(to bottom, rgba(229,231,235,0.2) 1px, transparent 1px),
-            radial-gradient(circle 500px at 0% 20%, rgba(131,169,138,0.08), transparent),
-            radial-gradient(circle 500px at 100% 0%, rgba(109,143,117,0.1), transparent)
-          `,
-          backgroundSize: "48px 48px, 48px 48px, 100% 100%, 100% 100%",
-          backgroundColor: "white",
-        }}
-      />
+      {/* Global Background with Tincadia Colors */}
+      <GridBackground className="fixed inset-0 -z-20" />
 
       {/* Interactive Particles */}
       <TechBackground disableAnimations={disableAnimations} />
@@ -79,6 +70,7 @@ export default function Home() {
           <DownloadAppSection />
           <Testimonials />
           <FAQ />
+
         </div>
 
         {/* Accessibility Button */}

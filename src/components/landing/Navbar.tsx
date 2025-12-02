@@ -21,7 +21,7 @@ export function Navbar() {
     { name: t('navbar.services'), href: '#servicios', hasDropdown: true },
     { name: t('navbar.courses'), href: '/cursos' },
     { name: t('navbar.pricing'), href: '/pricing' },
-    { name: t('navbar.contact'), href: '#contacto' },
+    { name: t('navbar.contact'), href: '/contacto' },
   ], [t]);
 
   const servicesDropdownItems = useMemo(() => [

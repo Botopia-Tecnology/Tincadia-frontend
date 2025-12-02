@@ -1,0 +1,24 @@
+{
+    "title": "Perguntas Frequentes",
+    "subtitle": "Tem dúvidas? Temos respostas.",
+    "questions": [
+        {
+            "question": "Como a Tincadia garante a qualidade dos intérpretes?",
+            "answer": "Todos os nossos intérpretes passam por um rigoroso processo de verificação que inclui validação de certificações (ILSE, FESORD), testes práticos de interpretação e avaliações contínuas de qualidade. Além disso, contamos com um sistema de avaliações e feedback dos usuários que nos permite manter os mais altos padrões de serviço."
+        },
+        {
+            "question": "Meus dados estão seguros na plataforma?",
+            "answer": "A segurança dos seus dados é nossa prioridade. Utilizamos criptografia de ponta a ponta, cumprimos com regulamentações de proteção de dados (GDPR, LOPD) e realizamos auditorias de segurança periódicas. Seus dados pessoais nunca são compartilhados com terceiros sem seu consentimento explícito."
+        },
+        {
+            "question": "Qual o custo do serviço para pessoas surdas?",
+            "answer": "Oferecemos diferentes planos adaptados a cada necessidade. O Plano Básico é gratuito e inclui funcionalidades essenciais como transcrição de voz para texto e tradução automática. Os planos Profissional e Premium oferecem recursos avançados com preços competitivos e opções de pagamento flexíveis."
+        },
+        {
+            "question": "Como as empresas são selecionadas no banco de empregos?",
+            "answer": "As empresas passam por um processo de validação que verifica seu compromisso real com a inclusão. Avaliamos suas políticas de acessibilidade, cultura organizacional e experiência prévia com talentos diversos. Apenas empresas certificadas como inclusivas podem publicar ofertas em nossa plataforma."
+        }
+    ],
+    "notFound": "Não encontra o que procura?",
+    "contactButton": "Contate-nos diretamente"
+}

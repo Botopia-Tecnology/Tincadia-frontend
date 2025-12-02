@@ -1,0 +1,133 @@
+{
+    "common": {
+        "selectOption": "Select an option",
+        "yes": "Yes",
+        "no": "No",
+        "required": "*"
+    },
+    "jobSeeker": {
+        "fields": {
+            "fullName": "Full name",
+            "documentId": "ID Document",
+            "disabilityType": "Disability type (if applicable)",
+            "usesLSC": "Do you use Colombian Sign Language (LSC)?",
+            "city": "City of residence",
+            "phone": "Phone / WhatsApp",
+            "email": "Email",
+            "educationLevel": "Education level",
+            "workArea": "Work area of interest (multiple selection)",
+            "workExperience": "Work experience",
+            "technicalSkills": "Technical skills",
+            "softSkills": "Soft skills",
+            "certifications": "Certifications, courses or workshops",
+            "uploadCV": "Attach CV (PDF)",
+            "selectFile": "Select PDF file",
+            "training": "Would you like to receive free training from TINCADIA?",
+            "dataAuthorization": "I authorize personal data processing according to Law 1581",
+            "specifyOther": "Specify other work area",
+            "describeExperience": "Describe your work experience...",
+            "describeTechnical": "Describe your technical skills...",
+            "describeSoft": "Describe your soft skills...",
+            "listCertifications": "List your certifications, courses or workshops..."
+        },
+        "disabilityTypes": [
+            "Deaf",
+            "Hard of hearing",
+            "Visual",
+            "Physical",
+            "Intellectual",
+            "Psychosocial",
+            "I do not have a disability"
+        ],
+        "lscLevels": [
+            "Yes, fluent",
+            "Basic",
+            "No"
+        ],
+        "educationLevels": [
+            "High School",
+            "Technical",
+            "Technologist",
+            "Professional",
+            "Postgraduate",
+            "In progress"
+        ],
+        "workAreas": [
+            "Customer Service",
+            "Technology",
+            "Administrative Assistant",
+            "Production",
+            "Marketing",
+            "Education",
+            "General Services",
+            "Logistics",
+            "Others"
+        ]
+    },
+    "interpreter": {
+        "fields": {
+            "fullName": "Full name",
+            "documentId": "ID Document",
+            "city": "City of residence",
+            "phone": "Phone / WhatsApp",
+            "email": "Email",
+            "isCertified": "Are you a certified interpreter?",
+            "academicLevel": "Indicate academic level achieved",
+            "academicDetail": "Specify title, level or career",
+            "experienceLevel": "Experience level",
+            "specialtyAreas": "Specialty areas (multiple selection)",
+            "availability": "Time availability",
+            "serviceType": "Type of service offered (multiple selection)",
+            "hourlyRates": "Hourly rates",
+            "ratesPlaceholder": "E.g: $50.000 COP",
+            "uploadCV": "CV (PDF)",
+            "selectFilePDF": "Select PDF file",
+            "certifications": "Certifications (optional)",
+            "selectFileCert": "Select file (PDF, JPG, PNG)",
+            "socialMedia": "Social media or portfolio",
+            "socialPlaceholder": "https://...",
+            "authorization": "I authorize TINCADIA to include me in the database and contact me for work",
+            "specifyOtherArea": "Specify other area",
+            "specifyOtherService": "Specify other service type"
+        },
+        "academicLevels": [
+            "High School Graduate",
+            "Professional (indicate title received)",
+            "Postgraduate (indicate title received)",
+            "Certified by FENASCOL (indicate level)",
+            "Undergraduate student (indicate career)",
+            "Technical (indicate title)",
+            "Technologist (indicate title)"
+        ],
+        "experienceLevels": [
+            "Beginner (0–1 year)",
+            "Intermediate (1–3 years)",
+            "Advanced (3–5 years)",
+            "Professional (+5 years)"
+        ],
+        "specialtyAreas": [
+            "Education",
+            "Medicine",
+            "Legal",
+            "Entrepreneurship / business",
+            "Deaf community",
+            "Technology",
+            "Events",
+            "Other"
+        ],
+        "availability": [
+            "Morning",
+            "Afternoon",
+            "Night",
+            "Weekends",
+            "24/7"
+        ],
+        "serviceTypes": [
+            "In-person interpretation",
+            "Virtual interpretation",
+            "Video translation",
+            "LSC tutoring",
+            "Others"
+        ]
+    }
+}

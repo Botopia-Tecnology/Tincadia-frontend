@@ -1,0 +1,51 @@
+{
+    "title": "Cómo funciona",
+    "titleHighlight": "TINCADIA",
+    "subtitle": "Explora nuestras funcionalidades principales y descubre cómo cada herramienta facilita la comunicación inclusiva.",
+    "features": {
+        "voiceToText": {
+            "title": "Transcripción de voz a texto",
+            "subtitle": "Convierte conversaciones en tiempo real",
+            "description": "Captura cualquier conversación y conviértela automáticamente en texto. Participa activamente en clases, reuniones o conversaciones cotidianas sin perder detalle.",
+            "steps": [
+                "Activa el micrófono en la aplicación",
+                "La IA comienza a transcribir automáticamente",
+                "Lee el texto en tiempo real en tu pantalla",
+                "Guarda y comparte las transcripciones"
+            ]
+        },
+        "translation": {
+            "title": "Traducción automática",
+            "subtitle": "Accede a contenidos en cualquier formato",
+            "description": "Traduce noticias, videos, películas y documentos automáticamente. Accede a subtítulos CC y contenido accesible en múltiples plataformas.",
+            "steps": [
+                "Sube o selecciona el contenido a traducir",
+                "Elige el formato de salida (texto o subtítulos)",
+                "La IA procesa y traduce el contenido",
+                "Disfruta del contenido totalmente accesible"
+            ]
+        },
+        "interpretation": {
+            "title": "Interpretación en LSC",
+            "subtitle": "Conéctate con intérpretes profesionales",
+            "description": "Accede a intérpretes de Lengua de Señas Colombiana por videollamada o escanea códigos QR en empresas, hospitales y universidades.",
+            "steps": [
+                "Escanea el código QR o abre la videollamada",
+                "Conecta con un intérprete disponible",
+                "Comunícate en tiempo real en LSC",
+                "Finaliza la sesión y califica el servicio"
+            ]
+        },
+        "writingAssistant": {
+            "title": "Asistente de escritura IA",
+            "subtitle": "Mejora tu comunicación escrita",
+            "description": "Escribe con confianza usando nuestro asistente inteligente que corrige gramática, tono y estilo para cualquier contexto: redes sociales, trabajo o estudios.",
+            "steps": [
+                "Escribe tu mensaje o documento",
+                "El asistente sugiere mejoras en tiempo real",
+                "Acepta o ajusta las sugerencias",
+                "Publica o envía tu texto perfeccionado"
+            ]
+        }
+    }
+}

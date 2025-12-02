@@ -1,0 +1,61 @@
+{
+    "panel": {
+        "title": "Únete a TINCADIA y descubre nuestras soluciones",
+        "emailPlaceholder": "Escribe tu correo electrónico",
+        "continueButton": "Continuar",
+        "orContinueWith": "o continúa con",
+        "facebook": "Continuar con Facebook",
+        "google": "Continuar con Google",
+        "microsoft": "Continuar con Microsoft",
+        "terms": "Al continuar, aceptas nuestros",
+        "termsLink": "Términos de servicio",
+        "and": "y",
+        "privacyLink": "Política de privacidad",
+        "createAccount": "Crea tu cuenta",
+        "fullName": "Nombre",
+        "lastName": "Apellido",
+        "documentType": "Tipo",
+        "documentNumber": "Número",
+        "phone": "Teléfono",
+        "email": "Correo electrónico",
+        "password": "Contraseña",
+        "confirmPassword": "Confirmar contraseña",
+        "passwordMismatch": "Las contraseñas no coinciden",
+        "acceptPolicies": "Acepto las",
+        "policiesLink": "políticas de Tincadia",
+        "andDataUsage": "y el",
+        "dataUsageLink": "uso de datos personales",
+        "createAccountButton": "Crear cuenta",
+        "closeLabel": "Cerrar panel de registro"
+    },
+    "interpreter": {
+        "title": "Conviértete en Intérprete",
+        "subtitle": "Únete a nuestra red de intérpretes profesionales certificados y marca la diferencia en la vida de las personas sordas e hipoacúsicas.",
+        "fullName": "Nombre Completo",
+        "fullNamePlaceholder": "Ingresa tu nombre completo",
+        "email": "Correo Electrónico",
+        "emailPlaceholder": "correo@ejemplo.com",
+        "certifications": "Certificaciones (ej. ILSE, FESORD)",
+        "certificationsPlaceholder": "Ej: ILSE Nivel 3, FESORD",
+        "submitButton": "Postular Ahora"
+    },
+    "jobSeeker": {
+        "title": "Encuentra tu Próxima Oportunidad",
+        "subtitle": "Crea un perfil y deja que empleadores inclusivos te encuentren.",
+        "formTitle": "Formulario — Bolsa de Empleo Inclusiva",
+        "formDescription": "Completa todos los campos para acceder a oportunidades laborales en empresas inclusivas.",
+        "fullName": "Nombre Completo",
+        "fullNamePlaceholder": "Ingresa tu nombre completo",
+        "email": "Correo Electrónico",
+        "emailPlaceholder": "correo@ejemplo.com",
+        "uploadCV": "Subir CV (opcional)",
+        "chooseFile": "Elegir archivo",
+        "submitButton": "Crear Perfil",
+        "submitForm": "Enviar Formulario"
+    },
+    "interpreterForm": {
+        "formTitle": "Formulario — Registro de Intérpretes de Lengua de Señas",
+        "formDescription": "Completa todos los campos para formar parte de nuestra red de intérpretes profesionales.",
+        "submitForm": "Enviar Formulario"
+    }
+}

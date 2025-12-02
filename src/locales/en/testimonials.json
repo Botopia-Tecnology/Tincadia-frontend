@@ -1,0 +1,40 @@
+{
+    "title": "Success",
+    "titleHighlight": "Stories",
+    "subtitle": "See how Tincadia is generating real impact.",
+    "previous": "Previous testimonial",
+    "next": "Next testimonial",
+    "goTo": "Go to testimonial",
+    "testimonials": [
+        {
+            "name": "Almia",
+            "role": "Software Engineering",
+            "company": "EAFIT",
+            "text": "TINCADIA has transformed the way our deaf students participate in classes. An indispensable tool."
+        },
+        {
+            "name": "Andrey",
+            "role": "LSE Interpreter",
+            "company": "Freelance",
+            "text": "We have significantly improved care for hearing-impaired patients thanks to TINCADIA solutions."
+        },
+        {
+            "name": "Elena R.",
+            "role": "HR Manager",
+            "company": "XYZ Corporation",
+            "text": "Accessibility certification has allowed us to expand our services to a more diverse audience."
+        },
+        {
+            "name": "Carlos M.",
+            "role": "Inclusion Director",
+            "company": "National University",
+            "text": "TINCADIA tools have revolutionized how we approach inclusive education in our institution."
+        },
+        {
+            "name": "María S.",
+            "role": "Project Coordinator",
+            "company": "Total Inclusion NGO",
+            "text": "Thanks to TINCADIA, we have been able to connect deaf talent with real job opportunities. An impressive change."
+        }
+    ]
+}

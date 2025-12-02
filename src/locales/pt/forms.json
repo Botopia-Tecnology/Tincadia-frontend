@@ -1,0 +1,133 @@
+{
+    "common": {
+        "selectOption": "Selecione uma opção",
+        "yes": "Sim",
+        "no": "Não",
+        "required": "*"
+    },
+    "jobSeeker": {
+        "fields": {
+            "fullName": "Nome completo",
+            "documentId": "Documento de Identidade",
+            "disabilityType": "Tipo de deficiência (se houver)",
+            "usesLSC": "Você usa Língua de Sinais Colombiana (LSC)?",
+            "city": "Cidade de residência",
+            "phone": "Telefone / WhatsApp",
+            "email": "E-mail",
+            "educationLevel": "Nível educacional",
+            "workArea": "Área de trabalho de interesse (seleção múltipla)",
+            "workExperience": "Experiência de trabalho",
+            "technicalSkills": "Habilidades técnicas",
+            "softSkills": "Habilidades interpessoais",
+            "certifications": "Certificações, cursos ou workshops",
+            "uploadCV": "Anexar CV (PDF)",
+            "selectFile": "Selecionar arquivo PDF",
+            "training": "Gostaria de receber treinamento gratuito da TINCADIA?",
+            "dataAuthorization": "Autorizo o tratamento de dados pessoais de acordo com a Lei 1581",
+            "specifyOther": "Especifique outra área de trabalho",
+            "describeExperience": "Descreva sua experiência de trabalho...",
+            "describeTechnical": "Descreva suas habilidades técnicas...",
+            "describeSoft": "Descreva suas habilidades interpessoais...",
+            "listCertifications": "Liste suas certificações, cursos ou workshops..."
+        },
+        "disabilityTypes": [
+            "Surdo",
+            "Deficiente auditivo",
+            "Visual",
+            "Física",
+            "Intelectual",
+            "Psicossocial",
+            "Não tenho deficiência"
+        ],
+        "lscLevels": [
+            "Sim, fluente",
+            "Básico",
+            "Não"
+        ],
+        "educationLevels": [
+            "Ensino Médio",
+            "Técnico",
+            "Tecnólogo",
+            "Profissional",
+            "Pós-graduação",
+            "Em andamento"
+        ],
+        "workAreas": [
+            "Atendimento ao Cliente",
+            "Tecnologia",
+            "Assistente Administrativo",
+            "Produção",
+            "Marketing",
+            "Educação",
+            "Serviços Gerais",
+            "Logística",
+            "Outros"
+        ]
+    },
+    "interpreter": {
+        "fields": {
+            "fullName": "Nome completo",
+            "documentId": "Documento de Identidade",
+            "city": "Cidade de residência",
+            "phone": "Telefone / WhatsApp",
+            "email": "E-mail",
+            "isCertified": "Você é um intérprete certificado?",
+            "academicLevel": "Indique o nível acadêmico alcançado",
+            "academicDetail": "Especifique título, nível ou carreira",
+            "experienceLevel": "Nível de experiência",
+            "specialtyAreas": "Áreas de especialidade (seleção múltipla)",
+            "availability": "Disponibilidade de horário",
+            "serviceType": "Tipo de serviço oferecido (seleção múltipla)",
+            "hourlyRates": "Taxas por hora",
+            "ratesPlaceholder": "Ex: $50.000 COP",
+            "uploadCV": "CV (PDF)",
+            "selectFilePDF": "Selecionar arquivo PDF",
+            "certifications": "Certificações (opcional)",
+            "selectFileCert": "Selecionar arquivo (PDF, JPG, PNG)",
+            "socialMedia": "Redes sociais ou portfólio",
+            "socialPlaceholder": "https://...",
+            "authorization": "Autorizo a TINCADIA a me incluir no banco de dados e me contatar para trabalho",
+            "specifyOtherArea": "Especifique outra área",
+            "specifyOtherService": "Especifique outro tipo de serviço"
+        },
+        "academicLevels": [
+            "Ensino Médio Completo",
+            "Profissional (indique título recebido)",
+            "Pós-graduação (indique título recebido)",
+            "Certificado pela FENASCOL (indique nível)",
+            "Estudante de graduação (indique carreira)",
+            "Técnico (indique título)",
+            "Tecnólogo (indique título)"
+        ],
+        "experienceLevels": [
+            "Iniciante (0–1 ano)",
+            "Intermediário (1–3 anos)",
+            "Avançado (3–5 anos)",
+            "Profissional (+5 anos)"
+        ],
+        "specialtyAreas": [
+            "Educação",
+            "Medicina",
+            "Jurídico",
+            "Empreendedorismo / negócios",
+            "Comunidade surda",
+            "Tecnologia",
+            "Eventos",
+            "Outro"
+        ],
+        "availability": [
+            "Manhã",
+            "Tarde",
+            "Noite",
+            "Fins de semana",
+            "24/7"
+        ],
+        "serviceTypes": [
+            "Interpretação presencial",
+            "Interpretação virtual",
+            "Tradução de vídeo",
+            "Tutoria de LSC",
+            "Outros"
+        ]
+    }
+}

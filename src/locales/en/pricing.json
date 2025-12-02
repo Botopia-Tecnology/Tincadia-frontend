@@ -1,0 +1,118 @@
+{
+    "title": "Plans and Pricing",
+    "subtitle": "Choose the plan that best fits your needs",
+    "personal": "Personal",
+    "empresa": "Business",
+    "mensual": "Monthly",
+    "anual": "Annual",
+    "save20": "Save 20%",
+    "free": "Free",
+    "perMonth": "/month",
+    "perYear": "/year",
+    "includes": "Includes",
+    "notIncludes": "Does not include",
+    "plans": {
+        "personal": {
+            "free": {
+                "name": "Free Plan",
+                "description": "For individual users looking to improve their accessibility",
+                "buttonText": "Start for free",
+                "includes": [
+                    "Access to free content and educational resources.",
+                    "Basic LSC course material.",
+                    "Community support and inclusive forums.",
+                    "Participation certificate.",
+                    "Access to inclusive community forums."
+                ],
+                "excludes": [
+                    "Advanced AI features",
+                    "Multiple profiles",
+                    "Unlimited usage",
+                    "Priority support"
+                ]
+            },
+            "premium": {
+                "name": "Premium Plan",
+                "description": "For users who need more features and usage time",
+                "buttonText": "Subscribe now",
+                "includes": [
+                    "Full automatic translation",
+                    "3 accessible digital profiles",
+                    "Up to 3 hours daily usage",
+                    "Email and chat support",
+                    "Advanced AI features"
+                ],
+                "excludes": [
+                    "Unlimited multiple profiles",
+                    "Unlimited usage",
+                    "Priority support"
+                ]
+            },
+            "corporate": {
+                "name": "Premium",
+                "description": "For users who require full access without restrictions",
+                "buttonText": "Get Premium",
+                "includes": [
+                    "Premium automatic translation",
+                    "Unlimited digital profiles",
+                    "Unlimited usage",
+                    "24/7 priority support",
+                    "All advanced AI features",
+                    "Early access to new features"
+                ],
+                "excludes": []
+            }
+        },
+        "empresa": {
+            "free": {
+                "name": "Free Plan",
+                "description": "For individual users looking to improve their accessibility",
+                "buttonText": "Start for free",
+                "includes": [
+                    "Access to free content and educational resources.",
+                    "Basic LSC course material.",
+                    "Community support and inclusive forums.",
+                    "Participation certificate.",
+                    "Access to inclusive community forums."
+                ],
+                "excludes": [
+                    "Advanced AI features",
+                    "Multiple profiles",
+                    "Unlimited usage",
+                    "Priority support"
+                ]
+            },
+            "business": {
+                "name": "Business Plan",
+                "description": "For companies looking for scalable accessibility solutions",
+                "buttonText": "Subscribe now",
+                "includes": [
+                    "Full automatic translation",
+                    "3 accessible digital profiles",
+                    "Up to 3 hours daily usage",
+                    "Email and chat support",
+                    "Advanced AI features"
+                ],
+                "excludes": [
+                    "Unlimited multiple profiles",
+                    "Unlimited usage",
+                    "Priority support"
+                ]
+            },
+            "corporate": {
+                "name": "Corporate Plan",
+                "description": "For corporations requiring complete solutions and dedicated support",
+                "buttonText": "Get Premium",
+                "includes": [
+                    "Premium automatic translation",
+                    "Unlimited digital profiles",
+                    "Unlimited usage",
+                    "24/7 priority support",
+                    "All advanced AI features",
+                    "Early access to new features"
+                ],
+                "excludes": []
+            }
+        }
+    }
+}

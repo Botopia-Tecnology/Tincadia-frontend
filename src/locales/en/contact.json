@@ -1,0 +1,30 @@
+{
+    "title": "We're here to help",
+    "subtitle": "Leave your contacts and we will contact you shortly",
+    "description": "Contact us to learn more about our inclusive technology solutions.",
+    "phone": "Phone",
+    "email": "Email",
+    "linkedin": "LinkedIn",
+    "location1": {
+        "city": "Medellín, Colombia",
+        "address": "Calle 10 #43B-25"
+    },
+    "location2": {
+        "city": "Bogotá, Colombia",
+        "address": "Carrera 7 #71-21"
+    },
+    "form": {
+        "fullName": "Full name",
+        "name": "Name",
+        "email": "Email",
+        "phone": "Phone number",
+        "phoneNumber": "Phone number",
+        "message": "Describe your inquiry",
+        "problem": "Describe your inquiry",
+        "date": "Preferred contact date",
+        "upload": "Drag and drop your image here or click to select.",
+        "submit": "Send"
+    },
+    "copyright": "© 2025 TINCADIA. All rights reserved.",
+    "privacyPolicy": "Privacy Policy"
+}

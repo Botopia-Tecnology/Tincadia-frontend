@@ -1,0 +1,28 @@
+{
+    "title": "Our Services",
+    "subtitle": "We offer comprehensive solutions to make technology accessible to everyone, regardless of their abilities.",
+    "signLanguage": {
+        "badge": "Welcome to class!",
+        "title": "Learn Sign Language",
+        "subtitle": "Expert-guided classes",
+        "description": "Train in Colombian Sign Language (LSC) with didactic, inclusive, and 100% practical sessions.",
+        "primaryAction": "Schedule class",
+        "secondaryAction": "More information"
+    },
+    "translator": {
+        "badge": "Your phone interpreting signs",
+        "title": "Real-time Translation",
+        "subtitle": "From signs to text or voice",
+        "description": "A real-time Sign Language interpreter app converting to text or voice, real communication",
+        "primaryAction": "Try now",
+        "secondaryAction": "View demo"
+    },
+    "writingAssistant": {
+        "badge": "AI-assisted writing",
+        "title": "Inclusive Writing Assistant",
+        "subtitle": "Communicate your ideas clearly",
+        "description": "Write professional, clear, and accessible messages with AI support.",
+        "primaryAction": "Use assistant",
+        "secondaryAction": "How it works"
+    }
+}

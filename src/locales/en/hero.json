@@ -1,0 +1,15 @@
+{
+    "title": "TINCADIA",
+    "concepts": {
+        "technology": "Technology",
+        "inclusion": "Inclusion",
+        "accessibility": "Accessibility",
+        "disability": "Disability",
+        "ai": "Artificial Intelligence"
+    },
+    "description": "We are <strong>TINCADIA</strong>, a company focused on <strong>inclusive technology</strong>, <strong>accessibility</strong>, <strong>disability</strong>, and <strong>artificial intelligence</strong>. We are dedicated to promoting social inclusion for people with hearing impairments and other disabilities in strategic sectors, through innovative solutions that foster equal opportunities. Additionally, we seek to connect companies and establish alliances between diverse sectors, eliminating barriers.",
+    "emailPlaceholder": "Enter your email address",
+    "emailLabel": "Email address",
+    "startButton": "Get Started",
+    "startButtonLabel": "Start registration"
+}

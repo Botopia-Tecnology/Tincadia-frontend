@@ -1,0 +1,19 @@
+{
+    "title": "Comienza en",
+    "titleHighlight": "3 Simples Pasos",
+    "subtitle": "Unirte a nuestra comunidad es rápido y fácil.",
+    "steps": [
+        {
+            "title": "Crea tu Perfil",
+            "description": "Regístrate como solicitante de empleo o intérprete y cuéntanos tus metas."
+        },
+        {
+            "title": "Verifícate",
+            "description": "Completa nuestro proceso de verificación para garantizar una comunidad segura."
+        },
+        {
+            "title": "Empieza a Conectar",
+            "description": "Aplica a trabajos, ofrece servicios de interpretación y rompe barreras."
+        }
+    ]
+}

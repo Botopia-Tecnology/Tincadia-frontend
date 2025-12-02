@@ -56,14 +56,9 @@ export function ImpactSection() {
     const cardIcons = [Target, Zap, Network, ArrowRight];
 
     return (
-        <section id="nosotros" className="relative py-20 lg:py-24 overflow-hidden bg-gray-50/50">
+        <section id="nosotros" className="relative py-20 lg:py-24 overflow-hidden bg-transparent">
 
-            {/* Background Pattern */}
-            <div className="absolute inset-0 -z-20">
-                <div className="absolute inset-0 bg-[linear-gradient(to_right,#e5e7eb08_1px,transparent_1px),linear-gradient(to_bottom,#e5e7eb08_1px,transparent_1px)] bg-[size:4rem_4rem]" />
-                <div className="absolute top-0 left-0 right-0 h-32 bg-gradient-to-b from-white to-transparent" />
-                <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-white to-transparent" />
-            </div>
+            {/* Background Pattern Removed - Handled by Page */}
 
             <div className="relative z-10 mx-auto max-w-7xl px-6 lg:px-8">
 
