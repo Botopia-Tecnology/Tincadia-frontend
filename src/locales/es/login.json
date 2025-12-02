@@ -1,0 +1,15 @@
+{
+    "closeLabel": "Cerrar panel de inicio de sesión",
+    "title": "Bienvenido de nuevo",
+    "subtitle": "Inicia sesión en tu cuenta",
+    "emailPlaceholder": "Ingresa tu correo electrónico",
+    "passwordPlaceholder": "Ingresa tu contraseña",
+    "forgotPassword": "¿Olvidaste tu contraseña?",
+    "loginButton": "Iniciar Sesión",
+    "orContinueWith": "o continúa con",
+    "google": "Continuar con Google",
+    "apple": "Continuar con Apple",
+    "microsoft": "Continuar con Microsoft",
+    "noAccount": "¿No tienes una cuenta?",
+    "signUp": "Regístrate"
+}

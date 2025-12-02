@@ -11,26 +11,25 @@ interface InterpreterFormData {
   ciudadResidencia: string;
   telefonoWhatsapp: string;
   correoElectronico: string;
-  
+
   // Certificación y educación
   esInterpreteCertificado: 'si' | 'no' | '';
   nivelAcademico: string;
   nivelAcademicoDetalle: string;
-  
+
   // Experiencia
   nivelExperiencia: string;
   areasEspecialidad: string[];
-  
+
   // Servicios
   disponibilidadHoraria: string[];
   tipoServicio: string[];
-  
+
   // Tarifas y documentos
-  tarifasPorHora: string;
   hojaVida: File | null;
   certificaciones: File | null;
   redesSocialesPortafolio: string;
-  
+
   // Autorización
   autorizaInclusion: 'si' | 'no' | '';
 }
@@ -38,18 +37,18 @@ interface InterpreterFormData {
 
 export function InterpreterRegistrationForm() {
   const t = useTranslation();
-  
-    const getArray = (key: string): string[] => {
+
+  const getArray = (key: string): string[] => {
     const value = t(key);
     return Array.isArray(value) ? value : [];
   };
-  
+
   const nivelesAcademicos = useMemo(() => getArray('forms.interpreter.academicLevels'), [t]);
   const nivelesExperiencia = useMemo(() => getArray('forms.interpreter.experienceLevels'), [t]);
   const areasEspecialidad = useMemo(() => getArray('forms.interpreter.specialtyAreas'), [t]);
   const disponibilidadesHorarias = useMemo(() => getArray('forms.interpreter.availability'), [t]);
   const tiposServicio = useMemo(() => getArray('forms.interpreter.serviceTypes'), [t]);
-  
+
   const [formData, setFormData] = useState<InterpreterFormData>({
     nombreCompleto: '',
     documentoIdentidad: '',
@@ -63,7 +62,6 @@ export function InterpreterRegistrationForm() {
     areasEspecialidad: [],
     disponibilidadHoraria: [],
     tipoServicio: [],
-    tarifasPorHora: '',
     hojaVida: null,
     certificaciones: null,
     redesSocialesPortafolio: '',
@@ -248,16 +246,16 @@ export function InterpreterRegistrationForm() {
           {(formData.nivelAcademico.includes('indique') ||
             formData.nivelAcademico.includes('indique nivel') ||
             formData.nivelAcademico.includes('indique carrera')) && (
-            <input
-              type="text"
-              name="nivelAcademicoDetalle"
-              value={formData.nivelAcademicoDetalle}
-              onChange={handleInputChange}
-              placeholder={t('forms.interpreter.fields.academicDetail')}
-              className="w-full mt-3 px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#83A98A] focus:border-transparent"
-              required
-            />
-          )}
+              <input
+                type="text"
+                name="nivelAcademicoDetalle"
+                value={formData.nivelAcademicoDetalle}
+                onChange={handleInputChange}
+                placeholder={t('forms.interpreter.fields.academicDetail')}
+                className="w-full mt-3 px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#83A98A] focus:border-transparent"
+                required
+              />
+            )}
         </div>
 
         {/* 8. Nivel de experiencia */}
@@ -360,27 +358,12 @@ export function InterpreterRegistrationForm() {
           )}
         </div>
 
-        {/* 12. Tarifas por hora */}
-        <div>
-          <label htmlFor="tarifasPorHora" className="block text-sm font-semibold text-gray-700 mb-2">
-            12. {t('forms.interpreter.fields.hourlyRates')} <span className="text-red-500">{t('forms.common.required')}</span>
-          </label>
-          <input
-            id="tarifasPorHora"
-            name="tarifasPorHora"
-            type="text"
-            value={formData.tarifasPorHora}
-            onChange={handleInputChange}
-            placeholder={t('forms.interpreter.fields.ratesPlaceholder')}
-            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#83A98A] focus:border-transparent"
-            required
-          />
-        </div>
 
-        {/* 13. Hoja de vida (PDF) */}
+
+        {/* 12. Hoja de vida (PDF) */}
         <div>
           <label className="block text-sm font-semibold text-gray-700 mb-2">
-            13. {t('forms.interpreter.fields.uploadCV')} <span className="text-red-500">{t('forms.common.required')}</span>
+            12. {t('forms.interpreter.fields.uploadCV')} <span className="text-red-500">{t('forms.common.required')}</span>
           </label>
           <div className="relative">
             <input
@@ -403,10 +386,10 @@ export function InterpreterRegistrationForm() {
           </div>
         </div>
 
-        {/* 14. Certificaciones (opcional) */}
+        {/* 13. Certificaciones (opcional) */}
         <div>
           <label className="block text-sm font-semibold text-gray-700 mb-2">
-            14. {t('forms.interpreter.fields.certifications')}
+            13. {t('forms.interpreter.fields.certifications')}
           </label>
           <div className="relative">
             <input
@@ -430,10 +413,10 @@ export function InterpreterRegistrationForm() {
           </div>
         </div>
 
-        {/* 15. Redes sociales o portafolio */}
+        {/* 14. Redes sociales o portafolio */}
         <div>
           <label htmlFor="redesSocialesPortafolio" className="block text-sm font-semibold text-gray-700 mb-2">
-            15. {t('forms.interpreter.fields.socialMedia')}
+            14. {t('forms.interpreter.fields.socialMedia')}
           </label>
           <input
             id="redesSocialesPortafolio"
@@ -446,10 +429,10 @@ export function InterpreterRegistrationForm() {
           />
         </div>
 
-        {/* 16. Autorización */}
+        {/* 15. Autorización */}
         <div>
           <label className="block text-sm font-semibold text-gray-700 mb-3">
-            16. {t('forms.interpreter.fields.authorization')}{' '}
+            15. {t('forms.interpreter.fields.authorization')}{' '}
             <span className="text-red-500">{t('forms.common.required')}</span>
           </label>
           <div className="flex gap-6">

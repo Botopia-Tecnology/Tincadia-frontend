@@ -1,0 +1,28 @@
+{
+    "title": "Nuestros Servicios",
+    "subtitle": "Ofrecemos soluciones integrales para hacer que la tecnología sea accesible para todas las personas, independientemente de sus capacidades.",
+    "signLanguage": {
+        "badge": "Welcome to class!",
+        "title": "Aprende Lengua de Señas",
+        "subtitle": "Clases guiadas por expertos",
+        "description": "Capacítate en Lengua de Señas Colombiana (LSC) sesiones didácticas, inclusivas y 100% prácticas.",
+        "primaryAction": "Agendar clase",
+        "secondaryAction": "Más información"
+    },
+    "translator": {
+        "badge": "Tu celular interpretando señas",
+        "title": "Traducción en tiempo real",
+        "subtitle": "De señas a texto o voz",
+        "description": "Una app intérprete de Lengua de Señas en tiempo real convirtiendo en texto o voz, comunicación real",
+        "primaryAction": "Probar ahora",
+        "secondaryAction": "Ver demo"
+    },
+    "writingAssistant": {
+        "badge": "Redacción asistida por IA",
+        "title": "Asistente de redacción inclusiva",
+        "subtitle": "Comunica tus ideas con claridad",
+        "description": "Escribe mensajes profesionales, claras y accesibles con apoyo de IA.",
+        "primaryAction": "Usar asistente",
+        "secondaryAction": "Cómo funciona"
+    }
+}

@@ -1,0 +1,118 @@
+{
+    "title": "Planos e Preços",
+    "subtitle": "Escolha o plano que melhor se adapta às suas necessidades",
+    "personal": "Pessoal",
+    "empresa": "Empresa",
+    "mensual": "Mensal",
+    "anual": "Anual",
+    "save20": "Economize 20%",
+    "free": "Grátis",
+    "perMonth": "/mês",
+    "perYear": "/ano",
+    "includes": "Inclui",
+    "notIncludes": "Não inclui",
+    "plans": {
+        "personal": {
+            "free": {
+                "name": "Plano Gratuito",
+                "description": "Para usuários individuais que buscam melhorar sua acessibilidade",
+                "buttonText": "Começar grátis",
+                "includes": [
+                    "Acesso a conteúdos gratuitos e recursos educacionais.",
+                    "Material básico do curso de LSC.",
+                    "Apoio comunitário e fóruns inclusivos.",
+                    "Certificado de participação.",
+                    "Acesso a fóruns inclusivos da comunidade."
+                ],
+                "excludes": [
+                    "Recursos avançados de IA",
+                    "Múltiplos perfis",
+                    "Uso ilimitado",
+                    "Suporte prioritário"
+                ]
+            },
+            "premium": {
+                "name": "Plano Premium",
+                "description": "Para usuários que precisam de mais funcionalidades e tempo de uso",
+                "buttonText": "Assinar agora",
+                "includes": [
+                    "Tradução automática completa",
+                    "3 perfis digitais acessíveis",
+                    "Uso de até 3 horas diárias",
+                    "Suporte por e-mail e chat",
+                    "Recursos avançados de IA"
+                ],
+                "excludes": [
+                    "Múltiplos perfis ilimitados",
+                    "Uso ilimitado",
+                    "Suporte prioritário"
+                ]
+            },
+            "corporate": {
+                "name": "Premium",
+                "description": "Para usuários que requerem acesso completo e sem restrições",
+                "buttonText": "Obter Premium",
+                "includes": [
+                    "Tradução automática premium",
+                    "Perfis digitais ilimitados",
+                    "Uso ilimitado",
+                    "Suporte prioritário 24/7",
+                    "Todos os recursos avançados de IA",
+                    "Acesso antecipado a novos recursos"
+                ],
+                "excludes": []
+            }
+        },
+        "empresa": {
+            "free": {
+                "name": "Plano Gratuito",
+                "description": "Para usuários individuais que buscam melhorar sua acessibilidade",
+                "buttonText": "Começar grátis",
+                "includes": [
+                    "Acesso a conteúdos gratuitos e recursos educacionais.",
+                    "Material básico do curso de LSC.",
+                    "Apoio comunitário e fóruns inclusivos.",
+                    "Certificado de participação.",
+                    "Acesso a fóruns inclusivos da comunidade."
+                ],
+                "excludes": [
+                    "Recursos avançados de IA",
+                    "Múltiplos perfis",
+                    "Uso ilimitado",
+                    "Suporte prioritário"
+                ]
+            },
+            "business": {
+                "name": "Plano Empresarial",
+                "description": "Para empresas que buscam soluções escaláveis de acessibilidade",
+                "buttonText": "Assinar agora",
+                "includes": [
+                    "Tradução automática completa",
+                    "3 perfis digitais acessíveis",
+                    "Uso de até 3 horas diárias",
+                    "Suporte por e-mail e chat",
+                    "Recursos avançados de IA"
+                ],
+                "excludes": [
+                    "Múltiplos perfis ilimitados",
+                    "Uso ilimitado",
+                    "Suporte prioritário"
+                ]
+            },
+            "corporate": {
+                "name": "Plano Corporativo",
+                "description": "Para corporações que requerem soluções completas e suporte dedicado",
+                "buttonText": "Obter Premium",
+                "includes": [
+                    "Tradução automática premium",
+                    "Perfis digitais ilimitados",
+                    "Uso ilimitado",
+                    "Suporte prioritário 24/7",
+                    "Todos os recursos avançados de IA",
+                    "Acesso antecipado a novos recursos"
+                ],
+                "excludes": []
+            }
+        }
+    }
+}

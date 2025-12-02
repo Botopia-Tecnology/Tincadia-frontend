@@ -1,0 +1,51 @@
+{
+    "title": "Por que nos escolher?",
+    "subtitle": "A TINCADIA não apenas conecta talentos: educa, conscientiza e mede o impacto social para transformar a inclusão em ações reais.",
+    "tabs": {
+        "companies": "Para empresas",
+        "deafPeople": "Para pessoas surdas",
+        "society": "Para a sociedade"
+    },
+    "companies": {
+        "items": [
+            "Conformidade com políticas de inclusão e Objetivos de Desenvolvimento Sustentável (ODS 8, 10 e 17).",
+            "Melhoria na reputação corporativa e no clima organizacional.",
+            "Acompanhamento em acessibilidade comunicativa e processos inclusivos.",
+            "Acesso a ferramentas tecnológicas que facilitam a comunicação com colaboradores surdos."
+        ]
+    },
+    "deafPeople": {
+        "items": [
+            "Maior acesso a oportunidades de emprego e educação.",
+            "Ambientes de comunicação acessíveis.",
+            "Treinamento em Língua de Sinais Colombiana, tecnologia e inteligência artificial.",
+            "Conexão direta com empresas inclusivas."
+        ]
+    },
+    "society": {
+        "items": [
+            "Redução das desigualdades.",
+            "Promoção de espaços inclusivos e acessíveis.",
+            "Promoção do respeito, diversidade e eliminação de barreiras de comunicação."
+        ]
+    },
+    "ods": {
+        "title": "ODS que promovemos",
+        "items": {
+            "education": "Educação de qualidade",
+            "work": "Trabalho decente",
+            "inequality": "Redução das desigualdades",
+            "peace": "Paz e justiça instituições fortes",
+            "alliances": "Parcerias para os objetivos"
+        }
+    },
+    "businessImpact": {
+        "title": "Impacto empresarial",
+        "items": [
+            "Transformação real dos processos internos em direção à inclusão.",
+            "Medição e monitoramento do impacto social.",
+            "Implementação de ferramentas acessíveis para equipes diversas.",
+            "Contribuição direta para a empregabilidade de pessoas surdas na Colômbia."
+        ]
+    }
+}

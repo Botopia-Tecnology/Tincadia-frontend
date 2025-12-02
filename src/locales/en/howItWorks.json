@@ -1,0 +1,19 @@
+{
+    "title": "Start in",
+    "titleHighlight": "3 Simple Steps",
+    "subtitle": "Joining our community is quick and easy.",
+    "steps": [
+        {
+            "title": "Create your Profile",
+            "description": "Register as a job seeker or interpreter and tell us your goals."
+        },
+        {
+            "title": "Get Verified",
+            "description": "Complete our verification process to ensure a safe community."
+        },
+        {
+            "title": "Start Connecting",
+            "description": "Apply for jobs, offer interpretation services, and break barriers."
+        }
+    ]
+}

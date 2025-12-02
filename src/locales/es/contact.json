@@ -1,0 +1,30 @@
+{
+    "title": "Estamos aquí para ayudarte",
+    "subtitle": "Deja tus datos y nos pondremos en contacto contigo pronto",
+    "description": "Ponte en contacto con nosotros para conocer más sobre nuestras soluciones de tecnología inclusiva.",
+    "phone": "Teléfono",
+    "email": "Email",
+    "linkedin": "LinkedIn",
+    "location1": {
+        "city": "Medellín, Colombia",
+        "address": "Calle 10 #43B-25"
+    },
+    "location2": {
+        "city": "Bogotá, Colombia",
+        "address": "Carrera 7 #71-21"
+    },
+    "form": {
+        "fullName": "Nombre completo",
+        "name": "Nombre",
+        "email": "E-mail",
+        "phone": "Número de teléfono",
+        "phoneNumber": "Número de teléfono",
+        "message": "Describe tu consulta",
+        "problem": "Describe tu consulta",
+        "date": "Fecha preferida de contacto",
+        "upload": "Arrastra y suelta tu imagen aquí o haz clic para seleccionarla.",
+        "submit": "Enviar"
+    },
+    "copyright": "© 2025 TINCADIA. Todos los derechos reservados.",
+    "privacyPolicy": "Política de Privacidad"
+}

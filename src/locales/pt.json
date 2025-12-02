@@ -31,6 +31,42 @@
     "openMenu": "Abrir menu",
     "closeMenu": "Fechar menu"
   },
+  "courses": {
+    "title": "Cursos",
+    "comingSoonTitle": "Em breve",
+    "comingSoonDescription": "Estamos trabalhando duro para trazer os melhores cursos de LSC e tecnologia inclusiva. Aguarde!",
+    "backHome": "Voltar ao início"
+  },
+  "contactSection": {
+    "title": "Estamos aqui para ajudar",
+    "subtitle": "Deixe seus dados e entraremos em contato em breve",
+    "description": "Entre em contato conosco para saber mais sobre nossas soluções de tecnologia inclusiva.",
+    "phone": "Telefone",
+    "email": "E-mail",
+    "linkedin": "LinkedIn",
+    "location1": {
+      "city": "Medellín, Colômbia",
+      "address": "Calle 10 #43B-25"
+    },
+    "location2": {
+      "city": "Bogotá, Colômbia",
+      "address": "Carrera 7 #71-21"
+    },
+    "form": {
+      "fullName": "Nome completo",
+      "name": "Nome",
+      "email": "E-mail",
+      "phone": "Número de telefone",
+      "phoneNumber": "Número de telefone",
+      "message": "Descreva sua consulta",
+      "problem": "Descreva sua consulta",
+      "date": "Data preferida de contato",
+      "upload": "Arraste e solte sua imagem aqui ou clique para selecionar.",
+      "submit": "Enviar"
+    },
+    "copyright": "© 2025 TINCADIA. Todos os direitos reservados.",
+    "privacyPolicy": "Política de Privacidade"
+  },
   "hero": {
     "title": "TINCADIA",
     "concepts": {
@@ -40,7 +76,7 @@
       "disability": "Deficiência",
       "ai": "Inteligência Artificial"
     },
-    "description": "Somos a <strong>TINCADIA</strong>, uma empresa focada em <strong>tecnologia inclusiva</strong>, <strong>acessibilidade</strong>, <strong>deficiência</strong> e <strong>inteligência artificial</strong>. Dedicamo-nos a promover a inclusão social de pessoas com deficiência auditiva e outras deficiências em setores estratégicos, através de soluções inovadoras que fomentam a igualdade de oportunidades. Além disso, buscamos conectar empresas e estabelecer alianças entre diversos setores, eliminando barreiras.",
+    "description": "Somos a <strong>TINCADIA</strong>, uma empresa focada em <strong>tecnologia inclusiva</strong>, <strong>acessibilidade</strong>, <strong>deficiência</strong> e <strong>inteligência artificial</strong>. Dedicamo-nos a promover a inclusão social de pessoas com deficiência auditiva e outras deficiências em setores estratégicos, através de soluções inovadoras que fomentan a igualdade de oportunidades. Além disso, buscamos conectar empresas e estabelecer alianças entre diversos setores, eliminando barreiras.",
     "emailPlaceholder": "Digite seu e-mail",
     "emailLabel": "Endereço de e-mail",
     "startButton": "Começar",
@@ -152,30 +188,30 @@
       "policiesLink": "políticas da Tincadia",
       "andDataUsage": "e o",
       "dataUsageLink": "uso de dados pessoais",
-      "createAccountButton": "Criar Conta",
-      "closeLabel": "Fechar painel de cadastro"
+      "createAccountButton": "Criar conta",
+      "closeLabel": "Fechar painel de registro"
     },
     "interpreter": {
       "title": "Torne-se um Intérprete",
       "subtitle": "Junte-se à nossa rede de intérpretes profissionais certificados e faça a diferença na vida de pessoas surdas e com deficiência auditiva.",
       "fullName": "Nome Completo",
       "fullNamePlaceholder": "Digite seu nome completo",
-      "email": "Endereço de E-mail",
+      "email": "E-mail",
       "emailPlaceholder": "email@exemplo.com",
       "certifications": "Certificações (ex: ILSE, FESORD)",
       "certificationsPlaceholder": "Ex: ILSE Nível 3, FESORD",
-      "submitButton": "Candidatar-se Agora"
+      "submitButton": "Inscrever-se Agora"
     },
     "jobSeeker": {
-      "title": "Encontre Sua Próxima Oportunidade",
+      "title": "Encontre sua Próxima Oportunidade",
       "subtitle": "Crie um perfil e deixe que empregadores inclusivos encontrem você.",
       "formTitle": "Formulário — Banco de Empregos Inclusivo",
       "formDescription": "Preencha todos os campos para acessar oportunidades de trabalho em empresas inclusivas.",
       "fullName": "Nome Completo",
       "fullNamePlaceholder": "Digite seu nome completo",
-      "email": "Endereço de E-mail",
+      "email": "E-mail",
       "emailPlaceholder": "email@exemplo.com",
-      "uploadCV": "Enviar Currículo (opcional)",
+      "uploadCV": "Enviar CV (opcional)",
       "chooseFile": "Escolher arquivo",
       "submitButton": "Criar Perfil",
       "submitForm": "Enviar Formulário"
@@ -188,7 +224,7 @@
   },
   "faq": {
     "title": "Perguntas Frequentes",
-    "subtitle": "Tem dúvidas? Nós temos as respostas.",
+    "subtitle": "Tem dúvidas? Temos respostas.",
     "questions": [
       {
         "question": "Como a Tincadia garante a qualidade dos intérpretes?",
@@ -204,15 +240,15 @@
       },
       {
         "question": "Como as empresas são selecionadas no banco de empregos?",
-        "answer": "As empresas passam por um processo de validação que verifica seu compromisso real com a inclusão. Avaliamos suas políticas de acessibilidade, cultura organizacional e experiência anterior com talentos diversos. Apenas empresas certificadas como inclusivas podem publicar ofertas em nossa plataforma."
+        "answer": "As empresas passam por um processo de validação que verifica seu compromisso real com a inclusão. Avaliamos suas políticas de acessibilidade, cultura organizacional e experiência prévia com talentos diversos. Apenas empresas certificadas como inclusivas podem publicar ofertas em nossa plataforma."
       }
     ],
-    "notFound": "Não encontrou o que procura?",
+    "notFound": "Não encontra o que procura?",
     "contactButton": "Contate-nos diretamente"
   },
   "download": {
     "title": "Baixe o aplicativo TINCADIA",
-    "description": "A TINCADIA está sempre disponível. Seja indo para seu destino habitual ou explorando novos lugares, basta abrir o app TINCADIA e acessar todas as ferramentas de acessibilidade. Baixe e comece agora.",
+    "description": "TINCADIA está sempre disponível. Seja indo para seu destino habitual ou explorando novos lugares, basta abrir o app TINCADIA e acessar todas as ferramentas de acessibilidade. Baixe e comece agora.",
     "downloadOnThe": "Download on the",
     "appStore": "App Store",
     "getItOn": "Get it on",
@@ -240,9 +276,9 @@
     "website": "Site",
     "followUs": "Siga-nos",
     "linkedin": "LinkedIn",
-    "linkedinDesc": "Postagens sobre inovação, empreendedorismo inclusivo e participação em eventos nacionais.",
+    "linkedinDesc": "Publicações sobre inovação, empreendedorismo inclusivo e participação em eventos nacionais.",
     "instagram": "Instagram",
-    "instagramDesc": "Conteúdo visual sobre projetos, treinamentos e progresso da equipe TINCADIA.",
+    "instagramDesc": "Conteúdo visual sobre projetos, treinamentos e avanços da equipe TINCADIA.",
     "facebook": "Facebook",
     "facebookDesc": "Divulgação de atividades, chamadas e colaborações com entidades aliadas.",
     "twitter": "X (Twitter)",
@@ -254,18 +290,18 @@
     "copyright": "© 2025 TINCADIA. Todos os direitos reservados."
   },
   "accessibility": {
-    "highContrast": "Ativar alto contraste",
-    "invertColors": "Inverter cores",
-    "grayscale": "Ativar escala de cinza",
-    "largeCursor": "Cursor grande",
-    "disableAnimations": "Desativar animações",
-    "decreaseText": "Diminuir tamanho do texto",
-    "resetText": "Redefinir tamanho do texto",
-    "increaseText": "Aumentar tamanho do texto"
+    "highContrast": "Alto Contraste",
+    "invertColors": "Inverter Cores",
+    "grayscale": "Escala de Cinza",
+    "largeCursor": "Cursor Grande",
+    "disableAnimations": "Desativar Animações",
+    "decreaseText": "Diminuir Texto",
+    "resetText": "Redefinir Texto",
+    "increaseText": "Aumentar Texto"
   },
   "findInclusiveCompany": {
     "title": "Encontre uma Empresa Inclusiva",
-    "subtitle": "Crie seu perfil e acesse oportunidades de trabalho em empresas comprometidas com a inclusão e diversidade."
+    "subtitle": "Crie seu perfil e acesse oportunidades de trabalho em empresas comprometidas com a inclusão e a diversidade."
   },
   "becomeInterpreter": {
     "title": "Torne-se um Intérprete",
@@ -278,10 +314,10 @@
     "steps": [
       {
         "title": "Crie seu Perfil",
-        "description": "Cadastre-se como candidato a emprego ou intérprete e conte-nos seus objetivos."
+        "description": "Cadastre-se como candidato ou intérprete e conte-nos seus objetivos."
       },
       {
-        "title": "Seja Verificado",
+        "title": "Verifique-se",
         "description": "Complete nosso processo de verificação para garantir uma comunidade segura."
       },
       {
@@ -306,8 +342,8 @@
       },
       {
         "name": "Andrey",
-        "role": "Intérprete de LSE",
-        "company": "Freelancer",
+        "role": "Intérprete LSE",
+        "company": "Freelance",
         "text": "Melhoramos significativamente o atendimento a pacientes com deficiência auditiva graças às soluções da TINCADIA."
       },
       {
@@ -323,7 +359,7 @@
         "text": "As ferramentas da TINCADIA revolucionaram a forma como abordamos a educação inclusiva em nossa instituição."
       },
       {
-        "name": "María S.",
+        "name": "Maria S.",
         "role": "Coordenadora de Projetos",
         "company": "ONG Inclusão Total",
         "text": "Graças à TINCADIA, conseguimos conectar talentos surdos com oportunidades reais de trabalho. Uma mudança impressionante."
@@ -334,7 +370,7 @@
     "title": "Planos e Preços",
     "subtitle": "Escolha o plano que melhor se adapta às suas necessidades",
     "personal": "Pessoal",
-    "empresa": "Empresarial",
+    "empresa": "Empresa",
     "mensual": "Mensal",
     "anual": "Anual",
     "save20": "Economize 20%",
@@ -358,7 +394,7 @@
           ],
           "excludes": [
             "Recursos avançados de IA",
-            "Perfis múltiplos",
+            "Múltiplos perfis",
             "Uso ilimitado",
             "Suporte prioritário"
           ]
@@ -375,14 +411,14 @@
             "Recursos avançados de IA"
           ],
           "excludes": [
-            "Perfiles múltiplos ilimitados",
+            "Múltiplos perfis ilimitados",
             "Uso ilimitado",
             "Suporte prioritário"
           ]
         },
         "corporate": {
           "name": "Premium",
-          "description": "Para usuários que requerem acesso completo sem restrições",
+          "description": "Para usuários que requerem acesso completo e sem restrições",
           "buttonText": "Obter Premium",
           "includes": [
             "Tradução automática premium",
@@ -390,7 +426,7 @@
             "Uso ilimitado",
             "Suporte prioritário 24/7",
             "Todos os recursos avançados de IA",
-            "Acesso antecipado a novas funcionalidades"
+            "Acesso antecipado a novos recursos"
           ],
           "excludes": []
         }
@@ -409,7 +445,7 @@
           ],
           "excludes": [
             "Recursos avançados de IA",
-            "Perfis múltiplos",
+            "Múltiplos perfis",
             "Uso ilimitado",
             "Suporte prioritário"
           ]
@@ -426,7 +462,7 @@
             "Recursos avançados de IA"
           ],
           "excludes": [
-            "Perfis múltiplos ilimitados",
+            "Múltiplos perfis ilimitados",
             "Uso ilimitado",
             "Suporte prioritário"
           ]
@@ -441,7 +477,7 @@
             "Uso ilimitado",
             "Suporte prioritário 24/7",
             "Todos os recursos avançados de IA",
-            "Acesso antecipado a novas funcionalidades"
+            "Acesso antecipado a novos recursos"
           ],
           "excludes": []
         }
@@ -458,31 +494,31 @@
     "jobSeeker": {
       "fields": {
         "fullName": "Nome completo",
-        "documentId": "Documento de identidade",
-        "disabilityType": "Tipo de deficiência (se aplicável)",
+        "documentId": "Documento de Identidade",
+        "disabilityType": "Tipo de deficiência (se houver)",
         "usesLSC": "Você usa Língua de Sinais Colombiana (LSC)?",
         "city": "Cidade de residência",
         "phone": "Telefone / WhatsApp",
-        "email": "Endereço de e-mail",
+        "email": "E-mail",
         "educationLevel": "Nível educacional",
         "workArea": "Área de trabalho de interesse (seleção múltipla)",
-        "workExperience": "Experiência profissional",
+        "workExperience": "Experiência de trabalho",
         "technicalSkills": "Habilidades técnicas",
         "softSkills": "Habilidades interpessoais",
         "certifications": "Certificações, cursos ou workshops",
-        "uploadCV": "Anexar currículo (PDF)",
+        "uploadCV": "Anexar CV (PDF)",
         "selectFile": "Selecionar arquivo PDF",
         "training": "Gostaria de receber treinamento gratuito da TINCADIA?",
-        "dataAuthorization": "Autorizo o processamento de dados pessoais conforme a Lei 1581",
+        "dataAuthorization": "Autorizo o tratamento de dados pessoais de acordo com a Lei 1581",
         "specifyOther": "Especifique outra área de trabalho",
-        "describeExperience": "Descreva sua experiência profissional...",
+        "describeExperience": "Descreva sua experiência de trabalho...",
         "describeTechnical": "Descreva suas habilidades técnicas...",
         "describeSoft": "Descreva suas habilidades interpessoais...",
         "listCertifications": "Liste suas certificações, cursos ou workshops..."
       },
       "disabilityTypes": [
         "Surdo",
-        "Deficiência auditiva",
+        "Deficiente auditivo",
         "Visual",
         "Física",
         "Intelectual",
@@ -495,21 +531,21 @@
         "Não"
       ],
       "educationLevels": [
-        "Ensino médio",
+        "Ensino Médio",
         "Técnico",
         "Tecnólogo",
         "Profissional",
         "Pós-graduação",
-        "Em curso"
+        "Em andamento"
       ],
       "workAreas": [
-        "Atendimento ao cliente",
+        "Atendimento ao Cliente",
         "Tecnologia",
-        "Assistente administrativo",
+        "Assistente Administrativo",
         "Produção",
         "Marketing",
         "Educação",
-        "Serviços gerais",
+        "Serviços Gerais",
         "Logística",
         "Outros"
       ]
@@ -517,20 +553,20 @@
     "interpreter": {
       "fields": {
         "fullName": "Nome completo",
-        "documentId": "Documento de identidade",
+        "documentId": "Documento de Identidade",
         "city": "Cidade de residência",
         "phone": "Telefone / WhatsApp",
-        "email": "Endereço de e-mail",
+        "email": "E-mail",
         "isCertified": "Você é um intérprete certificado?",
         "academicLevel": "Indique o nível acadêmico alcançado",
-        "academicDetail": "Especifique o título, nível ou curso",
+        "academicDetail": "Especifique título, nível ou carreira",
         "experienceLevel": "Nível de experiência",
         "specialtyAreas": "Áreas de especialidade (seleção múltipla)",
-        "availability": "Disponibilidade horária",
+        "availability": "Disponibilidade de horário",
         "serviceType": "Tipo de serviço oferecido (seleção múltipla)",
-        "hourlyRates": "Tarifas por hora",
+        "hourlyRates": "Taxas por hora",
         "ratesPlaceholder": "Ex: $50.000 COP",
-        "uploadCV": "Currículo (PDF)",
+        "uploadCV": "CV (PDF)",
         "selectFilePDF": "Selecionar arquivo PDF",
         "certifications": "Certificações (opcional)",
         "selectFileCert": "Selecionar arquivo (PDF, JPG, PNG)",
@@ -541,11 +577,11 @@
         "specifyOtherService": "Especifique outro tipo de serviço"
       },
       "academicLevels": [
-        "Ensino médio acadêmico",
+        "Ensino Médio Completo",
         "Profissional (indique título recebido)",
         "Pós-graduação (indique título recebido)",
-        "Certificado por FENASCOL (indique nível)",
-        "Estudante de graduação (indique curso)",
+        "Certificado pela FENASCOL (indique nível)",
+        "Estudante de graduação (indique carreira)",
         "Técnico (indique título)",
         "Tecnólogo (indique título)"
       ],
@@ -575,7 +611,7 @@
       "serviceTypes": [
         "Interpretação presencial",
         "Interpretação virtual",
-        "Tradução de vídeos",
+        "Tradução de vídeo",
         "Tutoria de LSC",
         "Outros"
       ]
@@ -587,7 +623,7 @@
     "subtitle": "Faça login na sua conta",
     "emailPlaceholder": "Digite seu e-mail",
     "passwordPlaceholder": "Digite sua senha",
-    "forgotPassword": "Esqueceu a senha?",
+    "forgotPassword": "Esqueceu sua senha?",
     "loginButton": "Entrar",
     "orContinueWith": "ou continue com",
     "google": "Continuar com Google",
@@ -600,9 +636,9 @@
     "title": "Por que nos escolher?",
     "subtitle": "A TINCADIA não apenas conecta talentos: educa, conscientiza e mede o impacto social para transformar a inclusão em ações reais.",
     "tabs": {
-      "companies": "Para Empresas",
-      "deafPeople": "Para Pessoas Surdas",
-      "society": "Para a Sociedade"
+      "companies": "Para empresas",
+      "deafPeople": "Para pessoas surdas",
+      "society": "Para a sociedade"
     },
     "companies": {
       "items": [
@@ -614,9 +650,9 @@
     },
     "deafPeople": {
       "items": [
-        "Maior acesso a oportunidades de trabalho e educação.",
+        "Maior acesso a oportunidades de emprego e educação.",
         "Ambientes de comunicação acessíveis.",
-        "Formação em Língua de Sinais Colombiana, tecnologia e inteligência artificial.",
+        "Treinamento em Língua de Sinais Colombiana, tecnologia e inteligência artificial.",
         "Conexão direta com empresas inclusivas."
       ]
     },
@@ -624,21 +660,21 @@
       "items": [
         "Redução das desigualdades.",
         "Promoção de espaços inclusivos e acessíveis.",
-        "Fomento ao respeito, diversidade e eliminação de barreiras de comunicação."
+        "Promoção do respeito, diversidade e eliminação de barreiras de comunicação."
       ]
     },
     "ods": {
-      "title": "ODS que impulsionamos",
+      "title": "ODS que promovemos",
       "items": {
-        "education": "Educação de Qualidade",
-        "work": "Trabalho Decente",
-        "inequality": "Redução das Desigualdades",
-        "peace": "Paz e Justiça",
-        "alliances": "Parcerias para os Objetivos"
+        "education": "Educação de qualidade",
+        "work": "Trabalho decente",
+        "inequality": "Redução das desigualdades",
+        "peace": "Paz e justiça instituições fortes",
+        "alliances": "Parcerias para os objetivos"
       }
     },
     "businessImpact": {
-      "title": "Impacto Empresarial",
+      "title": "Impacto empresarial",
       "items": [
         "Transformação real dos processos internos em direção à inclusão.",
         "Medição e monitoramento do impacto social.",
@@ -646,5 +682,9 @@
         "Contribuição direta para a empregabilidade de pessoas surdas na Colômbia."
       ]
     }
+  },
+  "regionalMap": {
+    "currentlyInColombia": "Atualmente na Colômbia...",
+    "comingSoonWorld": "Em breve, no mundo"
   }
 }

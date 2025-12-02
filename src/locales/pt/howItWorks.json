@@ -1,0 +1,19 @@
+{
+    "title": "Comece em",
+    "titleHighlight": "3 Passos Simples",
+    "subtitle": "Juntar-se à nossa comunidade é rápido e fácil.",
+    "steps": [
+        {
+            "title": "Crie seu Perfil",
+            "description": "Cadastre-se como candidato ou intérprete e conte-nos seus objetivos."
+        },
+        {
+            "title": "Verifique-se",
+            "description": "Complete nosso processo de verificação para garantir uma comunidade segura."
+        },
+        {
+            "title": "Comece a Conectar",
+            "description": "Candidate-se a vagas, ofereça serviços de interpretação e quebre barreiras."
+        }
+    ]
+}

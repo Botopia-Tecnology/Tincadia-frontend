@@ -1,0 +1,42 @@
+{
+    "title": "¿Por qué elegirnos?",
+    "subtitle": "TINCADIA no solo conecta talento: educa, sensibiliza y mide el impacto social para transformar la inclusión en acciones reales.",
+    "tabs": {
+        "companies": "Para las empresas",
+        "deafPeople": "Para las personas sordas",
+        "society": "Para la sociedad"
+    },
+    "companies": {
+        "items": [
+            "Cumplimiento de políticas de inclusión y Objetivos de Desarrollo Sostenible (ODS 8, 10 y 17).",
+            "Mejora en la reputación corporativa y en el clima laboral.",
+            "Acompañamiento en accesibilidad comunicativa y procesos inclusivos.",
+            "Acceso a herramientas tecnológicas que facilitan la comunicación con colaboradores sordos."
+        ]
+    },
+    "deafPeople": {
+        "items": [
+            "Acceso a oportunidades laborales dignas y adaptadas.",
+            "Herramientas de comunicación accesibles en tiempo real.",
+            "Capacitación y desarrollo profesional continuo.",
+            "Participación activa en una comunidad inclusiva y de apoyo."
+        ]
+    },
+    "society": {
+        "items": [
+            "Reducción de la brecha de desigualdad y pobreza.",
+            "Fomento de una cultura de respeto y valoración de la diversidad.",
+            "Impulso a la innovación social y tecnológica.",
+            "Construcción de un entorno más justo y equitativo para todos."
+        ]
+    },
+    "ods": {
+        "title": "Impacto en los ODS",
+        "items": {
+            "work": "Trabajo Decente y Crecimiento Económico",
+            "inequality": "Reducción de las Desigualdades",
+            "peace": "Paz, Justicia e Instituciones Sólidas",
+            "alliances": "Alianzas para Lograr los Objetivos"
+        }
+    }
+}

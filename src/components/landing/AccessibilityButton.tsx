@@ -13,13 +13,8 @@ import {
   Droplet,
 } from 'lucide-react';
 import { useTranslation } from '@/hooks/useTranslation';
-import { useAccessibility } from '@/hooks/useAccessibility';
-
-interface AccessibilityButtonProps {
-  isRegistrationPanelOpen?: boolean;
-  disableAnimations?: boolean;
-  setDisableAnimations?: (value: boolean) => void;
-}
+import { useUI } from '@/contexts/UIContext';
+import { useAccessibilityContext } from '@/contexts/AccessibilityContext';
 
 const ACCESSIBILITY_COLORS = {
   BAR: '#1E4DD8',
@@ -100,17 +95,10 @@ const ZoomButton = ({ icon: Icon, onClick, label, disabled = false, sizes }: Zoo
   </button>
 );
 
-export function AccessibilityButton({
-  isRegistrationPanelOpen = false,
-  disableAnimations,
-  setDisableAnimations
-}: AccessibilityButtonProps) {
+export function AccessibilityButton() {
   const t = useTranslation();
-
-  const { state, actions, config } = useAccessibility({
-    disableAnimations,
-    setDisableAnimations
-  });
+  const { isRegistrationPanelOpen } = useUI();
+  const { state, actions, config } = useAccessibilityContext();
 
   const {
     highContrast,

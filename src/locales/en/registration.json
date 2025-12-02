@@ -1,0 +1,61 @@
+{
+    "panel": {
+        "title": "Join TINCADIA and discover our solutions",
+        "emailPlaceholder": "Enter your email address",
+        "continueButton": "Continue",
+        "orContinueWith": "or continue with",
+        "facebook": "Continue with Facebook",
+        "google": "Continue with Google",
+        "microsoft": "Continue with Microsoft",
+        "terms": "By continuing, you accept our",
+        "termsLink": "Terms of Service",
+        "and": "and",
+        "privacyLink": "Privacy Policy",
+        "createAccount": "Create your account",
+        "fullName": "First Name",
+        "lastName": "Last Name",
+        "documentType": "Type",
+        "documentNumber": "Number",
+        "phone": "Phone",
+        "email": "Email",
+        "password": "Password",
+        "confirmPassword": "Confirm Password",
+        "passwordMismatch": "Passwords do not match",
+        "acceptPolicies": "I accept the",
+        "policiesLink": "Tincadia policies",
+        "andDataUsage": "and",
+        "dataUsageLink": "personal data usage",
+        "createAccountButton": "Create Account",
+        "closeLabel": "Close registration panel"
+    },
+    "interpreter": {
+        "title": "Become an Interpreter",
+        "subtitle": "Join our network of certified professional interpreters and make a difference in the lives of deaf and hard of hearing people.",
+        "fullName": "Full Name",
+        "fullNamePlaceholder": "Enter your full name",
+        "email": "Email Address",
+        "emailPlaceholder": "email@example.com",
+        "certifications": "Certifications (e.g., ILSE, FESORD)",
+        "certificationsPlaceholder": "E.g: ILSE Level 3, FESORD",
+        "submitButton": "Apply Now"
+    },
+    "jobSeeker": {
+        "title": "Find Your Next Opportunity",
+        "subtitle": "Create a profile and let inclusive employers find you.",
+        "formTitle": "Form — Inclusive Job Board",
+        "formDescription": "Complete all fields to access job opportunities in inclusive companies.",
+        "fullName": "Full Name",
+        "fullNamePlaceholder": "Enter your full name",
+        "email": "Email Address",
+        "emailPlaceholder": "email@example.com",
+        "uploadCV": "Upload CV (optional)",
+        "chooseFile": "Choose file",
+        "submitButton": "Create Profile",
+        "submitForm": "Submit Form"
+    },
+    "interpreterForm": {
+        "formTitle": "Form — Sign Language Interpreter Registration",
+        "formDescription": "Complete all fields to join our network of professional interpreters.",
+        "submitForm": "Submit Form"
+    }
+}

@@ -1,0 +1,51 @@
+{
+    "title": "Why choose us?",
+    "subtitle": "TINCADIA not only connects talent: it educates, raises awareness, and measures social impact to transform inclusion into real actions.",
+    "tabs": {
+        "companies": "For companies",
+        "deafPeople": "For deaf people",
+        "society": "For society"
+    },
+    "companies": {
+        "items": [
+            "Compliance with inclusion policies and Sustainable Development Goals (SDG 8, 10, and 17).",
+            "Improvement in corporate reputation and work climate.",
+            "Accompaniment in communicative accessibility and inclusive processes.",
+            "Access to technological tools that facilitate communication with deaf collaborators."
+        ]
+    },
+    "deafPeople": {
+        "items": [
+            "Greater access to job and educational opportunities.",
+            "Accessible communication environments.",
+            "Training in Colombian Sign Language, technology, and artificial intelligence.",
+            "Direct connection with inclusive companies."
+        ]
+    },
+    "society": {
+        "items": [
+            "Reduction of inequalities.",
+            "Promotion of inclusive and accessible spaces.",
+            "Promotion of respect, diversity, and elimination of communication barriers."
+        ]
+    },
+    "ods": {
+        "title": "SDGs we promote",
+        "items": {
+            "education": "Quality education",
+            "work": "Decent work",
+            "inequality": "Reduced inequalities",
+            "peace": "Peace and justice strong institutions",
+            "alliances": "Partnerships for the goals"
+        }
+    },
+    "businessImpact": {
+        "title": "Business impact",
+        "items": [
+            "Real transformation of internal processes towards inclusion.",
+            "Measurement and monitoring of social impact.",
+            "Implementation of accessible tools for diverse teams.",
+            "Direct contribution to the employability of deaf people in Colombia."
+        ]
+    }
+}

@@ -5,7 +5,7 @@ import { Globe } from 'lucide-react';
 import { useState, useRef, useEffect } from 'react';
 
 const languages: { code: Locale; name: string; flag: string }[] = [
-  { code: 'es', name: 'Español', flag: '🇪🇸' },
+  { code: 'es', name: 'Español', flag: '🇨🇴' },
   { code: 'en', name: 'English', flag: '🇺🇸' },
   { code: 'pt', name: 'Português', flag: '🇧🇷' },
 ];
@@ -61,9 +61,8 @@ export function LanguageSelector() {
                 setLocale(lang.code);
                 setIsOpen(false);
               }}
-              className={`w-full text-left px-4 py-2 text-sm hover:bg-gray-50 transition-colors flex items-center gap-2 ${
-                locale === lang.code ? 'bg-[#83A98A]/10 text-[#83A98A] font-semibold' : 'text-gray-700'
-              }`}
+              className={`w-full text-left px-4 py-2 text-sm hover:bg-gray-50 transition-colors flex items-center gap-2 ${locale === lang.code ? 'bg-[#83A98A]/10 text-[#83A98A] font-semibold' : 'text-gray-700'
+                }`}
             >
               <span className="text-lg">{lang.flag}</span>
               <span>{lang.name}</span>

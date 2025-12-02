@@ -1,0 +1,15 @@
+{
+    "closeLabel": "Close login panel",
+    "title": "Welcome back",
+    "subtitle": "Log in to your account",
+    "emailPlaceholder": "Enter your email address",
+    "passwordPlaceholder": "Enter your password",
+    "forgotPassword": "Forgot your password?",
+    "loginButton": "Log In",
+    "orContinueWith": "or continue with",
+    "google": "Continue with Google",
+    "apple": "Continue with Apple",
+    "microsoft": "Continue with Microsoft",
+    "noAccount": "Don't have an account?",
+    "signUp": "Sign up"
+}

@@ -9,10 +9,10 @@ export function DownloadAppSection() {
   return (
     <section
       id="download"
-      className="py-16 lg:py-24 bg-white relative overflow-hidden"
+      className="py-16 lg:py-24 bg-white relative overflow-visible"
       aria-labelledby="download-heading"
     >
-      <div className="mx-auto max-w-7xl px-6 lg:px-8">
+      <div className="mx-auto max-w-7xl px-6 lg:px-8 relative z-10">
         <div className="grid lg:grid-cols-2 gap-12 lg:gap-16 items-center">
           {/* Columna izquierda: Texto y botones */}
           <div className="text-center lg:text-left">
@@ -90,18 +90,40 @@ export function DownloadAppSection() {
           </div>
 
           {/* Columna derecha: QR Code */}
-          <div className="flex justify-center lg:justify-end">
-            <div className="relative w-64 h-64 lg:w-80 lg:h-80 bg-white p-6 rounded-2xl shadow-2xl">
-              <div className="w-full h-full bg-gray-100 rounded-lg flex items-center justify-center">
-                {/* Placeholder para QR Code - reemplazar con imagen real */}
-                <div className="text-center p-4">
-                  <div className="w-48 h-48 lg:w-64 lg:h-64 bg-gray-200 rounded-lg flex items-center justify-center mb-4 mx-auto">
-                    <span className="text-gray-400 text-sm">QR Code</span>
-                  </div>
-                  <p className="text-sm font-semibold text-gray-900">
-                    {t('download.scanToDownload')}
-                  </p>
-                </div>
+          <div className="relative min-h-[400px] lg:min-h-[500px]">
+            {/* Imagen decorativa de fondo */}
+            <div className="absolute top-1/2 left-[40%] -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] lg:w-[700px] lg:h-[700px] pointer-events-none z-0">
+              <Image
+                src="/media/images/mobile.png"
+                alt=""
+                fill
+                className="object-contain"
+                unoptimized
+                aria-hidden="true"
+              />
+            </div>
+
+            {/* Contenedor de los QR Codes - Centrado vertical, corrido a la derecha */}
+            <div className="absolute top-1/2 -translate-y-1/2 right-0 z-10 flex flex-col gap-4">
+              {/* QR Code Google Play */}
+              <div className="relative w-40 h-40 lg:w-48 lg:h-48 rounded-xl overflow-hidden">
+                <Image
+                  src="/media/images/qr-code.png"
+                  alt={t('download.scanToDownload')}
+                  fill
+                  className="object-contain"
+                  unoptimized
+                />
+              </div>
+              {/* QR Code App Store */}
+              <div className="relative w-40 h-40 lg:w-48 lg:h-48 rounded-xl overflow-hidden">
+                <Image
+                  src="/media/images/qr-code-appstore.png"
+                  alt={t('download.scanToDownload')}
+                  fill
+                  className="object-contain"
+                  unoptimized
+                />
               </div>
             </div>
           </div>

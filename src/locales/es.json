@@ -31,6 +31,42 @@
     "openMenu": "Abrir menú",
     "closeMenu": "Cerrar menú"
   },
+  "courses": {
+    "title": "Cursos",
+    "comingSoonTitle": "Próximamente",
+    "comingSoonDescription": "Estamos trabajando duro para traerte los mejores cursos de LSC y tecnología inclusiva. ¡Espéralos pronto!",
+    "backHome": "Volver al inicio"
+  },
+  "contactSection": {
+    "title": "Estamos aquí para ayudarte",
+    "subtitle": "Deja tus datos y nos pondremos en contacto contigo pronto",
+    "description": "Ponte en contacto con nosotros para conocer más sobre nuestras soluciones de tecnología inclusiva.",
+    "phone": "Teléfono",
+    "email": "Email",
+    "linkedin": "LinkedIn",
+    "location1": {
+      "city": "Medellín, Colombia",
+      "address": "Calle 10 #43B-25"
+    },
+    "location2": {
+      "city": "Bogotá, Colombia",
+      "address": "Carrera 7 #71-21"
+    },
+    "form": {
+      "fullName": "Nombre completo",
+      "name": "Nombre",
+      "email": "E-mail",
+      "phone": "Número de teléfono",
+      "phoneNumber": "Número de teléfono",
+      "message": "Describe tu consulta",
+      "problem": "Describe tu consulta",
+      "date": "Fecha preferida de contacto",
+      "upload": "Arrastra y suelta tu imagen aquí o haz clic para seleccionarla.",
+      "submit": "Enviar"
+    },
+    "copyright": "© 2025 TINCADIA. Todos los derechos reservados.",
+    "privacyPolicy": "Política de Privacidad"
+  },
   "hero": {
     "title": "TINCADIA",
     "concepts": {
@@ -69,7 +105,7 @@
       "badge": "Redacción asistida por IA",
       "title": "Asistente de redacción inclusiva",
       "subtitle": "Comunica tus ideas con claridad",
-      "description": "Escribe mensajes profesionales, claros y accesibles con apoyo de IA.",
+      "description": "Escribe mensajes profesionales, claras y accesibles con apoyo de IA.",
       "primaryAction": "Usar asistente",
       "secondaryAction": "Cómo funciona"
     }
@@ -646,5 +682,9 @@
         "Contribución directa a la empleabilidad de personas sordas en Colombia."
       ]
     }
+  },
+  "regionalMap": {
+    "currentlyInColombia": "Actualmente en Colombia...",
+    "comingSoonWorld": "Muy pronto, en el mundo"
   }
 }

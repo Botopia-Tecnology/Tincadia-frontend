@@ -4,11 +4,12 @@ import { useState } from 'react';
 import { X } from 'lucide-react';
 import Link from 'next/link';
 import { useTranslation } from '@/hooks/useTranslation';
+import { GridBackground } from '@/components/ui/GridBackground';
 
 interface LoginPanelProps {
     isOpen: boolean;
     onClose: () => void;
-    onSignUpClick?: () => void;
+    onSignUpClick?: (email?: string) => void;
 }
 
 export function LoginPanel({ isOpen, onClose, onSignUpClick }: LoginPanelProps) {
@@ -38,12 +39,15 @@ export function LoginPanel({ isOpen, onClose, onSignUpClick }: LoginPanelProps) 
                 />
             )}
 
+
+
             {/* Panel */}
             <div
                 className={`fixed top-0 right-0 h-full w-full lg:w-1/3 bg-white shadow-2xl z-50 transform transition-transform duration-300 ease-out ${isOpen ? 'translate-x-0' : 'translate-x-full'
-                    }`}
+                    } overflow-hidden`}
             >
-                <div className="h-full flex flex-col overflow-y-auto">
+                <GridBackground className="absolute inset-0 -z-10" />
+                <div className="h-full flex flex-col overflow-y-auto relative z-10">
                     {/* Header */}
                     <div className="flex items-center justify-between p-6">
                         <button
@@ -117,10 +121,10 @@ export function LoginPanel({ isOpen, onClose, onSignUpClick }: LoginPanelProps) 
                             {/* Social Login Options */}
                             <div className="pt-6">
                                 <p className="text-sm text-gray-500 text-center mb-4">{t('login.orContinueWith')}</p>
-                                <div className="grid grid-cols-2 gap-3">
+                                <div className="flex gap-3">
                                     <button
                                         onClick={() => handleSocialLogin('google')}
-                                        className="flex items-center justify-center gap-2 px-4 py-3 bg-white text-gray-900 border border-gray-300 rounded-lg font-semibold hover:bg-gray-50 transition-colors"
+                                        className="flex-1 flex items-center justify-center gap-2 px-4 py-3 bg-white text-gray-900 border border-gray-300 rounded-lg font-semibold hover:bg-gray-50 transition-colors"
                                         title={t('login.google')}
                                     >
                                         <svg className="w-5 h-5" viewBox="0 0 24 24" fill="none">
@@ -134,7 +138,7 @@ export function LoginPanel({ isOpen, onClose, onSignUpClick }: LoginPanelProps) 
 
                                     <button
                                         onClick={() => handleSocialLogin('apple')}
-                                        className="flex items-center justify-center gap-2 px-4 py-3 bg-black text-white rounded-lg font-semibold hover:bg-gray-800 transition-colors"
+                                        className="flex-1 flex items-center justify-center gap-2 px-4 py-3 bg-black text-white rounded-lg font-semibold hover:bg-gray-800 transition-colors"
                                         title={t('login.apple')}
                                     >
                                         <svg className="w-5 h-5" viewBox="0 0 24 24" fill="currentColor">
@@ -145,7 +149,7 @@ export function LoginPanel({ isOpen, onClose, onSignUpClick }: LoginPanelProps) 
 
                                     <button
                                         onClick={() => handleSocialLogin('microsoft')}
-                                        className="flex items-center justify-center gap-2 px-4 py-3 bg-white text-gray-900 border border-gray-300 rounded-lg font-semibold hover:bg-gray-50 transition-colors col-span-2"
+                                        className="flex-1 flex items-center justify-center gap-2 px-4 py-3 bg-white text-gray-900 border border-gray-300 rounded-lg font-semibold hover:bg-gray-50 transition-colors"
                                         title={t('login.microsoft')}
                                     >
                                         <svg className="w-5 h-5" viewBox="0 0 23 23" fill="none">
@@ -166,7 +170,7 @@ export function LoginPanel({ isOpen, onClose, onSignUpClick }: LoginPanelProps) 
                                     <button
                                         onClick={() => {
                                             onClose();
-                                            onSignUpClick?.();
+                                            onSignUpClick?.(email);
                                         }}
                                         className="text-[#83A98A] hover:underline font-semibold"
                                     >

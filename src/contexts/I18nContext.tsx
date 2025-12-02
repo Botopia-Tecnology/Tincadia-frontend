@@ -1,9 +1,9 @@
 'use client';
 
 import { createContext, useContext, useState, useEffect, ReactNode } from 'react';
-import esTranslations from '@/locales/es.json';
-import enTranslations from '@/locales/en.json';
-import ptTranslations from '@/locales/pt.json';
+import esTranslations from '@/locales/es';
+import enTranslations from '@/locales/en';
+import ptTranslations from '@/locales/pt';
 
 export type Locale = 'es' | 'en' | 'pt';
 

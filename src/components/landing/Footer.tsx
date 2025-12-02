@@ -3,15 +3,11 @@
 import Link from 'next/link';
 import Image from 'next/image';
 import {
-  Mail,
-  Globe,
   Linkedin,
   Instagram,
   Facebook,
   Twitter,
-  MessageCircle,
   Youtube,
-
 } from 'lucide-react';
 import { useTranslation } from '@/hooks/useTranslation';
 
@@ -20,159 +16,24 @@ export function Footer() {
   return (
     <footer className="bg-white/30 backdrop-blur-sm border-t border-gray-200">
       <div className="mx-auto max-w-7xl px-6 lg:px-8 py-12 lg:py-16">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 lg:gap-12">
-          {/* Columna 1: Logo + Descarga app */}
-          <div className="lg:col-span-1">
-            <Link href="/" className="flex items-center gap-3 mb-4">
-              <div className="relative w-20 h-12">
-                <Image
-                  src="/media/images/main_logo.png"
-                  alt="Logo TINCADIA"
-                  fill
-                  className="object-contain"
-                />
-              </div>
+        <div className="flex flex-col items-center justify-center">
 
-            </Link>
-
-            <p className="text-sm text-gray-600">
-              {t('footer.description')}
-            </p>
-
-            <div className="mt-6">
-              <p className="text-sm font-semibold text-gray-900 mb-3">
-                {t('footer.downloadFree')}
-              </p>
-              <div className="space-y-3">
-                {/* Google Play */}
-                <button
-                  type="button"
-                  className="w-full sm:w-auto inline-flex items-center gap-3 rounded-lg border border-gray-300 px-4 py-2.5 text-left hover:border-[#83A98A] hover:bg-gray-50 transition-colors"
-                >
-                  <div className="relative w-[24px] h-[24px] flex-shrink-0">
-                    <Image
-                      src="/media/images/footer/playstore.png"
-                      alt="Google Play"
-                      fill
-                      className="object-contain"
-                      unoptimized
-                    />
-                  </div>
-                  <div className="flex flex-col leading-tight">
-                    <span className="text-[10px] uppercase tracking-wide text-gray-500">
-                      {t('footer.getItOn')}
-                    </span>
-                    <span className="text-sm font-semibold text-gray-900">
-                      {t('footer.googlePlay')}
-                    </span>
-                  </div>
-                </button>
-
-                {/* App Store */}
-                <button
-                  type="button"
-                  className="w-full sm:w-auto inline-flex items-center gap-3 rounded-lg border border-gray-300 px-4 py-2.5 text-left hover:border-[#83A98A] hover:bg-gray-50 transition-colors"
-                >
-                  <div className="relative w-[24px] h-[24px] flex-shrink-0">
-                    <Image
-                      src="/media/images/footer/appstore.png"
-                      alt="App Store"
-                      fill
-                      className="object-contain"
-                      unoptimized
-                    />
-                  </div>
-                  <div className="flex flex-col leading-tight">
-                    <span className="text-[10px] uppercase tracking-wide text-gray-500">
-                      {t('footer.downloadOnThe')}
-                    </span>
-                    <span className="text-sm font-semibold text-gray-900">
-                      {t('footer.appStore')}
-                    </span>
-                  </div>
-                </button>
-              </div>
-              <p className="mt-3 text-xs text-gray-500">
-                {t('footer.comingSoon')}
-              </p>
-            </div>
-          </div>
-
-          {/* Columna 2: Servicio / TINCADIA / Para negocios */}
-          <div>
-            <h3 className="text-sm font-semibold text-gray-900 uppercase tracking-wider mb-4">
-              {t('footer.service')}
-            </h3>
-            <ul className="space-y-2 text-sm text-gray-600">
-              <li className="font-semibold text-gray-900">{t('footer.tincadia')}</li>
-              <li>
-                {t('footer.tincadiaDesc')}
-              </li>
-            </ul>
-
-            <div className="mt-6">
-              <h4 className="text-sm font-semibold text-gray-900 uppercase tracking-wider mb-2">
-                {t('footer.forBusiness')}
-              </h4>
-              <p className="text-sm text-gray-600">
-                {t('footer.forBusinessDesc')}
-              </p>
-            </div>
-          </div>
-
-          {/* Columna 3: Contacto + Sitio web */}
-          <div>
-            <h3 className="text-sm font-semibold text-gray-900 uppercase tracking-wider mb-4">
-              {t('footer.contact')}
-            </h3>
-            <div className="space-y-3 text-sm text-gray-600">
-              <div className="flex items-start gap-2">
-                <Mail className="w-4 h-4 mt-0.5 text-[#83A98A]" />
-                <div>
-                  <p className="font-semibold text-gray-900">{t('footer.email')}</p>
-                  <a
-                    href="mailto:contacto@tincadia.com"
-                    className="hover:text-[#83A98A] transition-colors"
-                  >
-                    contacto@tincadia.com
-                  </a>
-                </div>
-              </div>
-
-              <div className="flex items-start gap-2">
-                <Globe className="w-4 h-4 mt-0.5 text-[#83A98A]" />
-                <div>
-                  <p className="font-semibold text-gray-900">{t('footer.website')}</p>
-                  <p className="text-gray-700">www.tincadia.com</p>
-                  <p className="mt-1 text-xs text-gray-500">
-                    {t('footer.comingSoon')}
-                  </p>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          {/* Columna 4: Síguenos en redes */}
-          <div>
-            <h3 className="text-sm font-semibold text-gray-900 uppercase tracking-wider mb-4">
+          {/* Social Media Section */}
+          <div className="text-center">
+            <h3 className="text-sm font-semibold text-gray-900 uppercase tracking-wider mb-6">
               {t('footer.followUs')}
             </h3>
 
-            <div className="space-y-4 text-sm text-gray-600">
+            <div className="flex flex-wrap justify-center gap-6">
               {/* LinkedIn */}
               <a
                 href="https://www.linkedin.com/company/tincadia/"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex items-start gap-3 hover:text-[#83A98A] transition-colors"
+                className="text-gray-600 hover:text-[#83A98A] transition-colors"
+                aria-label={t('footer.linkedin')}
               >
-                <Linkedin className="w-5 h-5 mt-0.5 text-[#83A98A]" />
-                <div>
-                  <p className="font-semibold text-gray-900">{t('footer.linkedin')}</p>
-                  <p className="text-xs">
-                    {t('footer.linkedinDesc')}
-                  </p>
-                </div>
+                <Linkedin className="w-6 h-6" />
               </a>
 
               {/* Instagram */}
@@ -180,15 +41,10 @@ export function Footer() {
                 href="https://www.instagram.com/tincadia?igsh=cnM1Y3hjYnZjbzZj"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex items-start gap-3 hover:text-[#83A98A] transition-colors"
+                className="text-gray-600 hover:text-[#83A98A] transition-colors"
+                aria-label={t('footer.instagram')}
               >
-                <Instagram className="w-5 h-5 mt-0.5 text-[#83A98A]" />
-                <div>
-                  <p className="font-semibold text-gray-900">{t('footer.instagram')}</p>
-                  <p className="text-xs">
-                    {t('footer.instagramDesc')}
-                  </p>
-                </div>
+                <Instagram className="w-6 h-6" />
               </a>
 
               {/* Facebook */}
@@ -196,15 +52,10 @@ export function Footer() {
                 href="https://www.facebook.com/isramirez10?mibextid=ZbWKwL"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex items-start gap-3 hover:text-[#83A98A] transition-colors"
+                className="text-gray-600 hover:text-[#83A98A] transition-colors"
+                aria-label={t('footer.facebook')}
               >
-                <Facebook className="w-5 h-5 mt-0.5 text-[#83A98A]" />
-                <div>
-                  <p className="font-semibold text-gray-900">{t('footer.facebook')}</p>
-                  <p className="text-xs">
-                    {t('footer.facebookDesc')}
-                  </p>
-                </div>
+                <Facebook className="w-6 h-6" />
               </a>
 
               {/* X (Twitter) */}
@@ -212,15 +63,10 @@ export function Footer() {
                 href="https://x.com/tincadiaapp"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex items-start gap-3 hover:text-[#83A98A] transition-colors"
+                className="text-gray-600 hover:text-[#83A98A] transition-colors"
+                aria-label={t('footer.twitter')}
               >
-                <Twitter className="w-5 h-5 mt-0.5 text-[#83A98A]" />
-                <div>
-                  <p className="font-semibold text-gray-900">{t('footer.twitter')}</p>
-                  <p className="text-xs">
-                    {t('footer.twitterDesc')}
-                  </p>
-                </div>
+                <Twitter className="w-6 h-6" />
               </a>
 
               {/* WhatsApp Canal */}
@@ -228,17 +74,19 @@ export function Footer() {
                 href="https://www.whatsapp.com/channel/0029VbAmXrWHVvTVFnnCh82Q"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex items-start gap-3 hover:text-[#83A98A] transition-colors"
+                className="text-gray-600 hover:text-[#83A98A] transition-colors"
+                aria-label={t('footer.whatsapp')}
               >
-                <MessageCircle className="w-5 h-5 mt-0.5 text-[#83A98A]" />
-                <div>
-                  <p className="font-semibold text-gray-900">
-                    {t('footer.whatsapp')}
-                  </p>
-                  <p className="text-xs">
-                    {t('footer.whatsappDesc')}
-                  </p>
-                </div>
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="24"
+                  height="24"
+                  fill="currentColor"
+                  className="w-6 h-6"
+                  viewBox="0 0 16 16"
+                >
+                  <path d="M13.601 2.326A7.85 7.85 0 0 0 7.994 0C3.627 0 .068 3.558.064 7.926c0 1.399.366 2.76 1.057 3.965L0 16l4.204-1.102a7.9 7.9 0 0 0 3.79.965h.004c4.368 0 7.926-3.558 7.93-7.93A7.9 7.9 0 0 0 13.6 2.326zM7.994 14.521a6.6 6.6 0 0 1-3.356-.92l-.24-.144-2.494.654.666-2.433-.156-.251a6.56 6.56 0 0 1-1.007-3.505c0-3.626 2.957-6.584 6.591-6.584a6.56 6.56 0 0 1 4.66 1.931 6.56 6.56 0 0 1 1.928 4.66c-.004 3.639-2.961 6.592-6.592 6.592m3.615-4.934c-.197-.099-1.17-.578-1.353-.646-.182-.065-.315-.099-.445.099-.133.197-.513.646-.627.775-.114.133-.232.148-.43.05-.197-.1-.836-.308-1.592-.985-.59-.525-.985-1.175-1.103-1.372-.114-.198-.011-.304.088-.403.087-.088.197-.232.296-.346.1-.114.133-.198.198-.33.065-.134.034-.248-.015-.347-.05-.099-.445-1.076-.612-1.47-.16-.389-.323-.335-.445-.34-.114-.007-.247-.007-.38-.007a.73.73 0 0 0-.529.247c-.182.198-.691.677-.691 1.654s.71 1.916.81 2.049c.098.133 1.394 2.132 3.383 2.992.47.205.84.326 1.129.418.475.152.904.129 1.246.08.38-.058 1.171-.48 1.338-.943.164-.464.164-.86.114-.943-.049-.084-.182-.133-.38-.232" />
+                </svg>
               </a>
 
               {/* YouTube */}
@@ -246,46 +94,40 @@ export function Footer() {
                 href="https://www.youtube.com/@tincadiaapp"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex items-start gap-3 hover:text-[#83A98A] transition-colors"
+                className="text-gray-600 hover:text-[#83A98A] transition-colors"
+                aria-label={t('footer.youtube')}
               >
-                <Youtube className="w-5 h-5 mt-0.5 text-[#83A98A]" />
-                <div>
-                  <p className="font-semibold text-gray-900">{t('footer.youtube')}</p>
-                  <p className="text-xs">
-                    {t('footer.youtubeDesc')}
-                  </p>
-                </div>
+                <Youtube className="w-6 h-6" />
               </a>
 
-              {/* TikTok 
+              {/* TikTok */}
               <a
                 href="https://www.tiktok.com/@tincadiaapp"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex items-start gap-3 hover:text-[#83A98A] transition-colors"
+                className="text-gray-600 hover:text-[#83A98A] transition-colors"
+                aria-label="TikTok"
               >
-                <Tiktok className="w-5 h-5 mt-0.5 text-[#83A98A]" />
-                <div>
-                  <p className="font-semibold text-gray-900">TikTok</p>
-                  <p className="text-xs">
-                    Contenido educativo, motivacional y tecnológico sobre
-                    inclusión.
-                  </p>
-                </div>
-               
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="24"
+                  height="24"
+                  fill="currentColor"
+                  className="w-6 h-6"
+                  viewBox="0 0 16 16"
+                >
+                  <path d="M9 0h1.98c.144.715.54 1.617 1.235 2.512C12.895 3.389 13.797 4 15 4v2c-1.753 0-3.07-.814-4-1.829V11a5 5 0 1 1-5-5v2a3 3 0 1 0 3 3z" />
+                </svg>
               </a>
-               */}
             </div>
           </div>
 
-        </div>
-
-
-        {/* Línea divisoria y footer inferior */}
-        <div className="mt-12 pt-8 border-t border-gray-200">
-          <p className="text-xs sm:text-sm text-gray-600 text-center">
-            {t('footer.copyright')}
-          </p>
+          {/* Copyright */}
+          <div className="mt-12 pt-8 border-t border-gray-200 w-full">
+            <p className="text-xs sm:text-sm text-gray-600 text-center">
+              {t('footer.copyright')}
+            </p>
+          </div>
         </div>
       </div>
     </footer>

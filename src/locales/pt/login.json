@@ -1,0 +1,15 @@
+{
+    "closeLabel": "Fechar painel de login",
+    "title": "Bem-vindo de volta",
+    "subtitle": "Faça login na sua conta",
+    "emailPlaceholder": "Digite seu e-mail",
+    "passwordPlaceholder": "Digite sua senha",
+    "forgotPassword": "Esqueceu sua senha?",
+    "loginButton": "Entrar",
+    "orContinueWith": "ou continue com",
+    "google": "Continuar com Google",
+    "apple": "Continuar com Apple",
+    "microsoft": "Continuar com Microsoft",
+    "noAccount": "Não tem uma conta?",
+    "signUp": "Cadastre-se"
+}

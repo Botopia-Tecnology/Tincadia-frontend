@@ -2,8 +2,8 @@
 
 import Image from 'next/image';
 import { useEffect, useRef, useState, useMemo } from 'react';
-import { RegistrationPanel } from './RegistrationPanel';
 import { useTranslation } from '@/hooks/useTranslation';
+import { useUI } from '@/contexts/UIContext';
 
 // Letras del título principal
 const TINCADIA_LETTERS = ['T', 'I', 'N', 'C', 'A', 'D', 'I', 'A'];
@@ -21,8 +21,11 @@ export function Hero({ disableAnimations = false }: HeroProps) {
   const [showTincadia, setShowTincadia] = useState(false);
   const [showWord, setShowWord] = useState(false);
   const [showVideo, setShowVideo] = useState(false);
-  const [registrationPanelOpen, setRegistrationPanelOpen] = useState(false);
   const [email, setEmail] = useState('');
+  const [isEmailValid, setIsEmailValid] = useState(false);
+  const [isSubmitted, setIsSubmitted] = useState(false);
+
+  const { setIsRegistrationPanelOpen, setRegistrationEmail: setGlobalEmail } = useUI();
 
   // Radio del círculo de letras (responsive)
   const [circleRadius, setCircleRadius] = useState(100);
@@ -230,7 +233,11 @@ export function Hero({ disableAnimations = false }: HeroProps) {
                 aria-label={t('hero.emailLabel')}
               />
               <button
-                onClick={() => setRegistrationPanelOpen(true)}
+                onClick={() => {
+                  setGlobalEmail(email);
+                  setIsRegistrationPanelOpen(true);
+                  setIsSubmitted(true);
+                }}
                 className="rounded-r-lg sm:rounded-l-none rounded-l-lg sm:rounded-r-lg bg-white px-8 py-3.5 text-base font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#83A98A] transition-colors whitespace-nowrap"
                 aria-label={t('hero.startButtonLabel')}
               >
@@ -381,12 +388,7 @@ export function Hero({ disableAnimations = false }: HeroProps) {
         </div>
       </div>
 
-      {/* Registration Panel */}
-      <RegistrationPanel
-        isOpen={registrationPanelOpen}
-        onClose={() => setRegistrationPanelOpen(false)}
-        initialEmail={email}
-      />
+      {/* Registration Panel removed from here as it is now global in page.tsx */}
     </section>
   );
 }

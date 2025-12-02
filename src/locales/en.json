@@ -31,6 +31,42 @@
     "openMenu": "Open menu",
     "closeMenu": "Close menu"
   },
+  "courses": {
+    "title": "Courses",
+    "comingSoonTitle": "Coming Soon",
+    "comingSoonDescription": "We are working hard to bring you the best LSC and inclusive technology courses. Stay tuned!",
+    "backHome": "Back to Home"
+  },
+  "contactSection": {
+    "title": "We're here to help",
+    "subtitle": "Leave your contacts and we will contact you shortly",
+    "description": "Contact us to learn more about our inclusive technology solutions.",
+    "phone": "Phone",
+    "email": "Email",
+    "linkedin": "LinkedIn",
+    "location1": {
+      "city": "Medellín, Colombia",
+      "address": "Calle 10 #43B-25"
+    },
+    "location2": {
+      "city": "Bogotá, Colombia",
+      "address": "Carrera 7 #71-21"
+    },
+    "form": {
+      "fullName": "Full name",
+      "name": "Name",
+      "email": "Email",
+      "phone": "Phone number",
+      "phoneNumber": "Phone number",
+      "message": "Describe your inquiry",
+      "problem": "Describe your inquiry",
+      "date": "Preferred contact date",
+      "upload": "Drag and drop your image here or click to select.",
+      "submit": "Send"
+    },
+    "copyright": "© 2025 TINCADIA. All rights reserved.",
+    "privacyPolicy": "Privacy Policy"
+  },
   "hero": {
     "title": "TINCADIA",
     "concepts": {
@@ -234,7 +270,7 @@
     "tincadia": "TINCADIA",
     "tincadiaDesc": "Platform connecting deaf people, hearing people, and organizations through inclusive technology.",
     "forBusiness": "For Business",
-    "forBusinessDesc": "Solutions for companies, educational entities, and organizations seeking to make their services more accessible.",
+    "forBusinessDesc": "Solutions for companies, educational entities, and organizations looking to make their services more accessible.",
     "contact": "Contact",
     "email": "Email",
     "website": "Website",
@@ -242,7 +278,7 @@
     "linkedin": "LinkedIn",
     "linkedinDesc": "Posts about innovation, inclusive entrepreneurship, and participation in national events.",
     "instagram": "Instagram",
-    "instagramDesc": "Visual content about projects, training, and TINCADIA team progress.",
+    "instagramDesc": "Visual content about projects, trainings, and TINCADIA team progress.",
     "facebook": "Facebook",
     "facebookDesc": "Dissemination of activities, calls, and collaborations with allied entities.",
     "twitter": "X (Twitter)",
@@ -250,18 +286,18 @@
     "whatsapp": "WhatsApp Channel",
     "whatsappDesc": "Official channel for information, events, and TINCADIA news.",
     "youtube": "YouTube",
-    "youtubeDesc": "Videos on inclusion, accessibility, and impact testimonials.",
+    "youtubeDesc": "Videos about inclusion, accessibility, and impact testimonials.",
     "copyright": "© 2025 TINCADIA. All rights reserved."
   },
   "accessibility": {
-    "highContrast": "Enable high contrast",
-    "invertColors": "Invert colors",
-    "grayscale": "Enable grayscale",
-    "largeCursor": "Large cursor",
-    "disableAnimations": "Disable animations",
-    "decreaseText": "Decrease text size",
-    "resetText": "Reset text size",
-    "increaseText": "Increase text size"
+    "highContrast": "Toggle High Contrast",
+    "invertColors": "Invert Colors",
+    "grayscale": "Toggle Grayscale",
+    "largeCursor": "Large Cursor",
+    "disableAnimations": "Disable Animations",
+    "decreaseText": "Decrease Text Size",
+    "resetText": "Reset Text Size",
+    "increaseText": "Increase Text Size"
   },
   "findInclusiveCompany": {
     "title": "Find an Inclusive Company",
@@ -302,7 +338,7 @@
         "name": "Almia",
         "role": "Software Engineering",
         "company": "EAFIT",
-        "text": "TINCADIA has transformed how our deaf students participate in classes. An indispensable tool."
+        "text": "TINCADIA has transformed the way our deaf students participate in classes. An indispensable tool."
       },
       {
         "name": "Andrey",
@@ -320,7 +356,7 @@
         "name": "Carlos M.",
         "role": "Inclusion Director",
         "company": "National University",
-        "text": "TINCADIA tools have revolutionized how we approach inclusive education at our institution."
+        "text": "TINCADIA tools have revolutionized how we approach inclusive education in our institution."
       },
       {
         "name": "María S.",
@@ -332,26 +368,26 @@
   },
   "pricing": {
     "title": "Plans and Pricing",
-    "subtitle": "Choose the plan that best suits your needs",
+    "subtitle": "Choose the plan that best fits your needs",
     "personal": "Personal",
     "empresa": "Business",
     "mensual": "Monthly",
     "anual": "Annual",
     "save20": "Save 20%",
     "free": "Free",
-    "perMonth": "/mo",
-    "perYear": "/yr",
+    "perMonth": "/month",
+    "perYear": "/year",
     "includes": "Includes",
     "notIncludes": "Does not include",
     "plans": {
       "personal": {
         "free": {
           "name": "Free Plan",
-          "description": "For individual users seeking to improve accessibility",
-          "buttonText": "Get started free",
+          "description": "For individual users looking to improve their accessibility",
+          "buttonText": "Start for free",
           "includes": [
             "Access to free content and educational resources.",
-            "Basic LSC course materials.",
+            "Basic LSC course material.",
             "Community support and inclusive forums.",
             "Participation certificate.",
             "Access to inclusive community forums."
@@ -365,10 +401,10 @@
         },
         "premium": {
           "name": "Premium Plan",
-          "description": "For users needing more features and usage time",
+          "description": "For users who need more features and usage time",
           "buttonText": "Subscribe now",
           "includes": [
-            "Complete automatic translation",
+            "Full automatic translation",
             "3 accessible digital profiles",
             "Up to 3 hours daily usage",
             "Email and chat support",
@@ -382,7 +418,7 @@
         },
         "corporate": {
           "name": "Premium",
-          "description": "For users requiring full access without restrictions",
+          "description": "For users who require full access without restrictions",
           "buttonText": "Get Premium",
           "includes": [
             "Premium automatic translation",
@@ -398,11 +434,11 @@
       "empresa": {
         "free": {
           "name": "Free Plan",
-          "description": "For individual users seeking to improve accessibility",
-          "buttonText": "Get started free",
+          "description": "For individual users looking to improve their accessibility",
+          "buttonText": "Start for free",
           "includes": [
             "Access to free content and educational resources.",
-            "Basic LSC course materials.",
+            "Basic LSC course material.",
             "Community support and inclusive forums.",
             "Participation certificate.",
             "Access to inclusive community forums."
@@ -416,10 +452,10 @@
         },
         "business": {
           "name": "Business Plan",
-          "description": "For companies seeking scalable accessibility solutions",
+          "description": "For companies looking for scalable accessibility solutions",
           "buttonText": "Subscribe now",
           "includes": [
-            "Complete automatic translation",
+            "Full automatic translation",
             "3 accessible digital profiles",
             "Up to 3 hours daily usage",
             "Email and chat support",
@@ -458,22 +494,22 @@
     "jobSeeker": {
       "fields": {
         "fullName": "Full name",
-        "documentId": "Identity document",
+        "documentId": "ID Document",
         "disabilityType": "Disability type (if applicable)",
         "usesLSC": "Do you use Colombian Sign Language (LSC)?",
         "city": "City of residence",
         "phone": "Phone / WhatsApp",
-        "email": "Email address",
+        "email": "Email",
         "educationLevel": "Education level",
         "workArea": "Work area of interest (multiple selection)",
         "workExperience": "Work experience",
         "technicalSkills": "Technical skills",
         "softSkills": "Soft skills",
         "certifications": "Certifications, courses or workshops",
-        "uploadCV": "Attach resume (PDF)",
+        "uploadCV": "Attach CV (PDF)",
         "selectFile": "Select PDF file",
         "training": "Would you like to receive free training from TINCADIA?",
-        "dataAuthorization": "I authorize personal data processing under Law 1581",
+        "dataAuthorization": "I authorize personal data processing according to Law 1581",
         "specifyOther": "Specify other work area",
         "describeExperience": "Describe your work experience...",
         "describeTechnical": "Describe your technical skills...",
@@ -495,21 +531,21 @@
         "No"
       ],
       "educationLevels": [
-        "High school",
+        "High School",
         "Technical",
         "Technologist",
         "Professional",
-        "Graduate",
+        "Postgraduate",
         "In progress"
       ],
       "workAreas": [
-        "Customer service",
+        "Customer Service",
         "Technology",
-        "Administrative assistant",
+        "Administrative Assistant",
         "Production",
         "Marketing",
         "Education",
-        "General services",
+        "General Services",
         "Logistics",
         "Others"
       ]
@@ -517,20 +553,20 @@
     "interpreter": {
       "fields": {
         "fullName": "Full name",
-        "documentId": "Identity document",
+        "documentId": "ID Document",
         "city": "City of residence",
         "phone": "Phone / WhatsApp",
-        "email": "Email address",
+        "email": "Email",
         "isCertified": "Are you a certified interpreter?",
         "academicLevel": "Indicate academic level achieved",
-        "academicDetail": "Specify degree, level or major",
+        "academicDetail": "Specify title, level or career",
         "experienceLevel": "Experience level",
         "specialtyAreas": "Specialty areas (multiple selection)",
         "availability": "Time availability",
         "serviceType": "Type of service offered (multiple selection)",
         "hourlyRates": "Hourly rates",
-        "ratesPlaceholder": "E.g: $50,000 COP",
-        "uploadCV": "Resume (PDF)",
+        "ratesPlaceholder": "E.g: $50.000 COP",
+        "uploadCV": "CV (PDF)",
         "selectFilePDF": "Select PDF file",
         "certifications": "Certifications (optional)",
         "selectFileCert": "Select file (PDF, JPG, PNG)",
@@ -541,13 +577,13 @@
         "specifyOtherService": "Specify other service type"
       },
       "academicLevels": [
-        "Academic high school",
-        "Professional (indicate degree received)",
-        "Graduate (indicate degree received)",
+        "High School Graduate",
+        "Professional (indicate title received)",
+        "Postgraduate (indicate title received)",
         "Certified by FENASCOL (indicate level)",
-        "Undergraduate student (indicate major)",
-        "Technical (indicate degree)",
-        "Technologist (indicate degree)"
+        "Undergraduate student (indicate career)",
+        "Technical (indicate title)",
+        "Technologist (indicate title)"
       ],
       "experienceLevels": [
         "Beginner (0–1 year)",
@@ -584,11 +620,11 @@
   "login": {
     "closeLabel": "Close login panel",
     "title": "Welcome back",
-    "subtitle": "Login to your account",
+    "subtitle": "Log in to your account",
     "emailPlaceholder": "Enter your email address",
     "passwordPlaceholder": "Enter your password",
-    "forgotPassword": "Forgot password?",
-    "loginButton": "Sign In",
+    "forgotPassword": "Forgot your password?",
+    "loginButton": "Log In",
     "orContinueWith": "or continue with",
     "google": "Continue with Google",
     "apple": "Continue with Apple",
@@ -597,18 +633,18 @@
     "signUp": "Sign up"
   },
   "impact": {
-    "title": "Why Choose Us?",
+    "title": "Why choose us?",
     "subtitle": "TINCADIA not only connects talent: it educates, raises awareness, and measures social impact to transform inclusion into real actions.",
     "tabs": {
-      "companies": "For Companies",
-      "deafPeople": "For Deaf People",
-      "society": "For Society"
+      "companies": "For companies",
+      "deafPeople": "For deaf people",
+      "society": "For society"
     },
     "companies": {
       "items": [
-        "Compliance with inclusion policies and Sustainable Development Goals (SDGs 8, 10, and 17).",
+        "Compliance with inclusion policies and Sustainable Development Goals (SDG 8, 10, and 17).",
         "Improvement in corporate reputation and work climate.",
-        "Support in communicative accessibility and inclusive processes.",
+        "Accompaniment in communicative accessibility and inclusive processes.",
         "Access to technological tools that facilitate communication with deaf collaborators."
       ]
     },
@@ -624,21 +660,21 @@
       "items": [
         "Reduction of inequalities.",
         "Promotion of inclusive and accessible spaces.",
-        "Fostering respect, diversity, and the elimination of communication barriers."
+        "Promotion of respect, diversity, and elimination of communication barriers."
       ]
     },
     "ods": {
       "title": "SDGs we promote",
       "items": {
-        "education": "Quality Education",
-        "work": "Decent Work",
-        "inequality": "Reduced Inequalities",
-        "peace": "Peace and Justice",
-        "alliances": "Partnerships for the Goals"
+        "education": "Quality education",
+        "work": "Decent work",
+        "inequality": "Reduced inequalities",
+        "peace": "Peace and justice strong institutions",
+        "alliances": "Partnerships for the goals"
       }
     },
     "businessImpact": {
-      "title": "Business Impact",
+      "title": "Business impact",
       "items": [
         "Real transformation of internal processes towards inclusion.",
         "Measurement and monitoring of social impact.",
@@ -646,5 +682,9 @@
         "Direct contribution to the employability of deaf people in Colombia."
       ]
     }
+  },
+  "regionalMap": {
+    "currentlyInColombia": "Currently in Colombia...",
+    "comingSoonWorld": "Coming soon, to the world"
   }
 }
