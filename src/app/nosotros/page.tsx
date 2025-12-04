@@ -7,7 +7,7 @@ export default function NosotrosPage() {
     return (
         <main className="min-h-screen relative">
             <GridBackground className="fixed inset-0 -z-10" />
-            <div className="pt-20">
+            <div>
                 <ImpactSection />
             </div>
         </main>

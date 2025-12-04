@@ -90,9 +90,9 @@ export function DownloadAppSection() {
           </div>
 
           {/* Columna derecha: QR Code */}
-          <div className="relative min-h-[400px] lg:min-h-[500px]">
+          <div className="relative min-h-[400px] lg:min-h-[500px] flex flex-col items-end justify-center">
             {/* Imagen decorativa de fondo */}
-            <div className="absolute top-1/2 left-[40%] -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] lg:w-[700px] lg:h-[700px] pointer-events-none z-0">
+            <div className="absolute top-1/2 left-[60%] -translate-x-1/2 -translate-y-[60%] w-[500px] h-[500px] lg:w-[700px] lg:h-[700px] pointer-events-none z-0">
               <Image
                 src="/media/images/mobile.png"
                 alt=""
@@ -103,10 +103,10 @@ export function DownloadAppSection() {
               />
             </div>
 
-            {/* Contenedor de los QR Codes - Centrado vertical, corrido a la derecha */}
-            <div className="absolute top-1/2 -translate-y-1/2 right-0 z-10 flex flex-col gap-4">
+            {/* Contenedor de los QR Codes - Horizontal, debajo de los celulares */}
+            <div className="relative z-10 flex flex-row gap-4 mt-[350px] lg:mt-[420px] mr-8 lg:mr-16">
               {/* QR Code Google Play */}
-              <div className="relative w-40 h-40 lg:w-48 lg:h-48 rounded-xl overflow-hidden">
+              <div className="relative w-24 h-24 lg:w-32 lg:h-32 rounded-xl overflow-hidden shadow-lg bg-white p-1">
                 <Image
                   src="/media/images/qr-code.png"
                   alt={t('download.scanToDownload')}
@@ -116,7 +116,7 @@ export function DownloadAppSection() {
                 />
               </div>
               {/* QR Code App Store */}
-              <div className="relative w-40 h-40 lg:w-48 lg:h-48 rounded-xl overflow-hidden">
+              <div className="relative w-24 h-24 lg:w-32 lg:h-32 rounded-xl overflow-hidden shadow-lg bg-white p-1">
                 <Image
                   src="/media/images/qr-code-appstore.png"
                   alt={t('download.scanToDownload')}

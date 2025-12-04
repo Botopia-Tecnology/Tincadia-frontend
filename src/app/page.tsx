@@ -6,12 +6,10 @@ import { HowItWorks } from '@/components/landing/HowItWorks';
 import { HowToStart } from '@/components/landing/HowToStart';
 import { Testimonials } from '@/components/landing/Testimonials';
 import { FAQ } from '@/components/landing/FAQ';
-import { TechBackground } from '@/components/landing/TechBackground';
 import { RegionalMap } from '@/components/landing/RegionalMap';
 import { DownloadAppSection } from '@/components/landing/DownloadAppSection';
 import { LoginPanel } from '@/components/landing/LoginPanel';
 import { RegistrationPanel } from '@/components/landing/RegistrationPanel';
-import { GridBackground } from '@/components/ui/GridBackground';
 import { useUI } from '@/contexts/UIContext';
 import { useAccessibilityContext } from '@/contexts/AccessibilityContext';
 
@@ -30,11 +28,6 @@ export default function Home() {
 
   return (
     <div className="min-h-screen w-full relative">
-      {/* Global Background with Tincadia Colors */}
-      <GridBackground className="fixed inset-0 -z-20" />
-
-      {/* Interactive Particles */}
-      <TechBackground disableAnimations={disableAnimations} />
 
       {/* Page Content */}
       <div className="relative z-10">
