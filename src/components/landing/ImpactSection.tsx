@@ -56,7 +56,7 @@ export function ImpactSection() {
     const cardIcons = [Target, Zap, Network, ArrowRight];
 
     return (
-        <section id="nosotros" className="relative py-20 lg:py-24 overflow-hidden bg-transparent">
+        <section id="nosotros" className="relative pt-12 pb-20 lg:pt-16 lg:pb-24 overflow-hidden bg-transparent">
 
             {/* Background Pattern Removed - Handled by Page */}
 
