@@ -289,9 +289,9 @@ export function HowToStart() {
           ref={contentRef}
           className="grid lg:grid-cols-2 gap-12 items-start"
         >
-          {/* Video placeholder - Sticky */}
+          {/* Video placeholder - Sticky (solo desktop) */}
           <div
-            className="lg:sticky lg:top-28 relative rounded-2xl overflow-hidden shadow-2xl h-[500px] lg:h-[550px] flex items-center justify-center transition-all duration-500"
+            className="hidden lg:block lg:sticky lg:top-28 relative rounded-2xl overflow-hidden shadow-2xl h-[550px] flex items-center justify-center transition-all duration-500"
           >
             {features.map((feature) => {
               const FeatureIcon = feature.icon;
@@ -317,16 +317,47 @@ export function HowToStart() {
             })}
           </div>
 
-          {/* Información - Todas las features apiladas para crear altura de scroll */}
-          <div className="space-y-0">
+          {/* Card de contenido mobile */}
+          <div className="lg:hidden mb-8">
             {features.map((feature) => {
+              const FeatureIcon = feature.icon;
               const isActive = displayTab === feature.id;
+
+              if (!isActive) return null;
 
               return (
                 <div
                   key={feature.id}
-                  className={`min-h-[80vh] flex flex-col justify-center py-12 transition-opacity duration-500 ${isActive ? 'opacity-100' : 'opacity-30'
-                    }`}
+                  className={`rounded-2xl ${feature.bgColor} p-8 shadow-xl transition-all duration-500`}
+                >
+                  <div className="flex flex-col items-center text-center mb-6">
+                    <div className="w-20 h-20 rounded-full bg-white shadow-lg flex items-center justify-center mb-4">
+                      <FeatureIcon size={40} className="text-gray-600" strokeWidth={2} />
+                    </div>
+                    <span className="text-2xl font-bold bg-gradient-to-r from-[#83A98A] to-[#6D8F75] bg-clip-text text-transparent">
+                      {feature.videoLabel}
+                    </span>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+
+          {/* Información */}
+          <div className="space-y-0">
+            {features.map((feature) => {
+              const isActive = displayTab === feature.id;
+              const FeatureIcon = feature.icon;
+
+              return (
+                <div
+                  key={feature.id}
+                  className={`
+                    transition-all duration-500
+                    ${isActive ? 'block' : 'hidden lg:block'}
+                    ${isActive ? 'lg:opacity-100' : 'lg:opacity-30'}
+                    lg:min-h-[80vh] flex flex-col justify-center py-12
+                  `}
                 >
                   <div className="space-y-6">
                     <div>

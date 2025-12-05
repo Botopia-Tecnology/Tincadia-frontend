@@ -9,6 +9,7 @@ import { UIProvider } from "@/contexts/UIContext";
 import { AccessibilityProvider } from "@/contexts/AccessibilityContext";
 import { AccessibilityButton } from "@/components/landing/AccessibilityButton";
 import { GlobalBackgrounds } from "@/components/layout/GlobalBackgrounds";
+import { GlobalPanels } from "@/components/layout/GlobalPanels";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -51,6 +52,7 @@ export default function RootLayout({
               <AccessibilityButton />
               <Footer />
               <SignLanguageTooltip />
+              <GlobalPanels />
             </AccessibilityProvider>
           </UIProvider>
         </I18nProvider>
