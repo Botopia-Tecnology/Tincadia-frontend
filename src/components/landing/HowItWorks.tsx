@@ -6,7 +6,7 @@ import { useTranslation } from '@/hooks/useTranslation';
 
 export function HowItWorks() {
   const t = useTranslation();
-  
+
   const steps = useMemo(() => {
     const stepsData = t('howItWorks.steps') as unknown as Array<{ title: string; description: string }>;
     return [

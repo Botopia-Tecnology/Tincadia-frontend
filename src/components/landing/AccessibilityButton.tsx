@@ -128,8 +128,9 @@ export function AccessibilityButton() {
   const { ZOOM_CONFIG } = config;
 
   // Configuración de tamaños según el estado del panel
+  // Mobile sizes are handled via CSS responsive classes
   const sizes = useMemo(
-    () => (isRegistrationPanelOpen ? SIZE_CONFIG.COMPACT : SIZE_CONFIG.NORMAL),
+    () => (isRegistrationPanelOpen ? SIZE_CONFIG.COMPACT : SIZE_CONFIG.COMPACT),
     [isRegistrationPanelOpen]
   );
 

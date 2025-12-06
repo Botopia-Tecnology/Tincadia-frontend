@@ -90,9 +90,9 @@ export function DownloadAppSection() {
           </div>
 
           {/* Columna derecha: QR Code */}
-          <div className="relative min-h-[400px] lg:min-h-[500px] flex flex-col items-end justify-center">
+          <div className="relative min-h-[400px] lg:min-h-[500px] flex flex-col items-center lg:items-end justify-center">
             {/* Imagen decorativa de fondo */}
-            <div className="absolute top-1/2 left-[60%] -translate-x-1/2 -translate-y-[60%] w-[500px] h-[500px] lg:w-[700px] lg:h-[700px] pointer-events-none z-0">
+            <div className="absolute top-1/2 left-[45%] lg:left-[60%] -translate-x-1/2 -translate-y-[60%] w-[500px] h-[500px] lg:w-[700px] lg:h-[700px] pointer-events-none z-0">
               <Image
                 src="/media/images/mobile.png"
                 alt=""
@@ -104,7 +104,7 @@ export function DownloadAppSection() {
             </div>
 
             {/* Contenedor de los QR Codes - Horizontal, debajo de los celulares */}
-            <div className="relative z-10 flex flex-row gap-4 mt-[350px] lg:mt-[420px] mr-8 lg:mr-16">
+            <div className="relative z-10 flex flex-row gap-4 mt-[300px] lg:mt-[420px] lg:mr-16">
               {/* QR Code Google Play */}
               <div className="relative w-24 h-24 lg:w-32 lg:h-32 rounded-xl overflow-hidden shadow-lg bg-white p-1">
                 <Image

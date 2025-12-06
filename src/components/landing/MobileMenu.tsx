@@ -4,6 +4,9 @@ import { useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
 import { X, ChevronDown, Building2, MessageSquare } from 'lucide-react';
 import { Logo } from '@/components/ui/Logo';
+import { LanguageSelector } from '@/components/ui/LanguageSelector';
+import { useTranslation } from '@/hooks/useTranslation';
+import { useUI } from '@/contexts/UIContext';
 
 interface MobileMenuProps {
   isOpen: boolean;
@@ -29,6 +32,8 @@ const servicesDropdownItems = [
 ];
 
 export function MobileMenu({ isOpen, onClose, navigation }: MobileMenuProps) {
+  const t = useTranslation();
+  const { openLoginPanel } = useUI();
   const menuRef = useRef<HTMLDivElement>(null);
   const [servicesDropdownOpen, setServicesDropdownOpen] = useState(false);
 
@@ -76,18 +81,21 @@ export function MobileMenu({ isOpen, onClose, navigation }: MobileMenuProps) {
 
       {/* Panel blanco tipo cortina */}
       <div className="absolute inset-x-0 top-0 h-full bg-white flex flex-col shadow-xl">
-        {/* Header (logo + X) */}
+        {/* Header (logo + language + X) */}
         <div className="flex items-center justify-between p-4 border-b border-gray-100">
           <Logo onClick={onClose} />
-          <button
-            type="button"
-            className="-m-2.5 rounded-md p-2.5 text-gray-700 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-[#83A98A] transition-colors"
-            onClick={onClose}
-            aria-label="Cerrar menú"
-          >
-            <span className="sr-only">Cerrar menú</span>
-            <X className="h-7 w-7" aria-hidden="true" />
-          </button>
+          <div className="flex items-center gap-3">
+            <LanguageSelector />
+            <button
+              type="button"
+              className="-m-2.5 rounded-md p-2.5 text-gray-700 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-[#83A98A] transition-colors"
+              onClick={onClose}
+              aria-label="Cerrar menú"
+            >
+              <span className="sr-only">Cerrar menú</span>
+              <X className="h-7 w-7" aria-hidden="true" />
+            </button>
+          </div>
         </div>
 
         {/* Links del menú */}
@@ -103,13 +111,12 @@ export function MobileMenu({ isOpen, onClose, navigation }: MobileMenuProps) {
                     <button
                       type="button"
                       onClick={() => setServicesDropdownOpen(!servicesDropdownOpen)}
-                      className="w-full flex items-center justify-between text-2xl font-bold text-gray-900 hover:text-[#83A98A] transition-colors focus:outline-none focus:ring-2 focus:ring-inset focus:ring-[#83A98A] rounded-lg"
+                      className="w-full flex items-center justify-center text-2xl font-bold text-gray-900 hover:text-[#83A98A] transition-colors focus:outline-none focus:ring-2 focus:ring-inset focus:ring-[#83A98A] rounded-lg"
                     >
                       {item.name}
                       <ChevronDown
-                        className={`w-6 h-6 transition-transform ${
-                          servicesDropdownOpen ? 'rotate-180' : ''
-                        }`}
+                        className={`w-6 h-6 transition-transform ${servicesDropdownOpen ? 'rotate-180' : ''
+                          }`}
                       />
                     </button>
                     {servicesDropdownOpen && (
@@ -164,15 +171,17 @@ export function MobileMenu({ isOpen, onClose, navigation }: MobileMenuProps) {
               );
             })}
 
-            {/* CTA */}
+            {/* Login Button */}
             <div className="pt-4">
-              <Link
-                href="#cursos"
+              <button
+                onClick={() => {
+                  openLoginPanel();
+                  onClose();
+                }}
                 className="block w-full rounded-xl bg-[#83A98A] px-6 py-4 text-center text-lg font-semibold text-white shadow-lg hover:bg-[#6D8F75] transition-all active:scale-95 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#83A98A]"
-                onClick={onClose}
               >
-                Aprende más
-              </Link>
+                {t('login.loginButton')}
+              </button>
             </div>
           </div>
         </nav>
