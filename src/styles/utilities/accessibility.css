@@ -40,3 +40,61 @@
 .accessibility-text-color select {
   color: var(--foreground) !important;
 }
+
+/* Modo oscuro */
+.accessibility-dark-mode {
+  --dark-bg-primary: #0a0a0a;
+  --dark-bg-secondary: #1a1a1a;
+  --dark-bg-tertiary: #2a2a2a;
+  --dark-text-primary: #f5f5f5;
+  --dark-text-secondary: #d4d4d4;
+  --dark-border: #404040;
+  --dark-accent: #1E4DD8;
+}
+
+.accessibility-dark-mode,
+.accessibility-dark-mode body {
+  background-color: var(--dark-bg-primary) !important;
+  color: var(--dark-text-primary) !important;
+}
+
+.accessibility-dark-mode * {
+  border-color: var(--dark-border) !important;
+}
+
+.accessibility-dark-mode h1,
+.accessibility-dark-mode h2,
+.accessibility-dark-mode h3,
+.accessibility-dark-mode h4,
+.accessibility-dark-mode h5,
+.accessibility-dark-mode h6,
+.accessibility-dark-mode p,
+.accessibility-dark-mode span,
+.accessibility-dark-mode a,
+.accessibility-dark-mode li,
+.accessibility-dark-mode label {
+  color: var(--dark-text-primary) !important;
+}
+
+.accessibility-dark-mode section,
+.accessibility-dark-mode div:not([class*="bg-"]) {
+  background-color: transparent !important;
+}
+
+.accessibility-dark-mode [class*="bg-white"],
+.accessibility-dark-mode [class*="bg-gray"] {
+  background-color: var(--dark-bg-secondary) !important;
+}
+
+.accessibility-dark-mode input,
+.accessibility-dark-mode textarea,
+.accessibility-dark-mode select {
+  background-color: var(--dark-bg-tertiary) !important;
+  color: var(--dark-text-primary) !important;
+  border-color: var(--dark-border) !important;
+}
+
+.accessibility-dark-mode button {
+  background-color: var(--dark-accent) !important;
+  color: var(--dark-text-primary) !important;
+}

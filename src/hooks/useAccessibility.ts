@@ -19,6 +19,7 @@ export function useAccessibility({
     setDisableAnimations: propSetDisableAnimations
 }: UseAccessibilityProps = {}) {
     const [highContrast, setHighContrast] = useState(false);
+    const [darkMode, setDarkMode] = useState(false);
     const [inverted, setInverted] = useState(false);
     const [grayscale, setGrayscale] = useState(false);
     const [largeCursor, setLargeCursor] = useState(false);
@@ -110,15 +111,22 @@ export function useAccessibility({
             document.documentElement.classList.remove('accessibility-no-animations');
         }
 
+        if (darkMode) {
+            document.documentElement.classList.add('accessibility-dark-mode');
+        } else {
+            document.documentElement.classList.remove('accessibility-dark-mode');
+        }
+
         return () => {
             document.documentElement.style.filter = 'none';
             document.documentElement.style.fontSize = '100%';
             document.documentElement.classList.remove('accessibility-large-cursor');
             document.documentElement.classList.remove('accessibility-no-animations');
+            document.documentElement.classList.remove('accessibility-dark-mode');
             document.documentElement.style.removeProperty('--accessibility-text-color');
             document.documentElement.classList.remove('accessibility-text-color');
         };
-    }, [highContrast, inverted, grayscale, zoomLevel, largeCursor, disableAnimations, textColor]);
+    }, [highContrast, darkMode, inverted, grayscale, zoomLevel, largeCursor, disableAnimations, textColor]);
 
     // Funciones de control de zoom
     const increaseZoom = () => {
@@ -136,6 +144,7 @@ export function useAccessibility({
     return {
         state: {
             highContrast,
+            darkMode,
             inverted,
             grayscale,
             largeCursor,
@@ -146,6 +155,7 @@ export function useAccessibility({
         },
         actions: {
             setHighContrast,
+            setDarkMode,
             setInverted: handleSetInverted,
             setGrayscale,
             setLargeCursor,
