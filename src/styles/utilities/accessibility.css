@@ -26,13 +26,27 @@
   scroll-behavior: auto !important;
 }
 
-/* Clase para cambiar el color del texto */
-.accessibility-text-color,
-.accessibility-text-color *:not(input):not(textarea):not(select),
-.accessibility-text-color *::before,
-.accessibility-text-color *::after {
+/* Clase para cambiar el color del texto - FORZADO AGRESIVO */
+html.accessibility-text-color body,
+html.accessibility-text-color body * {
   color: var(--accessibility-text-color) !important;
 }
+
+/* Manejo especial para SVGs (iconos) */
+html.accessibility-text-color body svg {
+  stroke: var(--accessibility-text-color) !important;
+}
+
+/* Excepciones críticas */
+html.accessibility-text-color input,
+html.accessibility-text-color textarea,
+html.accessibility-text-color select {
+  color: initial !important;
+  /* Dejar inputs quietos */
+}
+
+/* Los colores de texto ahora funcionan directamente con el modo oscuro
+   sin necesidad de filtros o lógica de cancelación */
 
 /* Forzar color normal en inputs para evitar herencia y lag */
 .accessibility-text-color input,
@@ -48,18 +62,13 @@
   --dark-bg-tertiary: #2a2a2a;
   --dark-text-primary: #f5f5f5;
   --dark-text-secondary: #d4d4d4;
-  --dark-border: #404040;
-  --dark-accent: #1E4DD8;
+  --dark-border: #2a2a2a;
 }
 
 .accessibility-dark-mode,
 .accessibility-dark-mode body {
   background-color: var(--dark-bg-primary) !important;
   color: var(--dark-text-primary) !important;
-}
-
-.accessibility-dark-mode * {
-  border-color: var(--dark-border) !important;
 }
 
 .accessibility-dark-mode h1,
@@ -94,7 +103,59 @@
   border-color: var(--dark-border) !important;
 }
 
-.accessibility-dark-mode button {
-  background-color: var(--dark-accent) !important;
+/* Eliminar todos los bordes, rings y outlines problemáticos */
+.accessibility-dark-mode *:focus,
+.accessibility-dark-mode *:focus-visible,
+.accessibility-dark-mode button:focus,
+.accessibility-dark-mode a:focus {
+  outline: none !important;
+  box-shadow: none !important;
+  border-color: transparent !important;
+  --tw-ring-color: transparent !important;
+  --tw-ring-offset-color: transparent !important;
+  --tw-ring-offset-width: 0px !important;
+}
+
+/* Eliminar bordes de botones y links del navbar */
+.accessibility-dark-mode button,
+.accessibility-dark-mode a {
+  border: none !important;
+  box-shadow: none !important;
   color: var(--dark-text-primary) !important;
+}
+
+/* Forzar color blanco en botones del navbar específicamente */
+.accessibility-dark-mode nav button,
+.accessibility-dark-mode nav a,
+.accessibility-dark-mode header button,
+.accessibility-dark-mode header a {
+  color: var(--dark-text-primary) !important;
+}
+
+/* Asegurar que los elementos interactivos mantengan accesibilidad con outline sutil solo al navegar por teclado */
+.accessibility-dark-mode *:focus-visible {
+  outline: 1px solid rgba(255, 255, 255, 0.2) !important;
+  outline-offset: 2px !important;
+}
+
+/* Fix para pricing page - sobreescribir grises oscuros */
+.accessibility-dark-mode [class*="text-gray-300"],
+.accessibility-dark-mode [class*="text-gray-400"] {
+  color: var(--dark-text-primary) !important;
+}
+
+/* Asegurar que los span de precio y billing cycle sean blancos */
+.accessibility-dark-mode span {
+  color: var(--dark-text-primary) !important;
+}
+
+/* Fix para toggle switch (Mensual/Anual) */
+.accessibility-dark-mode button[role="switch"] {
+  background-color: #4a5568 !important;
+  /* Un gris más claro para mejor contraste */
+}
+
+.accessibility-dark-mode button[role="switch"] span {
+  background-color: white !important;
+  /* Asegurar que el círculo sea blanco */
 }
