@@ -11,6 +11,7 @@ import {
   MousePointer2,
   Pause,
   Droplet,
+  Palette,
 } from 'lucide-react';
 import { useTranslation } from '@/hooks/useTranslation';
 import { useUI } from '@/contexts/UIContext';
@@ -102,6 +103,7 @@ export function AccessibilityButton() {
 
   const {
     highContrast,
+    darkMode,
     inverted,
     grayscale,
     largeCursor,
@@ -113,6 +115,7 @@ export function AccessibilityButton() {
 
   const {
     setHighContrast,
+    setDarkMode,
     setInverted,
     setGrayscale,
     setLargeCursor,
@@ -150,8 +153,15 @@ export function AccessibilityButton() {
       onClick: () => setHighContrast(!highContrast),
     },
     {
-      id: 'inverted',
+      id: 'darkMode',
       icon: Moon,
+      label: t('accessibility.darkMode'),
+      isActive: darkMode,
+      onClick: () => setDarkMode(!darkMode),
+    },
+    {
+      id: 'inverted',
+      icon: Palette,
       label: t('accessibility.invertColors'),
       isActive: inverted,
       onClick: () => setInverted(!inverted),
@@ -177,7 +187,7 @@ export function AccessibilityButton() {
       isActive: effectiveDisableAnimations,
       onClick: () => setEffectiveDisableAnimations(!effectiveDisableAnimations),
     },
-  ], [t, highContrast, inverted, grayscale, largeCursor, effectiveDisableAnimations, setHighContrast, setInverted, setGrayscale, setLargeCursor, setEffectiveDisableAnimations]);
+  ], [t, highContrast, darkMode, inverted, grayscale, largeCursor, effectiveDisableAnimations, setHighContrast, setDarkMode, setInverted, setGrayscale, setLargeCursor, setEffectiveDisableAnimations]);
 
 
   return (

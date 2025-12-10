@@ -1,5 +1,6 @@
 {
     "highContrast": "Toggle High Contrast",
+    "darkMode": "Dark Mode",
     "invertColors": "Invert Colors",
     "grayscale": "Toggle Grayscale",
     "largeCursor": "Large Cursor",

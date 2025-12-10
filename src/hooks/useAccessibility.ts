@@ -19,6 +19,7 @@ export function useAccessibility({
     setDisableAnimations: propSetDisableAnimations
 }: UseAccessibilityProps = {}) {
     const [highContrast, setHighContrast] = useState(false);
+    const [darkMode, setDarkMode] = useState(false);
     const [inverted, setInverted] = useState(false);
     const [grayscale, setGrayscale] = useState(false);
     const [largeCursor, setLargeCursor] = useState(false);
@@ -55,9 +56,9 @@ export function useAccessibility({
     };
 
     const handleSetTextColor = (color: TextColor) => {
-        // Si seleccionamos un color y no estamos en modo invertido, lo activamos
-        if (color !== 'none' && !inverted) {
-            setInverted(true);
+        // Si seleccionamos un color y no estamos en modo oscuro, lo activamos
+        if (color !== 'none' && !darkMode) {
+            setDarkMode(true);
         }
         setTextColor(color);
     };
@@ -81,23 +82,39 @@ export function useAccessibility({
         document.documentElement.style.filter = filters.join(' ') || 'none';
         document.documentElement.style.fontSize = `${zoomLevel}%`;
 
-        // Aplicar color de texto
-        const colorMap: Record<TextColor, string> = {
-            none: '',
-            // En modo invertido, usamos colores oscuros para que al invertirse se vean brillantes
-            yellow: inverted ? '#2f2f00ff' : '#FFFF00',
-            blue: inverted ? '#0000ffff' : '#00BFFF',
-            red: inverted ? '#ff0000ff' : '#FF0000',
-        };
-
-        if (textColor !== 'none') {
-            document.documentElement.style.setProperty('--accessibility-text-color', colorMap[textColor]);
-            document.documentElement.classList.add('accessibility-text-color');
+        // Aplicar o quitar clase de modo invertido
+        if (inverted) {
+            document.documentElement.classList.add('accessibility-inverted');
         } else {
-            document.documentElement.style.removeProperty('--accessibility-text-color');
-            document.documentElement.classList.remove('accessibility-text-color');
+            document.documentElement.classList.remove('accessibility-inverted');
         }
 
+        // Aplicar color de texto - Usamos colores brillantes directamente
+        // Ya no dependemos del modo invertido, funcionan con modo oscuro
+        const colorMap: Record<TextColor, string> = {
+            none: '',
+            yellow: '#FAEE00',  // Amarillo Neón Chillón exacto
+            blue: '#00BFFF',    // Azul Cielo Brillante
+            red: '#FF0000',     // Rojo Brillante
+        };
+
+        // Limpiar clases de colores anteriores
+        document.documentElement.classList.remove(
+            'accessibility-text-color',
+            'accessibility-text-yellow',
+            'accessibility-text-blue',
+            'accessibility-text-red'
+        );
+        document.documentElement.style.removeProperty('--accessibility-text-color');
+
+        if (textColor !== 'none') {
+            // Aplicar variable CSS y clases
+            document.documentElement.style.setProperty('--accessibility-text-color', colorMap[textColor]);
+            document.documentElement.classList.add('accessibility-text-color');
+            document.documentElement.classList.add(`accessibility-text-${textColor}`);
+        }
+
+        // Cursor grande
         if (largeCursor) {
             document.documentElement.classList.add('accessibility-large-cursor');
         } else {
@@ -110,15 +127,26 @@ export function useAccessibility({
             document.documentElement.classList.remove('accessibility-no-animations');
         }
 
+        if (darkMode) {
+            document.documentElement.classList.add('accessibility-dark-mode');
+        } else {
+            document.documentElement.classList.remove('accessibility-dark-mode');
+        }
+
         return () => {
             document.documentElement.style.filter = 'none';
             document.documentElement.style.fontSize = '100%';
             document.documentElement.classList.remove('accessibility-large-cursor');
             document.documentElement.classList.remove('accessibility-no-animations');
+            document.documentElement.classList.remove('accessibility-dark-mode');
+            document.documentElement.classList.remove('accessibility-inverted');
             document.documentElement.style.removeProperty('--accessibility-text-color');
             document.documentElement.classList.remove('accessibility-text-color');
+            document.documentElement.classList.remove('accessibility-text-yellow');
+            document.documentElement.classList.remove('accessibility-text-blue');
+            document.documentElement.classList.remove('accessibility-text-red');
         };
-    }, [highContrast, inverted, grayscale, zoomLevel, largeCursor, disableAnimations, textColor]);
+    }, [highContrast, darkMode, inverted, grayscale, zoomLevel, largeCursor, disableAnimations, textColor]);
 
     // Funciones de control de zoom
     const increaseZoom = () => {
@@ -136,6 +164,7 @@ export function useAccessibility({
     return {
         state: {
             highContrast,
+            darkMode,
             inverted,
             grayscale,
             largeCursor,
@@ -146,6 +175,7 @@ export function useAccessibility({
         },
         actions: {
             setHighContrast,
+            setDarkMode,
             setInverted: handleSetInverted,
             setGrayscale,
             setLargeCursor,

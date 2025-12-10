@@ -3,8 +3,11 @@
 import { useState, useEffect, useRef } from 'react';
 import Image from 'next/image';
 import { CardBody, CardContainer, CardItem } from '@/components/ui/3d-card';
+import { useAccessibilityContext } from '@/contexts/AccessibilityContext';
 
 export function RegionalMap() {
+    const { state } = useAccessibilityContext();
+    const { darkMode } = state;
     const sectionRef = useRef<HTMLElement>(null);
     const [scrollProgress, setScrollProgress] = useState(0);
 
@@ -71,7 +74,7 @@ export function RegionalMap() {
                             }}
                         >
                             <Image
-                                src="/media/images/world_map.png"
+                                src={darkMode ? "/media/images/world_map_dark.png" : "/media/images/world_map.png"}
                                 alt="World map"
                                 fill
                                 className="object-contain drop-shadow-2xl"
