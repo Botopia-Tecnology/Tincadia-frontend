@@ -15,6 +15,10 @@ import type {
     RegisterResponse,
     ResetPasswordDto,
     ResetPasswordResponse,
+    OAuthProvider,
+    OAuthLoginResponse,
+    UpdateProfileDto,
+    UpdateProfileResponse,
 } from '@/types/auth.types';
 
 // ===========================================
@@ -67,6 +71,33 @@ export const authService = {
     },
 
     /**
+     * Login with OAuth provider (Google, Apple, Microsoft, etc.)
+     * 
+     * @param provider - OAuth provider name
+     * @param idToken - ID token from OAuth provider (Google/Apple)
+     * @param accessToken - Optional access token
+     * @returns User data and auth token
+     * 
+     * @example
+     * // After getting idToken from Google Sign-In
+     * const { user, token } = await authService.loginWithOAuth('google', idToken);
+     */
+    async loginWithOAuth(provider: OAuthProvider, idToken: string, accessToken?: string): Promise<OAuthLoginResponse> {
+        const response = await api.post<OAuthLoginResponse>(
+            AUTH_ENDPOINTS.OAUTH_LOGIN,
+            // Send idToken as both fields - accessToken can use idToken as fallback
+            // This ensures compatibility with backend DTO that requires accessToken
+            { provider, idToken, accessToken: accessToken || idToken },
+            { skipAuth: true }
+        );
+
+        // Store token
+        tokenStorage.setTokens({ accessToken: response.token });
+
+        return response;
+    },
+
+    /**
      * Logout the current user
      * Invalidates tokens on the server and clears local storage
      */
@@ -79,6 +110,22 @@ export const authService = {
         } finally {
             tokenStorage.clearTokens();
         }
+    },
+
+    /**
+     * Update user profile
+     * Used for OAuth users to complete their profile with missing fields
+     * 
+     * @param userId - The user's ID
+     * @param profileData - Profile fields to update
+     * @returns Updated profile data
+     */
+    async updateProfile(userId: string, profileData: UpdateProfileDto): Promise<UpdateProfileResponse> {
+        const response = await api.put<UpdateProfileResponse>(
+            `${AUTH_ENDPOINTS.UPDATE_PROFILE}/${userId}`,
+            profileData
+        );
+        return response;
     },
 
     /**

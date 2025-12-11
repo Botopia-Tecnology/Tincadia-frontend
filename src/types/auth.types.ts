@@ -43,12 +43,15 @@ export interface User {
     firstName: string;
     lastName: string;
     documentTypeId?: number;
+    documentType?: string; // Document type name from backend
     documentNumber?: string;
     phone?: string;
     avatarUrl?: string;
+    authProvider?: string;
     emailVerified: boolean;
-    createdAt: string;
-    updatedAt: string;
+    isProfileComplete?: boolean; // Backend provides this directly
+    createdAt?: string;
+    updatedAt?: string;
 }
 
 // ===========================================
@@ -74,6 +77,7 @@ export interface LoginResponse {
     user: User;
     token: string;
     session?: unknown;
+    isProfileComplete?: boolean; // At response level, not in user
 }
 
 // ===========================================
@@ -94,6 +98,59 @@ export interface RegisterResponse {
     user: User;
     token: string;
     session?: unknown;
+    isProfileComplete?: boolean;
+}
+
+// ===========================================
+// OAuth Authentication
+// ===========================================
+
+export type OAuthProvider = 'google' | 'apple' | 'microsoft' | 'facebook';
+
+export interface OAuthLoginDto {
+    provider: OAuthProvider;
+    idToken: string;        // ID Token from OAuth provider (required for Google/Apple)
+    accessToken?: string;   // Access Token (optional)
+}
+
+// OAuth uses the same response format as regular login
+export type OAuthLoginResponse = LoginResponse;
+
+// ===========================================
+// Profile Update (for OAuth users to complete profile)
+// ===========================================
+
+export interface UpdateProfileDto {
+    firstName?: string;
+    lastName?: string;
+    documentTypeId?: number;
+    documentNumber?: string;
+    phone?: string;
+}
+
+export interface UpdateProfileResponse {
+    message: string;
+    profile: User;
+}
+
+/**
+ * Check if a user profile has all required fields filled
+ * Uses backend's isProfileComplete if available, otherwise checks fields
+ */
+export function isProfileComplete(user: User | null): boolean {
+    if (!user) return false;
+
+    // Prefer backend's isProfileComplete flag if available
+    if (typeof user.isProfileComplete === 'boolean') {
+        return user.isProfileComplete;
+    }
+
+    // Fallback: check if required fields are filled
+    return !!(
+        (user.documentTypeId || user.documentType) &&
+        user.documentNumber &&
+        user.phone
+    );
 }
 
 // ===========================================
