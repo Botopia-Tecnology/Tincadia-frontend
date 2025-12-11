@@ -56,9 +56,10 @@ export function AuthProvider({ children }: AuthProviderProps) {
             setUser(currentUser);
             setStatus('authenticated');
         } catch (err) {
+            console.error('Error checking auth status:', err);
+            setUser(null);
+            setStatus('unauthenticated');
             if (isAuthError(err)) {
-                setUser(null);
-                setStatus('unauthenticated');
                 tokenStorage.clearTokens();
             }
         }
