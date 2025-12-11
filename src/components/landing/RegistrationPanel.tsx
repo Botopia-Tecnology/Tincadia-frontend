@@ -5,6 +5,8 @@ import { X } from 'lucide-react';
 import Link from 'next/link';
 import { useTranslation } from '@/hooks/useTranslation';
 import { GridBackground } from '@/components/ui/GridBackground';
+import { useAuth } from '@/contexts/AuthContext';
+import { DOCUMENT_TYPES, type DocumentTypeId } from '@/types/auth.types';
 
 interface RegistrationPanelProps {
   isOpen: boolean;
@@ -14,19 +16,22 @@ interface RegistrationPanelProps {
 
 export function RegistrationPanel({ isOpen, onClose, initialEmail = '' }: RegistrationPanelProps) {
   const t = useTranslation();
+  const { register, isLoading, error, clearError } = useAuth();
+
   // Si hay un email inicial, mostrar directamente el formulario completo
   const [email, setEmail] = useState('');
   const [showEmailForm, setShowEmailForm] = useState(false);
   const [formData, setFormData] = useState({
     nombre: '',
     apellido: '',
-    tipoDocumento: '',
+    tipoDocumento: '' as string | DocumentTypeId,
     numeroDocumento: '',
     telefono: '',
     password: '',
     confirmPassword: '',
     aceptaPoliticas: false,
   });
+  const [formError, setFormError] = useState<string | null>(null);
 
   useEffect(() => {
     if (isOpen) {
@@ -37,8 +42,11 @@ export function RegistrationPanel({ isOpen, onClose, initialEmail = '' }: Regist
         setEmail('');
         setShowEmailForm(false);
       }
+      // Clear any previous errors
+      clearError();
+      setFormError(null);
     }
-  }, [isOpen, initialEmail]);
+  }, [isOpen, initialEmail, clearError]);
 
   // Función para resetear el formulario
   const resetForm = () => {
@@ -52,6 +60,7 @@ export function RegistrationPanel({ isOpen, onClose, initialEmail = '' }: Regist
       confirmPassword: '',
       aceptaPoliticas: false,
     });
+    setFormError(null);
     if (!initialEmail) {
       setShowEmailForm(false);
       setEmail('');
@@ -74,31 +83,47 @@ export function RegistrationPanel({ isOpen, onClose, initialEmail = '' }: Regist
     if (type === 'checkbox') {
       const checked = (e.target as HTMLInputElement).checked;
       setFormData((prev) => ({ ...prev, [name]: checked }));
+    } else if (name === 'tipoDocumento') {
+      // Convertir a número para documentTypeId
+      setFormData((prev) => ({ ...prev, [name]: value ? Number(value) as DocumentTypeId : '' }));
     } else {
       setFormData((prev) => ({ ...prev, [name]: value }));
     }
   };
 
-  const handleEmailSubmit = (e: React.FormEvent) => {
+  const handleEmailSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setFormError(null);
 
     // Validar que las contraseñas coincidan
     if (formData.password !== formData.confirmPassword) {
-      alert(t('registration.panel.passwordMismatch'));
+      setFormError(t('registration.panel.passwordMismatch') as string);
       return;
     }
 
     // Validar que acepte las políticas
     if (!formData.aceptaPoliticas) {
-      alert(t('registration.panel.acceptPolicies') + ' ' + t('registration.panel.policiesLink'));
+      setFormError(`${t('registration.panel.acceptPolicies')} ${t('registration.panel.policiesLink')}`);
       return;
     }
 
-    console.log('Registro con email:', {
-      email,
-      ...formData,
-    });
-    // Aquí iría la lógica de registro con email
+    try {
+      await register({
+        email,
+        password: formData.password,
+        firstName: formData.nombre,
+        lastName: formData.apellido,
+        documentTypeId: formData.tipoDocumento ? Number(formData.tipoDocumento) : undefined,
+        documentNumber: formData.numeroDocumento || undefined,
+        phone: formData.telefono || undefined,
+      });
+
+      // Si el registro es exitoso, cerrar el panel
+      handleClose();
+    } catch (err) {
+      // El error ya está manejado por el AuthContext
+      console.error('Registration error:', err);
+    }
   };
 
   return (
@@ -259,10 +284,11 @@ export function RegistrationPanel({ isOpen, onClose, initialEmail = '' }: Regist
                     required
                   >
                     <option value="">{t('registration.panel.documentType')}</option>
-                    <option value="cc">Cédula de Ciudadanía</option>
-                    <option value="ce">Cédula de Extranjería</option>
-                    <option value="pasaporte">Pasaporte</option>
-                    <option value="ti">Tarjeta de Identidad</option>
+                    {DOCUMENT_TYPES.map((docType) => (
+                      <option key={docType.id} value={docType.id}>
+                        {docType.name}
+                      </option>
+                    ))}
                   </select>
                   <input
                     type="text"
@@ -332,6 +358,13 @@ export function RegistrationPanel({ isOpen, onClose, initialEmail = '' }: Regist
                   )}
                 </div>
 
+                {/* Error Message */}
+                {(formError || error) && (
+                  <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg text-sm">
+                    {formError || error}
+                  </div>
+                )}
+
                 {/* Checkbox de políticas */}
                 <div className="flex items-start gap-3 pt-2">
                   <input
@@ -357,18 +390,32 @@ export function RegistrationPanel({ isOpen, onClose, initialEmail = '' }: Regist
 
                 <button
                   type="submit"
-                  className="w-full bg-[#83A98A] text-white font-semibold py-4 px-6 rounded-full hover:bg-[#6D8F75] transition-colors flex items-center justify-center gap-2 mt-4"
+                  disabled={isLoading}
+                  className="w-full bg-[#83A98A] text-white font-semibold py-4 px-6 rounded-full hover:bg-[#6D8F75] transition-colors flex items-center justify-center gap-2 mt-4 disabled:opacity-50 disabled:cursor-not-allowed"
                 >
-                  {t('registration.panel.createAccountButton')}
-                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                  </svg>
+                  {isLoading ? (
+                    <>
+                      <svg className="animate-spin w-5 h-5" fill="none" viewBox="0 0 24 24">
+                        <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                        <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
+                      </svg>
+                      {t('common.loading')}
+                    </>
+                  ) : (
+                    <>
+                      {t('registration.panel.createAccountButton')}
+                      <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                      </svg>
+                    </>
+                  )}
                 </button>
 
                 <button
                   type="button"
                   onClick={() => setShowEmailForm(false)}
-                  className="w-full text-sm text-gray-600 hover:text-gray-900 transition-colors text-center"
+                  disabled={isLoading}
+                  className="w-full text-sm text-gray-600 hover:text-gray-900 transition-colors text-center disabled:opacity-50"
                 >
                   ← {t('common.back')}
                 </button>

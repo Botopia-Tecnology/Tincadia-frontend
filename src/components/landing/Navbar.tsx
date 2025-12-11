@@ -2,13 +2,14 @@
 
 import { useState, useCallback, useRef, useEffect, useMemo } from 'react';
 import Link from 'next/link';
-import { Menu, ChevronDown, Building2, MessageSquare } from 'lucide-react';
+import { Menu, ChevronDown, Building2, MessageSquare, LogOut, User } from 'lucide-react';
 import { Logo } from '@/components/ui/Logo';
 import { MobileMenu } from './MobileMenu';
 import { useScrollLock } from '@/hooks/useScrollLock';
 import { useTranslation } from '@/hooks/useTranslation';
 import { LanguageSelector } from '@/components/ui/LanguageSelector';
 import { useUI } from '@/contexts/UIContext';
+import { useAuth } from '@/contexts/AuthContext';
 
 export function Navbar() {
   const t = useTranslation();
@@ -17,6 +18,7 @@ export function Navbar() {
   const servicesDropdownRef = useRef<HTMLDivElement>(null);
   const timeoutRef = useRef<NodeJS.Timeout | null>(null);
   const { openLoginPanel } = useUI();
+  const { user, isAuthenticated, logout, isLoading } = useAuth();
 
   const navigation = useMemo(() => [
     { name: t('navbar.about'), href: '/nosotros' },
@@ -195,14 +197,42 @@ export function Navbar() {
           </div>
 
           {/* CTA desktop */}
-          <div className="hidden lg:flex lg:flex-1 lg:justify-end lg:items-center lg:gap-3 xl:gap-4">
+          <div className="hidden lg:flex lg:flex-1 lg:justify-end lg:items-center lg:gap-4 xl:gap-5">
             <LanguageSelector />
-            <button
-              onClick={openLoginPanel}
-              className="rounded-lg bg-[#83A98A] px-3 xl:px-4 py-1.5 text-xs xl:text-sm font-semibold text-white shadow-sm hover:bg-[#6D8F75] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#83A98A] transition-colors whitespace-nowrap"
-            >
-              {t('login.loginButton')}
-            </button>
+            {isLoading ? (
+              <div className="h-10 w-32 bg-gray-200 animate-pulse rounded-full" />
+            ) : isAuthenticated && user ? (
+              <div className="flex items-center gap-3">
+                {/* User greeting with avatar */}
+                <div className="flex items-center gap-3 pl-4 pr-2 py-1 rounded-full bg-gradient-to-r from-gray-50 to-gray-100 border border-gray-200/80 shadow-sm">
+                  <span className="text-sm font-medium text-gray-600">
+                    Hola, <span className="text-gray-900 font-semibold">{user.firstName}</span>
+                  </span>
+                  {/* Avatar with initials */}
+                  <div className="w-8 h-8 rounded-full bg-gradient-to-br from-[#83A98A] to-[#6D8F75] flex items-center justify-center shadow-inner">
+                    <span className="text-xs font-bold text-white uppercase">
+                      {user.firstName?.charAt(0)}{user.lastName?.charAt(0)}
+                    </span>
+                  </div>
+                </div>
+                {/* Logout button */}
+                <button
+                  onClick={logout}
+                  className="group flex items-center gap-2 px-3 py-2 rounded-full text-sm font-medium text-gray-500 hover:text-red-600 hover:bg-red-50 transition-all duration-200"
+                  title="Cerrar sesión"
+                >
+                  <LogOut className="w-4 h-4 transition-transform group-hover:-translate-x-0.5" />
+                  <span className="hidden xl:inline">Salir</span>
+                </button>
+              </div>
+            ) : (
+              <button
+                onClick={openLoginPanel}
+                className="rounded-full bg-gradient-to-r from-[#83A98A] to-[#6D8F75] px-5 py-2 text-sm font-semibold text-white shadow-md hover:shadow-lg hover:scale-[1.02] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#83A98A] transition-all duration-200 whitespace-nowrap"
+              >
+                {t('login.loginButton')}
+              </button>
+            )}
           </div>
         </nav>
       </header>

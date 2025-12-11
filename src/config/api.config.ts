@@ -42,20 +42,20 @@ export const AUTH_ENDPOINTS = {
     LOGIN: '/auth/login',
     /** POST - Register new user */
     REGISTER: '/auth/register',
+    /** POST - OAuth login */
+    OAUTH_LOGIN: '/auth/oauth/login',
     /** POST - Logout and invalidate tokens */
     LOGOUT: '/auth/logout',
-    /** POST - Refresh access token */
-    REFRESH_TOKEN: '/auth/refresh',
-    /** POST - Request password reset email */
-    FORGOT_PASSWORD: '/auth/forgot-password',
-    /** POST - Reset password with token */
-    RESET_PASSWORD: '/auth/reset-password',
     /** GET - Get current authenticated user */
     ME: '/auth/me',
-    /** POST - Verify email with token */
-    VERIFY_EMAIL: '/auth/verify-email',
-    /** POST - Resend verification email */
-    RESEND_VERIFICATION: '/auth/resend-verification',
+    /** GET - Get profile by ID */
+    PROFILE: '/auth/profile', // Append /:id when using
+    /** PUT - Update profile */
+    UPDATE_PROFILE: '/auth/profile', // Append /:userId when using
+    /** POST - Verify token */
+    VERIFY_TOKEN: '/auth/verify-token',
+    /** POST - Reset password */
+    RESET_PASSWORD: '/auth/reset-password',
 } as const;
 
 /**

@@ -6,6 +6,34 @@
  */
 
 // ===========================================
+// Document Types (from document_types table)
+// ===========================================
+
+/**
+ * Document type IDs matching the document_types table
+ * 1 = CC (Cédula de Ciudadanía)
+ * 2 = TI (Tarjeta de Identidad)
+ * 3 = CE (Cédula de Extranjería)
+ * 4 = Pasaporte
+ */
+export type DocumentTypeId = 1 | 2 | 3 | 4;
+
+export interface DocumentType {
+    id: DocumentTypeId;
+    name: string;
+}
+
+/**
+ * Document types available for registration
+ */
+export const DOCUMENT_TYPES: DocumentType[] = [
+    { id: 1, name: 'CC' },
+    { id: 2, name: 'TI' },
+    { id: 3, name: 'CE' },
+    { id: 4, name: 'Pasaporte' },
+];
+
+// ===========================================
 // User Types
 // ===========================================
 
@@ -14,7 +42,7 @@ export interface User {
     email: string;
     firstName: string;
     lastName: string;
-    documentType?: string;
+    documentTypeId?: number;
     documentNumber?: string;
     phone?: string;
     avatarUrl?: string;
@@ -29,8 +57,8 @@ export interface User {
 
 export interface AuthTokens {
     accessToken: string;
-    refreshToken: string;
-    expiresIn: number; // seconds until access token expires
+    refreshToken?: string; // Optional - backend may not provide
+    expiresIn?: number; // Optional - seconds until access token expires
 }
 
 // ===========================================
@@ -44,7 +72,8 @@ export interface LoginDto {
 
 export interface LoginResponse {
     user: User;
-    tokens: AuthTokens;
+    token: string;
+    session?: unknown;
 }
 
 // ===========================================
@@ -56,15 +85,15 @@ export interface RegisterDto {
     password: string;
     firstName: string;
     lastName: string;
-    documentType?: string;
+    documentTypeId?: number;
     documentNumber?: string;
     phone?: string;
 }
 
 export interface RegisterResponse {
     user: User;
-    tokens: AuthTokens;
-    message: string;
+    token: string;
+    session?: unknown;
 }
 
 // ===========================================

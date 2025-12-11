@@ -1,10 +1,11 @@
 'use client';
 
 import { useState } from 'react';
-import { X } from 'lucide-react';
+import { X, Loader2 } from 'lucide-react';
 import Link from 'next/link';
 import { useTranslation } from '@/hooks/useTranslation';
 import { GridBackground } from '@/components/ui/GridBackground';
+import { useAuth } from '@/contexts/AuthContext';
 
 interface LoginPanelProps {
     isOpen: boolean;
@@ -14,19 +15,36 @@ interface LoginPanelProps {
 
 export function LoginPanel({ isOpen, onClose, onSignUpClick }: LoginPanelProps) {
     const t = useTranslation();
+    const { login, isLoading, error, clearError } = useAuth();
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const [localError, setLocalError] = useState<string | null>(null);
 
     const handleSocialLogin = (provider: 'facebook' | 'google' | 'microsoft' | 'apple') => {
         console.log(`Login con ${provider}`);
         // Aquí iría la lógica de autenticación social
     };
 
-    const handleEmailLogin = (e: React.FormEvent) => {
+    const handleEmailLogin = async (e: React.FormEvent) => {
         e.preventDefault();
-        console.log('Login con email:', { email, password });
-        // Aquí iría la lógica de login con email
+        setLocalError(null);
+        clearError();
+
+        try {
+            await login({ email, password });
+            // Login exitoso - cerrar el panel
+            onClose();
+        } catch (err) {
+            // El error ya está manejado en el contexto
+            if (err instanceof Error) {
+                setLocalError(err.message);
+            } else {
+                setLocalError('Error al iniciar sesión');
+            }
+        }
     };
+
+    const displayError = localError || error;
 
     return (
         <>
@@ -106,15 +124,32 @@ export function LoginPanel({ isOpen, onClose, onSignUpClick }: LoginPanelProps) 
                                     </Link>
                                 </div>
 
+                                {/* Error Message */}
+                                {displayError && (
+                                    <div className="p-3 bg-red-50 border border-red-200 rounded-lg">
+                                        <p className="text-sm text-red-600">{displayError}</p>
+                                    </div>
+                                )}
+
                                 {/* Login Button */}
                                 <button
                                     type="submit"
-                                    className="w-full bg-[#83A98A] text-white font-semibold py-4 px-6 rounded-full hover:bg-[#6D8F75] transition-colors flex items-center justify-center gap-2"
+                                    disabled={isLoading}
+                                    className="w-full bg-[#83A98A] text-white font-semibold py-4 px-6 rounded-full hover:bg-[#6D8F75] transition-colors flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
                                 >
-                                    {t('login.loginButton')}
-                                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                                    </svg>
+                                    {isLoading ? (
+                                        <>
+                                            <Loader2 className="w-5 h-5 animate-spin" />
+                                            <span>Iniciando sesión...</span>
+                                        </>
+                                    ) : (
+                                        <>
+                                            {t('login.loginButton')}
+                                            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                                            </svg>
+                                        </>
+                                    )}
                                 </button>
                             </form>
 

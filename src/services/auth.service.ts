@@ -13,12 +13,8 @@ import type {
     LoginResponse,
     RegisterDto,
     RegisterResponse,
-    ForgotPasswordDto,
-    ForgotPasswordResponse,
     ResetPasswordDto,
     ResetPasswordResponse,
-    VerifyEmailDto,
-    VerifyEmailResponse,
 } from '@/types/auth.types';
 
 // ===========================================
@@ -45,8 +41,8 @@ export const authService = {
             { skipAuth: true }
         );
 
-        // Store tokens
-        tokenStorage.setTokens(response.tokens);
+        // Store token (backend returns 'token' not 'tokens')
+        tokenStorage.setTokens({ accessToken: response.token });
 
         return response;
     },
@@ -64,8 +60,8 @@ export const authService = {
             { skipAuth: true }
         );
 
-        // Store tokens
-        tokenStorage.setTokens(response.tokens);
+        // Store token (backend returns 'token' not 'tokens')
+        tokenStorage.setTokens({ accessToken: response.token });
 
         return response;
     },
@@ -86,32 +82,42 @@ export const authService = {
     },
 
     /**
+     * Verify the current token and get user info
+     * Uses POST /auth/verify-token to validate the token
+     * 
+     * @returns Token verification result with user ID
+     */
+    async verifyToken(): Promise<{ valid: boolean; userId?: string }> {
+        return api.post<{ valid: boolean; userId?: string }>(AUTH_ENDPOINTS.VERIFY_TOKEN);
+    },
+
+    /**
+     * Get user profile by ID
+     * Uses GET /auth/profile/:id
+     * 
+     * @param userId - User ID to fetch profile for
+     * @returns User profile data
+     */
+    async getProfile(userId: string): Promise<User> {
+        return api.get<User>(`${AUTH_ENDPOINTS.PROFILE}/${userId}`);
+    },
+
+    /**
      * Get the current authenticated user
+     * Uses GET /auth/me with the Authorization header
      * 
      * @returns Current user data
      * @throws ApiClientError if not authenticated
      */
     async getCurrentUser(): Promise<User> {
-        return api.get<User>(AUTH_ENDPOINTS.ME);
+        const response = await api.get<{ user: User }>(AUTH_ENDPOINTS.ME);
+        return response.user;
     },
 
     /**
-     * Request a password reset email
+     * Reset password
      * 
-     * @param data - Email to send reset link to
-     */
-    async forgotPassword(data: ForgotPasswordDto): Promise<ForgotPasswordResponse> {
-        return api.post<ForgotPasswordResponse>(
-            AUTH_ENDPOINTS.FORGOT_PASSWORD,
-            data,
-            { skipAuth: true }
-        );
-    },
-
-    /**
-     * Reset password with token
-     * 
-     * @param data - Reset token and new password
+     * @param data - Reset password data
      */
     async resetPassword(data: ResetPasswordDto): Promise<ResetPasswordResponse> {
         return api.post<ResetPasswordResponse>(
@@ -119,26 +125,6 @@ export const authService = {
             data,
             { skipAuth: true }
         );
-    },
-
-    /**
-     * Verify email with token
-     * 
-     * @param data - Verification token
-     */
-    async verifyEmail(data: VerifyEmailDto): Promise<VerifyEmailResponse> {
-        return api.post<VerifyEmailResponse>(
-            AUTH_ENDPOINTS.VERIFY_EMAIL,
-            data,
-            { skipAuth: true }
-        );
-    },
-
-    /**
-     * Resend verification email
-     */
-    async resendVerification(): Promise<{ message: string }> {
-        return api.post<{ message: string }>(AUTH_ENDPOINTS.RESEND_VERIFICATION);
     },
 
     /**
