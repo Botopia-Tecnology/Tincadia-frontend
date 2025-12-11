@@ -7,6 +7,8 @@ import { SignLanguageTooltip } from "@/components/landing/SignLanguageTooltip";
 import { I18nProvider } from "@/contexts/I18nContext";
 import { UIProvider } from "@/contexts/UIContext";
 import { AccessibilityProvider } from "@/contexts/AccessibilityContext";
+import { AuthProvider } from "@/contexts/AuthContext";
+import { GoogleAuthProvider } from "@/contexts/GoogleAuthProvider";
 import { AccessibilityButton } from "@/components/landing/AccessibilityButton";
 import { GlobalBackgrounds } from "@/components/layout/GlobalBackgrounds";
 import { GlobalPanels } from "@/components/layout/GlobalPanels";
@@ -43,17 +45,21 @@ export default function RootLayout({
       >
         <I18nProvider defaultLocale="es">
           <UIProvider>
-            <AccessibilityProvider>
-              <Navbar />
-              <GlobalBackgrounds />
-              <main className="pt-20">
-                {children}
-              </main>
-              <AccessibilityButton />
-              <Footer />
-              <SignLanguageTooltip />
-              <GlobalPanels />
-            </AccessibilityProvider>
+            <GoogleAuthProvider>
+              <AuthProvider>
+                <AccessibilityProvider>
+                  <Navbar />
+                  <GlobalBackgrounds />
+                  <main className="pt-20">
+                    {children}
+                  </main>
+                  <AccessibilityButton />
+                  <Footer />
+                  <SignLanguageTooltip />
+                  <GlobalPanels />
+                </AccessibilityProvider>
+              </AuthProvider>
+            </GoogleAuthProvider>
           </UIProvider>
         </I18nProvider>
       </body>

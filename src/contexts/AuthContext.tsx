@@ -1,12 +1,5 @@
 'use client';
 
-/**
- * Authentication Context
- * 
- * Provides global authentication state and actions.
- * Handles session persistence and auto-refresh.
- */
-
 import {
     createContext,
     useContext,
@@ -22,23 +15,22 @@ import type {
     AuthStatus,
     LoginDto,
     RegisterDto,
+    OAuthProvider,
+    UpdateProfileDto,
 } from '@/types/auth.types';
-
-// ===========================================
-// Types
-// ===========================================
+import { isProfileComplete } from '@/types/auth.types';
 
 interface AuthContextValue {
-    // State
     user: User | null;
     status: AuthStatus;
     isAuthenticated: boolean;
     isLoading: boolean;
     error: string | null;
-
-    // Actions
+    profileComplete: boolean;
     login: (credentials: LoginDto) => Promise<void>;
+    loginWithOAuth: (provider: OAuthProvider, idToken: string, accessToken?: string) => Promise<void>;
     register: (userData: RegisterDto) => Promise<void>;
+    updateProfile: (profileData: UpdateProfileDto) => Promise<void>;
     logout: () => Promise<void>;
     clearError: () => void;
     refreshUser: () => Promise<void>;
@@ -48,28 +40,16 @@ interface AuthProviderProps {
     children: ReactNode;
 }
 
-// ===========================================
-// Context
-// ===========================================
-
 const AuthContext = createContext<AuthContextValue | null>(null);
-
-// ===========================================
-// Provider
-// ===========================================
 
 export function AuthProvider({ children }: AuthProviderProps) {
     const [user, setUser] = useState<User | null>(null);
     const [status, setStatus] = useState<AuthStatus>('idle');
     const [error, setError] = useState<string | null>(null);
 
-    // Derived state
     const isAuthenticated = status === 'authenticated';
     const isLoading = status === 'loading';
 
-    /**
-     * Fetch current user from API
-     */
     const refreshUser = useCallback(async () => {
         try {
             const currentUser = await authService.getCurrentUser();
@@ -84,33 +64,28 @@ export function AuthProvider({ children }: AuthProviderProps) {
         }
     }, []);
 
-    /**
-     * Initialize auth state on mount
-     */
     useEffect(() => {
         const initAuth = async () => {
             if (!tokenStorage.hasTokens()) {
                 setStatus('unauthenticated');
                 return;
             }
-
             setStatus('loading');
             await refreshUser();
         };
-
         initAuth();
     }, [refreshUser]);
 
-    /**
-     * Login action
-     */
     const login = useCallback(async (credentials: LoginDto) => {
         setStatus('loading');
         setError(null);
 
         try {
             const response = await authService.login(credentials);
-            setUser(response.user);
+            setUser({
+                ...response.user,
+                isProfileComplete: response.isProfileComplete ?? response.user.isProfileComplete,
+            });
             setStatus('authenticated');
         } catch (err) {
             setStatus('unauthenticated');
@@ -123,16 +98,16 @@ export function AuthProvider({ children }: AuthProviderProps) {
         }
     }, []);
 
-    /**
-     * Register action
-     */
     const register = useCallback(async (userData: RegisterDto) => {
         setStatus('loading');
         setError(null);
 
         try {
             const response = await authService.register(userData);
-            setUser(response.user);
+            setUser({
+                ...response.user,
+                isProfileComplete: response.isProfileComplete ?? response.user.isProfileComplete,
+            });
             setStatus('authenticated');
         } catch (err) {
             setStatus('unauthenticated');
@@ -145,9 +120,28 @@ export function AuthProvider({ children }: AuthProviderProps) {
         }
     }, []);
 
-    /**
-     * Logout action
-     */
+    const loginWithOAuth = useCallback(async (provider: OAuthProvider, idToken: string, accessToken?: string) => {
+        setStatus('loading');
+        setError(null);
+
+        try {
+            const response = await authService.loginWithOAuth(provider, idToken, accessToken);
+            setUser({
+                ...response.user,
+                isProfileComplete: response.isProfileComplete ?? response.user.isProfileComplete,
+            });
+            setStatus('authenticated');
+        } catch (err) {
+            setStatus('unauthenticated');
+            if (err instanceof Error) {
+                setError(err.message);
+            } else {
+                setError('An error occurred during OAuth login');
+            }
+            throw err;
+        }
+    }, []);
+
     const logout = useCallback(async () => {
         try {
             await authService.logout();
@@ -158,16 +152,43 @@ export function AuthProvider({ children }: AuthProviderProps) {
         }
     }, []);
 
-    /**
-     * Clear error
-     */
+    const updateProfile = useCallback(async (profileData: UpdateProfileDto) => {
+        if (!user) {
+            throw new Error('User must be logged in to update profile');
+        }
+
+        setError(null);
+
+        try {
+            const response = await authService.updateProfile(user.id, profileData);
+            const updatedProfile = response.profile || (response as unknown as { user?: User }).user || response;
+
+            if (updatedProfile && typeof updatedProfile === 'object' && 'id' in updatedProfile) {
+                setUser({
+                    ...user,
+                    ...updatedProfile,
+                } as User);
+            } else {
+                setUser({
+                    ...user,
+                    ...profileData,
+                } as User);
+            }
+        } catch (err) {
+            if (err instanceof Error) {
+                setError(err.message);
+            } else {
+                setError('An error occurred updating profile');
+            }
+            throw err;
+        }
+    }, [user]);
+
     const clearError = useCallback(() => {
         setError(null);
     }, []);
 
-    // ===========================================
-    // Context Value
-    // ===========================================
+    const profileComplete = isProfileComplete(user);
 
     const value: AuthContextValue = {
         user,
@@ -175,8 +196,11 @@ export function AuthProvider({ children }: AuthProviderProps) {
         isAuthenticated,
         isLoading,
         error,
+        profileComplete,
         login,
+        loginWithOAuth,
         register,
+        updateProfile,
         logout,
         clearError,
         refreshUser,
@@ -185,35 +209,11 @@ export function AuthProvider({ children }: AuthProviderProps) {
     return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 }
 
-// ===========================================
-// Hook
-// ===========================================
-
-/**
- * Hook to access authentication context
- * 
- * @example
- * function ProfileButton() {
- *   const { user, isAuthenticated, logout } = useAuth();
- * 
- *   if (!isAuthenticated) {
- *     return <LoginButton />;
- *   }
- * 
- *   return (
- *     <button onClick={logout}>
- *       {user?.firstName}
- *     </button>
- *   );
- * }
- */
 export function useAuth(): AuthContextValue {
     const context = useContext(AuthContext);
-
     if (!context) {
         throw new Error('useAuth must be used within an AuthProvider');
     }
-
     return context;
 }
 

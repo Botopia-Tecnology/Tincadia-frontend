@@ -53,7 +53,9 @@ export const tokenStorage = {
     setTokens: (tokens: AuthTokens): void => {
         if (typeof window === 'undefined') return;
         localStorage.setItem(STORAGE_KEYS.ACCESS_TOKEN, tokens.accessToken);
-        localStorage.setItem(STORAGE_KEYS.REFRESH_TOKEN, tokens.refreshToken);
+        if (tokens.refreshToken) {
+            localStorage.setItem(STORAGE_KEYS.REFRESH_TOKEN, tokens.refreshToken);
+        }
     },
 
     clearTokens: (): void => {
@@ -83,32 +85,15 @@ const onTokenRefreshed = (newToken: string) => {
     refreshSubscribers = [];
 };
 
+/**
+ * Attempt to refresh the access token
+ * Note: Backend doesn't have a refresh token endpoint, so this just clears tokens
+ * and returns null, requiring user to re-login
+ */
 const refreshAccessToken = async (): Promise<string | null> => {
-    const refreshToken = tokenStorage.getRefreshToken();
-    if (!refreshToken) return null;
-
-    try {
-        const response = await fetch(`${API_BASE_URL}${apiConfig.endpoints.auth.REFRESH_TOKEN}`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({ refreshToken }),
-        });
-
-        if (!response.ok) {
-            tokenStorage.clearTokens();
-            return null;
-        }
-
-        const data = await response.json();
-        const tokens: AuthTokens = data.tokens || data;
-        tokenStorage.setTokens(tokens);
-        return tokens.accessToken;
-    } catch {
-        tokenStorage.clearTokens();
-        return null;
-    }
+    // Backend doesn't support token refresh, clear tokens and require re-login
+    tokenStorage.clearTokens();
+    return null;
 };
 
 // ===========================================
