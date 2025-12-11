@@ -204,9 +204,9 @@ export function Navbar() {
             ) : isAuthenticated && user ? (
               <div className="flex items-center gap-3">
                 {/* User greeting with avatar */}
-                <div className="flex items-center gap-3 pl-4 pr-2 py-1 rounded-full bg-gradient-to-r from-gray-50 to-gray-100 border border-gray-200/80 shadow-sm">
-                  <span className="text-sm font-medium text-gray-600">
-                    Hola, <span className="text-gray-900 font-semibold">{user.firstName}</span>
+                <div className="flex items-center gap-3 pl-4 pr-2 py-1 rounded-full bg-gradient-to-r from-gray-50 to-gray-100 dark:from-gray-100 dark:to-gray-200 border border-gray-200/80 dark:border-gray-300 shadow-sm">
+                  <span className="text-sm font-medium text-gray-600 dark:text-gray-800">
+                    Hola, <span className="text-gray-900 dark:text-black font-semibold">{user.firstName}</span>
                   </span>
                   {/* Avatar with initials */}
                   <div className="w-8 h-8 rounded-full bg-gradient-to-br from-[#83A98A] to-[#6D8F75] flex items-center justify-center shadow-inner">
