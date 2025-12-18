@@ -1,9 +1,10 @@
 'use client';
 
-import { useState } from 'react';
 import Link from 'next/link';
 import { useTranslation } from '@/hooks/useTranslation';
 import { DOCUMENT_TYPES, type DocumentTypeId } from '@/types/auth.types';
+import { useFormik } from 'formik';
+import * as Yup from 'yup';
 
 interface RegistrationFormData {
     nombre: string;
@@ -35,52 +36,38 @@ export function RegistrationForm({
 }: RegistrationFormProps) {
     const t = useTranslation();
 
-    const [formData, setFormData] = useState<RegistrationFormData>({
-        nombre: '',
-        apellido: '',
-        tipoDocumento: '',
-        numeroDocumento: '',
-        telefono: '',
-        password: '',
-        confirmPassword: '',
-        aceptaPoliticas: false,
+    const validationSchema = Yup.object({
+        nombre: Yup.string().required(t('forms.common.required') as string),
+        apellido: Yup.string().required(t('forms.common.required') as string),
+        tipoDocumento: Yup.string().required(t('forms.common.required') as string),
+        numeroDocumento: Yup.string().required(t('forms.common.required') as string),
+        telefono: Yup.string().required(t('forms.common.required') as string),
+        password: Yup.string().min(6, 'Mínimo 6 caracteres').required(t('forms.common.required') as string),
+        confirmPassword: Yup.string()
+            .oneOf([Yup.ref('password')], t('registration.panel.passwordMismatch') as string)
+            .required(t('forms.common.required') as string),
+        aceptaPoliticas: Yup.boolean().oneOf([true], t('registration.panel.acceptPolicies') as string),
     });
-    const [formError, setFormError] = useState<string | null>(null);
 
-    const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
-        const { name, value, type } = e.target;
-        if (type === 'checkbox') {
-            const checked = (e.target as HTMLInputElement).checked;
-            setFormData((prev) => ({ ...prev, [name]: checked }));
-        } else if (name === 'tipoDocumento') {
-            setFormData((prev) => ({ ...prev, [name]: value ? Number(value) as DocumentTypeId : '' }));
-        } else {
-            setFormData((prev) => ({ ...prev, [name]: value }));
-        }
-    };
-
-    const handleSubmit = async (e: React.FormEvent) => {
-        e.preventDefault();
-        setFormError(null);
-
-        if (formData.password !== formData.confirmPassword) {
-            setFormError(t('registration.panel.passwordMismatch') as string);
-            return;
-        }
-
-        if (!formData.aceptaPoliticas) {
-            setFormError(`${t('registration.panel.acceptPolicies')} ${t('registration.panel.policiesLink')}`);
-            return;
-        }
-
-        await onSubmit(formData);
-    };
-
-    const displayError = formError || error;
-    const passwordMismatch = formData.confirmPassword && formData.password !== formData.confirmPassword;
+    const formik = useFormik<RegistrationFormData>({
+        initialValues: {
+            nombre: '',
+            apellido: '',
+            tipoDocumento: '',
+            numeroDocumento: '',
+            telefono: '',
+            password: '',
+            confirmPassword: '',
+            aceptaPoliticas: false,
+        },
+        validationSchema,
+        onSubmit: async (values) => {
+            await onSubmit(values);
+        },
+    });
 
     return (
-        <form onSubmit={handleSubmit} className="space-y-6">
+        <form onSubmit={formik.handleSubmit} className="space-y-6">
             <div>
                 <h2 className="text-2xl font-bold text-gray-900 mb-6">
                     {t('registration.panel.createAccount')}
@@ -91,62 +78,81 @@ export function RegistrationForm({
                 <input
                     type="text"
                     name="nombre"
-                    value={formData.nombre}
-                    onChange={handleInputChange}
-                    className="w-full bg-transparent text-lg text-gray-900 placeholder-gray-400 border-0 border-b border-gray-300 focus:outline-none focus:border-gray-900 transition-colors pb-2"
+                    onChange={formik.handleChange}
+                    onBlur={formik.handleBlur}
+                    value={formik.values.nombre}
+                    className={`w-full bg-transparent text-lg text-gray-900 placeholder-gray-400 border-0 border-b focus:outline-none focus:border-gray-900 transition-colors pb-2 ${formik.touched.nombre && formik.errors.nombre ? 'border-red-500' : 'border-gray-300'}`}
                     placeholder={t('registration.panel.fullName')}
-                    required
                 />
+                {formik.touched.nombre && formik.errors.nombre && (
+                    <p className="text-red-500 text-sm mt-1">{formik.errors.nombre}</p>
+                )}
             </div>
 
             <div>
                 <input
                     type="text"
                     name="apellido"
-                    value={formData.apellido}
-                    onChange={handleInputChange}
-                    className="w-full bg-transparent text-lg text-gray-900 placeholder-gray-400 border-0 border-b border-gray-300 focus:outline-none focus:border-gray-900 transition-colors pb-2"
+                    onChange={formik.handleChange}
+                    onBlur={formik.handleBlur}
+                    value={formik.values.apellido}
+                    className={`w-full bg-transparent text-lg text-gray-900 placeholder-gray-400 border-0 border-b focus:outline-none focus:border-gray-900 transition-colors pb-2 ${formik.touched.apellido && formik.errors.apellido ? 'border-red-500' : 'border-gray-300'}`}
                     placeholder={t('registration.panel.lastName')}
-                    required
                 />
+                {formik.touched.apellido && formik.errors.apellido && (
+                    <p className="text-red-500 text-sm mt-1">{formik.errors.apellido}</p>
+                )}
             </div>
 
             <div className="grid grid-cols-2 gap-4">
-                <select
-                    name="tipoDocumento"
-                    value={formData.tipoDocumento}
-                    onChange={handleInputChange}
-                    className="bg-transparent text-lg text-gray-900 border-0 border-b border-gray-300 focus:outline-none focus:border-gray-900 transition-colors pb-2"
-                    required
-                >
-                    <option value="">{t('registration.panel.documentType')}</option>
-                    {DOCUMENT_TYPES.map((docType) => (
-                        <option key={docType.id} value={docType.id}>
-                            {docType.name}
-                        </option>
-                    ))}
-                </select>
-                <input
-                    type="text"
-                    name="numeroDocumento"
-                    value={formData.numeroDocumento}
-                    onChange={handleInputChange}
-                    className="bg-transparent text-lg text-gray-900 placeholder-gray-400 border-0 border-b border-gray-300 focus:outline-none focus:border-gray-900 transition-colors pb-2"
-                    placeholder={t('registration.panel.documentNumber')}
-                    required
-                />
+                <div className="flex flex-col">
+                    <select
+                        name="tipoDocumento"
+                        onChange={formik.handleChange}
+                        onBlur={formik.handleBlur}
+                        value={formik.values.tipoDocumento}
+                        className={`bg-transparent text-lg text-gray-900 border-0 border-b focus:outline-none focus:border-gray-900 transition-colors pb-2 ${formik.touched.tipoDocumento && formik.errors.tipoDocumento ? 'border-red-500' : 'border-gray-300'}`}
+                    >
+                        <option value="">{t('registration.panel.documentType')}</option>
+                        {DOCUMENT_TYPES.map((docType) => (
+                            <option key={docType.id} value={docType.id}>
+                                {docType.name}
+                            </option>
+                        ))}
+                    </select>
+                    {formik.touched.tipoDocumento && formik.errors.tipoDocumento && (
+                        <p className="text-red-500 text-sm mt-1">{formik.errors.tipoDocumento}</p>
+                    )}
+                </div>
+                <div className="flex flex-col">
+                    <input
+                        type="text"
+                        name="numeroDocumento"
+                        onChange={formik.handleChange}
+                        onBlur={formik.handleBlur}
+                        value={formik.values.numeroDocumento}
+                        className={`bg-transparent text-lg text-gray-900 placeholder-gray-400 border-0 border-b focus:outline-none focus:border-gray-900 transition-colors pb-2 ${formik.touched.numeroDocumento && formik.errors.numeroDocumento ? 'border-red-500' : 'border-gray-300'}`}
+                        placeholder={t('registration.panel.documentNumber')}
+                    />
+                    {formik.touched.numeroDocumento && formik.errors.numeroDocumento && (
+                        <p className="text-red-500 text-sm mt-1">{formik.errors.numeroDocumento}</p>
+                    )}
+                </div>
             </div>
 
             <div>
                 <input
                     type="tel"
                     name="telefono"
-                    value={formData.telefono}
-                    onChange={handleInputChange}
-                    className="w-full bg-transparent text-lg text-gray-900 placeholder-gray-400 border-0 border-b border-gray-300 focus:outline-none focus:border-gray-900 transition-colors pb-2"
+                    onChange={formik.handleChange}
+                    onBlur={formik.handleBlur}
+                    value={formik.values.telefono}
+                    className={`w-full bg-transparent text-lg text-gray-900 placeholder-gray-400 border-0 border-b focus:outline-none focus:border-gray-900 transition-colors pb-2 ${formik.touched.telefono && formik.errors.telefono ? 'border-red-500' : 'border-gray-300'}`}
                     placeholder={t('registration.panel.phone')}
-                    required
                 />
+                {formik.touched.telefono && formik.errors.telefono && (
+                    <p className="text-red-500 text-sm mt-1">{formik.errors.telefono}</p>
+                )}
             </div>
 
             <div>
@@ -164,64 +170,71 @@ export function RegistrationForm({
                 <input
                     type="password"
                     name="password"
-                    value={formData.password}
-                    onChange={handleInputChange}
-                    className="w-full bg-transparent text-lg text-gray-900 placeholder-gray-400 border-0 border-b border-gray-300 focus:outline-none focus:border-gray-900 transition-colors pb-2"
+                    onChange={formik.handleChange}
+                    onBlur={formik.handleBlur}
+                    value={formik.values.password}
+                    className={`w-full bg-transparent text-lg text-gray-900 placeholder-gray-400 border-0 border-b focus:outline-none focus:border-gray-900 transition-colors pb-2 ${formik.touched.password && formik.errors.password ? 'border-red-500' : 'border-gray-300'}`}
                     placeholder={t('registration.panel.password')}
-                    required
                 />
+                {formik.touched.password && formik.errors.password && (
+                    <p className="text-red-500 text-sm mt-1">{formik.errors.password}</p>
+                )}
             </div>
 
             <div>
                 <input
                     type="password"
                     name="confirmPassword"
-                    value={formData.confirmPassword}
-                    onChange={handleInputChange}
-                    className={`w-full bg-transparent text-lg text-gray-900 placeholder-gray-400 border-0 border-b pb-2 focus:outline-none transition-colors ${passwordMismatch ? 'border-red-400 focus:border-red-500' : 'border-gray-300 focus:border-gray-900'
-                        }`}
+                    onChange={formik.handleChange}
+                    onBlur={formik.handleBlur}
+                    value={formik.values.confirmPassword}
+                    className={`w-full bg-transparent text-lg text-gray-900 placeholder-gray-400 border-0 border-b pb-2 focus:outline-none transition-colors ${formik.touched.confirmPassword && formik.errors.confirmPassword ? 'border-red-400 focus:border-red-500' : 'border-gray-300 focus:border-gray-900'}`}
                     placeholder={t('registration.panel.confirmPassword')}
-                    required
                 />
-                {passwordMismatch && (
-                    <p className="text-sm text-red-500 mt-1">{t('registration.panel.passwordMismatch')}</p>
+                {formik.touched.confirmPassword && formik.errors.confirmPassword && (
+                    <p className="text-sm text-red-500 mt-1">{formik.errors.confirmPassword}</p>
                 )}
             </div>
 
-            {displayError && (
+            {error && (
                 <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg text-sm">
-                    {displayError}
+                    {error}
                 </div>
             )}
 
-            <div className="flex items-start gap-3 pt-2">
-                <input
-                    type="checkbox"
-                    id="aceptaPoliticas"
-                    name="aceptaPoliticas"
-                    checked={formData.aceptaPoliticas}
-                    onChange={handleInputChange}
-                    className="mt-1 w-4 h-4 text-[#83A98A] border-gray-300 rounded focus:ring-[#83A98A] cursor-pointer"
-                    required
-                />
-                <label htmlFor="aceptaPoliticas" className="text-sm text-gray-700 cursor-pointer">
-                    {t('registration.panel.acceptPolicies')}{' '}
-                    <Link href="#politicas" className="text-[#83A98A] hover:underline">
-                        {t('registration.panel.policiesLink')}
-                    </Link>{' '}
-                    {t('registration.panel.andDataUsage')}{' '}
-                    <Link href="#datos" className="text-[#83A98A] hover:underline">
-                        {t('registration.panel.dataUsageLink')}
-                    </Link>
-                </label>
+            <div className="flex flex-col items-start gap-1 pt-2">
+                <div className="flex items-start gap-3">
+                    <input
+                        type="checkbox"
+                        id="aceptaPoliticas"
+                        name="aceptaPoliticas"
+                        checked={formik.values.aceptaPoliticas}
+                        onChange={formik.handleChange}
+                        onBlur={formik.handleBlur}
+                        className="mt-1 w-4 h-4 text-[#83A98A] border-gray-300 rounded focus:ring-[#83A98A] cursor-pointer"
+                    />
+                    <label htmlFor="aceptaPoliticas" className="text-sm text-gray-700 cursor-pointer">
+                        {t('registration.panel.acceptPolicies')}{' '}
+                        <Link href="#politicas" className="text-[#83A98A] hover:underline">
+                            {t('registration.panel.policiesLink')}
+                        </Link>{' '}
+                        {t('registration.panel.andDataUsage')}{' '}
+                        <Link href="#datos" className="text-[#83A98A] hover:underline">
+                            {t('registration.panel.dataUsageLink')}
+                        </Link>
+                    </label>
+                </div>
+                {formik.touched.aceptaPoliticas && formik.errors.aceptaPoliticas && (
+                    <p className="text-red-500 text-sm pl-7">{formik.errors.aceptaPoliticas}</p>
+                )}
             </div>
 
             <button
                 type="submit"
-                disabled={isLoading}
+                disabled={isLoading || formik.isSubmitting}
                 className="w-full bg-[#83A98A] text-white font-semibold py-4 px-6 rounded-full hover:bg-[#6D8F75] transition-colors flex items-center justify-center gap-2 mt-4 disabled:opacity-50 disabled:cursor-not-allowed"
             >
-                {isLoading ? (
+                {isLoading || formik.isSubmitting ? (
                     <>
                         <svg className="animate-spin w-5 h-5" fill="none" viewBox="0 0 24 24">
                             <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
@@ -242,7 +255,7 @@ export function RegistrationForm({
             <button
                 type="button"
                 onClick={onBack}
-                disabled={isLoading}
+                disabled={isLoading || formik.isSubmitting}
                 className="w-full text-sm text-gray-600 hover:text-gray-900 transition-colors text-center disabled:opacity-50"
             >
                 ← {t('common.back')}
@@ -250,5 +263,4 @@ export function RegistrationForm({
         </form>
     );
 }
-
 export type { RegistrationFormData };

@@ -59,6 +59,16 @@ export const AUTH_ENDPOINTS = {
 } as const;
 
 /**
+ * Forms endpoints (forms-ms)
+ */
+export const FORMS_ENDPOINTS = {
+    /** GET - Find form by type */
+    FIND_BY_TYPE: '/forms/type', // Append /:type when using
+    /** POST - Submit form */
+    SUBMIT: '/forms/submit',
+} as const;
+
+/**
  * User profile endpoints (users-ms)
  * Note: Add these when you implement the users microservice
  */
