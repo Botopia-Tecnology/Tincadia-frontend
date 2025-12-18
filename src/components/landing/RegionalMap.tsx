@@ -67,7 +67,7 @@ export function RegionalMap() {
                     <CardItem translateZ="50" className="w-full h-full flex items-center justify-center">
                         {/* Tarjeta del mapa mundial con efecto de zoom */}
                         <div
-                            className="relative w-full max-w-5xl aspect-square transition-transform duration-500 ease-out"
+                            className="relative w-full max-w-5xl aspect-square transition-transform duration-500 ease-out mt-16 md:mt-20 lg:mt-24"
                             style={{
                                 transform: `scale(${zoom})`,
                                 transformOrigin: transformOrigin,

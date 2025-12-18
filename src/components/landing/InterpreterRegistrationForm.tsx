@@ -1,39 +1,30 @@
 'use client';
 
-import { useState, useMemo } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { Upload, FileText } from 'lucide-react';
 import { useTranslation } from '@/hooks/useTranslation';
+import { formsService } from '@/services/forms.service';
+import { useFormik } from 'formik';
+import * as Yup from 'yup';
 
 interface InterpreterFormData {
-  // Información básica
   nombreCompleto: string;
   documentoIdentidad: string;
   ciudadResidencia: string;
   telefonoWhatsapp: string;
   correoElectronico: string;
-
-  // Certificación y educación
   esInterpreteCertificado: 'si' | 'no' | '';
   nivelAcademico: string;
   nivelAcademicoDetalle: string;
-
-  // Experiencia
   nivelExperiencia: string;
   areasEspecialidad: string[];
-
-  // Servicios
   disponibilidadHoraria: string[];
   tipoServicio: string[];
-
-  // Tarifas y documentos
   hojaVida: File | null;
   certificaciones: File | null;
   redesSocialesPortafolio: string;
-
-  // Autorización
   autorizaInclusion: 'si' | 'no' | '';
 }
-
 
 export function InterpreterRegistrationForm() {
   const t = useTranslation();
@@ -49,53 +40,106 @@ export function InterpreterRegistrationForm() {
   const disponibilidadesHorarias = useMemo(() => getArray('forms.interpreter.availability'), [t]);
   const tiposServicio = useMemo(() => getArray('forms.interpreter.serviceTypes'), [t]);
 
-  const [formData, setFormData] = useState<InterpreterFormData>({
-    nombreCompleto: '',
-    documentoIdentidad: '',
-    ciudadResidencia: '',
-    telefonoWhatsapp: '',
-    correoElectronico: '',
-    esInterpreteCertificado: '',
-    nivelAcademico: '',
-    nivelAcademicoDetalle: '',
-    nivelExperiencia: '',
-    areasEspecialidad: [],
-    disponibilidadHoraria: [],
-    tipoServicio: [],
-    hojaVida: null,
-    certificaciones: null,
-    redesSocialesPortafolio: '',
-    autorizaInclusion: '',
-  });
-
   const [otraAreaEspecialidad, setOtraAreaEspecialidad] = useState('');
   const [otroTipoServicio, setOtroTipoServicio] = useState('');
+  const [formId, setFormId] = useState<string | null>(null);
+  const [submitStatus, setSubmitStatus] = useState<'idle' | 'success' | 'error'>('idle');
 
-  const handleInputChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>
-  ) => {
-    const { name, value } = e.target;
-    setFormData((prev) => ({ ...prev, [name]: value }));
-  };
+  // Fetch form ID on mount
+  useEffect(() => {
+    const fetchFormId = async () => {
+      try {
+        const form = await formsService.findFormByType('interpreter_registration');
+        setFormId(form.id);
+      } catch (error) {
+        console.error('Error fetching form definition:', error);
+      }
+    };
+    fetchFormId();
+  }, []);
+
+  const validationSchema = Yup.object({
+    nombreCompleto: Yup.string().required(t('forms.common.required') as string),
+    documentoIdentidad: Yup.string().required(t('forms.common.required') as string),
+    ciudadResidencia: Yup.string().required(t('forms.common.required') as string),
+    telefonoWhatsapp: Yup.string().required(t('forms.common.required') as string),
+    correoElectronico: Yup.string().email('Email inválido').required(t('forms.common.required') as string),
+    esInterpreteCertificado: Yup.string().required(t('forms.common.required') as string),
+    nivelAcademico: Yup.string().required(t('forms.common.required') as string),
+    nivelExperiencia: Yup.string().required(t('forms.common.required') as string),
+    areasEspecialidad: Yup.array().min(1, t('forms.common.required') as string),
+    disponibilidadHoraria: Yup.array().min(1, t('forms.common.required') as string),
+    tipoServicio: Yup.array().min(1, t('forms.common.required') as string),
+    hojaVida: Yup.mixed().required(t('forms.common.required') as string),
+    autorizaInclusion: Yup.string().required(t('forms.common.required') as string),
+  });
+
+  const formik = useFormik<InterpreterFormData>({
+    initialValues: {
+      nombreCompleto: '',
+      documentoIdentidad: '',
+      ciudadResidencia: '',
+      telefonoWhatsapp: '',
+      correoElectronico: '',
+      esInterpreteCertificado: '',
+      nivelAcademico: '',
+      nivelAcademicoDetalle: '',
+      nivelExperiencia: '',
+      areasEspecialidad: [],
+      disponibilidadHoraria: [],
+      tipoServicio: [],
+      hojaVida: null,
+      certificaciones: null,
+      redesSocialesPortafolio: '',
+      autorizaInclusion: '',
+    },
+    validationSchema,
+    onSubmit: async (values) => {
+      if (!formId) {
+        alert(t('forms.common.errorFormNotLoaded'));
+        return;
+      }
+      setSubmitStatus('idle');
+
+      try {
+        const submissionData = {
+          ...values,
+          hojaVida: values.hojaVida ? { name: values.hojaVida.name, size: values.hojaVida.size, type: values.hojaVida.type } : null,
+          certificaciones: values.certificaciones ? { name: values.certificaciones.name, size: values.certificaciones.size, type: values.certificaciones.type } : null,
+          // Append custom strings if selected
+          areasEspecialidad: values.areasEspecialidad.map(a => a === areasEspecialidad[areasEspecialidad.length - 1] ? `${a} - ${otraAreaEspecialidad}` : a),
+          tipoServicio: values.tipoServicio.map(t => t === tiposServicio[tiposServicio.length - 1] ? `${t} - ${otroTipoServicio}` : t),
+        };
+
+        const response = await formsService.submitForm(formId, submissionData);
+
+        console.log('Formulario enviado:', response);
+        setSubmitStatus('success');
+
+        if (response.action === 'redirect_to_register') {
+          alert(t('forms.common.pleaseRegister'));
+        } else {
+          alert(t('forms.common.submitSuccess'));
+        }
+      } catch (error) {
+        console.error('Error submitting form:', error);
+        setSubmitStatus('error');
+        alert(t('forms.common.submitError'));
+      }
+    },
+  });
 
   const handleCheckboxChange = (name: keyof InterpreterFormData, value: string) => {
-    setFormData((prev) => {
-      const currentArray = (prev[name] as string[]) || [];
-      if (currentArray.includes(value)) {
-        return { ...prev, [name]: currentArray.filter((item) => item !== value) };
-      }
-      return { ...prev, [name]: [...currentArray, value] };
-    });
+    const currentArray = (formik.values[name] as string[]) || [];
+    if (currentArray.includes(value)) {
+      formik.setFieldValue(name, currentArray.filter((item) => item !== value));
+    } else {
+      formik.setFieldValue(name, [...currentArray, value]);
+    }
   };
 
   const handleFileChange = (name: 'hojaVida' | 'certificaciones', file: File | null) => {
-    setFormData((prev) => ({ ...prev, [name]: file }));
-  };
-
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    console.log('Formulario enviado:', formData);
-    // Aquí iría la lógica para enviar a la API
+    formik.setFieldValue(name, file);
   };
 
   return (
@@ -109,7 +153,7 @@ export function InterpreterRegistrationForm() {
         </p>
       </div>
 
-      <form onSubmit={handleSubmit} className="space-y-6">
+      <form onSubmit={formik.handleSubmit} className="space-y-6">
         {/* 1. Nombre completo */}
         <div>
           <label htmlFor="nombreCompleto" className="block text-sm font-semibold text-gray-700 mb-2">
@@ -119,11 +163,14 @@ export function InterpreterRegistrationForm() {
             id="nombreCompleto"
             name="nombreCompleto"
             type="text"
-            value={formData.nombreCompleto}
-            onChange={handleInputChange}
-            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#83A98A] focus:border-transparent"
-            required
+            onChange={formik.handleChange}
+            onBlur={formik.handleBlur}
+            value={formik.values.nombreCompleto}
+            className={`w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#83A98A] focus:border-transparent ${formik.touched.nombreCompleto && formik.errors.nombreCompleto ? 'border-red-500' : 'border-gray-300'}`}
           />
+          {formik.touched.nombreCompleto && formik.errors.nombreCompleto && (
+            <p className="text-red-500 text-sm mt-1">{formik.errors.nombreCompleto}</p>
+          )}
         </div>
 
         {/* 2. Documento de identidad */}
@@ -135,11 +182,14 @@ export function InterpreterRegistrationForm() {
             id="documentoIdentidad"
             name="documentoIdentidad"
             type="text"
-            value={formData.documentoIdentidad}
-            onChange={handleInputChange}
-            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#83A98A] focus:border-transparent"
-            required
+            onChange={formik.handleChange}
+            onBlur={formik.handleBlur}
+            value={formik.values.documentoIdentidad}
+            className={`w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#83A98A] focus:border-transparent ${formik.touched.documentoIdentidad && formik.errors.documentoIdentidad ? 'border-red-500' : 'border-gray-300'}`}
           />
+          {formik.touched.documentoIdentidad && formik.errors.documentoIdentidad && (
+            <p className="text-red-500 text-sm mt-1">{formik.errors.documentoIdentidad}</p>
+          )}
         </div>
 
         {/* 3. Ciudad de residencia */}
@@ -151,11 +201,14 @@ export function InterpreterRegistrationForm() {
             id="ciudadResidencia"
             name="ciudadResidencia"
             type="text"
-            value={formData.ciudadResidencia}
-            onChange={handleInputChange}
-            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#83A98A] focus:border-transparent"
-            required
+            onChange={formik.handleChange}
+            onBlur={formik.handleBlur}
+            value={formik.values.ciudadResidencia}
+            className={`w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#83A98A] focus:border-transparent ${formik.touched.ciudadResidencia && formik.errors.ciudadResidencia ? 'border-red-500' : 'border-gray-300'}`}
           />
+          {formik.touched.ciudadResidencia && formik.errors.ciudadResidencia && (
+            <p className="text-red-500 text-sm mt-1">{formik.errors.ciudadResidencia}</p>
+          )}
         </div>
 
         {/* 4. Teléfono / WhatsApp */}
@@ -167,11 +220,14 @@ export function InterpreterRegistrationForm() {
             id="telefonoWhatsapp"
             name="telefonoWhatsapp"
             type="tel"
-            value={formData.telefonoWhatsapp}
-            onChange={handleInputChange}
-            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#83A98A] focus:border-transparent"
-            required
+            onChange={formik.handleChange}
+            onBlur={formik.handleBlur}
+            value={formik.values.telefonoWhatsapp}
+            className={`w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#83A98A] focus:border-transparent ${formik.touched.telefonoWhatsapp && formik.errors.telefonoWhatsapp ? 'border-red-500' : 'border-gray-300'}`}
           />
+          {formik.touched.telefonoWhatsapp && formik.errors.telefonoWhatsapp && (
+            <p className="text-red-500 text-sm mt-1">{formik.errors.telefonoWhatsapp}</p>
+          )}
         </div>
 
         {/* 5. Correo electrónico */}
@@ -183,11 +239,14 @@ export function InterpreterRegistrationForm() {
             id="correoElectronico"
             name="correoElectronico"
             type="email"
-            value={formData.correoElectronico}
-            onChange={handleInputChange}
-            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#83A98A] focus:border-transparent"
-            required
+            onChange={formik.handleChange}
+            onBlur={formik.handleBlur}
+            value={formik.values.correoElectronico}
+            className={`w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#83A98A] focus:border-transparent ${formik.touched.correoElectronico && formik.errors.correoElectronico ? 'border-red-500' : 'border-gray-300'}`}
           />
+          {formik.touched.correoElectronico && formik.errors.correoElectronico && (
+            <p className="text-red-500 text-sm mt-1">{formik.errors.correoElectronico}</p>
+          )}
         </div>
 
         {/* 6. ¿Eres intérprete certificado? */}
@@ -201,10 +260,9 @@ export function InterpreterRegistrationForm() {
                 type="radio"
                 name="esInterpreteCertificado"
                 value="si"
-                checked={formData.esInterpreteCertificado === 'si'}
-                onChange={handleInputChange}
+                checked={formik.values.esInterpreteCertificado === 'si'}
+                onChange={formik.handleChange}
                 className="w-4 h-4 text-[#83A98A] focus:ring-[#83A98A]"
-                required
               />
               <span className="text-gray-700">{t('forms.common.yes')}</span>
             </label>
@@ -213,14 +271,16 @@ export function InterpreterRegistrationForm() {
                 type="radio"
                 name="esInterpreteCertificado"
                 value="no"
-                checked={formData.esInterpreteCertificado === 'no'}
-                onChange={handleInputChange}
+                checked={formik.values.esInterpreteCertificado === 'no'}
+                onChange={formik.handleChange}
                 className="w-4 h-4 text-[#83A98A] focus:ring-[#83A98A]"
-                required
               />
               <span className="text-gray-700">{t('forms.common.no')}</span>
             </label>
           </div>
+          {formik.touched.esInterpreteCertificado && formik.errors.esInterpreteCertificado && (
+            <p className="text-red-500 text-sm mt-1">{formik.errors.esInterpreteCertificado}</p>
+          )}
         </div>
 
         {/* 7. Nivel académico */}
@@ -231,10 +291,10 @@ export function InterpreterRegistrationForm() {
           <select
             id="nivelAcademico"
             name="nivelAcademico"
-            value={formData.nivelAcademico}
-            onChange={handleInputChange}
-            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#83A98A] focus:border-transparent"
-            required
+            value={formik.values.nivelAcademico}
+            onChange={formik.handleChange}
+            onBlur={formik.handleBlur}
+            className={`w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#83A98A] focus:border-transparent ${formik.touched.nivelAcademico && formik.errors.nivelAcademico ? 'border-red-500' : 'border-gray-300'}`}
           >
             <option value="">{t('forms.common.selectOption')}</option>
             {nivelesAcademicos.map((nivel) => (
@@ -243,17 +303,19 @@ export function InterpreterRegistrationForm() {
               </option>
             ))}
           </select>
-          {(formData.nivelAcademico.includes('indique') ||
-            formData.nivelAcademico.includes('indique nivel') ||
-            formData.nivelAcademico.includes('indique carrera')) && (
+          {formik.touched.nivelAcademico && formik.errors.nivelAcademico && (
+            <p className="text-red-500 text-sm mt-1">{formik.errors.nivelAcademico}</p>
+          )}
+          {(formik.values.nivelAcademico.includes('indique') ||
+            formik.values.nivelAcademico.includes('indique nivel') ||
+            formik.values.nivelAcademico.includes('indique carrera')) && (
               <input
                 type="text"
                 name="nivelAcademicoDetalle"
-                value={formData.nivelAcademicoDetalle}
-                onChange={handleInputChange}
+                value={formik.values.nivelAcademicoDetalle}
+                onChange={formik.handleChange}
                 placeholder={t('forms.interpreter.fields.academicDetail')}
                 className="w-full mt-3 px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#83A98A] focus:border-transparent"
-                required
               />
             )}
         </div>
@@ -266,10 +328,10 @@ export function InterpreterRegistrationForm() {
           <select
             id="nivelExperiencia"
             name="nivelExperiencia"
-            value={formData.nivelExperiencia}
-            onChange={handleInputChange}
-            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#83A98A] focus:border-transparent"
-            required
+            value={formik.values.nivelExperiencia}
+            onChange={formik.handleChange}
+            onBlur={formik.handleBlur}
+            className={`w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#83A98A] focus:border-transparent ${formik.touched.nivelExperiencia && formik.errors.nivelExperiencia ? 'border-red-500' : 'border-gray-300'}`}
           >
             <option value="">{t('forms.common.selectOption')}</option>
             {nivelesExperiencia.map((nivel) => (
@@ -278,6 +340,9 @@ export function InterpreterRegistrationForm() {
               </option>
             ))}
           </select>
+          {formik.touched.nivelExperiencia && formik.errors.nivelExperiencia && (
+            <p className="text-red-500 text-sm mt-1">{formik.errors.nivelExperiencia}</p>
+          )}
         </div>
 
         {/* 9. Áreas de especialidad */}
@@ -290,7 +355,7 @@ export function InterpreterRegistrationForm() {
               <label key={area} className="flex items-center gap-2 cursor-pointer">
                 <input
                   type="checkbox"
-                  checked={formData.areasEspecialidad.includes(area)}
+                  checked={formik.values.areasEspecialidad.includes(area)}
                   onChange={() => handleCheckboxChange('areasEspecialidad', area)}
                   className="w-4 h-4 text-[#83A98A] focus:ring-[#83A98A] rounded"
                 />
@@ -298,7 +363,10 @@ export function InterpreterRegistrationForm() {
               </label>
             ))}
           </div>
-          {formData.areasEspecialidad.includes(areasEspecialidad[areasEspecialidad.length - 1]) && (
+          {formik.touched.areasEspecialidad && formik.errors.areasEspecialidad && (
+            <p className="text-red-500 text-sm mt-1">{formik.errors.areasEspecialidad}</p>
+          )}
+          {formik.values.areasEspecialidad.includes(areasEspecialidad[areasEspecialidad.length - 1]) && (
             <input
               type="text"
               value={otraAreaEspecialidad}
@@ -319,7 +387,7 @@ export function InterpreterRegistrationForm() {
               <label key={disponibilidad} className="flex items-center gap-2 cursor-pointer">
                 <input
                   type="checkbox"
-                  checked={formData.disponibilidadHoraria.includes(disponibilidad)}
+                  checked={formik.values.disponibilidadHoraria.includes(disponibilidad)}
                   onChange={() => handleCheckboxChange('disponibilidadHoraria', disponibilidad)}
                   className="w-4 h-4 text-[#83A98A] focus:ring-[#83A98A] rounded"
                 />
@@ -327,6 +395,9 @@ export function InterpreterRegistrationForm() {
               </label>
             ))}
           </div>
+          {formik.touched.disponibilidadHoraria && formik.errors.disponibilidadHoraria && (
+            <p className="text-red-500 text-sm mt-1">{formik.errors.disponibilidadHoraria}</p>
+          )}
         </div>
 
         {/* 11. Tipo de servicio */}
@@ -339,7 +410,7 @@ export function InterpreterRegistrationForm() {
               <label key={tipo} className="flex items-center gap-2 cursor-pointer">
                 <input
                   type="checkbox"
-                  checked={formData.tipoServicio.includes(tipo)}
+                  checked={formik.values.tipoServicio.includes(tipo)}
                   onChange={() => handleCheckboxChange('tipoServicio', tipo)}
                   className="w-4 h-4 text-[#83A98A] focus:ring-[#83A98A] rounded"
                 />
@@ -347,7 +418,10 @@ export function InterpreterRegistrationForm() {
               </label>
             ))}
           </div>
-          {formData.tipoServicio.includes(tiposServicio[tiposServicio.length - 1]) && (
+          {formik.touched.tipoServicio && formik.errors.tipoServicio && (
+            <p className="text-red-500 text-sm mt-1">{formik.errors.tipoServicio}</p>
+          )}
+          {formik.values.tipoServicio.includes(tiposServicio[tiposServicio.length - 1]) && (
             <input
               type="text"
               value={otroTipoServicio}
@@ -357,8 +431,6 @@ export function InterpreterRegistrationForm() {
             />
           )}
         </div>
-
-
 
         {/* 12. Hoja de vida (PDF) */}
         <div>
@@ -372,17 +444,19 @@ export function InterpreterRegistrationForm() {
               onChange={(e) => handleFileChange('hojaVida', e.target.files?.[0] || null)}
               className="hidden"
               id="hojaVida"
-              required
             />
             <label
               htmlFor="hojaVida"
-              className="flex items-center justify-center gap-2 w-full px-4 py-3 border-2 border-dashed border-gray-300 rounded-lg hover:border-[#83A98A] cursor-pointer transition-all group"
+              className={`flex items-center justify-center gap-2 w-full px-4 py-3 border-2 border-dashed rounded-lg hover:border-[#83A98A] cursor-pointer transition-all group ${formik.touched.hojaVida && formik.errors.hojaVida ? 'border-red-500' : 'border-gray-300'}`}
             >
               <FileText className="w-5 h-5 text-gray-400 group-hover:text-[#83A98A]" />
               <span className="text-sm text-gray-600 group-hover:text-[#83A98A]">
-                {formData.hojaVida ? formData.hojaVida.name : t('forms.interpreter.fields.selectFilePDF')}
+                {formik.values.hojaVida ? formik.values.hojaVida.name : t('forms.interpreter.fields.selectFilePDF')}
               </span>
             </label>
+            {formik.touched.hojaVida && formik.errors.hojaVida && (
+              <p className="text-red-500 text-sm mt-1">{formik.errors.hojaVida}</p>
+            )}
           </div>
         </div>
 
@@ -405,8 +479,8 @@ export function InterpreterRegistrationForm() {
             >
               <Upload className="w-5 h-5 text-gray-400 group-hover:text-[#83A98A]" />
               <span className="text-sm text-gray-600 group-hover:text-[#83A98A]">
-                {formData.certificaciones
-                  ? formData.certificaciones.name
+                {formik.values.certificaciones
+                  ? formik.values.certificaciones.name
                   : t('forms.interpreter.fields.selectFileCert')}
               </span>
             </label>
@@ -422,8 +496,9 @@ export function InterpreterRegistrationForm() {
             id="redesSocialesPortafolio"
             name="redesSocialesPortafolio"
             type="url"
-            value={formData.redesSocialesPortafolio}
-            onChange={handleInputChange}
+            onChange={formik.handleChange}
+            onBlur={formik.handleBlur}
+            value={formik.values.redesSocialesPortafolio}
             placeholder={t('forms.interpreter.fields.socialPlaceholder')}
             className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#83A98A] focus:border-transparent"
           />
@@ -441,10 +516,9 @@ export function InterpreterRegistrationForm() {
                 type="radio"
                 name="autorizaInclusion"
                 value="si"
-                checked={formData.autorizaInclusion === 'si'}
-                onChange={handleInputChange}
+                checked={formik.values.autorizaInclusion === 'si'}
+                onChange={formik.handleChange}
                 className="w-4 h-4 text-[#83A98A] focus:ring-[#83A98A]"
-                required
               />
               <span className="text-gray-700">{t('forms.common.yes')}</span>
             </label>
@@ -453,22 +527,25 @@ export function InterpreterRegistrationForm() {
                 type="radio"
                 name="autorizaInclusion"
                 value="no"
-                checked={formData.autorizaInclusion === 'no'}
-                onChange={handleInputChange}
+                checked={formik.values.autorizaInclusion === 'no'}
+                onChange={formik.handleChange}
                 className="w-4 h-4 text-[#83A98A] focus:ring-[#83A98A]"
-                required
               />
               <span className="text-gray-700">{t('forms.common.no')}</span>
             </label>
           </div>
+          {formik.touched.autorizaInclusion && formik.errors.autorizaInclusion && (
+            <p className="text-red-500 text-sm mt-1">{formik.errors.autorizaInclusion}</p>
+          )}
         </div>
 
         {/* Botón Submit */}
         <button
           type="submit"
-          className="w-full bg-[#83A98A] text-white font-semibold py-3.5 px-6 rounded-lg hover:bg-[#6D8F75] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#83A98A] transition-all duration-300 shadow-lg hover:shadow-xl mt-8"
+          className="w-full bg-[#83A98A] text-white font-semibold py-3.5 px-6 rounded-lg hover:bg-[#6D8F75] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#83A98A] transition-all duration-300 shadow-lg hover:shadow-xl mt-8 disabled:opacity-50"
+          disabled={formik.isSubmitting}
         >
-          {t('registration.interpreterForm.submitForm')}
+          {formik.isSubmitting ? t('forms.common.sending') : t('registration.interpreterForm.submitForm')}
         </button>
       </form>
     </div>
