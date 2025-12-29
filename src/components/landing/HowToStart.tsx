@@ -180,7 +180,7 @@ export function HowToStart() {
         </div>
 
         {/* Timeline de pestañas (Desktop) - Sticky */}
-        <div className="hidden lg:block mb-8 lg:sticky lg:top-4 lg:z-20 lg:bg-gray-50 lg:py-3 lg:pb-4">
+        <div className="hidden lg:block mb-8 lg:sticky lg:top-20 lg:z-20 lg:bg-gray-50 lg:py-3 lg:pb-4">
           <div className="relative">
             {/* Línea de conexión horizontal */}
             <div className="absolute top-1/2 left-0 right-0 h-0.5 bg-gray-200 -translate-y-1/2" aria-hidden="true" />
