@@ -69,10 +69,46 @@ export const FORMS_ENDPOINTS = {
 } as const;
 
 /**
+ * Content endpoints (content-ms)
+ */
+export const CONTENT_ENDPOINTS = {
+    /** GET - Get all courses */
+    COURSES: '/content/courses',
+    /** POST - Create course */
+    CREATE: '/content/courses',
+} as const;
+
+/**
+ * Notification endpoints (communication-ms)
+ */
+export const NOTIFICATION_ENDPOINTS = {
+    /** GET - [Admin] Get all notifications */
+    ADMIN_ALL: '/notifications/admin/all',
+    /** POST - Create notification */
+    CREATE: '/notifications',
+    /** PUT - Update notification */
+    UPDATE: '/notifications', // Append /:id
+    /** DELETE - Delete notification */
+    DELETE: '/notifications', // Append /:id
+} as const;
+
+/**
+ * Payment endpoints (payments-ms)
+ */
+export const PAYMENTS_ENDPOINTS = {
+    /** GET - Get all payments */
+    LIST: '/payments',
+    /** GET - Get payment details */
+    DETAILS: '/payments', // Append /:id
+} as const;
+
+/**
  * User profile endpoints (users-ms)
  * Note: Add these when you implement the users microservice
  */
 export const USER_ENDPOINTS = {
+    /** GET - Get all users (Admin) */
+    LIST: '/auth/users', // Append /:currentUserId to exclude self
     /** GET - Get user profile */
     PROFILE: '/users/profile',
     /** PATCH - Update user profile */
@@ -101,6 +137,9 @@ export const apiConfig = {
     endpoints: {
         auth: AUTH_ENDPOINTS,
         users: USER_ENDPOINTS,
+        content: CONTENT_ENDPOINTS,
+        notifications: NOTIFICATION_ENDPOINTS,
+        payments: PAYMENTS_ENDPOINTS,
     },
     buildUrl,
 } as const;

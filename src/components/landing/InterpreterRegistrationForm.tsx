@@ -43,18 +43,27 @@ export function InterpreterRegistrationForm() {
   const [otraAreaEspecialidad, setOtraAreaEspecialidad] = useState('');
   const [otroTipoServicio, setOtroTipoServicio] = useState('');
   const [formId, setFormId] = useState<string | null>(null);
+  const [formIdError, setFormIdError] = useState<string | null>(null);
   const [submitStatus, setSubmitStatus] = useState<'idle' | 'success' | 'error'>('idle');
 
   // Fetch form ID on mount
-  useEffect(() => {
-    const fetchFormId = async () => {
-      try {
-        const form = await formsService.findFormByType('interpreter_registration');
-        setFormId(form.id);
-      } catch (error) {
-        console.error('Error fetching form definition:', error);
+  const fetchFormId = async () => {
+    try {
+      setFormIdError(null);
+      const form = await formsService.findFormByType('interpreter_registration');
+      setFormId(form.id);
+    } catch (error: any) {
+      console.error('Error fetching form definition:', error);
+      const status = error?.status || error?.statusCode;
+      if (status === 404) {
+        setFormIdError('El formulario de registro de intérprete no está configurado. Por favor, contacta al administrador.');
+      } else {
+        setFormIdError('No se pudo cargar la configuración del formulario. Por favor, recarga la página.');
       }
-    };
+    }
+  };
+
+  useEffect(() => {
     fetchFormId();
   }, []);
 
@@ -94,37 +103,92 @@ export function InterpreterRegistrationForm() {
       autorizaInclusion: '',
     },
     validationSchema,
-    onSubmit: async (values) => {
-      if (!formId) {
-        alert(t('forms.common.errorFormNotLoaded'));
-        return;
+    onSubmit: async (values, { resetForm }) => {
+      // Try to fetch formId if not available
+      let currentFormId = formId;
+      if (!currentFormId) {
+        try {
+          const form = await formsService.findFormByType('interpreter_registration');
+          currentFormId = form.id;
+          setFormId(currentFormId);
+          setFormIdError(null);
+        } catch (error: any) {
+          console.error('Error fetching form definition:', error);
+          const status = error?.status || error?.statusCode;
+          if (status === 404) {
+            setFormIdError('El formulario de registro de intérprete no está configurado. Por favor, contacta al administrador.');
+          } else {
+            setFormIdError('No se pudo cargar la configuración del formulario. Por favor, recarga la página.');
+          }
+          setSubmitStatus('error');
+          return;
+        }
       }
+
       setSubmitStatus('idle');
 
       try {
+        // Upload files first if present
+        let hojaVidaUrl: string | null = null;
+        let certificacionesUrl: string | null = null;
+
+        if (values.hojaVida) {
+          try {
+            console.log('📤 Uploading resume...');
+            const uploadResult = await formsService.uploadFile(values.hojaVida);
+            hojaVidaUrl = uploadResult.url;
+            console.log('✅ Resume uploaded:', hojaVidaUrl);
+          } catch (uploadError) {
+            console.error('Error uploading resume:', uploadError);
+            setSubmitStatus('error');
+            return;
+          }
+        }
+
+        if (values.certificaciones) {
+          try {
+            console.log('📤 Uploading certifications...');
+            const uploadResult = await formsService.uploadFile(values.certificaciones);
+            certificacionesUrl = uploadResult.url;
+            console.log('✅ Certifications uploaded:', certificacionesUrl);
+          } catch (uploadError) {
+            console.error('Error uploading certifications:', uploadError);
+            setSubmitStatus('error');
+            return;
+          }
+        }
+
         const submissionData = {
           ...values,
-          hojaVida: values.hojaVida ? { name: values.hojaVida.name, size: values.hojaVida.size, type: values.hojaVida.type } : null,
-          certificaciones: values.certificaciones ? { name: values.certificaciones.name, size: values.certificaciones.size, type: values.certificaciones.type } : null,
+          hojaVida: hojaVidaUrl ? {
+            url: hojaVidaUrl,
+            name: values.hojaVida?.name,
+            size: values.hojaVida?.size,
+            type: values.hojaVida?.type
+          } : null,
+          certificaciones: certificacionesUrl ? {
+            url: certificacionesUrl,
+            name: values.certificaciones?.name,
+            size: values.certificaciones?.size,
+            type: values.certificaciones?.type
+          } : null,
           // Append custom strings if selected
           areasEspecialidad: values.areasEspecialidad.map(a => a === areasEspecialidad[areasEspecialidad.length - 1] ? `${a} - ${otraAreaEspecialidad}` : a),
           tipoServicio: values.tipoServicio.map(t => t === tiposServicio[tiposServicio.length - 1] ? `${t} - ${otroTipoServicio}` : t),
         };
 
-        const response = await formsService.submitForm(formId, submissionData);
+        const response = await formsService.submitForm(currentFormId, submissionData);
 
-        console.log('Formulario enviado:', response);
+        console.log('✅ Formulario enviado exitosamente:', response);
         setSubmitStatus('success');
 
-        if (response.action === 'redirect_to_register') {
-          alert(t('forms.common.pleaseRegister'));
-        } else {
-          alert(t('forms.common.submitSuccess'));
-        }
+        // Reset form and state
+        resetForm();
+        setOtraAreaEspecialidad('');
+        setOtroTipoServicio('');
       } catch (error) {
         console.error('Error submitting form:', error);
         setSubmitStatus('error');
-        alert(t('forms.common.submitError'));
       }
     },
   });
@@ -539,11 +603,18 @@ export function InterpreterRegistrationForm() {
           )}
         </div>
 
+        {/* Error message if formId not loaded */}
+        {formIdError && (
+          <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg mt-4">
+            <p className="text-sm">{formIdError}</p>
+          </div>
+        )}
+
         {/* Botón Submit */}
         <button
           type="submit"
           className="w-full bg-[#83A98A] text-white font-semibold py-3.5 px-6 rounded-lg hover:bg-[#6D8F75] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#83A98A] transition-all duration-300 shadow-lg hover:shadow-xl mt-8 disabled:opacity-50"
-          disabled={formik.isSubmitting}
+          disabled={formik.isSubmitting || !!formIdError}
         >
           {formik.isSubmitting ? t('forms.common.sending') : t('registration.interpreterForm.submitForm')}
         </button>

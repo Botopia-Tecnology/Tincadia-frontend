@@ -1,12 +1,106 @@
 'use client';
 
 import { useTranslation } from '@/hooks/useTranslation';
-import { Phone, Mail, Linkedin, Facebook, Instagram, Twitter, Youtube, Upload } from 'lucide-react';
-import { useState } from 'react';
+import { Linkedin, Facebook, Instagram, Twitter } from 'lucide-react';
+import { useState, useEffect } from 'react';
+import { useFormik } from 'formik';
+import * as Yup from 'yup';
+import { formsService } from '@/services/forms.service';
+
+interface ContactFormData {
+    name: string;
+    phone: string;
+    email: string;
+    message: string;
+}
 
 export function ContactSection() {
     const t = useTranslation();
-    const [dragActive, setDragActive] = useState(false);
+    const [formId, setFormId] = useState<string | null>(null);
+    const [formIdError, setFormIdError] = useState<string | null>(null);
+    const [submitStatus, setSubmitStatus] = useState<'idle' | 'success' | 'error'>('idle');
+
+    // Fetch form ID on mount
+    const fetchFormId = async () => {
+        try {
+            setFormIdError(null);
+            const form = await formsService.findFormByType('contact');
+            setFormId(form.id);
+        } catch (error: any) {
+            console.error('Error fetching form definition:', error);
+            const status = error?.status || error?.statusCode;
+            if (status === 404) {
+                setFormIdError('El formulario de contacto no está configurado. Por favor, contacta al administrador.');
+            } else {
+                setFormIdError('No se pudo cargar la configuración del formulario. Por favor, recarga la página.');
+            }
+        }
+    };
+
+    useEffect(() => {
+        fetchFormId();
+    }, []);
+
+    const validationSchema = Yup.object({
+        name: Yup.string().required('El nombre es requerido'),
+        phone: Yup.string().required('El teléfono es requerido'),
+        email: Yup.string().email('Email inválido').required('El email es requerido'),
+        message: Yup.string().required('El mensaje es requerido'),
+    });
+
+    const formik = useFormik<ContactFormData>({
+        initialValues: {
+            name: '',
+            phone: '',
+            email: '',
+            message: '',
+        },
+        validationSchema,
+        onSubmit: async (values, { resetForm }) => {
+            // Try to fetch formId if not available
+            let currentFormId = formId;
+            if (!currentFormId) {
+                try {
+                    const form = await formsService.findFormByType('contact');
+                    currentFormId = form.id;
+                    setFormId(currentFormId);
+                    setFormIdError(null);
+                } catch (error: any) {
+                    console.error('Error fetching form definition:', error);
+                    const status = error?.status || error?.statusCode;
+                    if (status === 404) {
+                        setFormIdError('El formulario de contacto no está configurado. Por favor, contacta al administrador.');
+                    } else {
+                        setFormIdError('No se pudo cargar la configuración del formulario. Por favor, recarga la página.');
+                    }
+                    setSubmitStatus('error');
+                    return;
+                }
+            }
+
+            setSubmitStatus('idle');
+
+            try {
+                const submissionData = {
+                    nombreCompleto: values.name,
+                    telefono: values.phone,
+                    correoElectronico: values.email,
+                    mensaje: values.message,
+                };
+
+                const response = await formsService.submitForm(currentFormId, submissionData);
+
+                console.log('✅ Formulario de contacto enviado exitosamente:', response);
+                setSubmitStatus('success');
+
+                // Reset form
+                resetForm();
+            } catch (error) {
+                console.error('Error submitting contact form:', error);
+                setSubmitStatus('error');
+            }
+        },
+    });
 
     const handleDrag = (e: React.DragEvent) => {
         e.preventDefault();
@@ -34,43 +128,97 @@ export function ContactSection() {
 
                     {/* Left Column: Form (Span 5) */}
                     <div className="lg:col-span-5 order-2 lg:order-1">
-                        <form className="space-y-8 mt-8 lg:mt-24">
+                        <form onSubmit={formik.handleSubmit} className="space-y-8 mt-8 lg:mt-24">
                             <div className="space-y-6">
                                 <div>
                                     <input
+                                        id="name"
+                                        name="name"
                                         type="text"
                                         placeholder={t('contactSection.form.name')}
-                                        className="w-full px-0 py-3 bg-transparent border-b border-gray-300 focus:border-[#83A98A] focus:ring-0 placeholder-gray-400 text-lg transition-colors"
+                                        onChange={formik.handleChange}
+                                        onBlur={formik.handleBlur}
+                                        value={formik.values.name}
+                                        className={`w-full px-0 py-3 bg-transparent border-b focus:border-[#83A98A] focus:ring-0 placeholder-gray-400 text-lg transition-colors ${formik.touched.name && formik.errors.name ? 'border-red-500' : 'border-gray-300'}`}
                                     />
+                                    {formik.touched.name && formik.errors.name && (
+                                        <p className="text-red-500 text-sm mt-1">{formik.errors.name}</p>
+                                    )}
                                 </div>
                                 <div>
                                     <input
+                                        id="phone"
+                                        name="phone"
                                         type="tel"
                                         placeholder={t('contactSection.form.phone')}
-                                        className="w-full px-0 py-3 bg-transparent border-b border-gray-300 focus:border-[#83A98A] focus:ring-0 placeholder-gray-400 text-lg transition-colors"
+                                        onChange={formik.handleChange}
+                                        onBlur={formik.handleBlur}
+                                        value={formik.values.phone}
+                                        className={`w-full px-0 py-3 bg-transparent border-b focus:border-[#83A98A] focus:ring-0 placeholder-gray-400 text-lg transition-colors ${formik.touched.phone && formik.errors.phone ? 'border-red-500' : 'border-gray-300'}`}
                                     />
+                                    {formik.touched.phone && formik.errors.phone && (
+                                        <p className="text-red-500 text-sm mt-1">{formik.errors.phone}</p>
+                                    )}
                                 </div>
                                 <div>
                                     <input
+                                        id="email"
+                                        name="email"
                                         type="email"
                                         placeholder={t('contactSection.form.email')}
-                                        className="w-full px-0 py-3 bg-transparent border-b border-gray-300 focus:border-[#83A98A] focus:ring-0 placeholder-gray-400 text-lg transition-colors"
+                                        onChange={formik.handleChange}
+                                        onBlur={formik.handleBlur}
+                                        value={formik.values.email}
+                                        className={`w-full px-0 py-3 bg-transparent border-b focus:border-[#83A98A] focus:ring-0 placeholder-gray-400 text-lg transition-colors ${formik.touched.email && formik.errors.email ? 'border-red-500' : 'border-gray-300'}`}
                                     />
+                                    {formik.touched.email && formik.errors.email && (
+                                        <p className="text-red-500 text-sm mt-1">{formik.errors.email}</p>
+                                    )}
                                 </div>
                                 <div>
                                     <textarea
+                                        id="message"
+                                        name="message"
                                         rows={3}
                                         placeholder={t('contactSection.form.message')}
-                                        className="w-full px-0 py-3 bg-transparent border-b border-gray-300 focus:border-[#83A98A] focus:ring-0 placeholder-gray-400 resize-none text-lg transition-colors"
+                                        onChange={formik.handleChange}
+                                        onBlur={formik.handleBlur}
+                                        value={formik.values.message}
+                                        className={`w-full px-0 py-3 bg-transparent border-b focus:border-[#83A98A] focus:ring-0 placeholder-gray-400 resize-none text-lg transition-colors ${formik.touched.message && formik.errors.message ? 'border-red-500' : 'border-gray-300'}`}
                                     />
+                                    {formik.touched.message && formik.errors.message && (
+                                        <p className="text-red-500 text-sm mt-1">{formik.errors.message}</p>
+                                    )}
                                 </div>
                             </div>
 
+                            {/* Success message */}
+                            {submitStatus === 'success' && (
+                                <div className="bg-green-50 border border-green-200 text-green-700 px-4 py-3 rounded-lg">
+                                    <p className="text-sm">¡Mensaje enviado exitosamente! Nos pondremos en contacto contigo pronto.</p>
+                                </div>
+                            )}
+
+                            {/* Error message if formId not loaded */}
+                            {formIdError && (
+                                <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg">
+                                    <p className="text-sm">{formIdError}</p>
+                                </div>
+                            )}
+
+                            {/* Error message on submit */}
+                            {submitStatus === 'error' && !formIdError && (
+                                <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg">
+                                    <p className="text-sm">Error al enviar el mensaje. Por favor, intenta de nuevo.</p>
+                                </div>
+                            )}
+
                             <button
                                 type="submit"
-                                className="px-12 py-4 bg-[#83A98A] text-white font-medium rounded-full hover:bg-[#6D8F75] transition-colors shadow-lg"
+                                disabled={formik.isSubmitting || !!formIdError}
+                                className="px-12 py-4 bg-[#83A98A] text-white font-medium rounded-full hover:bg-[#6D8F75] transition-colors shadow-lg disabled:opacity-50 disabled:cursor-not-allowed"
                             >
-                                {t('contactSection.form.submit')}
+                                {formik.isSubmitting ? 'Enviando...' : t('contactSection.form.submit')}
                             </button>
                         </form>
                     </div>

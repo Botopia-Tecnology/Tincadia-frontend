@@ -41,17 +41,26 @@ export function JobSeekerRegistrationForm() {
 
   const [otraAreaLaboral, setOtraAreaLaboral] = useState('');
   const [formId, setFormId] = useState<string | null>(null);
+  const [formIdError, setFormIdError] = useState<string | null>(null);
 
   // Fetch form ID on mount
-  useEffect(() => {
-    const fetchFormId = async () => {
-      try {
-        const form = await formsService.findFormByType('job_seeker_registration');
-        setFormId(form.id);
-      } catch (error) {
-        console.error('Error fetching form definition:', error);
+  const fetchFormId = async () => {
+    try {
+      setFormIdError(null);
+      const form = await formsService.findFormByType('job_seeker_registration');
+      setFormId(form.id);
+    } catch (error: any) {
+      console.error('Error fetching form definition:', error);
+      const status = error?.status || error?.statusCode;
+      if (status === 404) {
+        setFormIdError('El formulario de registro de buscador de empleo no está configurado. Por favor, contacta al administrador.');
+      } else {
+        setFormIdError('No se pudo cargar la configuración del formulario. Por favor, recarga la página.');
       }
-    };
+    }
+  };
+
+  useEffect(() => {
     fetchFormId();
   }, []);
 
@@ -93,32 +102,69 @@ export function JobSeekerRegistrationForm() {
       autorizaTratamientoDatos: '',
     },
     validationSchema,
-    onSubmit: async (values) => {
-      if (!formId) {
-        alert(t('forms.common.errorFormNotLoaded'));
-        return;
+    onSubmit: async (values, { resetForm }) => {
+      // Try to fetch formId if not available
+      let currentFormId = formId;
+      if (!currentFormId) {
+        try {
+          const form = await formsService.findFormByType('job_seeker_registration');
+          currentFormId = form.id;
+          setFormId(currentFormId);
+          setFormIdError(null);
+        } catch (error: any) {
+          console.error('Error fetching form definition:', error);
+          const status = error?.status || error?.statusCode;
+          if (status === 404) {
+            setFormIdError('El formulario de registro de buscador de empleo no está configurado. Por favor, contacta al administrador.');
+          } else {
+            setFormIdError('No se pudo cargar la configuración del formulario. Por favor, recarga la página.');
+          }
+          return;
+        }
       }
 
       try {
+        // Upload file first if present
+        let hojaVidaUrl: string | null = null;
+        if (values.hojaVida) {
+          try {
+            console.log('📤 Uploading resume...');
+            const uploadResult = await formsService.uploadFile(values.hojaVida);
+            hojaVidaUrl = uploadResult.url;
+            console.log('✅ Resume uploaded:', hojaVidaUrl);
+          } catch (uploadError) {
+            console.error('Error uploading file:', uploadError);
+            return;
+          }
+        }
+
         const submissionData = {
           ...values,
-          hojaVida: values.hojaVida ? { name: values.hojaVida.name, size: values.hojaVida.size, type: values.hojaVida.type } : null,
+          hojaVida: hojaVidaUrl ? {
+            url: hojaVidaUrl,
+            name: values.hojaVida?.name,
+            size: values.hojaVida?.size,
+            type: values.hojaVida?.type
+          } : null,
           // Append custom string if selected
           areaLaboralInteres: values.areaLaboralInteres.map(a => a === areasLaborales[areasLaborales.length - 1] ? `${a} - ${otraAreaLaboral}` : a),
         };
 
-        const response = await formsService.submitForm(formId, submissionData);
+        console.log('📤 [Frontend] Submitting form:', {
+          formId,
+          dataKeys: Object.keys(submissionData),
+          hasHojaVida: !!submissionData.hojaVida,
+        });
 
-        console.log('Formulario enviado:', response);
+        const response = await formsService.submitForm(currentFormId, submissionData);
 
-        if (response.action === 'redirect_to_register') {
-          alert(t('forms.common.pleaseRegister'));
-        } else {
-          alert(t('forms.common.submitSuccess'));
-        }
+        console.log('✅ Formulario enviado exitosamente:', response);
+
+        // Reset form and state
+        resetForm();
+        setOtraAreaLaboral('');
       } catch (error) {
         console.error('Error submitting form:', error);
-        alert(t('forms.common.submitError'));
       }
     },
   });
@@ -525,11 +571,18 @@ export function JobSeekerRegistrationForm() {
           )}
         </div>
 
+        {/* Error message if formId not loaded */}
+        {formIdError && (
+          <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg mt-4">
+            <p className="text-sm">{formIdError}</p>
+          </div>
+        )}
+
         {/* Botón Submit */}
         <button
           type="submit"
           className="w-full bg-[#83A98A] text-white font-semibold py-3.5 px-6 rounded-lg hover:bg-[#6D8F75] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#83A98A] transition-all duration-300 shadow-lg hover:shadow-xl mt-8 disabled:opacity-50"
-          disabled={formik.isSubmitting}
+          disabled={formik.isSubmitting || !!formIdError}
         >
           {formik.isSubmitting ? t('forms.common.sending') : t('registration.jobSeeker.submitForm')}
         </button>

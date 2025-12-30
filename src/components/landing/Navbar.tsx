@@ -2,7 +2,7 @@
 
 import { useState, useCallback, useRef, useEffect, useMemo } from 'react';
 import Link from 'next/link';
-import { Menu, ChevronDown, Building2, MessageSquare, LogOut, User } from 'lucide-react';
+import { Menu, ChevronDown, Building2, MessageSquare, LogOut, User, LayoutDashboard } from 'lucide-react';
 import { Logo } from '@/components/ui/Logo';
 import { MobileMenu } from './MobileMenu';
 import { useScrollLock } from '@/hooks/useScrollLock';
@@ -203,6 +203,17 @@ export function Navbar() {
               <div className="h-10 w-32 bg-gray-200 animate-pulse rounded-full" />
             ) : isAuthenticated && user ? (
               <div className="flex items-center gap-3">
+                {/* Admin Panel Button */}
+                {user.role === 'Admin' && (
+                  <Link
+                    href="/admin"
+                    className="hidden md:flex items-center gap-2 px-4 py-2 rounded-full text-sm font-bold text-white bg-gradient-to-r from-slate-800 to-slate-900 hover:from-slate-700 hover:to-slate-800 border border-slate-700 shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-0.5"
+                  >
+                    <LayoutDashboard className="w-4 h-4" />
+                    <span>Panel Control</span>
+                  </Link>
+                )}
+
                 {/* User greeting with avatar */}
                 <div className="flex items-center gap-3 pl-4 pr-2 py-1 rounded-full bg-gradient-to-r from-gray-50 to-gray-100 dark:from-gray-100 dark:to-gray-200 border border-gray-200/80 dark:border-gray-300 shadow-sm">
                   <span className="text-sm font-medium text-gray-600 dark:text-gray-800">

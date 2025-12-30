@@ -50,6 +50,7 @@ export interface User {
     authProvider?: string;
     emailVerified: boolean;
     isProfileComplete?: boolean; // Backend provides this directly
+    role?: string; // User role (e.g., 'Admin', 'User')
     createdAt?: string;
     updatedAt?: string;
 }

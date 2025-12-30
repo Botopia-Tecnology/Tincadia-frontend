@@ -1,17 +1,12 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
-import { Navbar } from "@/components/landing/Navbar";
-import { Footer } from "@/components/landing/Footer";
-import { SignLanguageTooltip } from "@/components/landing/SignLanguageTooltip";
 import { I18nProvider } from "@/contexts/I18nContext";
 import { UIProvider } from "@/contexts/UIContext";
 import { AccessibilityProvider } from "@/contexts/AccessibilityContext";
 import { AuthProvider } from "@/contexts/AuthContext";
 import { GoogleAuthProvider } from "@/contexts/GoogleAuthProvider";
-import { AccessibilityButton } from "@/components/landing/AccessibilityButton";
-import { GlobalBackgrounds } from "@/components/layout/GlobalBackgrounds";
-import { GlobalPanels } from "@/components/layout/GlobalPanels";
+import { ConditionalLayout } from "@/components/layout/ConditionalLayout";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -48,15 +43,9 @@ export default function RootLayout({
             <GoogleAuthProvider>
               <AuthProvider>
                 <AccessibilityProvider>
-                  <Navbar />
-                  <GlobalBackgrounds />
-                  <main className="pt-20">
+                  <ConditionalLayout>
                     {children}
-                  </main>
-                  <AccessibilityButton />
-                  <Footer />
-                  <SignLanguageTooltip />
-                  <GlobalPanels />
+                  </ConditionalLayout>
                 </AccessibilityProvider>
               </AuthProvider>
             </GoogleAuthProvider>
@@ -66,3 +55,4 @@ export default function RootLayout({
     </html>
   );
 }
+
