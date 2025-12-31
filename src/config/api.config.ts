@@ -74,8 +74,43 @@ export const FORMS_ENDPOINTS = {
 export const CONTENT_ENDPOINTS = {
     /** GET - Get all courses */
     COURSES: '/content/courses',
+    /** GET - Get course details */
+    DETAILS: '/content/courses/:id',
+    /** PUT - Update course */
+    UPDATE: '/content/courses/:id',
     /** POST - Create course */
     CREATE: '/content/courses',
+    /** DELETE - Delete course */
+    DELETE: '/content/courses/:id',
+
+    /** POST - Create module */
+    CREATE_MODULE: '/content/courses/:courseId/modules',
+    /** PUT - Update module */
+    UPDATE_MODULE: '/content/modules/:id',
+    /** DELETE - Delete module */
+    DELETE_MODULE: '/content/modules/:id',
+
+    /** POST - Create lesson */
+    CREATE_LESSON: '/content/modules/:moduleId/lessons',
+    /** PUT - Update lesson */
+    UPDATE_LESSON: '/content/lessons/:id',
+    /** DELETE - Delete lesson */
+    DELETE_LESSON: '/content/lessons/:id',
+    /** DELETE - Remove lesson video */
+    REMOVE_VIDEO: '/content/lessons/:id/video',
+
+    /** GET - Get all categories */
+    CATEGORIES: '/content/categories',
+    /** POST - Create category */
+    CREATE_CATEGORY: '/content/categories',
+    /** PUT - Update category */
+    UPDATE_CATEGORY: '/content/categories/:id',
+    /** DELETE - Delete category */
+    DELETE_CATEGORY: '/content/categories/:id',
+    /** POST - Upload course thumbnail */
+    UPLOAD_THUMBNAIL: '/content/courses/:courseId/thumbnail',
+    /** POST - Upload lesson video */
+    UPLOAD_LESSON_VIDEO: '/content/lessons/:lessonId/video',
 } as const;
 
 /**

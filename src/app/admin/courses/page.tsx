@@ -1,8 +1,9 @@
 'use client';
 
-import { Plus, Folder, Video, BookOpen, MoreHorizontal, Loader2 } from 'lucide-react';
+import { Plus, Folder, Video, BookOpen, MoreHorizontal, Loader2, FolderKanban, Trash2 } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { contentService, Course } from '@/services/content.service';
+import Link from 'next/link';
 
 import CreateCourseModal from './CreateCourseModal';
 
@@ -59,10 +60,14 @@ export default function CoursesPage() {
                     <h2 className="text-2xl font-bold text-white">Content Library</h2>
                     <p className="text-slate-400">Manage courses, modules, and video lessons.</p>
                 </div>
-                <div className="flex gap-3">
-                    <button className="bg-slate-800 hover:bg-slate-700 text-white px-4 py-2 rounded-lg font-medium transition-colors border border-slate-700">
-                        Manage Categories
-                    </button>
+                <div className="flex gap-4">
+                    <Link
+                        href="/admin/categories"
+                        className="flex items-center gap-2 bg-slate-800 hover:bg-slate-700 border border-slate-700 text-white px-4 py-2 rounded-lg transition-colors font-medium"
+                    >
+                        <FolderKanban size={20} />
+                        Categories
+                    </Link>
                     <button
                         onClick={() => setIsCreateModalOpen(true)}
                         className="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-lg font-medium transition-colors flex items-center gap-2"
@@ -81,39 +86,50 @@ export default function CoursesPage() {
             ) : (
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                     {courses.map((course) => (
-                        <div key={course.id} className="bg-slate-800 rounded-xl border border-slate-700 overflow-hidden group hover:border-slate-600 transition-all">
-                            <div className="h-40 bg-slate-900 relative flex items-center justify-center">
-                                {course.thumbnailUrl ? (
-                                    <img src={course.thumbnailUrl} alt={course.title} className="w-full h-full object-cover opacity-80 group-hover:opacity-100 transition-opacity" />
-                                ) : (
-                                    <Video size={48} className="text-slate-700 group-hover:text-slate-600 transition-colors" />
-                                )}
-                                <div className="absolute top-3 right-3">
-                                    <button className="p-2 bg-black/50 hover:bg-black/70 rounded-full text-white backdrop-blur-sm transition-colors">
-                                        <MoreHorizontal size={16} />
-                                    </button>
+                        <Link href={`/admin/courses/${course.id}`} key={course.id} className="block">
+                            <div className="bg-slate-800 rounded-xl border border-slate-700 overflow-hidden group hover:border-indigo-500/50 hover:shadow-lg hover:shadow-indigo-500/10 transition-all cursor-pointer h-full flex flex-col">
+                                <div className="h-40 bg-slate-900 relative flex items-center justify-center overflow-hidden">
+                                    {course.thumbnailUrl ? (
+                                        <img src={course.thumbnailUrl} alt={course.title} className="w-full h-full object-cover opacity-80 group-hover:opacity-100 group-hover:scale-105 transition-all duration-500" />
+                                    ) : (
+                                        <Video size={48} className="text-slate-700 group-hover:text-slate-600 transition-colors" />
+                                    )}
+                                    <div className="absolute top-3 right-3 flex gap-2">
+                                        <button
+                                            onClick={(e) => {
+                                                e.preventDefault();
+                                                if (confirm('Delete this course?')) {
+                                                    contentService.deleteCourse(course.id).then(fetchCourses);
+                                                }
+                                            }}
+                                            className="p-2 bg-red-500/80 hover:bg-red-600 rounded-full text-white backdrop-blur-sm transition-colors z-10 opacity-0 group-hover:opacity-100"
+                                            title="Delete Course"
+                                        >
+                                            <Trash2 size={16} />
+                                        </button>
+                                    </div>
+                                    <div className="absolute bottom-3 left-3">
+                                        <span className={`px-2 py-1 rounded text-xs font-bold ${course.isPublished ? 'bg-emerald-500 text-white' : 'bg-yellow-500 text-black'
+                                            }`}>
+                                            {course.isPublished ? 'Published' : 'Draft'}
+                                        </span>
+                                    </div>
                                 </div>
-                                <div className="absolute bottom-3 left-3">
-                                    <span className={`px-2 py-1 rounded text-xs font-bold ${course.isPublished ? 'bg-emerald-500 text-white' : 'bg-yellow-500 text-black'
-                                        }`}>
-                                        {course.isPublished ? 'Published' : 'Draft'}
-                                    </span>
+                                <div className="p-5 flex-1 flex flex-col">
+                                    {/* Category would need to be populated on backend or fetched separately, handling loading state simply for now */}
+                                    <div className="text-xs font-medium text-indigo-400 mb-1">Category {course.categoryId}</div>
+                                    <h3 className="text-lg font-bold text-white mb-2 line-clamp-2">{course.title}</h3>
+                                    <div className="mt-auto flex items-center gap-4 text-slate-400 text-sm border-t border-slate-700/50 pt-4">
+                                        <span className="flex items-center gap-1">
+                                            <Folder size={14} /> {course.modules?.length || 0} Modules
+                                        </span>
+                                        <span className="flex items-center gap-1">
+                                            <BookOpen size={14} /> Manage Content
+                                        </span>
+                                    </div>
                                 </div>
                             </div>
-                            <div className="p-5">
-                                {/* Category would need to be populated on backend or fetched separately, handling loading state simply for now */}
-                                <div className="text-xs font-medium text-indigo-400 mb-1">Category {course.categoryId}</div>
-                                <h3 className="text-lg font-bold text-white mb-2">{course.title}</h3>
-                                <div className="flex items-center gap-4 text-slate-400 text-sm">
-                                    <span className="flex items-center gap-1">
-                                        <Folder size={14} /> {course.modules?.length || 0} Modules
-                                    </span>
-                                    <span className="flex items-center gap-1">
-                                        <BookOpen size={14} /> - Lessons
-                                    </span>
-                                </div>
-                            </div>
-                        </div>
+                        </Link>
                     ))}
                 </div>
             )}
