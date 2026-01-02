@@ -5,6 +5,7 @@ import { useUI } from '@/contexts/UIContext';
 import { useAuth } from '@/contexts/AuthContext';
 import { LoginPanel } from '@/components/landing/LoginPanel';
 import { RegistrationPanel } from '@/components/landing/RegistrationPanel';
+import { ForgotPasswordPanel } from '@/components/landing/ForgotPasswordPanel';
 import { CompleteProfileModal } from '@/components/landing/CompleteProfileModal';
 
 export function GlobalPanels() {
@@ -14,7 +15,9 @@ export function GlobalPanels() {
         registrationEmail,
         setRegistrationEmail,
         isLoginPanelOpen,
-        setIsLoginPanelOpen
+        setIsLoginPanelOpen,
+        isForgotPasswordPanelOpen,
+        setIsForgotPasswordPanelOpen
     } = useUI();
 
     const { isAuthenticated, profileComplete } = useAuth();
@@ -43,12 +46,21 @@ export function GlobalPanels() {
                     if (email) setRegistrationEmail(email);
                     setIsRegistrationPanelOpen(true);
                 }}
+                onForgotPasswordClick={() => {
+                    setIsLoginPanelOpen(false);
+                    setIsForgotPasswordPanelOpen(true);
+                }}
             />
 
             <RegistrationPanel
                 isOpen={isRegistrationPanelOpen}
                 onClose={() => setIsRegistrationPanelOpen(false)}
                 initialEmail={registrationEmail}
+            />
+
+            <ForgotPasswordPanel
+                isOpen={isForgotPasswordPanelOpen}
+                onClose={() => setIsForgotPasswordPanelOpen(false)}
             />
 
             <CompleteProfileModal

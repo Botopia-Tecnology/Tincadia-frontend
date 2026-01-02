@@ -34,23 +34,61 @@ function ResetPasswordContent() {
     const [tokenError, setTokenError] = useState(false);
 
     // URL params from Supabase
-    const accessToken = searchParams.get('access_token');
+    // URL params from Supabase (query params)
+    const queryAccessToken = searchParams.get('access_token');
+    const queryErrorDescription = searchParams.get('error_description');
     const type = searchParams.get('type');
-    const errorDescription = searchParams.get('error_description');
 
-    // Validate token on mount
+    // State for the token (can come from query or hash)
+    const [accessToken, setAccessToken] = useState<string | null>(queryAccessToken);
+
+    // Validate token on mount and check hash
     useEffect(() => {
-        if (errorDescription) {
+        // 1. Check for errors in query params
+        if (queryErrorDescription) {
             setTokenError(true);
-            setError(decodeURIComponent(errorDescription));
+            setError(decodeURIComponent(queryErrorDescription));
             return;
         }
 
-        if (type === 'recovery' && !accessToken) {
+        // 2. Check hash for token if not in query params
+        const checkHash = () => {
+            if (typeof window !== 'undefined' && window.location.hash) {
+                const hashParams = new URLSearchParams(window.location.hash.substring(1));
+                const hashToken = hashParams.get('access_token');
+                const hashError = hashParams.get('error_description');
+
+                if (hashError) {
+                    setTokenError(true);
+                    setError(decodeURIComponent(hashError));
+                    return true; // handled
+                }
+
+                if (hashToken) {
+                    setAccessToken(hashToken);
+                    return true; // found token
+                }
+            }
+            return false;
+        };
+
+        const foundInHash = checkHash();
+
+        // 3. Validation fallback logic
+        // If we didn't find a token in hash AND we don't have one from query...
+        if (!foundInHash && !queryAccessToken) {
+            // Only show error if we are sure we needed one (e.g. type=recovery implies we expect a token)
+            // Or if we just want to be strict that this page requires a token.
+            // However, Supabase sometimes redirects without 'type' in hash mode.
+            // Let's assume if no token is found at all, it's invalid.
             setTokenError(true);
-            setError('El enlace de recuperación no es válido o ha expirado.');
+            setError('El enlace de recuperación no es válido o está incompleto.');
+        } else {
+            // If we found a token (either query or hash), clear any previous token error
+            setTokenError(false);
         }
-    }, [accessToken, type, errorDescription]);
+
+    }, [queryAccessToken, queryErrorDescription, type]);
 
     // Form validation
     const passwordStrength = getPasswordStrength(password);

@@ -19,6 +19,7 @@ export function ContactSection() {
     const [formId, setFormId] = useState<string | null>(null);
     const [formIdError, setFormIdError] = useState<string | null>(null);
     const [submitStatus, setSubmitStatus] = useState<'idle' | 'success' | 'error'>('idle');
+    const [dragActive, setDragActive] = useState(false);
 
     // Fetch form ID on mount
     const fetchFormId = async () => {

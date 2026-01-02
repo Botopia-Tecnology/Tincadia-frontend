@@ -8,6 +8,7 @@ import { usersService } from '@/services/users.service';
 interface DashboardStats {
     totalUsers: number;
     totalSubmissions: number;
+    totalCourses: number;
     recentUsers: Array<{
         id: string;
         firstName: string;
@@ -64,9 +65,21 @@ export default function AdminDashboard() {
                 submissions = await submissionsResponse.json();
             }
 
+            // Fetch courses
+            let courses: any[] = [];
+            try {
+                const coursesResponse = await fetch(`${apiUrl}/content/courses`);
+                if (coursesResponse.ok) {
+                    courses = await coursesResponse.json();
+                }
+            } catch (e) {
+                console.warn('Could not fetch courses:', e);
+            }
+
             setStats({
                 totalUsers: users.length,
                 totalSubmissions: Array.isArray(submissions) ? submissions.length : 0,
+                totalCourses: Array.isArray(courses) ? courses.length : 0,
                 recentUsers: users.slice(0, 5).map((u: any) => ({
                     id: u.id,
                     firstName: u.firstName || 'N/A',
@@ -102,7 +115,7 @@ export default function AdminDashboard() {
         <div className="space-y-8">
             <div className="flex items-center justify-between">
                 <div>
-                    <h2 className="text-3xl font-bold text-white">Dashboard Overview</h2>
+                    <h2 className="text-3xl font-bold text-white">Resumen del Panel</h2>
                     <p className="text-slate-400 mt-2">Bienvenido al Panel de Control de Tincadia.</p>
                 </div>
                 <button
@@ -139,10 +152,10 @@ export default function AdminDashboard() {
                 />
                 <StatCard
                     title="Cursos"
-                    value="Próximamente"
+                    value={stats?.totalCourses?.toLocaleString() || '0'}
                     icon={BookOpen}
                     color="bg-emerald-500"
-                    loading={false}
+                    loading={loading}
                 />
                 <StatCard
                     title="Métricas"

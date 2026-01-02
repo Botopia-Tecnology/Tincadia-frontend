@@ -54,7 +54,7 @@ export const AUTH_ENDPOINTS = {
     UPDATE_PROFILE: '/auth/profile', // Append /:userId when using
     /** POST - Verify token */
     VERIFY_TOKEN: '/auth/verify-token',
-    /** POST - Reset password */
+    /** POST - Request reset password email */
     RESET_PASSWORD: '/auth/reset-password',
 } as const;
 

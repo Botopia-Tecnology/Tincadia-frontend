@@ -10,6 +10,9 @@ interface UIContextType {
     isLoginPanelOpen: boolean;
     setIsLoginPanelOpen: (isOpen: boolean) => void;
     openLoginPanel: () => void;
+    isForgotPasswordPanelOpen: boolean;
+    setIsForgotPasswordPanelOpen: (isOpen: boolean) => void;
+    openForgotPasswordPanel: () => void;
 }
 
 const UIContext = createContext<UIContextType | undefined>(undefined);
@@ -18,8 +21,10 @@ export function UIProvider({ children }: { children: ReactNode }) {
     const [isRegistrationPanelOpen, setIsRegistrationPanelOpen] = useState(false);
     const [registrationEmail, setRegistrationEmail] = useState('');
     const [isLoginPanelOpen, setIsLoginPanelOpen] = useState(false);
+    const [isForgotPasswordPanelOpen, setIsForgotPasswordPanelOpen] = useState(false);
 
     const openLoginPanel = () => setIsLoginPanelOpen(true);
+    const openForgotPasswordPanel = () => setIsForgotPasswordPanelOpen(true);
 
     // Expose login panel function globally for Navbar (legacy support if needed, but context is better)
     useEffect(() => {
@@ -37,7 +42,10 @@ export function UIProvider({ children }: { children: ReactNode }) {
             setRegistrationEmail,
             isLoginPanelOpen,
             setIsLoginPanelOpen,
-            openLoginPanel
+            openLoginPanel,
+            isForgotPasswordPanelOpen,
+            setIsForgotPasswordPanelOpen,
+            openForgotPasswordPanel
         }}>
             {children}
         </UIContext.Provider>

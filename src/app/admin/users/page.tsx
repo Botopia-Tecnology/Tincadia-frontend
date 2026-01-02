@@ -38,13 +38,13 @@ export default function UsersPage() {
     return (
         <div className="space-y-6">
             <div className="flex justify-between items-center">
-                <h2 className="text-2xl font-bold text-white">User Management</h2>
+                <h2 className="text-2xl font-bold text-white">Gestión de Usuarios</h2>
                 <div className="flex gap-4">
                     <div className="relative">
                         <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" size={20} />
                         <input
                             type="text"
-                            placeholder="Search users..."
+                            placeholder="Buscar usuarios..."
                             value={searchTerm}
                             onChange={(e) => setSearchTerm(e.target.value)}
                             className="pl-10 pr-4 py-2 bg-slate-800 border border-slate-700 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
@@ -52,7 +52,7 @@ export default function UsersPage() {
                     </div>
                     {/* Add User functionality would go here - usually via invite or admin creation */}
                     <button className="bg-slate-700 text-slate-400 cursor-not-allowed px-4 py-2 rounded-lg font-medium">
-                        Add User
+                        Agregar Usuario
                     </button>
                 </div>
             </div>
@@ -66,17 +66,17 @@ export default function UsersPage() {
                     <table className="w-full text-left">
                         <thead className="bg-slate-900 border-b border-slate-700 text-slate-400 uppercase text-xs font-semibold">
                             <tr>
-                                <th className="px-6 py-4">Name</th>
-                                <th className="px-6 py-4">Role</th>
-                                <th className="px-6 py-4">Status</th>
-                                <th className="px-6 py-4">Last Active</th>
-                                <th className="px-6 py-4 text-right">Actions</th>
+                                <th className="px-6 py-4">Nombre</th>
+                                <th className="px-6 py-4">Rol</th>
+                                <th className="px-6 py-4">Estado</th>
+                                <th className="px-6 py-4">Última Actividad</th>
+                                <th className="px-6 py-4 text-right">Acciones</th>
                             </tr>
                         </thead>
                         <tbody className="divide-y divide-slate-700">
                             {filteredUsers.length === 0 ? (
                                 <tr>
-                                    <td colSpan={5} className="text-center py-8 text-slate-500">No users found.</td>
+                                    <td colSpan={5} className="text-center py-8 text-slate-500">No se encontraron usuarios.</td>
                                 </tr>
                             ) : (
                                 filteredUsers.map((user) => (
@@ -104,7 +104,7 @@ export default function UsersPage() {
                                             <span className={`inline-flex items-center gap-1.5 px-2 py-1 rounded text-xs font-medium ${user.status === 'Active' ? 'bg-emerald-900/50 text-emerald-400' : 'bg-slate-700 text-slate-400'
                                                 }`}>
                                                 <span className={`w-1.5 h-1.5 rounded-full ${user.status === 'Active' ? 'bg-emerald-400' : 'bg-slate-400'}`} />
-                                                {user.status}
+                                                {user.status === 'Active' ? 'Activo' : user.status}
                                             </span>
                                         </td>
                                         <td className="px-6 py-4 text-slate-400 text-sm">

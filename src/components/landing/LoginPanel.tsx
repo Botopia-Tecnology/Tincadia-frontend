@@ -2,8 +2,8 @@
 
 import { useState } from 'react';
 import { X, Loader2 } from 'lucide-react';
-import Link from 'next/link';
 import { type CredentialResponse } from '@react-oauth/google';
+import { appleAuthHelpers } from 'react-apple-signin-auth';
 import { useTranslation } from '@/hooks/useTranslation';
 import { GridBackground } from '@/components/ui/GridBackground';
 import { useAuth } from '@/contexts/AuthContext';
@@ -13,9 +13,10 @@ interface LoginPanelProps {
     isOpen: boolean;
     onClose: () => void;
     onSignUpClick?: (email?: string) => void;
+    onForgotPasswordClick?: () => void;
 }
 
-export function LoginPanel({ isOpen, onClose, onSignUpClick }: LoginPanelProps) {
+export function LoginPanel({ isOpen, onClose, onSignUpClick, onForgotPasswordClick }: LoginPanelProps) {
     const t = useTranslation();
     const { login, loginWithOAuth, isLoading, error, clearError } = useAuth();
     const [email, setEmail] = useState('');
@@ -45,6 +46,39 @@ export function LoginPanel({ isOpen, onClose, onSignUpClick }: LoginPanelProps) 
 
     const handleGoogleError = () => {
         setLocalError('Error al conectar con Google. Intenta de nuevo.');
+    };
+
+    const handleAppleLogin = async () => {
+        setLocalError(null);
+        clearError();
+        setOauthLoading(true);
+
+        try {
+            const response = await appleAuthHelpers.signIn({
+                authOptions: {
+                    clientId: process.env.NEXT_PUBLIC_APPLE_CLIENT_ID || '',
+                    scope: 'email name',
+                    redirectURI: process.env.NEXT_PUBLIC_APP_URL || '',
+                    usePopup: true,
+                },
+                onError: (error: any) => {
+                    console.error('Apple Sign In Error:', error);
+                    throw new Error(error.error || 'Error en inicio de sesión con Apple');
+                },
+            });
+
+            if (response && response.authorization && response.authorization.id_token) {
+                await loginWithOAuth('apple', response.authorization.id_token);
+                onClose();
+            } else {
+                throw new Error('No se recibió el token de Apple');
+            }
+        } catch (err) {
+            console.error(err);
+            setLocalError(err instanceof Error ? err.message : 'Error al iniciar sesión con Apple');
+        } finally {
+            setOauthLoading(false);
+        }
     };
 
     const handleOtherSocialLogin = () => {
@@ -125,9 +159,13 @@ export function LoginPanel({ isOpen, onClose, onSignUpClick }: LoginPanelProps) 
                                 </div>
 
                                 <div className="text-right">
-                                    <Link href="#forgot-password" className="text-sm text-[#83A98A] hover:underline">
+                                    <button
+                                        type="button"
+                                        onClick={() => onForgotPasswordClick?.()}
+                                        className="text-sm text-[#83A98A] hover:underline"
+                                    >
                                         {t('login.forgotPassword')}
-                                    </Link>
+                                    </button>
                                 </div>
 
                                 {displayError && (
@@ -139,7 +177,7 @@ export function LoginPanel({ isOpen, onClose, onSignUpClick }: LoginPanelProps) 
                                 <button
                                     type="submit"
                                     disabled={isLoading}
-                                    className="w-full bg-[#83A98A] text-white font-semibold py-4 px-6 rounded-full hover:bg-[#6D8F75] transition-colors flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
+                                    className="w-full bg-[#111827] text-white font-semibold py-4 px-6 rounded-full hover:bg-black transition-colors flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
                                 >
                                     {isLoading ? (
                                         <>
@@ -162,8 +200,7 @@ export function LoginPanel({ isOpen, onClose, onSignUpClick }: LoginPanelProps) 
                                 <SocialLoginButtons
                                     onGoogleSuccess={handleGoogleSuccess}
                                     onGoogleError={handleGoogleError}
-                                    onAppleClick={handleOtherSocialLogin}
-                                    onMicrosoftClick={handleOtherSocialLogin}
+                                    onAppleClick={handleAppleLogin}
                                     disabled={oauthLoading}
                                     googleText="continue_with"
                                 />

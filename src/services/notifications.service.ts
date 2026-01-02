@@ -10,6 +10,17 @@ export interface AppNotification {
     isActive: boolean;
     createdAt: string;
     expiresAt?: string;
+    category?: NotificationCategory;
+    categoryId?: string;
+}
+
+export interface NotificationCategory {
+    id: string;
+    name: string;
+    label: string;
+    color: string;
+    icon: string;
+    isActive: boolean;
 }
 
 export const notificationsService = {
@@ -58,5 +69,30 @@ export const notificationsService = {
             method: 'DELETE',
         });
         if (!response.ok) throw new Error('Failed to delete notification');
+    },
+
+    // ==================== Categories ====================
+
+    getCategories: async (): Promise<NotificationCategory[]> => {
+        const response = await fetch(`${buildUrl(NOTIFICATION_ENDPOINTS.CREATE)}/categories/all`);
+        if (!response.ok) throw new Error('Failed to fetch categories');
+        return response.json();
+    },
+
+    createCategory: async (data: any): Promise<NotificationCategory> => {
+        const response = await fetch(`${buildUrl(NOTIFICATION_ENDPOINTS.CREATE)}/categories`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(data),
+        });
+        if (!response.ok) throw new Error('Failed to create category');
+        return response.json();
+    },
+
+    deleteCategory: async (id: string): Promise<void> => {
+        const response = await fetch(`${buildUrl(NOTIFICATION_ENDPOINTS.CREATE)}/categories/${id}`, {
+            method: 'DELETE',
+        });
+        if (!response.ok) throw new Error('Failed to delete category');
     }
 };
