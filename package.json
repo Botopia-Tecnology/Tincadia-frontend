@@ -9,15 +9,15 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
-    "start": "next start",
+    "start": "npm run build && next start",
     "lint": "eslint"
   },
   "dependencies": {
     "@react-oauth/google": "^0.12.2",
     "@react-three/drei": "^10.7.7",
-    "@react-three/fiber": "^9.4.2",
+    "@react-three/fiber": "^9.5.0",
     "@splinetool/react-spline": "^4.1.0",
-    "@splinetool/runtime": "^1.12.23",
+    "@splinetool/runtime": "^1.12.28",
     "@tsparticles/engine": "^3.9.1",
     "@tsparticles/react": "^3.0.0",
     "@tsparticles/slim": "^3.9.1",
@@ -26,7 +26,9 @@
     "formik": "^2.4.9",
     "lucide-react": "^0.554.0",
     "next": "16.0.10",
+    "posthog-js": "^1.311.0",
     "react": "19.2.3",
+    "react-apple-signin-auth": "^1.1.2",
     "react-dom": "19.2.3",
     "tailwind-merge": "^3.4.0",
     "three": "^0.181.2",

@@ -180,7 +180,7 @@ export function HowToStart() {
         </div>
 
         {/* Timeline de pestañas (Desktop) - Sticky */}
-        <div className="hidden lg:block mb-8 lg:sticky lg:top-20 lg:z-20 lg:bg-gray-50 lg:py-3 lg:pb-4">
+        <div className="hidden lg:block mb-8 lg:sticky lg:top-[68px] lg:z-20 lg:bg-white/90 lg:backdrop-blur-sm lg:py-3 lg:pb-4">
           <div className="relative">
             {/* Línea de conexión horizontal */}
             <div className="absolute top-1/2 left-0 right-0 h-0.5 bg-gray-200 -translate-y-1/2" aria-hidden="true" />
@@ -291,7 +291,7 @@ export function HowToStart() {
         >
           {/* Video placeholder - Sticky (solo desktop) */}
           <div
-            className="hidden lg:block lg:sticky lg:top-28 relative rounded-2xl overflow-hidden shadow-2xl h-[550px] flex items-center justify-center transition-all duration-500"
+            className="hidden lg:block lg:sticky lg:top-[220px] relative rounded-2xl overflow-hidden shadow-2xl h-[550px] flex items-center justify-center transition-all duration-500"
           >
             {features.map((feature) => {
               const FeatureIcon = feature.icon;

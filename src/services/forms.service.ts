@@ -1,5 +1,5 @@
 import { api } from '@/lib/api-client';
-import { FORMS_ENDPOINTS } from '@/config/api.config';
+import { FORMS_ENDPOINTS, API_BASE_URL } from '@/config/api.config';
 
 export interface FormDefinition {
     id: string;
@@ -15,6 +15,11 @@ export interface FormSubmissionResponse {
     submission: any;
     userStatus: 'registered' | 'not_registered' | 'unknown';
     action: 'redirect_to_register' | 'none';
+}
+
+export interface FileUploadResponse {
+    url: string;
+    path: string;
 }
 
 export const formsService = {
@@ -35,11 +40,49 @@ export const formsService = {
      * @param submittedBy - Optional user ID if authenticated
      */
     async submitForm(formId: string, data: any, submittedBy?: string): Promise<FormSubmissionResponse> {
-        return api.post<FormSubmissionResponse>(FORMS_ENDPOINTS.SUBMIT, {
+        console.log('📤 [Forms Service] Calling submitForm API:', {
+            endpoint: FORMS_ENDPOINTS.SUBMIT,
             formId,
-            data,
+            hasData: !!data,
             submittedBy,
         });
+        
+        try {
+            const response = await api.post<FormSubmissionResponse>(FORMS_ENDPOINTS.SUBMIT, {
+                formId,
+                data,
+                submittedBy,
+            });
+            
+            console.log('✅ [Forms Service] Form submitted successfully:', response);
+            return response;
+        } catch (error) {
+            console.error('❌ [Forms Service] Error submitting form:', error);
+            throw error;
+        }
+    },
+
+    /**
+     * Upload a file to Supabase Storage
+     * 
+     * @param file - The file to upload
+     * @returns The public URL and path of the uploaded file
+     */
+    async uploadFile(file: File): Promise<FileUploadResponse> {
+        const formData = new FormData();
+        formData.append('file', file);
+
+        const response = await fetch(`${API_BASE_URL}/forms/upload`, {
+            method: 'POST',
+            body: formData,
+        });
+
+        if (!response.ok) {
+            const errorData = await response.json().catch(() => ({}));
+            throw new Error(errorData.message || 'Failed to upload file');
+        }
+
+        return response.json();
     }
 };
 

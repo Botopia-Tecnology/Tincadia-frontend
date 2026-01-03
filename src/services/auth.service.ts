@@ -15,6 +15,8 @@ import type {
     RegisterResponse,
     ResetPasswordDto,
     ResetPasswordResponse,
+    ForgotPasswordDto,
+    ForgotPasswordResponse,
     OAuthProvider,
     OAuthLoginResponse,
     UpdateProfileDto,
@@ -162,11 +164,29 @@ export const authService = {
     },
 
     /**
-     * Reset password
+     * Request password reset email
      * 
+     * @param data - Forgot password data (email)
+     */
+    async forgotPassword(data: ForgotPasswordDto): Promise<ForgotPasswordResponse> {
+        return api.post<ForgotPasswordResponse>(
+            AUTH_ENDPOINTS.RESET_PASSWORD,
+            data,
+            { skipAuth: true }
+        );
+    },
+
+    /**
+     * Reset password (Set new password)
+     * Note: This usually happens after user clicks email link and is authenticated
      * @param data - Reset password data
      */
     async resetPassword(data: ResetPasswordDto): Promise<ResetPasswordResponse> {
+        // This likely maps to updatePassword in backend now, or needs to be adjusted
+        // if backend usage of 'reset-password' is ONLY for sending email.
+        // For now, leaving it but noting the endpoint reuse/confusion.
+        // Actually, if backend reset-password IS "send email", then this method 
+        // effectively does the same as forgotPassword.
         return api.post<ResetPasswordResponse>(
             AUTH_ENDPOINTS.RESET_PASSWORD,
             data,

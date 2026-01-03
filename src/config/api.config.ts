@@ -54,7 +54,7 @@ export const AUTH_ENDPOINTS = {
     UPDATE_PROFILE: '/auth/profile', // Append /:userId when using
     /** POST - Verify token */
     VERIFY_TOKEN: '/auth/verify-token',
-    /** POST - Reset password */
+    /** POST - Request reset password email */
     RESET_PASSWORD: '/auth/reset-password',
 } as const;
 
@@ -69,10 +69,81 @@ export const FORMS_ENDPOINTS = {
 } as const;
 
 /**
+ * Content endpoints (content-ms)
+ */
+export const CONTENT_ENDPOINTS = {
+    /** GET - Get all courses */
+    COURSES: '/content/courses',
+    /** GET - Get course details */
+    DETAILS: '/content/courses/:id',
+    /** PUT - Update course */
+    UPDATE: '/content/courses/:id',
+    /** POST - Create course */
+    CREATE: '/content/courses',
+    /** DELETE - Delete course */
+    DELETE: '/content/courses/:id',
+
+    /** POST - Create module */
+    CREATE_MODULE: '/content/courses/:courseId/modules',
+    /** PUT - Update module */
+    UPDATE_MODULE: '/content/modules/:id',
+    /** DELETE - Delete module */
+    DELETE_MODULE: '/content/modules/:id',
+
+    /** POST - Create lesson */
+    CREATE_LESSON: '/content/modules/:moduleId/lessons',
+    /** PUT - Update lesson */
+    UPDATE_LESSON: '/content/lessons/:id',
+    /** DELETE - Delete lesson */
+    DELETE_LESSON: '/content/lessons/:id',
+    /** DELETE - Remove lesson video */
+    REMOVE_VIDEO: '/content/lessons/:id/video',
+
+    /** GET - Get all categories */
+    CATEGORIES: '/content/categories',
+    /** POST - Create category */
+    CREATE_CATEGORY: '/content/categories',
+    /** PUT - Update category */
+    UPDATE_CATEGORY: '/content/categories/:id',
+    /** DELETE - Delete category */
+    DELETE_CATEGORY: '/content/categories/:id',
+    /** POST - Upload course thumbnail */
+    UPLOAD_THUMBNAIL: '/content/courses/:courseId/thumbnail',
+    /** POST - Upload lesson video */
+    UPLOAD_LESSON_VIDEO: '/content/lessons/:lessonId/video',
+} as const;
+
+/**
+ * Notification endpoints (communication-ms)
+ */
+export const NOTIFICATION_ENDPOINTS = {
+    /** GET - [Admin] Get all notifications */
+    ADMIN_ALL: '/notifications/admin/all',
+    /** POST - Create notification */
+    CREATE: '/notifications',
+    /** PUT - Update notification */
+    UPDATE: '/notifications', // Append /:id
+    /** DELETE - Delete notification */
+    DELETE: '/notifications', // Append /:id
+} as const;
+
+/**
+ * Payment endpoints (payments-ms)
+ */
+export const PAYMENTS_ENDPOINTS = {
+    /** GET - Get all payments */
+    LIST: '/payments',
+    /** GET - Get payment details */
+    DETAILS: '/payments', // Append /:id
+} as const;
+
+/**
  * User profile endpoints (users-ms)
  * Note: Add these when you implement the users microservice
  */
 export const USER_ENDPOINTS = {
+    /** GET - Get all users (Admin) */
+    LIST: '/auth/users', // Append /:currentUserId to exclude self
     /** GET - Get user profile */
     PROFILE: '/users/profile',
     /** PATCH - Update user profile */
@@ -101,6 +172,9 @@ export const apiConfig = {
     endpoints: {
         auth: AUTH_ENDPOINTS,
         users: USER_ENDPOINTS,
+        content: CONTENT_ENDPOINTS,
+        notifications: NOTIFICATION_ENDPOINTS,
+        payments: PAYMENTS_ENDPOINTS,
     },
     buildUrl,
 } as const;

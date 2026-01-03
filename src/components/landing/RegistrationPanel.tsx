@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import { X } from 'lucide-react';
 import Link from 'next/link';
 import { type CredentialResponse } from '@react-oauth/google';
+import { appleAuthHelpers } from 'react-apple-signin-auth';
 import { useTranslation } from '@/hooks/useTranslation';
 import { GridBackground } from '@/components/ui/GridBackground';
 import { useAuth } from '@/contexts/AuthContext';
@@ -65,8 +66,37 @@ export function RegistrationPanel({ isOpen, onClose, initialEmail = '' }: Regist
     setFormError('Error al conectar con Google. Intenta de nuevo.');
   };
 
-  const handleOtherSocialLogin = () => {
-    setFormError('OAuth con este proveedor aún no está disponible.');
+  const handleAppleLogin = async () => {
+    setFormError(null);
+    clearError();
+    setOauthLoading(true);
+
+    try {
+      const response = await appleAuthHelpers.signIn({
+        authOptions: {
+          clientId: process.env.NEXT_PUBLIC_APPLE_CLIENT_ID || '',
+          scope: 'email name',
+          redirectURI: process.env.NEXT_PUBLIC_APP_URL || '',
+          usePopup: true,
+        },
+        onError: (error: any) => {
+          console.error('Apple Sign In Error:', error);
+          throw new Error(error.error || 'Error en inicio de sesión con Apple');
+        },
+      });
+
+      if (response && response.authorization && response.authorization.id_token) {
+        await loginWithOAuth('apple', response.authorization.id_token);
+        handleClose();
+      } else {
+        throw new Error('No se recibió el token de Apple');
+      }
+    } catch (err) {
+      console.error(err);
+      setFormError(err instanceof Error ? err.message : 'Error al registrarse con Apple');
+    } finally {
+      setOauthLoading(false);
+    }
   };
 
   const handleFormSubmit = async (formData: RegistrationFormData) => {
@@ -153,8 +183,7 @@ export function RegistrationPanel({ isOpen, onClose, initialEmail = '' }: Regist
                   <SocialLoginButtons
                     onGoogleSuccess={handleGoogleSuccess}
                     onGoogleError={handleGoogleError}
-                    onAppleClick={handleOtherSocialLogin}
-                    onMicrosoftClick={handleOtherSocialLogin}
+                    onAppleClick={handleAppleLogin}
                     disabled={oauthLoading}
                     googleText="signup_with"
                   />
@@ -162,11 +191,11 @@ export function RegistrationPanel({ isOpen, onClose, initialEmail = '' }: Regist
 
                 <p className="mt-8 text-xs text-gray-500 text-center">
                   {t('registration.panel.terms')}{' '}
-                  <Link href="#terminos" className="text-[#83A98A] hover:underline">
+                  <Link href="/terminos" target="_blank" className="text-[#83A98A] hover:underline">
                     {t('registration.panel.termsLink')}
                   </Link>{' '}
                   {t('registration.panel.and')}{' '}
-                  <Link href="#privacidad" className="text-[#83A98A] hover:underline">
+                  <Link href="/privacidad" target="_blank" className="text-[#83A98A] hover:underline">
                     {t('registration.panel.privacyLink')}
                   </Link>
                 </p>
