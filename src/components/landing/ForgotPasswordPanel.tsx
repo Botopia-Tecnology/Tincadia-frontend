@@ -13,7 +13,7 @@ interface ForgotPasswordPanelProps {
 }
 
 export function ForgotPasswordPanel({ isOpen, onClose }: ForgotPasswordPanelProps) {
-    const { t } = useTranslation();
+    const t = useTranslation();
     const { openLoginPanel } = useUI();
 
     // States
