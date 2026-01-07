@@ -54,6 +54,7 @@ export function AdminSidebar() {
                 <SidebarItem href="/admin/notifications" icon={Bell} label="Notificaciones" />
                 <SidebarItem href="/admin/finance" icon={CreditCard} label="Finanzas" />
                 <SidebarItem href="/admin/forms" icon={FileText} label="Formularios" />
+                <SidebarItem href="/admin/landing" icon={Settings} label="Landing Page" />
             </nav>
 
             <div className="p-4 border-t border-slate-800 space-y-2">

@@ -3,13 +3,27 @@
 import Link from 'next/link';
 import { GraduationCap, Languages, PenTool } from 'lucide-react';
 import { useTranslation } from '@/hooks/useTranslation';
-import { useMemo } from 'react';
-import { cn } from '@/lib/utils';
+import { useState, useEffect, useMemo } from 'react';
+import { api } from '@/lib/api-client';
 import { ServiceCard } from './ServiceCard';
 
 export function Services() {
   // Force rebuild
   const t = useTranslation();
+  const [config, setConfig] = useState<Record<string, string>>({});
+
+  useEffect(() => {
+    const fetchConfig = async () => {
+      try {
+        const data = await api.get<any[]>('/content/landing-config');
+        const configMap = data.reduce((acc, item) => ({ ...acc, [item.key]: item.value }), {});
+        setConfig(configMap);
+      } catch (error) {
+        console.error('Failed to fetch landing config:', error);
+      }
+    };
+    fetchConfig();
+  }, []);
 
   const services = useMemo(() => [
     {
@@ -21,11 +35,8 @@ export function Services() {
       description: t('services.signLanguage.description'),
       primaryAction: { text: t('services.signLanguage.primaryAction'), href: '#agendar' },
       secondaryAction: { text: t('services.signLanguage.secondaryAction'), href: '#info-clases' },
-      // Using the existing hoverImage as the main background for now, 
-      // and maybe we can find a gif or just use a different effect.
-      // For now, let's use the static image as background.
-      backgroundImage: 'https://images.unsplash.com/photo-1503676260728-1c00da094a0b?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80',
-      hoverImage: 'https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExbmV5Y3V5Y3V5Y3V5Y3V5Y3V5Y3V5Y3V5Y3V5Y3V5Y3V5Y3V5/3o7TKrEzvLbsVAud8I/giphy.gif', // Example GIF for sign language/learning
+      backgroundImage: config['service_1_bg'] || 'https://images.unsplash.com/photo-1503676260728-1c00da094a0b?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80',
+      hoverImage: config['service_1_hover'] || 'https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExbmV5Y3V5Y3V5Y3V5Y3V5Y3V5Y3V5Y3V5Y3V5Y3V5Y3V5Y3V5/3o7TKrEzvLbsVAud8I/giphy.gif',
     },
     {
       id: 'traductor-senas',
@@ -36,8 +47,8 @@ export function Services() {
       description: t('services.translator.description'),
       primaryAction: { text: t('services.translator.primaryAction'), href: '#probar-traductor' },
       secondaryAction: { text: t('services.translator.secondaryAction'), href: '#demo' },
-      backgroundImage: 'https://images.unsplash.com/photo-1521737604893-d14cc237f11d?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80',
-      hoverImage: 'https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExbmV5Y3V5Y3V5Y3V5Y3V5Y3V5Y3V5Y3V5Y3V5Y3V5Y3V5Y3V5/l41lVz7dG0s5z5b5S/giphy.gif', // Example GIF for translation/tech
+      backgroundImage: config['service_2_bg'] || 'https://images.unsplash.com/photo-1521737604893-d14cc237f11d?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80',
+      hoverImage: config['service_2_hover'] || 'https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExbmV5Y3V5Y3V5Y3V5Y3V5Y3V5Y3V5Y3V5Y3V5Y3V5Y3V5Y3V5/l41lVz7dG0s5z5b5S/giphy.gif',
     },
     {
       id: 'asistente-redaccion',
@@ -48,10 +59,10 @@ export function Services() {
       description: t('services.writingAssistant.description'),
       primaryAction: { text: t('services.writingAssistant.primaryAction'), href: '#usar-asistente' },
       secondaryAction: { text: t('services.writingAssistant.secondaryAction'), href: '#como-funciona' },
-      backgroundImage: 'https://images.unsplash.com/photo-1455390582262-044cdead277a?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80',
-      hoverImage: 'https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExbmV5Y3V5Y3V5Y3V5Y3V5Y3V5Y3V5Y3V5Y3V5Y3V5Y3V5Y3V5/3o6Zt6ML6JBC02opAA/giphy.gif', // Example GIF for writing/typing
+      backgroundImage: config['service_3_bg'] || 'https://images.unsplash.com/photo-1455390582262-044cdead277a?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80',
+      hoverImage: config['service_3_hover'] || 'https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExbmV5Y3V5Y3V5Y3V5Y3V5Y3V5Y3V5Y3V5Y3V5Y3V5Y3V5Y3V5/3o6Zt6ML6JBC02opAA/giphy.gif',
     },
-  ], [t]);
+  ], [t, config]);
 
   return (
     <section

@@ -137,7 +137,7 @@ export function DownloadAppSection() {
                             <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
                                 <a href="#" className="inline-flex items-center gap-3 rounded-lg border border-gray-300 px-4 py-3 hover:border-[#83A98A] hover:bg-gray-50 transition-all justify-center sm:justify-start"> {/* Adjusted padding/centering */}
                                     <div className="relative w-6 h-6 flex-shrink-0">
-                                        <Image src="/media/images/footer/appstore.png" alt="App Store" fill className="object-contain" unoptimized />
+                                        <Image src="https://res.cloudinary.com/do1mvhvms/image/upload/v1767786854/appstore_vqf0e9.jpg" alt="App Store" fill className="object-contain" unoptimized />
                                     </div>
                                     <div className="flex flex-col leading-tight text-left">
                                         <span className="text-[10px] uppercase tracking-wide text-gray-500">{t('download.downloadOnThe')}</span>
@@ -146,7 +146,7 @@ export function DownloadAppSection() {
                                 </a>
                                 <a href="#" className="inline-flex items-center gap-3 rounded-lg border border-gray-300 px-4 py-3 hover:border-[#83A98A] hover:bg-gray-50 transition-all justify-center sm:justify-start">
                                     <div className="relative w-6 h-6 flex-shrink-0">
-                                        <Image src="/media/images/footer/playstore.png" alt="Google Play" fill className="object-contain" unoptimized />
+                                        <Image src="https://res.cloudinary.com/do1mvhvms/image/upload/v1767786855/playstore_x0twtw.jpg" alt="Google Play" fill className="object-contain" unoptimized />
                                     </div>
                                     <div className="flex flex-col leading-tight text-left">
                                         <span className="text-[10px] uppercase tracking-wide text-gray-500">{t('download.getItOn')}</span>
@@ -160,7 +160,7 @@ export function DownloadAppSection() {
                         {/* Mobile: Image below text. Desktop: Right column */}
                         <div className={`relative flex items-center ${isMobile ? 'justify-center w-full' : 'justify-end'}`}>
                             <div className={`relative w-full max-w-[300px] h-[300px] sm:max-w-[450px] sm:h-[400px] lg:w-[650px] lg:h-[520px] ${isMobile ? 'mx-auto' : ''}`}>
-                                <Image src="/media/images/download_1.png" alt="TINCADIA App" fill className="object-contain lg:object-right" unoptimized priority /> {/* Center obj on mobile */}
+                                <Image src="https://res.cloudinary.com/do1mvhvms/image/upload/v1767786402/download_1_flmhlk.png" alt="TINCADIA App" fill className="object-contain lg:object-right" unoptimized priority /> {/* Center obj on mobile */}
                             </div>
                         </div>
                     </div>
@@ -177,7 +177,7 @@ export function DownloadAppSection() {
                                     style={{ background: 'linear-gradient(to bottom, rgba(59, 130, 246, 0.8), rgba(59, 130, 246, 0))', boxShadow: '0 0 60px 25px rgba(59, 130, 246, 0.5)' }} />}
 
                                 <div className="relative w-28 h-28 sm:w-32 sm:h-32 lg:w-44 lg:h-44 rounded-xl overflow-hidden shadow-xl bg-white p-2 z-10">
-                                    <Image src="/media/images/qr-code.png" alt={t('download.scanToDownload')} fill className="object-contain" unoptimized />
+                                    <Image src="https://res.cloudinary.com/do1mvhvms/image/upload/v1767786403/qr-code_bzuhho.png" alt={t('download.scanToDownload')} fill className="object-contain" unoptimized />
                                 </div>
                             </div>
                             <div className="relative">
@@ -185,13 +185,13 @@ export function DownloadAppSection() {
                                     style={{ background: 'linear-gradient(to bottom, rgba(59, 130, 246, 0.8), rgba(59, 130, 246, 0))', boxShadow: '0 0 60px 25px rgba(59, 130, 246, 0.5)' }} />}
 
                                 <div className="relative w-28 h-28 sm:w-32 sm:h-32 lg:w-44 lg:h-44 rounded-xl overflow-hidden shadow-xl bg-white p-2 z-10">
-                                    <Image src="/media/images/qr-code-appstore.png" alt={t('download.scanToDownload')} fill className="object-contain" unoptimized />
+                                    <Image src="https://res.cloudinary.com/do1mvhvms/image/upload/v1767786403/qr-code-appstore_tmz5qk.png" alt={t('download.scanToDownload')} fill className="object-contain" unoptimized />
                                 </div>
                             </div>
                         </div>
 
                         <div className="relative w-full max-w-[90vw] h-[200px] sm:h-[250px] lg:h-[350px] -mt-2">
-                            <Image src="/media/images/download_2.png" alt="TINCADIA App Features" fill className="object-contain" unoptimized />
+                            <Image src="https://res.cloudinary.com/do1mvhvms/image/upload/v1767786402/download_2_dcyn12.png" alt="TINCADIA App Features" fill className="object-contain" unoptimized />
                         </div>
                     </div>
 
