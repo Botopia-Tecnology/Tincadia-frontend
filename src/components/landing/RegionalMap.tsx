@@ -74,7 +74,7 @@ export function RegionalMap() {
                             }}
                         >
                             <Image
-                                src={darkMode ? "/media/images/world_map_dark.png" : "/media/images/world_map.png"}
+                                src={darkMode ? "https://res.cloudinary.com/do1mvhvms/image/upload/v1767786404/world_map_dark_tgfm59.png" : "https://res.cloudinary.com/do1mvhvms/image/upload/v1767786404/world_map_aucnfk.png"}
                                 alt="World map"
                                 fill
                                 className="object-contain drop-shadow-2xl"

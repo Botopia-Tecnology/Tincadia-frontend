@@ -271,7 +271,7 @@ export function Hero({ disableAnimations = false }: HeroProps) {
                     aria-label="Video de presentación de Tincadia"
                   >
                     <source
-                      src="/media/videos/1.mp4"
+                      src="https://res.cloudinary.com/do1mvhvms/video/upload/v1767786925/1_qlrdln.mp4"
                       type="video/mp4"
                     />
                     Tu navegador no soporta el elemento de video.
@@ -350,7 +350,7 @@ export function Hero({ disableAnimations = false }: HeroProps) {
                 >
                   <div className="relative h-6 w-20 md:h-8 md:w-24 lg:h-10 lg:w-28 flex-shrink-0 grayscale hover:grayscale-0 transition-all duration-300 opacity-60 hover:opacity-100">
                     <Image
-                      src="/media/images/logo_almia.png"
+                      src="https://res.cloudinary.com/do1mvhvms/image/upload/v1767786402/logo_almia_wbemsv.png"
                       alt=""
                       fill
                       className="object-contain"
@@ -359,7 +359,7 @@ export function Hero({ disableAnimations = false }: HeroProps) {
                   </div>
                   <div className="relative h-10 w-28 md:h-12 md:w-32 lg:h-14 lg:w-36 flex-shrink-0 grayscale hover:grayscale-0 transition-all duration-300 opacity-60 hover:opacity-100">
                     <Image
-                      src="/media/images/logo_daste.png"
+                      src="https://res.cloudinary.com/do1mvhvms/image/upload/v1767786403/logo_daste_tla5iz.png"
                       alt=""
                       fill
                       className="object-contain"
@@ -368,8 +368,17 @@ export function Hero({ disableAnimations = false }: HeroProps) {
                   </div>
                   <div className="relative h-10 w-28 md:h-12 md:w-32 lg:h-14 lg:w-36 flex-shrink-0 grayscale hover:grayscale-0 transition-all duration-300 opacity-60 hover:opacity-100">
                     <Image
-                      src="/media/images/logo_educatics.png"
+                      src="https://res.cloudinary.com/do1mvhvms/image/upload/v1767786402/logo_educatics_jqsbtn.png"
                       alt=""
+                      fill
+                      className="object-contain"
+                      sizes="(max-width: 768px) 112px, (max-width: 1024px) 128px, 144px"
+                    />
+                  </div>
+                  <div className="relative h-10 w-28 md:h-12 md:w-32 lg:h-14 lg:w-36 flex-shrink-0 grayscale hover:grayscale-0 transition-all duration-300 opacity-60 hover:opacity-100">
+                    <Image
+                      src="https://res.cloudinary.com/do1mvhvms/image/upload/v1767786803/WhatsApp_Image_2026-01-06_at_22.54.25_efd4tc.jpg"
+                      alt="ParqueTe"
                       fill
                       className="object-contain"
                       sizes="(max-width: 768px) 112px, (max-width: 1024px) 128px, 144px"
