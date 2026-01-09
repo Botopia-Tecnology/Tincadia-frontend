@@ -23,80 +23,138 @@ export function Pricing() {
   const t = useTranslation();
   const [userType, setUserType] = useState<UserType>('personal');
   const [billingCycle, setBillingCycle] = useState<BillingCycle>('mensual');
-  
-  const plans: Record<UserType, Plan[]> = useMemo(() => {
+  const [plans, setPlans] = useState<Record<UserType, Plan[]>>({
+    personal: [],
+    empresa: []
+  });
+  const [isLoading, setIsLoading] = useState(true);
+
+  // Fallback plans from i18n
+  const fallbackPlans: Record<UserType, Plan[]> = useMemo(() => {
     const getArray = (key: string): string[] => {
       const value = t(key);
       return Array.isArray(value) ? value : [];
     };
-    
+
     return {
-    personal: [
-      {
-        name: t('pricing.plans.personal.free.name'),
-        price: t('pricing.free'),
-        description: t('pricing.plans.personal.free.description'),
-        buttonText: t('pricing.plans.personal.free.buttonText'),
-        buttonIcon: <Users className="w-4 h-4" />,
-        includes: getArray('pricing.plans.personal.free.includes'),
-        excludes: getArray('pricing.plans.personal.free.excludes'),
-      },
-      {
-        name: t('pricing.plans.personal.premium.name'),
-        price: '0',
-        priceAnnual: '0',
-        description: t('pricing.plans.personal.premium.description'),
-        buttonText: t('pricing.plans.personal.premium.buttonText'),
-        buttonIcon: <CreditCard className="w-4 h-4" />,
-        includes: getArray('pricing.plans.personal.premium.includes'),
-        excludes: getArray('pricing.plans.personal.premium.excludes'),
-      },
-      {
-        name: t('pricing.plans.personal.corporate.name'),
-        price: '0',
-        priceAnnual: '0',
-        description: t('pricing.plans.personal.corporate.description'),
-        buttonText: t('pricing.plans.personal.corporate.buttonText'),
-        buttonIcon: <Crown className="w-4 h-4" />,
-        includes: getArray('pricing.plans.personal.corporate.includes'),
-        excludes: getArray('pricing.plans.personal.corporate.excludes'),
-      },
-    ],
-    empresa: [
-      {
-        name: t('pricing.plans.empresa.free.name'),
-        price: t('pricing.free'),
-        description: t('pricing.plans.empresa.free.description'),
-        buttonText: t('pricing.plans.empresa.free.buttonText'),
-        buttonIcon: <Users className="w-4 h-4" />,
-        includes: getArray('pricing.plans.empresa.free.includes'),
-        excludes: getArray('pricing.plans.empresa.free.excludes'),
-      },
-      {
-        name: t('pricing.plans.empresa.business.name'),
-        price: '0',
-        priceAnnual: '0',
-        description: t('pricing.plans.empresa.business.description'),
-        buttonText: t('pricing.plans.empresa.business.buttonText'),
-        buttonIcon: <CreditCard className="w-4 h-4" />,
-        includes: getArray('pricing.plans.empresa.business.includes'),
-        excludes: getArray('pricing.plans.empresa.business.excludes'),
-      },
-      {
-        name: t('pricing.plans.empresa.corporate.name'),
-        price: '0',
-        priceAnnual: '0',
-        description: t('pricing.plans.empresa.corporate.description'),
-        buttonText: t('pricing.plans.empresa.corporate.buttonText'),
-        buttonIcon: <Crown className="w-4 h-4" />,
-        includes: getArray('pricing.plans.empresa.corporate.includes'),
-        excludes: getArray('pricing.plans.empresa.corporate.excludes'),
-      },
-    ],
+      personal: [
+        {
+          name: t('pricing.plans.personal.free.name'),
+          price: t('pricing.free'),
+          description: t('pricing.plans.personal.free.description'),
+          buttonText: t('pricing.plans.personal.free.buttonText'),
+          buttonIcon: <Users className="w-4 h-4" />,
+          includes: getArray('pricing.plans.personal.free.includes'),
+          excludes: getArray('pricing.plans.personal.free.excludes'),
+        },
+        {
+          name: t('pricing.plans.personal.premium.name'),
+          price: '0',
+          priceAnnual: '0',
+          description: t('pricing.plans.personal.premium.description'),
+          buttonText: t('pricing.plans.personal.premium.buttonText'),
+          buttonIcon: <CreditCard className="w-4 h-4" />,
+          includes: getArray('pricing.plans.personal.premium.includes'),
+          excludes: getArray('pricing.plans.personal.premium.excludes'),
+        },
+        {
+          name: t('pricing.plans.personal.corporate.name'),
+          price: '0',
+          priceAnnual: '0',
+          description: t('pricing.plans.personal.corporate.description'),
+          buttonText: t('pricing.plans.personal.corporate.buttonText'),
+          buttonIcon: <Crown className="w-4 h-4" />,
+          includes: getArray('pricing.plans.personal.corporate.includes'),
+          excludes: getArray('pricing.plans.personal.corporate.excludes'),
+        },
+      ],
+      empresa: [
+        {
+          name: t('pricing.plans.empresa.free.name'),
+          price: t('pricing.free'),
+          description: t('pricing.plans.empresa.free.description'),
+          buttonText: t('pricing.plans.empresa.free.buttonText'),
+          buttonIcon: <Users className="w-4 h-4" />,
+          includes: getArray('pricing.plans.empresa.free.includes'),
+          excludes: getArray('pricing.plans.empresa.free.excludes'),
+        },
+        {
+          name: t('pricing.plans.empresa.business.name'),
+          price: '0',
+          priceAnnual: '0',
+          description: t('pricing.plans.empresa.business.description'),
+          buttonText: t('pricing.plans.empresa.business.buttonText'),
+          buttonIcon: <CreditCard className="w-4 h-4" />,
+          includes: getArray('pricing.plans.empresa.business.includes'),
+          excludes: getArray('pricing.plans.empresa.business.excludes'),
+        },
+        {
+          name: t('pricing.plans.empresa.corporate.name'),
+          price: '0',
+          priceAnnual: '0',
+          description: t('pricing.plans.empresa.corporate.description'),
+          buttonText: t('pricing.plans.empresa.corporate.buttonText'),
+          buttonIcon: <Crown className="w-4 h-4" />,
+          includes: getArray('pricing.plans.empresa.corporate.includes'),
+          excludes: getArray('pricing.plans.empresa.corporate.excludes'),
+        },
+      ],
     };
   }, [t]);
 
-  const currentPlans = plans[userType];
+  useEffect(() => {
+    const fetchPlans = async () => {
+      try {
+        const response = await fetch('http://localhost:3001/api/content/pricing/plans');
+        if (!response.ok) throw new Error('Failed to fetch');
+
+        const data = await response.json();
+        if (Array.isArray(data) && data.length > 0) {
+          const apiPlans: Record<UserType, Plan[]> = {
+            personal: [],
+            empresa: []
+          };
+
+          data.forEach(p => {
+            const icon = p.name.toLowerCase().includes('premium') || p.name.toLowerCase().includes('negocios') ?
+              <CreditCard className="w-4 h-4" /> :
+              p.name.toLowerCase().includes('free') || p.name.toLowerCase().includes('gratis') ?
+                <Users className="w-4 h-4" /> :
+                <Crown className="w-4 h-4" />;
+
+            const mapped: Plan = {
+              name: p.name,
+              price: p.price_monthly,
+              priceAnnual: p.price_annual,
+              description: p.description,
+              buttonText: p.button_text || 'Empezar',
+              includes: p.includes || [],
+              excludes: p.excludes || [],
+              buttonIcon: icon,
+              ...p // keep id etc
+            };
+
+            if (p.type === 'personal') apiPlans.personal.push(mapped);
+            else if (p.type === 'empresa') apiPlans.empresa.push(mapped);
+          });
+
+          setPlans(apiPlans);
+        } else {
+          setPlans(fallbackPlans);
+        }
+      } catch (error) {
+        console.error(error);
+        setPlans(fallbackPlans);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchPlans();
+  }, [fallbackPlans]);
+
+  // Use state plans or fallback while loading (or just fallback if loading to avoid flash?)
+  const currentPlans = (isLoading || plans.personal.length === 0) ? fallbackPlans[userType] : plans[userType];
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 py-12 px-4 sm:px-6 lg:px-8">
@@ -117,22 +175,20 @@ export function Pricing() {
             <button
               type="button"
               onClick={() => setUserType('personal')}
-              className={`px-6 py-2 rounded-md text-sm font-semibold transition-all ${
-                userType === 'personal'
+              className={`px-6 py-2 rounded-md text-sm font-semibold transition-all ${userType === 'personal'
                   ? 'bg-[#83A98A] text-white shadow-lg'
                   : 'text-gray-300 hover:text-white'
-              }`}
+                }`}
             >
               {t('pricing.personal')}
             </button>
             <button
               type="button"
               onClick={() => setUserType('empresa')}
-              className={`px-6 py-2 rounded-md text-sm font-semibold transition-all ${
-                userType === 'empresa'
+              className={`px-6 py-2 rounded-md text-sm font-semibold transition-all ${userType === 'empresa'
                   ? 'bg-[#83A98A] text-white shadow-lg'
                   : 'text-gray-300 hover:text-white'
-              }`}
+                }`}
             >
               {t('pricing.empresa')}
             </button>
@@ -142,9 +198,8 @@ export function Pricing() {
         {/* Toggle de facturación */}
         <div className="flex justify-center items-center gap-4 mb-12">
           <span
-            className={`text-sm font-medium ${
-              billingCycle === 'mensual' ? 'text-white' : 'text-gray-400'
-            }`}
+            className={`text-sm font-medium ${billingCycle === 'mensual' ? 'text-white' : 'text-gray-400'
+              }`}
           >
             {t('pricing.mensual')}
           </span>
@@ -158,16 +213,14 @@ export function Pricing() {
             aria-checked={billingCycle === 'anual'}
           >
             <span
-              className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
-                billingCycle === 'anual' ? 'translate-x-6' : 'translate-x-1'
-              }`}
+              className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${billingCycle === 'anual' ? 'translate-x-6' : 'translate-x-1'
+                }`}
             />
           </button>
           <div className="relative flex items-center">
             <span
-              className={`text-sm font-medium min-w-[50px] ${
-                billingCycle === 'anual' ? 'text-white' : 'text-gray-400'
-              }`}
+              className={`text-sm font-medium min-w-[50px] ${billingCycle === 'anual' ? 'text-white' : 'text-gray-400'
+                }`}
             >
               {t('pricing.anual')}
             </span>
@@ -181,12 +234,12 @@ export function Pricing() {
 
         {/* Cards de planes */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {currentPlans.map((plan, index) => {
+          {currentPlans.map((plan: any, index) => {
             const displayPrice =
               billingCycle === 'anual' && plan.priceAnnual
                 ? plan.priceAnnual
                 : plan.price;
-            const isFree = plan.price === t('pricing.free');
+            const isFree = plan.price === t('pricing.free') || plan.price === 'Gratis';
 
             return (
               <div
@@ -200,7 +253,7 @@ export function Pricing() {
                   </h3>
                   <div className="mb-4">
                     {isFree ? (
-                      <p className="text-3xl font-bold text-white">{t('pricing.free')}</p>
+                      <p className="text-3xl font-bold text-white">{plan.price}</p>
                     ) : (
                       <div>
                         <span className="text-4xl font-bold text-white">
@@ -232,7 +285,7 @@ export function Pricing() {
                     {t('pricing.includes')}
                   </h4>
                   <ul className="space-y-3">
-                    {plan.includes.map((item, idx) => (
+                    {plan.includes.map((item: string, idx: number) => (
                       <li key={idx} className="flex items-start gap-3">
                         <Check className="w-5 h-5 text-[#83A98A] flex-shrink-0 mt-0.5" />
                         <span className="text-gray-300 text-sm">{item}</span>
@@ -248,7 +301,7 @@ export function Pricing() {
                       {t('pricing.notIncludes')}
                     </h4>
                     <ul className="space-y-3">
-                      {plan.excludes.map((item, idx) => (
+                      {plan.excludes.map((item: string, idx: number) => (
                         <li key={idx} className="flex items-start gap-3">
                           <X className="w-5 h-5 text-red-400 flex-shrink-0 mt-0.5" />
                           <span className="text-gray-400 text-sm">{item}</span>

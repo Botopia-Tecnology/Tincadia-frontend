@@ -241,7 +241,7 @@ export function ContactSection() {
                                 <h3 className="text-sm font-semibold text-gray-400 uppercase tracking-wider">
                                     {t('contactSection.email')}
                                 </h3>
-                                <p className="text-lg text-black font-medium">email@example.com</p>
+                                <p className="text-lg text-black font-medium">Contacto@tincadia.com</p>
                             </div>
 
                             <div className="space-y-2">
