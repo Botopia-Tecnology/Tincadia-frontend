@@ -1,4 +1,4 @@
-import { USER_ENDPOINTS, buildUrl } from '@/config/api.config';
+import { USER_ENDPOINTS, AUTH_ENDPOINTS, buildUrl } from '@/config/api.config';
 
 export interface User {
     id: string;
@@ -36,6 +36,26 @@ export const usersService = {
             return data.users;
         } catch (error) {
             console.error('Error fetching users:', error);
+            throw error;
+        }
+    },
+    promoteToInterpreter: async (email: string): Promise<void> => {
+        try {
+            const response = await fetch(buildUrl(AUTH_ENDPOINTS.PROMOTE_INTERPRETER), {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${localStorage.getItem('tincadia_token')}`
+                },
+                body: JSON.stringify({ email })
+            });
+
+            if (!response.ok) {
+                const data = await response.json();
+                throw new Error(data.message || 'Failed to promote user');
+            }
+        } catch (error) {
+            console.error('Error promoting user:', error);
             throw error;
         }
     },

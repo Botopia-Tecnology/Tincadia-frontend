@@ -56,6 +56,8 @@ export const AUTH_ENDPOINTS = {
     VERIFY_TOKEN: '/auth/verify-token',
     /** POST - Request reset password email */
     RESET_PASSWORD: '/auth/reset-password',
+    /** POST - Promote user to interpreter (Admin) */
+    PROMOTE_INTERPRETER: '/auth/promote-interpreter',
 } as const;
 
 /**
@@ -66,6 +68,10 @@ export const FORMS_ENDPOINTS = {
     FIND_BY_TYPE: '/forms/type', // Append /:type when using
     /** POST - Submit form */
     SUBMIT: '/forms/submit',
+    /** GET - Get all submissions (Admin) */
+    SUBMISSIONS: '/forms/submissions',
+    /** DELETE - Delete a submission (Admin) */
+    DELETE_SUBMISSION: '/forms/submissions', // Append /:id when using
 } as const;
 
 /**
