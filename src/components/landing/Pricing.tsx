@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import Link from 'next/link';
 import { Users, CreditCard, Crown, Check, X } from 'lucide-react';
 import { useTranslation } from '@/hooks/useTranslation';
@@ -105,7 +105,8 @@ export function Pricing() {
   useEffect(() => {
     const fetchPlans = async () => {
       try {
-        const response = await fetch('http://localhost:3001/api/content/pricing/plans');
+        const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001';
+        const response = await fetch(`${apiUrl}/api/content/pricing/plans`);
         if (!response.ok) throw new Error('Failed to fetch');
 
         const data = await response.json();
@@ -176,8 +177,8 @@ export function Pricing() {
               type="button"
               onClick={() => setUserType('personal')}
               className={`px-6 py-2 rounded-md text-sm font-semibold transition-all ${userType === 'personal'
-                  ? 'bg-[#83A98A] text-white shadow-lg'
-                  : 'text-gray-300 hover:text-white'
+                ? 'bg-[#83A98A] text-white shadow-lg'
+                : 'text-gray-300 hover:text-white'
                 }`}
             >
               {t('pricing.personal')}
@@ -186,8 +187,8 @@ export function Pricing() {
               type="button"
               onClick={() => setUserType('empresa')}
               className={`px-6 py-2 rounded-md text-sm font-semibold transition-all ${userType === 'empresa'
-                  ? 'bg-[#83A98A] text-white shadow-lg'
-                  : 'text-gray-300 hover:text-white'
+                ? 'bg-[#83A98A] text-white shadow-lg'
+                : 'text-gray-300 hover:text-white'
                 }`}
             >
               {t('pricing.empresa')}
