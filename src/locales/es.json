@@ -686,5 +686,131 @@
   "regionalMap": {
     "currentlyInColombia": "Actualmente en Colombia...",
     "comingSoonWorld": "Muy pronto, en el mundo"
+  },
+  "terms": {
+    "title": "Términos y Condiciones de Uso",
+    "lastUpdated": "Última actualización:",
+    "alert": {
+      "title": "¡Leer con atención!",
+      "content": "La navegación, descarga, registro y utilización de la aplicación, plataforma web y/o servicios digitales de TINCADIA S.A.S. (en adelante, \"TINCADIA\"), identificada con NIT 1121934814-7 y domicilio principal en Medellín, Colombia, implica la aceptación plena y sin reservas de todos y cada uno de los presentes Términos y Condiciones, así como de nuestra Política de Privacidad y Tratamiento de Datos."
+    },
+    "sections": {
+      "object": {
+        "title": "1. Objeto",
+        "content": "TINCADIA es una plataforma tecnológica (móvil y web) diseñada para facilitar la comunicación, accesibilidad e inclusión de personas con discapacidad auditiva y otras discapacidades, así como para apoyar a organizaciones y empresas en la provisión de una atención accesible. Los servicios tienen una finalidad tecnológica y asistencial, y en ningún caso sustituyen servicios médicos, terapéuticos, legales, educativos ni la interpretación humana profesional de Lengua de Señas (LS)."
+      },
+      "definitions": {
+        "title": "2. Definiciones",
+        "items": [
+          {
+            "term": "Plataforma:",
+            "definition": "Conjunto de aplicaciones, sitios web, software y servicios digitales de TINCADIA."
+          },
+          {
+            "term": "Usuario:",
+            "definition": "Persona natural que accede y utiliza la Plataforma."
+          },
+          {
+            "term": "Organización Cliente:",
+            "definition": "Persona jurídica o natural que contrata soluciones de TINCADIA mediante un acuerdo comercial específico."
+          }
+        ]
+      },
+      "ai": {
+        "title": "3. Uso de Inteligencia Artificial y Tecnologías de Accesibilidad",
+        "intro": "TINCADIA emplea tecnologías de Inteligencia Artificial (IA), incluyendo reconocimiento automático de voz, transcripción en tiempo real, procesamiento de lenguaje natural y avatares digitales en Lengua de Señas (LS). El Usuario reconoce y acepta expresamente que:",
+        "items": [
+          "Las transcripciones, traducciones y contenidos generados por IA pueden contener errores. No se garantiza exactitud absoluta.",
+          "Los avatares en LSC son una herramienta de apoyo tecnológico y no sustituyen a un intérprete humano certificado.",
+          "La información provista por la Plataforma no constituye asesoramiento profesional (médico, legal, psicológico, etc.).",
+          "TINCADIA no será responsable por decisiones o consecuencias derivadas del uso de la información generada por IA.",
+          "El Usuario se obliga a utilizar la Plataforma de manera ética, lícita y no discriminatoria."
+        ]
+      },
+      "responsibilities": {
+        "title": "4. Responsabilidades del Usuario",
+        "intro": "El Usuario se compromete a:",
+        "items": [
+          "Usar la Plataforma conforme a la ley, la buena fe y estos Términos.",
+          "No realizar ingeniería inversa, descompilar, copiar, modificar o explotar comercialmente la Plataforma o sus contenidos.",
+          "No utilizar TINCADIA para fines ilícitos, fraudulentos o que vulneren derechos de terceros.",
+          "Aceptar que el uso es bajo su propia responsabilidad."
+        ]
+      },
+      "license": {
+        "title": "5. Licencia y Limitación de Responsabilidad",
+        "items": [
+          "TINCADIA otorga una licencia de uso no exclusiva, intransferible y revocable para acceder a la Plataforma.",
+          "TINCADIA no garantiza la continuidad ininterrumpida o la ausencia de errores en la Plataforma.",
+          "Hasta el máximo permitido por la ley vigente, TINCADIA no será responsable por daños indirectos, incidentales, pérdida de datos o beneficios, derivados del uso o la imposibilidad de uso de la Plataforma.",
+          "TINCADIA no es un servicio de emergencia médica, policial o similar."
+        ]
+      },
+      "intellectualProperty": {
+        "title": "6. Propiedad Intelectual",
+        "content": "Todo el software, interfaces, marcas, logos, contenidos y tecnología subyacente a la Plataforma son propiedad de TINCADIA S.A.S. o de sus licenciantes. El acceso a la Plataforma no confiere ningún derecho de propiedad intelectual al Usuario."
+      },
+      "legislation": {
+        "title": "7. Legislación Aplicable y Competencia",
+        "content": "Estos Términos y Condiciones se rigen por las leyes de la República de Colombia. Para cualquier controversia derivada de su interpretación o ejecución, las partes se someten a los jueces y tribunales competentes de la ciudad de Medellín, Colombia, con renuncia expresa a cualquier otro fuero que pudiera corresponderles."
+      }
+    },
+    "note": "TINCADIA se reserva el derecho de modificar unilateralmente estos términos en cualquier momento. Las modificaciones entrarán en vigencia desde su publicación en la plataforma. Es responsabilidad del usuario revisarlos periódicamente.",
+    "contact": {
+      "title": "Contacto",
+      "text": "Si tiene preguntas, contáctenos en: "
+    }
+  },
+  "privacy": {
+    "title": "Política de Privacidad y Tratamiento de Datos Personales",
+    "lastUpdated": "Última actualización:",
+    "header": {
+      "responsible": "Responsable del Tratamiento:",
+      "responsibleName": "TINCADIA S.A.S.",
+      "contact": "Contacto:"
+    },
+    "sections": {
+      "purposes": {
+        "title": "1. Finalidades del Tratamiento",
+        "intro": "Trataremos sus datos personales, con su autorización, para:",
+        "items": [
+          "Prestar, operar, mantener y mejorar nuestros servicios de accesibilidad (transcripción, avatares LS, etc.).",
+          "Ejecutar y entrenar algoritmos de Inteligencia Artificial, aplicando técnicas de anonimización o seudonimización para proteger su identidad.",
+          "Gestionar su cuenta, brindar soporte técnico y atender sus solicitudes.",
+          "Cumplir obligaciones legales, regulatorias y contractuales.",
+          "Realizar análisis estadísticos anónimos para mejora continua."
+        ],
+        "prohibition": {
+          "title": "PROHIBICIÓN EXPRESA:",
+          "content": "TINCADIA NO comercializará (venderá, alquilará o negociará) sus datos personales sensibles."
+        }
+      },
+      "rights": {
+        "title": "2. Derechos del Titular",
+        "intro": "Usted tiene derecho a:",
+        "items": [
+          "Conocer, acceder, rectificar y actualizar sus datos.",
+          "Solicitar prueba de la autorización.",
+          "Revocar la autorización y/o solicitar la supresión de sus datos.",
+          "Presentar quejas ante la Superintendencia de Industria y Comercio (SIC)."
+        ]
+      },
+      "security": {
+        "title": "3. Seguridad y Transferencias",
+        "content": "Implementamos medidas técnicas y administrativas para proteger sus datos. Podremos compartirlos con proveedores tecnológicos y aliados estratégicos (nacionales o internacionales), quienes estarán obligados por contrato a mantener los más altos estándares de seguridad y confidencialidad, conforme a la Ley 1581 de 2012 y el Decreto 1377 de 2013."
+      },
+      "retention": {
+        "title": "4. Retención de Datos",
+        "content": "Conservaremos sus datos personales únicamente durante el tiempo necesario para cumplir las finalidades descritas en esta Política, o por el plazo requerido por obligaciones legales o contractuales. Posteriormente, procederemos a su eliminación segura."
+      },
+      "modifications": {
+        "title": "5. Modificaciones",
+        "content": "Nos reservamos el derecho de modificar esta Política. Los cambios se publicarán en la Plataforma con la fecha de la última actualización."
+      }
+    },
+    "contact": {
+      "title": "Contacto",
+      "text": "Si tiene preguntas sobre esta Política de Privacidad, contáctenos en: "
+    }
   }
 }

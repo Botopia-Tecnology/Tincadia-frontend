@@ -12,7 +12,7 @@ type Translations = typeof esTranslations;
 interface I18nContextType {
   locale: Locale;
   setLocale: (locale: Locale) => void;
-  t: (key: string) => string;
+  t: (key: string) => any;
   translations: Translations;
 }
 

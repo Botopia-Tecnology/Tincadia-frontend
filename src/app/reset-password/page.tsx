@@ -118,7 +118,7 @@ function ResetPasswordContent() {
         setIsLoading(true);
 
         try {
-            const response = await fetch(`${API_URL}/api/auth/update-password`, {
+            const response = await fetch(`${API_URL}/auth/update-password`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -260,7 +260,7 @@ function ResetPasswordContent() {
 
                 {/* Security note */}
                 <p className="text-center text-gray-400 text-xs mt-6">
-                    🔒 Tu conexión está protegida con encriptación de extremo a extremo
+                    Tu conexión está protegida con encriptación
                 </p>
             </div>
         </div>
@@ -289,7 +289,7 @@ function SubmitButton({ isLoading, disabled }: { isLoading: boolean; disabled: b
         <button
             type="submit"
             disabled={isLoading || disabled}
-            className="w-full py-4 px-6 bg-gradient-to-r from-tincadia-green to-tincadia-green-dark text-white font-semibold rounded-xl hover:shadow-lg hover:shadow-tincadia-green/25 transition-all duration-300 hover:scale-[1.02] disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100 relative overflow-hidden group"
+            className="w-full py-4 px-6 bg-gradient-to-r from-[#83A98A] to-[#6D8F75] text-white font-semibold rounded-xl hover:shadow-lg hover:shadow-[#83A98A]/25 transition-all duration-300 hover:scale-[1.02] disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100 relative overflow-hidden group"
         >
             {isLoading ? (
                 <div className="flex items-center justify-center gap-2">
@@ -299,7 +299,7 @@ function SubmitButton({ isLoading, disabled }: { isLoading: boolean; disabled: b
             ) : (
                 <>
                     <span className="relative z-10">Actualizar Contraseña</span>
-                    <div className="absolute inset-0 bg-gradient-to-r from-tincadia-green-dark to-tincadia-green opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                    <div className="absolute inset-0 bg-gradient-to-r from-[#6D8F75] to-[#83A98A] opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
                 </>
             )}
         </button>
