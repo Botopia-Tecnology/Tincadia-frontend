@@ -26,7 +26,10 @@ export default function PricingAdminPage() {
     // Fetch plans
     const fetchPlans = async () => {
         try {
-            const res = await fetch('http://localhost:3001/api/content/pricing/plans?activeOnly=false');
+            const baseUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001/api';
+            // Remove /api from path if base url already has it, or just use base url if it points to /api
+            // User .env has /api, so we should append /content...
+            const res = await fetch(`${baseUrl}/content/pricing/plans?activeOnly=false`);
             if (res.ok) {
                 const data = await res.json();
                 setPlans(data);
@@ -45,7 +48,8 @@ export default function PricingAdminPage() {
     const handleSave = async () => {
         if (!editingPlan) return;
         try {
-            const res = await fetch(`http://localhost:3001/api/content/pricing/plans/${editingPlan.id}`, {
+            const baseUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001/api';
+            const res = await fetch(`${baseUrl}/content/pricing/plans/${editingPlan.id}`, {
                 method: 'PUT',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(editingPlan),
