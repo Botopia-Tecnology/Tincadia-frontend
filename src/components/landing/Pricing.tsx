@@ -6,6 +6,7 @@ import { Users, CreditCard, Crown, Check, X, Loader2, Shield } from 'lucide-reac
 import { useTranslation } from '@/hooks/useTranslation';
 import { paymentsService, PaymentPlan, InitiatePaymentResponse } from '@/services/payments.service';
 import { pricingService, PricingPlan as ApiPricingPlan } from '@/services/content.service';
+import { useWompiWidget } from '@/hooks/useWompiWidget';
 
 type UserType = 'personal' | 'empresa';
 type BillingCycle = 'mensual' | 'anual';
@@ -48,6 +49,23 @@ export function Pricing() {
     const [processingPlan, setProcessingPlan] = useState<string | null>(null);
     const [error, setError] = useState<string | null>(null);
 
+    // Use Wompi Widget hook for card-only payments
+    const { openWidget } = useWompiWidget({
+        onSuccess: (result) => {
+            console.log('✅ Payment successful:', result);
+            setProcessingPlan(null);
+            router.push(`/pagos/respuesta?id=${result.transaction.id}`);
+        },
+        onError: (err) => {
+            console.error('❌ Payment error:', err);
+            setError('Error en el pago. Intenta de nuevo.');
+            setProcessingPlan(null);
+        },
+        onClose: () => {
+            setProcessingPlan(null);
+        }
+    });
+
     // Manejar click en plan - SEGURIDAD: El precio viene del backend, no del frontend
     const handlePlanClick = useCallback(async (plan: Plan) => {
         // Plan gratuito - redirigir a inicio
@@ -83,30 +101,14 @@ export function Pricing() {
                 throw new Error('Respuesta de pago inválida');
             }
 
-            const { widgetConfig: config } = response;
-
-            // URL de redirección (Wompi no acepta localhost)
-            const isLocalhost = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
-            const redirectBase = isLocalhost ? 'https://www.tincadia.com' : window.location.origin;
-
-            // Construir URL de checkout con todos los parámetros de seguridad
-            const checkoutParams = new URLSearchParams({
-                'public-key': config.publicKey,
-                'currency': config.currency,
-                'amount-in-cents': String(config.amountInCents),
-                'reference': config.reference,
-            });
-
-            // La firma de integridad es CRÍTICA - sin ella, el pago podría ser manipulado
-            const checkoutUrl = `https://checkout.wompi.co/p/?${checkoutParams.toString()}&signature:integrity=${config.signatureIntegrity}&redirect-url=${encodeURIComponent(`${redirectBase}/pagos/respuesta`)}`;
-
-            window.location.href = checkoutUrl;
+            // Open widget instead of redirecting (forces card-only)
+            openWidget(response.widgetConfig);
         } catch (err) {
             console.error('Error initiating payment:', err);
             setError('Error al iniciar el pago. Intenta de nuevo.');
             setProcessingPlan(null);
         }
-    }, [billingCycle, router]);
+    }, [billingCycle, router, openWidget]);
 
     // Cargar planes del backend
     useEffect(() => {
