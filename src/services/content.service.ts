@@ -284,6 +284,8 @@ export interface PricingPlan {
     excludes: string[];
     is_active: boolean;
     is_free: boolean;
+    // Billing interval in months: 1=monthly, 2=bimonthly, 3=quarterly, 6=semiannual, 12=annual
+    billing_interval_months?: number;
     order: number;
 }
 
@@ -295,24 +297,24 @@ export const pricingService = {
     getAll: async (activeOnly: boolean = true): Promise<PricingPlan[]> => {
         try {
             const url = `${buildUrl(CONTENT_ENDPOINTS.PRICING_PLANS)}?activeOnly=${activeOnly}`;
-            
+
             // Validar que la URL esté bien formada
             if (!url || url.startsWith('undefined') || url.startsWith('null')) {
                 throw new Error(`Invalid API URL. Check NEXT_PUBLIC_API_URL environment variable. Current URL: ${url}`);
             }
-            
+
             const response = await fetch(url, {
                 headers: {
                     'Accept': 'application/json',
                     'Content-Type': 'application/json',
                 },
             });
-            
+
             if (!response.ok) {
                 const errorText = await response.text();
                 throw new Error(`Failed to fetch pricing plans: ${response.status} ${response.statusText}. ${errorText}`);
             }
-            
+
             return await response.json();
         } catch (error) {
             console.error('Error fetching pricing plans:', error);

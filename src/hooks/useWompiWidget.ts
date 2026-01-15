@@ -36,7 +36,7 @@ export function useWompiWidget(options: UseWompiWidgetOptions = {}) {
         if (typeof window === 'undefined' || scriptLoaded.current) return;
 
         const existingScript = document.querySelector('script[src="https://checkout.wompi.co/widget.js"]');
-        
+
         if (existingScript) {
             scriptLoaded.current = true;
             return;
@@ -64,7 +64,7 @@ export function useWompiWidget(options: UseWompiWidgetOptions = {}) {
     const openWidget = useCallback((config: WompiWidgetConfig) => {
         console.log('🔓 Opening Wompi widget...');
         console.log('🌐 Window.WidgetCheckout:', typeof window !== 'undefined' ? !!window.WidgetCheckout : 'SSR');
-        
+
         if (typeof window === 'undefined' || !window.WidgetCheckout) {
             console.error('❌ Wompi widget not loaded');
             options.onError?.({ message: 'Payment widget not ready' });
@@ -80,11 +80,14 @@ export function useWompiWidget(options: UseWompiWidgetOptions = {}) {
                 reference: config.reference,
                 publicKey: config.publicKey,
                 signature: { integrity: config.signatureIntegrity },
+                // Force card-only payments for recurring subscriptions
+                paymentMethods: ['CARD'],
             };
 
-            if (config.redirectUrl) {
-                checkoutConfig.redirectUrl = config.redirectUrl;
-            }
+            // Don't use redirectUrl - we handle result via callback
+            // if (config.redirectUrl) {
+            //     checkoutConfig.redirectUrl = config.redirectUrl;
+            // }
 
             if (config.expirationTime) {
                 checkoutConfig.expirationTime = config.expirationTime;
@@ -108,14 +111,14 @@ export function useWompiWidget(options: UseWompiWidgetOptions = {}) {
             checkoutRef.current.open((result: WompiResult) => {
                 if (result.transaction) {
                     const { status } = result.transaction;
-                    
+
                     if (status === 'APPROVED') {
                         options.onSuccess?.(result);
                     } else if (status === 'DECLINED' || status === 'ERROR' || status === 'VOIDED') {
                         options.onError?.(result);
                     }
                 }
-                
+
                 options.onClose?.();
             });
         } catch (error) {

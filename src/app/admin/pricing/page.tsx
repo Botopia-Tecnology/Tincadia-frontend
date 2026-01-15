@@ -42,6 +42,7 @@ export default function PricingAdminPage() {
         excludes: [],
         is_active: true,
         is_free: false,
+        billing_interval_months: 1, // Default to monthly
         order: plans.filter(p => p.type === activeTab).length + 1,
     });
 
@@ -425,6 +426,23 @@ export default function PricingAdminPage() {
 
                                 {!editingPlan.is_free && (
                                     <>
+                                        <div>
+                                            <label className="text-xs text-gray-400">Ciclo de Cobro</label>
+                                            <select
+                                                value={editingPlan.billing_interval_months || 1}
+                                                onChange={(e) => updateField('billing_interval_months', parseInt(e.target.value))}
+                                                className="w-full bg-slate-800 text-white p-2 rounded border border-slate-700"
+                                            >
+                                                <option value={1}>Mensual (cada 1 mes)</option>
+                                                <option value={2}>Bimestral (cada 2 meses)</option>
+                                                <option value={3}>Trimestral (cada 3 meses)</option>
+                                                <option value={6}>Semestral (cada 6 meses)</option>
+                                                <option value={12}>Anual (cada 12 meses)</option>
+                                            </select>
+                                            <p className="text-xs text-gray-500 mt-1">
+                                                Define cada cuánto tiempo se cobra automáticamente
+                                            </p>
+                                        </div>
                                         <div className="grid grid-cols-2 gap-2">
                                             <div>
                                                 <label className="text-xs text-gray-400">Precio Mensual</label>
