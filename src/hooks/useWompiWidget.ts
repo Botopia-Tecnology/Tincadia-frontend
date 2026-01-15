@@ -80,14 +80,12 @@ export function useWompiWidget(options: UseWompiWidgetOptions = {}) {
                 reference: config.reference,
                 publicKey: config.publicKey,
                 signature: { integrity: config.signatureIntegrity },
-                // Force card-only payments for recurring subscriptions
-                paymentMethods: ['CARD'],
             };
 
-            // Don't use redirectUrl - we handle result via callback
-            // if (config.redirectUrl) {
-            //     checkoutConfig.redirectUrl = config.redirectUrl;
-            // }
+            // Redirect URL for when payment completes
+            if (config.redirectUrl) {
+                checkoutConfig.redirectUrl = config.redirectUrl;
+            }
 
             if (config.expirationTime) {
                 checkoutConfig.expirationTime = config.expirationTime;
