@@ -17,6 +17,9 @@ export default function CreateCourseModal({ isOpen, onClose, onSuccess }: Create
     const [categoryId, setCategoryId] = useState('');
     const [thumbnailFile, setThumbnailFile] = useState<File | null>(null);
     const [isLoading, setIsLoading] = useState(false);
+const [accessScope, setAccessScope] = useState<'course' | 'module' | 'lesson'>('course');
+const [isPaid, setIsPaid] = useState(false);
+const [previewLimit, setPreviewLimit] = useState<number>(3);
 
     // Category creation state
     const [isCreatingCategory, setIsCreatingCategory] = useState(false);
@@ -73,6 +76,9 @@ export default function CreateCourseModal({ isOpen, onClose, onSuccess }: Create
                 categoryId,
                 isPublished: false,
                 thumbnailUrl: '', // Will be updated after upload
+                accessScope,
+                isPaid: accessScope === 'course' ? isPaid : false,
+                previewLimit,
             });
 
             // 2. Upload Thumbnail if exists
@@ -171,6 +177,51 @@ export default function CreateCourseModal({ isOpen, onClose, onSuccess }: Create
                                 >
                                     Cancel
                                 </button>
+                            </div>
+                        )}
+                    </div>
+
+                    <div className="grid sm:grid-cols-2 gap-3">
+                        <div>
+                            <label className="block text-sm font-medium text-slate-400 mb-1">Modo de acceso</label>
+                            <select
+                                value={accessScope}
+                                onChange={(e) => setAccessScope(e.target.value as 'course' | 'module' | 'lesson')}
+                                className="w-full bg-slate-800 border border-slate-700 rounded-lg p-2.5 text-white focus:ring-2 focus:ring-blue-500"
+                            >
+                                <option value="course">Curso completo (un pago)</option>
+                                <option value="module">Por módulos</option>
+                                <option value="lesson">Por lecciones/videos</option>
+                            </select>
+                        </div>
+
+                        {accessScope === 'course' && (
+                            <div>
+                                <label className="block text-sm font-medium text-slate-400 mb-1">Curso de pago</label>
+                                <div className="flex items-center gap-3">
+                                    <button
+                                        type="button"
+                                        onClick={() => setIsPaid(!isPaid)}
+                                        className={`flex-1 px-3 py-2 rounded-lg border text-white ${isPaid
+                                            ? 'bg-amber-500/10 border-amber-500/40 text-amber-200'
+                                            : 'bg-emerald-500/10 border-emerald-500/40 text-emerald-200'
+                                            }`}
+                                    >
+                                        {isPaid ? 'De pago' : 'Libre'}
+                                    </button>
+                                    <div className="flex flex-col">
+                                        <label className="text-xs text-slate-400">Videos gratis</label>
+                                        <input
+                                            type="number"
+                                            min={0}
+                                            max={10}
+                                            value={previewLimit}
+                                            onChange={(e) => setPreviewLimit(Number(e.target.value))}
+                                            className="w-24 bg-slate-800 border border-slate-700 rounded-lg p-2 text-white focus:ring-2 focus:ring-blue-500"
+                                        />
+                                    </div>
+                                </div>
+                                <p className="text-xs text-slate-500 mt-1">Recomendado: 3-4 videos libres.</p>
                             </div>
                         )}
                     </div>

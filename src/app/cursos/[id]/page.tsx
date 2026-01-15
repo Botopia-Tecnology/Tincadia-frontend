@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import { contentService, Course } from '@/services/content.service';
 import { Loader2, ChevronDown, ChevronRight, PlayCircle, Lock, CheckCircle, Menu, ArrowLeft } from 'lucide-react';
@@ -15,6 +15,7 @@ export default function CoursePlayerPage() {
     const [loading, setLoading] = useState(true);
     const [activeLesson, setActiveLesson] = useState<any | null>(null);
     const [expandedModules, setExpandedModules] = useState<string[]>([]);
+    const [hasPaidAccess] = useState(false); // TODO: integrar con estado real de pago/suscripción
 
     useEffect(() => {
         if (courseId) {
@@ -28,18 +29,50 @@ export default function CoursePlayerPage() {
             const data = await contentService.getCourseById(courseId);
             setCourse(data);
 
-            // Auto-select first lesson if available and expand first module
-            if (data.modules && data.modules.length > 0) {
+            // Auto-select first accessible lesson and expand its module
+            const firstAccessible = findFirstAccessibleLesson(data);
+            if (firstAccessible) {
+                setExpandedModules([firstAccessible.moduleId]);
+                setActiveLesson(firstAccessible.lesson);
+            } else if (data.modules && data.modules.length > 0) {
                 setExpandedModules([data.modules[0].id]);
-                if (data.modules[0].lessons && data.modules[0].lessons.length > 0) {
-                    setActiveLesson(data.modules[0].lessons[0]);
-                }
             }
         } catch (error) {
             console.error('Failed to load course', error);
         } finally {
             setLoading(false);
         }
+    };
+
+    const findFirstAccessibleLesson = (c: Course) => {
+        for (const mod of c.modules || []) {
+            for (const les of mod.lessons || []) {
+                if (!isLessonLocked(c, mod, les)) {
+                    return { lesson: les, moduleId: mod.id };
+                }
+            }
+        }
+        return null;
+    };
+
+    const isLessonLocked = (c: Course, module: any, lesson: any) => {
+        // Backend may send locked/videoUrl masked
+        if (lesson.locked) return true;
+        if (lesson.videoUrl) return false;
+
+        const scope = c.accessScope || 'course';
+        const coursePaid = c.isPaid;
+        const modulePaid = module?.isPaid;
+        const lessonPaid = lesson?.isPaid;
+        const isPreview = lesson?.isFreePreview;
+
+        if (isPreview) return false;
+        if (hasPaidAccess) return false;
+
+        if (scope === 'course') return !!coursePaid;
+        if (scope === 'module') return !!modulePaid;
+        if (scope === 'lesson') return !!lessonPaid;
+        return false;
     };
 
     const toggleModule = (moduleId: string) => {
@@ -84,7 +117,10 @@ export default function CoursePlayerPage() {
                         <div className="flex-1 flex flex-col">
                             {/* Video Container */}
                             <div className="w-full bg-black aspect-video max-h-[70vh] flex items-center justify-center relative">
-                                {activeLesson.videoUrl ? (
+                                {(() => {
+                                    const currentModule = course.modules?.find((m: any) => m.lessons?.some((l: any) => l.id === activeLesson.id)) || { id: 'unknown' };
+                                    return !isLessonLocked(course, currentModule, activeLesson) && activeLesson.videoUrl;
+                                })() ? (
                                     <video
                                         src={activeLesson.videoUrl}
                                         controls
@@ -96,6 +132,12 @@ export default function CoursePlayerPage() {
                                     <div className="text-center p-8 bg-zinc-900 rounded-lg max-w-md">
                                         <Lock className="w-12 h-12 text-zinc-600 mx-auto mb-4" />
                                         <p className="text-zinc-400">Este video no está disponible o requiere acceso premium.</p>
+                                        <Link
+                                            href="/pricing"
+                                            className="inline-flex mt-4 px-4 py-2 rounded-lg bg-emerald-600 text-white font-semibold"
+                                        >
+                                            Ver planes
+                                        </Link>
                                     </div>
                                 )}
                             </div>
@@ -138,15 +180,21 @@ export default function CoursePlayerPage() {
                                         {module.lessons?.map((lesson: any) => (
                                             <button
                                                 key={lesson.id}
-                                                onClick={() => setActiveLesson(lesson)}
+                                                onClick={() => {
+                                                    if (isLessonLocked(course, module, lesson)) {
+                                                        alert('Contenido de pago. Desbloquea para continuar.');
+                                                        return;
+                                                    }
+                                                    setActiveLesson(lesson);
+                                                }}
                                                 className={`w-full flex items-center gap-3 p-3 text-left transition-all border-l-4 ${activeLesson?.id === lesson.id
                                                         ? 'bg-[#83A98A]/10 border-[#83A98A]'
                                                         : 'border-transparent hover:bg-gray-100'
-                                                    }`}
+                                                    } ${isLessonLocked(course, module, lesson) ? 'opacity-60' : ''}`}
                                             >
                                                 <div className={`flex-shrink-0 w-6 h-6 rounded-full flex items-center justify-center ${activeLesson?.id === lesson.id ? 'text-[#83A98A]' : 'text-gray-400'
                                                     }`}>
-                                                    {lesson.videoUrl ? <PlayCircle size={16} /> : <Lock size={14} />}
+                                                    {!isLessonLocked(course, module, lesson) && lesson.videoUrl ? <PlayCircle size={16} /> : <Lock size={14} />}
                                                 </div>
                                                 <div className="flex-1 min-w-0">
                                                     <p className={`text-sm font-medium truncate ${activeLesson?.id === lesson.id ? 'text-[#83A98A]' : 'text-gray-700'
@@ -155,6 +203,11 @@ export default function CoursePlayerPage() {
                                                     </p>
                                                     <span className="text-xs text-gray-400">{lesson.durationSeconds ? `${Math.round(lesson.durationSeconds / 60)} min` : 'Video'}</span>
                                                 </div>
+                                                {lesson.isFreePreview && (
+                                                    <span className="text-[10px] uppercase font-semibold text-emerald-600 bg-emerald-100 px-2 py-0.5 rounded">
+                                                        Preview
+                                                    </span>
+                                                )}
                                             </button>
                                         ))}
                                         {(!module.lessons || module.lessons.length === 0) && (
