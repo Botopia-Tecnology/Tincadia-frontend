@@ -1,10 +1,11 @@
 'use client';
 
-import { useEffect, useState } from 'react';
-import { useParams, useRouter } from 'next/navigation';
+import { useEffect, useState, useCallback } from 'react';
+import { useParams } from 'next/navigation';
 import { contentService, Course } from '@/services/content.service';
-import { ArrowLeft, Plus, Video, Trash2, Edit2, UploadCloud, ChevronDown, ChevronRight, PlayCircle, Loader2 } from 'lucide-react';
+import { ArrowLeft, Plus, Video, Trash2, UploadCloud, ChevronDown, PlayCircle, Loader2 } from 'lucide-react';
 import Link from 'next/link';
+import Image from 'next/image';
 
 // Types for local state (extending Course type if needed)
 interface Lesson {
@@ -13,6 +14,8 @@ interface Lesson {
     videoUrl?: string;
     durationSeconds?: number;
     order: number;
+    isPaid?: boolean;
+    isFreePreview?: boolean;
 }
 
 interface Module {
@@ -21,47 +24,63 @@ interface Module {
     description?: string;
     lessons: Lesson[];
     order: number;
+    isPaid?: boolean;
 }
 
 export default function CourseDetailsPage() {
-    const params = useParams();
-    const router = useRouter();
+const params = useParams();
     const courseId = params.id as string;
 
     const [course, setCourse] = useState<Course | null>(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
 
-    // Module Creation State
-    const [showModuleModal, setShowModuleModal] = useState(false);
-    const [newModuleTitle, setNewModuleTitle] = useState('');
-    const [creatingModule, setCreatingModule] = useState(false);
+// Access control state
+const [accessScope, setAccessScope] = useState<'course' | 'module' | 'lesson'>('course');
+const [courseIsPaid, setCourseIsPaid] = useState(false);
+const [previewLimit, setPreviewLimit] = useState<number>(3);
+const [savingAccess, setSavingAccess] = useState(false);
 
-    // Lesson Creation State
-    const [showLessonModal, setShowLessonModal] = useState<string | null>(null); // moduleId if open
-    const [newLessonTitle, setNewLessonTitle] = useState('');
-    const [creatingLesson, setCreatingLesson] = useState(false);
+// Module Creation State
+const [showModuleModal, setShowModuleModal] = useState(false);
+const [newModuleTitle, setNewModuleTitle] = useState('');
+const [creatingModule, setCreatingModule] = useState(false);
+const [newModulePaid, setNewModulePaid] = useState(false);
 
-    // Video Upload State
-    const [uploadingLessonId, setUploadingLessonId] = useState<string | null>(null);
+// Lesson Creation State
+const [showLessonModal, setShowLessonModal] = useState<string | null>(null); // moduleId if open
+const [newLessonTitle, setNewLessonTitle] = useState('');
+const [creatingLesson, setCreatingLesson] = useState(false);
+const [newLessonPaid, setNewLessonPaid] = useState(false);
+const [newLessonPreview, setNewLessonPreview] = useState(false);
 
-    useEffect(() => {
-        if (courseId) {
-            fetchCourse();
-        }
-    }, [courseId]);
+// Video Upload State
+const [uploadingLessonId, setUploadingLessonId] = useState<string | null>(null);
 
-    const fetchCourse = async () => {
-        try {
-            setLoading(true);
-            const data = await contentService.getCourseById(courseId);
-            setCourse(data);
-        } catch (err) {
-            setError('Failed to load course details');
-        } finally {
-            setLoading(false);
-        }
-    };
+const fetchCourse = useCallback(async () => {
+    try {
+        setLoading(true);
+        const data = await contentService.getCourseById(courseId);
+        setCourse(data);
+        syncAccessState(data);
+    } catch {
+        setError('Failed to load course details');
+    } finally {
+        setLoading(false);
+    }
+}, [courseId]);
+
+useEffect(() => {
+    if (courseId) {
+        fetchCourse();
+    }
+}, [courseId, fetchCourse]);
+
+const syncAccessState = (data: Course) => {
+    setAccessScope((data.accessScope as 'course' | 'module' | 'lesson' | undefined) || 'course');
+    setCourseIsPaid(!!data.isPaid);
+    setPreviewLimit(typeof data.previewLimit === 'number' ? data.previewLimit : 3);
+};
 
     const handleCreateModule = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -69,11 +88,12 @@ export default function CourseDetailsPage() {
 
         try {
             setCreatingModule(true);
-            await contentService.createModule(courseId, { title: newModuleTitle });
+        await contentService.createModule(courseId, { title: newModuleTitle, isPaid: newModulePaid });
             setNewModuleTitle('');
+        setNewModulePaid(false);
             setShowModuleModal(false);
             fetchCourse(); // Refresh to show new module
-        } catch (error) {
+        } catch {
             alert('Failed to create module');
         } finally {
             setCreatingModule(false);
@@ -86,11 +106,13 @@ export default function CourseDetailsPage() {
 
         try {
             setCreatingLesson(true);
-            await contentService.createLesson(showLessonModal, { title: newLessonTitle });
+        await contentService.createLesson(showLessonModal, { title: newLessonTitle, isPaid: newLessonPaid, isFreePreview: newLessonPreview });
             setNewLessonTitle('');
+        setNewLessonPaid(false);
+        setNewLessonPreview(false);
             setShowLessonModal(null);
             fetchCourse(); // Refresh
-        } catch (error) {
+        } catch {
             alert('Failed to create lesson');
         } finally {
             setCreatingLesson(false);
@@ -102,7 +124,7 @@ export default function CourseDetailsPage() {
             setUploadingLessonId(lessonId);
             await contentService.uploadLessonVideo(lessonId, file);
             fetchCourse();
-        } catch (error) {
+        } catch {
             alert('Failed to upload video');
         } finally {
             setUploadingLessonId(null);
@@ -114,7 +136,7 @@ export default function CourseDetailsPage() {
         try {
             await contentService.deleteModule(moduleId);
             fetchCourse();
-        } catch (error) {
+        } catch {
             alert('Failed to delete module');
         }
     };
@@ -124,7 +146,7 @@ export default function CourseDetailsPage() {
         try {
             await contentService.deleteLesson(lessonId);
             fetchCourse();
-        } catch (error) {
+        } catch {
             alert('Failed to delete lesson');
         }
     };
@@ -134,7 +156,7 @@ export default function CourseDetailsPage() {
         try {
             await contentService.removeLessonVideo(lessonId);
             fetchCourse();
-        } catch (error) {
+        } catch {
             alert('Failed to remove video');
         }
     };
@@ -147,12 +169,58 @@ export default function CourseDetailsPage() {
                 isPublished: !course.isPublished
             });
             setCourse(updatedCourse);
-        } catch (error) {
+        } catch {
             alert('Failed to update course status');
         } finally {
             setLoading(false);
         }
     };
+
+const handleSaveAccessSettings = async () => {
+    try {
+        setSavingAccess(true);
+        const updated = await contentService.updateCourse(courseId, {
+            accessScope,
+            isPaid: accessScope === 'course' ? courseIsPaid : false,
+            previewLimit: previewLimit ?? null,
+        });
+        setCourse(updated);
+        syncAccessState(updated);
+    } catch {
+        alert('No se pudo actualizar el acceso del curso');
+    } finally {
+        setSavingAccess(false);
+    }
+};
+
+const handleModuleAccess = async (moduleId: string, isPaid: boolean) => {
+    if (accessScope !== 'module') return;
+    try {
+        await contentService.updateModule(moduleId, { isPaid });
+        fetchCourse();
+    } catch {
+        alert('No se pudo actualizar el acceso del módulo');
+    }
+};
+
+const handleLessonAccess = async (lessonId: string, isPaid: boolean) => {
+    if (accessScope !== 'lesson') return;
+    try {
+        await contentService.updateLesson(lessonId, { isPaid });
+        fetchCourse();
+    } catch {
+        alert('No se pudo actualizar el acceso de la lección');
+    }
+};
+
+const handleLessonPreview = async (lessonId: string, isFreePreview: boolean) => {
+    try {
+        await contentService.updateLesson(lessonId, { isFreePreview });
+        fetchCourse();
+    } catch {
+        alert('No se pudo marcar la lección como previa gratuita');
+    }
+};
 
     if (loading) return <div className="flex justify-center p-12"><Loader2 className="animate-spin text-indigo-500" size={32} /></div>;
     if (error || !course) return <div className="text-center p-12 text-red-400">{error || 'Course not found'}</div>;
@@ -188,7 +256,7 @@ export default function CourseDetailsPage() {
             <div className="bg-slate-800 rounded-xl border border-slate-700 p-6 flex gap-6">
                 <div className="w-48 h-28 bg-slate-900 rounded-lg overflow-hidden flex-shrink-0 relative">
                     {course.thumbnailUrl ? (
-                        <img src={course.thumbnailUrl} alt="Thumbnail" className="w-full h-full object-cover" />
+                        <Image src={course.thumbnailUrl} alt="Thumbnail" fill className="object-cover" sizes="192px" />
                     ) : (
                         <div className="flex items-center justify-center h-full text-slate-600"><Video size={32} /></div>
                     )}
@@ -200,6 +268,78 @@ export default function CourseDetailsPage() {
                         <span>{course.modules?.length || 0} Modules</span>
                         <span>{course.isPublished ? 'Published' : 'Draft'}</span>
                     </div>
+                </div>
+            </div>
+
+            {/* Access control */}
+            <div className="bg-slate-800 rounded-xl border border-slate-700 p-6 space-y-4">
+                <div className="flex items-center justify-between gap-3">
+                    <div>
+                        <h3 className="text-lg font-semibold text-white">Acceso y pagos</h3>
+                        <p className="text-sm text-slate-400">Define si el curso es libre, por módulo o por lección.</p>
+                    </div>
+                    <button
+                        onClick={handleSaveAccessSettings}
+                        disabled={savingAccess}
+                        className="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg font-medium flex items-center gap-2 disabled:opacity-60 disabled:cursor-not-allowed"
+                    >
+                        {savingAccess && <Loader2 className="animate-spin" size={16} />}
+                        Guardar
+                    </button>
+                </div>
+
+                <div className="grid md:grid-cols-3 gap-4">
+                    <div className="space-y-2">
+                        <label className="text-sm text-slate-400">Modo de control</label>
+                        <select
+                            value={accessScope}
+                            onChange={(e) => setAccessScope(e.target.value as 'course' | 'module' | 'lesson')}
+                            className="w-full bg-slate-900 border border-slate-700 rounded-lg p-2.5 text-white focus:ring-2 focus:ring-indigo-500"
+                        >
+                            <option value="course">Curso completo (un solo pago)</option>
+                            <option value="module">Por módulos</option>
+                            <option value="lesson">Por lecciones/videos</option>
+                        </select>
+                    </div>
+
+                    {accessScope === 'course' && (
+                        <>
+                            <div className="space-y-2">
+                                <label className="text-sm text-slate-400">Estado</label>
+                                <button
+                                    type="button"
+                                    onClick={() => setCourseIsPaid(!courseIsPaid)}
+                                    className={`w-full px-4 py-2 rounded-lg border text-sm font-semibold transition-colors ${courseIsPaid
+                                        ? 'bg-amber-500/10 border-amber-500/40 text-amber-200'
+                                        : 'bg-emerald-500/10 border-emerald-500/40 text-emerald-200'
+                                        }`}
+                                >
+                                    {courseIsPaid ? 'Curso de pago' : 'Curso libre'}
+                                </button>
+                            </div>
+                            <div className="space-y-2">
+                                <label className="text-sm text-slate-400">Videos gratis de prueba</label>
+                                <input
+                                    type="number"
+                                    min={0}
+                                    max={10}
+                                    value={previewLimit ?? 0}
+                                    onChange={(e) => setPreviewLimit(Number(e.target.value))}
+                                    className="w-full bg-slate-900 border border-slate-700 rounded-lg p-2.5 text-white focus:ring-2 focus:ring-indigo-500"
+                                    placeholder="Ej: 3"
+                                />
+                                <p className="text-xs text-slate-500">Recomendado: 3-4 videos libres.</p>
+                            </div>
+                        </>
+                    )}
+
+                    {accessScope !== 'course' && (
+                        <div className="md:col-span-2 bg-slate-900/40 border border-slate-700 rounded-lg p-3 text-sm text-slate-300">
+                            {accessScope === 'module'
+                                ? 'Marca qué módulos serán de pago. Los no marcados quedan libres.'
+                                : 'Marca qué lecciones serán de pago y cuáles serán previews gratuitas.'}
+                        </div>
+                    )}
                 </div>
             </div>
 
@@ -225,8 +365,21 @@ export default function CourseDetailsPage() {
                                     </div>
                                     <h3 className="font-semibold text-white">{module.title}</h3>
                                     <span className="text-xs text-slate-500 bg-slate-900 px-2 py-1 rounded ml-2">{module.lessons?.length || 0} Lessons</span>
+                                    {accessScope === 'module' && (
+                                        <span className={`text-xs px-2 py-1 rounded ${module.isPaid ? 'bg-amber-500/10 text-amber-300 border border-amber-500/40' : 'bg-emerald-500/10 text-emerald-200 border border-emerald-500/40'}`}>
+                                            {module.isPaid ? 'Módulo de pago' : 'Libre'}
+                                        </span>
+                                    )}
                                 </div>
                                 <div className="flex items-center gap-3">
+                                    {accessScope === 'module' && (
+                                        <button
+                                            onClick={() => handleModuleAccess(module.id, !module.isPaid)}
+                                            className="text-xs font-medium px-3 py-1.5 rounded-lg border border-slate-600 bg-slate-900 hover:bg-slate-800 transition-colors"
+                                        >
+                                            {module.isPaid ? 'Marcar libre' : 'Marcar de pago'}
+                                        </button>
+                                    )}
                                     <button
                                         onClick={() => setShowLessonModal(module.id)}
                                         className="text-xs font-medium text-indigo-400 hover:text-indigo-300 flex items-center gap-1"
@@ -258,10 +411,38 @@ export default function CourseDetailsPage() {
                                                         Video Uploaded
                                                     </span>
                                                 )}
+                                                {accessScope === 'lesson' && (
+                                                    <div className="flex gap-2 mt-1">
+                                                        <span className={`text-[11px] px-2 py-0.5 rounded ${lesson.isPaid ? 'bg-amber-500/10 text-amber-200 border border-amber-500/40' : 'bg-emerald-500/10 text-emerald-200 border border-emerald-500/40'}`}>
+                                                            {lesson.isPaid ? 'De pago' : 'Libre'}
+                                                        </span>
+                                                        {lesson.isFreePreview && (
+                                                            <span className="text-[11px] px-2 py-0.5 rounded bg-sky-500/10 text-sky-200 border border-sky-500/40">
+                                                                Preview gratis
+                                                            </span>
+                                                        )}
+                                                    </div>
+                                                )}
                                             </div>
                                         </div>
 
                                         <div className="flex items-center gap-3">
+                                            {accessScope === 'lesson' && (
+                                                <>
+                                                    <button
+                                                        onClick={() => handleLessonAccess(lesson.id, !lesson.isPaid)}
+                                                        className="text-xs font-medium px-3 py-1.5 rounded-lg border border-slate-600 bg-slate-900 hover:bg-slate-800 transition-colors"
+                                                    >
+                                                        {lesson.isPaid ? 'Marcar libre' : 'Marcar de pago'}
+                                                    </button>
+                                                    <button
+                                                        onClick={() => handleLessonPreview(lesson.id, !lesson.isFreePreview)}
+                                                        className="text-xs font-medium px-3 py-1.5 rounded-lg border border-slate-600 bg-slate-900 hover:bg-slate-800 transition-colors"
+                                                    >
+                                                        {lesson.isFreePreview ? 'Quitar preview' : 'Preview gratis'}
+                                                    </button>
+                                                </>
+                                            )}
                                             <div className="relative">
                                                 <input
                                                     type="file"
@@ -316,7 +497,7 @@ export default function CourseDetailsPage() {
                                 ))}
                                 {(!module.lessons || module.lessons.length === 0) && (
                                     <div className="p-4 text-center text-sm text-slate-500 italic">
-                                        No lessons yet. Click "Add Lesson" to start.
+                                        No lessons yet. Click ‘Add Lesson’ to start.
                                     </div>
                                 )}
                             </div>
@@ -346,6 +527,17 @@ export default function CourseDetailsPage() {
                                     value={newModuleTitle}
                                     onChange={(e) => setNewModuleTitle(e.target.value)}
                                 />
+                                {accessScope === 'module' && (
+                                    <label className="flex items-center gap-2 text-sm text-slate-300 mb-4">
+                                        <input
+                                            type="checkbox"
+                                            checked={newModulePaid}
+                                            onChange={(e) => setNewModulePaid(e.target.checked)}
+                                            className="h-4 w-4"
+                                        />
+                                        Marcar este módulo como de pago
+                                    </label>
+                                )}
                                 <div className="flex justify-end gap-3">
                                     <button
                                         type="button"
@@ -384,6 +576,28 @@ export default function CourseDetailsPage() {
                                     value={newLessonTitle}
                                     onChange={(e) => setNewLessonTitle(e.target.value)}
                                 />
+                                {accessScope === 'lesson' && (
+                                    <div className="space-y-2 mb-4">
+                                        <label className="flex items-center gap-2 text-sm text-slate-300">
+                                            <input
+                                                type="checkbox"
+                                                checked={newLessonPaid}
+                                                onChange={(e) => setNewLessonPaid(e.target.checked)}
+                                                className="h-4 w-4"
+                                            />
+                                            Lección de pago
+                                        </label>
+                                        <label className="flex items-center gap-2 text-sm text-slate-300">
+                                            <input
+                                                type="checkbox"
+                                                checked={newLessonPreview}
+                                                onChange={(e) => setNewLessonPreview(e.target.checked)}
+                                                className="h-4 w-4"
+                                            />
+                                            Disponible como preview gratuita
+                                        </label>
+                                    </div>
+                                )}
                                 <div className="flex justify-end gap-3">
                                     <button
                                         type="button"

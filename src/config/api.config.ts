@@ -117,6 +117,18 @@ export const CONTENT_ENDPOINTS = {
     UPLOAD_THUMBNAIL: '/content/courses/:courseId/thumbnail',
     /** POST - Upload lesson video */
     UPLOAD_LESSON_VIDEO: '/content/lessons/:lessonId/video',
+
+    // --- Pricing Plans ---
+    /** GET - Get all pricing plans */
+    PRICING_PLANS: '/content/pricing/plans',
+    /** GET - Get pricing plan by ID */
+    PRICING_PLAN_DETAILS: '/content/pricing/plans/:id',
+    /** POST - Create pricing plan (Admin) */
+    CREATE_PRICING_PLAN: '/content/pricing/plans',
+    /** PUT - Update pricing plan (Admin) */
+    UPDATE_PRICING_PLAN: '/content/pricing/plans/:id',
+    /** DELETE - Delete pricing plan (Admin) */
+    DELETE_PRICING_PLAN: '/content/pricing/plans/:id',
 } as const;
 
 /**
@@ -161,10 +173,24 @@ export const USER_ENDPOINTS = {
 /**
  * Build full URL for an endpoint
  * @param endpoint - The endpoint path (e.g., AUTH_ENDPOINTS.LOGIN)
- * @returns Full URL (e.g., "http://localhost:3000/auth/login")
+ * @returns Full URL (e.g., "http://192.168.100.9:3001/api/auth/login")
+ * 
+ * Note: API_BASE_URL should already include the /api prefix.
+ * Example: "http://localhost:3001/api" or "https://api.tincadia.com/api"
  */
 export const buildUrl = (endpoint: string): string => {
-    return `${API_BASE_URL}${endpoint}`;
+    if (!API_BASE_URL) {
+        console.warn('API_BASE_URL is not configured. Check NEXT_PUBLIC_API_URL environment variable.');
+        return endpoint; // Fallback to relative URL
+    }
+    
+    // Normalizar baseUrl: remover trailing slash si existe
+    const baseUrl = API_BASE_URL.trim().replace(/\/$/, '');
+    
+    // Asegurar que el endpoint empiece con /
+    const normalizedEndpoint = endpoint.startsWith('/') ? endpoint : `/${endpoint}`;
+    
+    return `${baseUrl}${normalizedEndpoint}`;
 };
 
 // ===========================================

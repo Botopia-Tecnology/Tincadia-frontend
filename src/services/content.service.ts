@@ -1,5 +1,9 @@
 import { CONTENT_ENDPOINTS, buildUrl } from '@/config/api.config';
 
+// ===========================================
+// Interfaces
+// ===========================================
+
 export interface Course {
     id: string;
     title: string;
@@ -11,6 +15,9 @@ export interface Course {
         name: string;
     };
     isPublished: boolean;
+    accessScope?: 'course' | 'module' | 'lesson';
+    isPaid?: boolean;
+    previewLimit?: number | null;
     modules?: any[];
 }
 
@@ -42,9 +49,10 @@ export const contentService = {
     /**
      * Get course by ID
      */
-    getCourseById: async (id: string): Promise<Course> => {
+    getCourseById: async (id: string, opts?: { hasAccess?: boolean }): Promise<Course> => {
         try {
-            const url = buildUrl(CONTENT_ENDPOINTS.DETAILS).replace(':id', id);
+            const query = opts?.hasAccess ? `?hasAccess=${opts.hasAccess}` : '';
+            const url = buildUrl(CONTENT_ENDPOINTS.DETAILS).replace(':id', id) + query;
             const response = await fetch(url);
             if (!response.ok) throw new Error('Failed to fetch course details');
             return await response.json();
@@ -103,7 +111,7 @@ export const contentService = {
 
     // --- Module ---
 
-    createModule: async (courseId: string, data: { title: string; description?: string }): Promise<any> => {
+    createModule: async (courseId: string, data: { title: string; description?: string; isPaid?: boolean }): Promise<any> => {
         try {
             const url = buildUrl(CONTENT_ENDPOINTS.CREATE_MODULE).replace(':courseId', courseId);
             const response = await fetch(url, {
@@ -119,7 +127,7 @@ export const contentService = {
         }
     },
 
-    updateModule: async (id: string, data: { title: string; description?: string }): Promise<any> => {
+    updateModule: async (id: string, data: { title?: string; description?: string; isPaid?: boolean }): Promise<any> => {
         const url = buildUrl(CONTENT_ENDPOINTS.UPDATE_MODULE).replace(':id', id);
         const response = await fetch(url, {
             method: 'PUT',
@@ -137,7 +145,7 @@ export const contentService = {
 
     // --- Lesson ---
 
-    createLesson: async (moduleId: string, data: { title: string; content?: string }): Promise<any> => {
+    createLesson: async (moduleId: string, data: { title: string; content?: string; isPaid?: boolean; isFreePreview?: boolean }): Promise<any> => {
         try {
             const url = buildUrl(CONTENT_ENDPOINTS.CREATE_LESSON).replace(':moduleId', moduleId);
             const response = await fetch(url, {
@@ -252,6 +260,142 @@ export const contentService = {
             return await response.json();
         } catch (error) {
             console.error('Error uploading video:', error);
+            throw error;
+        }
+    },
+};
+
+// ===========================================
+// Pricing Plans Interface & Service
+// ===========================================
+
+export interface PricingPlan {
+    id: string;
+    name: string;
+    type: 'personal' | 'empresa';
+    plan_type: string;
+    price_monthly: string;
+    price_annual: string;
+    price_monthly_cents: number;
+    price_annual_cents: number;
+    description: string;
+    button_text: string;
+    includes: string[];
+    excludes: string[];
+    is_active: boolean;
+    is_free: boolean;
+    order: number;
+}
+
+export const pricingService = {
+    /**
+     * Get all pricing plans
+     * @param activeOnly - If true, returns only active plans
+     */
+    getAll: async (activeOnly: boolean = true): Promise<PricingPlan[]> => {
+        try {
+            const url = `${buildUrl(CONTENT_ENDPOINTS.PRICING_PLANS)}?activeOnly=${activeOnly}`;
+            
+            // Validar que la URL esté bien formada
+            if (!url || url.startsWith('undefined') || url.startsWith('null')) {
+                throw new Error(`Invalid API URL. Check NEXT_PUBLIC_API_URL environment variable. Current URL: ${url}`);
+            }
+            
+            const response = await fetch(url, {
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json',
+                },
+            });
+            
+            if (!response.ok) {
+                const errorText = await response.text();
+                throw new Error(`Failed to fetch pricing plans: ${response.status} ${response.statusText}. ${errorText}`);
+            }
+            
+            return await response.json();
+        } catch (error) {
+            console.error('Error fetching pricing plans:', error);
+            // Re-lanzar con más contexto
+            if (error instanceof Error) {
+                throw error;
+            }
+            throw new Error(`Unknown error fetching pricing plans: ${String(error)}`);
+        }
+    },
+
+    /**
+     * Get a pricing plan by ID
+     */
+    getById: async (id: string): Promise<PricingPlan> => {
+        try {
+            const url = buildUrl(CONTENT_ENDPOINTS.PRICING_PLAN_DETAILS).replace(':id', id);
+            const response = await fetch(url);
+            if (!response.ok) throw new Error('Failed to fetch pricing plan');
+            return await response.json();
+        } catch (error) {
+            console.error('Error fetching pricing plan:', error);
+            throw error;
+        }
+    },
+
+    /**
+     * Create a new pricing plan (Admin)
+     */
+    create: async (data: Omit<PricingPlan, 'id'>): Promise<PricingPlan> => {
+        try {
+            const response = await fetch(buildUrl(CONTENT_ENDPOINTS.CREATE_PRICING_PLAN), {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(data),
+            });
+            if (!response.ok) {
+                const errorText = await response.text();
+                throw new Error(errorText || 'Failed to create pricing plan');
+            }
+            return await response.json();
+        } catch (error) {
+            console.error('Error creating pricing plan:', error);
+            throw error;
+        }
+    },
+
+    /**
+     * Update a pricing plan (Admin)
+     */
+    update: async (id: string, data: Partial<PricingPlan>): Promise<PricingPlan> => {
+        try {
+            const url = buildUrl(CONTENT_ENDPOINTS.UPDATE_PRICING_PLAN).replace(':id', id);
+            const response = await fetch(url, {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(data),
+            });
+            if (!response.ok) {
+                const errorText = await response.text();
+                throw new Error(errorText || 'Failed to update pricing plan');
+            }
+            return await response.json();
+        } catch (error) {
+            console.error('Error updating pricing plan:', error);
+            throw error;
+        }
+    },
+
+    /**
+     * Delete a pricing plan (Admin)
+     */
+    delete: async (id: string): Promise<{ deleted: boolean; id: string }> => {
+        try {
+            const url = buildUrl(CONTENT_ENDPOINTS.DELETE_PRICING_PLAN).replace(':id', id);
+            const response = await fetch(url, { method: 'DELETE' });
+            if (!response.ok) {
+                const errorText = await response.text();
+                throw new Error(errorText || 'Failed to delete pricing plan');
+            }
+            return await response.json();
+        } catch (error) {
+            console.error('Error deleting pricing plan:', error);
             throw error;
         }
     },
