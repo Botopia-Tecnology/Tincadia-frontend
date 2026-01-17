@@ -42,6 +42,7 @@ export interface InitiatePaymentRequest {
     customerPhonePrefix?: string;
     customerLegalId?: string;
     customerLegalIdType?: string;
+    userId?: string;
 }
 
 export interface InitiatePaymentResponse {
@@ -118,8 +119,34 @@ class PaymentsService {
     /**
      * Lista todos los pagos del usuario
      */
-    async getUserPayments(userId: string): Promise<{ items: Payment[]; total: number }> {
-        return api.get<{ items: Payment[]; total: number }>(`${this.baseUrl}?userId=${userId}`);
+    /**
+     * Procesa un pago directo con tarjeta usando un token de Wompi
+     */
+    async processCardPayment(data: {
+        reference: string;
+        cardToken: string;
+        acceptanceToken: string;
+        email: string;
+        installments?: number;
+    }): Promise<any> {
+        return api.post(`${this.baseUrl}/charge-card`, data);
+    }
+    /**
+     * Obtiene el historial de transacciones de un usuario
+     */
+    async getUserTransactions(userId: string): Promise<{ items: Payment[]; total: number }> {
+        return api.get<{ items: Payment[]; total: number }>(`${this.baseUrl}?userId=${userId}&limit=50`);
+    }
+
+    /**
+     * Obtiene la suscripción activa de un usuario
+     */
+    async getActiveSubscription(userId: string): Promise<any> {
+        return api.get(`${this.baseUrl}/subscriptions/user/${userId}`);
+    }
+
+    async cancelSubscription(subscriptionId: string): Promise<any> {
+        return api.post<any>(`${this.baseUrl}/subscriptions/${subscriptionId}/cancel`, {});
     }
 }
 

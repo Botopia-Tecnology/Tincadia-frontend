@@ -59,4 +59,31 @@ export const usersService = {
             throw error;
         }
     },
+    updateUserRole: async (userId: string, role: string): Promise<void> => {
+        try {
+            // Note: Endpoint is /auth/users/:userId/role defined in api-gateway AuthController
+            // We can construct it relative to the LIST endpoint or just hardcode the path structure if config is limiting
+            const baseUrl = buildUrl(USER_ENDPOINTS.LIST).replace(/\/users$/, ''); // Remove /users suffix if present, or just use auth base
+            // actually LIST is likely /auth/users
+            // our new endpoint is /auth/users/:userId/role
+            // so if LIST is /auth/users, we can append /:userId/role
+
+            const response = await fetch(`${buildUrl(USER_ENDPOINTS.LIST)}/${userId}/role`, {
+                method: 'POST', // Changed to POST to match Controller
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${localStorage.getItem('tincadia_token')}`
+                },
+                body: JSON.stringify({ role })
+            });
+
+            if (!response.ok) {
+                const data = await response.json();
+                throw new Error(data.message || 'Failed to update user role');
+            }
+        } catch (error) {
+            console.error('Error updating user role:', error);
+            throw error;
+        }
+    },
 };

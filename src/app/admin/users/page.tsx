@@ -1,7 +1,7 @@
 'use client';
 
-import { Search, MoreVertical, Loader2 } from 'lucide-react';
-import { useEffect, useState } from 'react';
+import { Search, MoreVertical, Loader2, Edit, Trash2, Check, X } from 'lucide-react';
+import { useEffect, useState, useRef } from 'react';
 import { usersService, User } from '@/services/users.service';
 import { useAuth } from '@/contexts/AuthContext';
 
@@ -10,6 +10,23 @@ export default function UsersPage() {
     const [users, setUsers] = useState<User[]>([]);
     const [loading, setLoading] = useState(true);
     const [searchTerm, setSearchTerm] = useState('');
+    const [editingUserId, setEditingUserId] = useState<string | null>(null);
+    const [selectedRole, setSelectedRole] = useState<string>('');
+    const [activeMenuUserId, setActiveMenuUserId] = useState<string | null>(null);
+    const menuRef = useRef<HTMLDivElement>(null);
+
+    // Close menu when clicking outside
+    useEffect(() => {
+        function handleClickOutside(event: MouseEvent) {
+            if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
+                setActiveMenuUserId(null);
+            }
+        }
+        document.addEventListener("mousedown", handleClickOutside);
+        return () => {
+            document.removeEventListener("mousedown", handleClickOutside);
+        };
+    }, []);
 
     useEffect(() => {
         if (currentUser?.id) {
@@ -34,6 +51,25 @@ export default function UsersPage() {
         user.lastName?.toLowerCase().includes(searchTerm.toLowerCase()) ||
         user.email.toLowerCase().includes(searchTerm.toLowerCase())
     );
+
+    const handleUpdateRole = async (userId: string) => {
+        try {
+            await usersService.updateUserRole(userId, selectedRole);
+            // Update local state
+            setUsers(users.map(u => u.id === userId ? { ...u, role: selectedRole } : u));
+            setEditingUserId(null);
+            setActiveMenuUserId(null);
+        } catch (error) {
+            console.error('Failed to update role', error);
+            alert('Error al actualizar el rol');
+        }
+    };
+
+    const startEditing = (user: User) => {
+        setEditingUserId(user.id);
+        setSelectedRole(user.role);
+        setActiveMenuUserId(null); // Close menu
+    };
 
     return (
         <div className="space-y-6">
@@ -93,12 +129,32 @@ export default function UsersPage() {
                                             </div>
                                         </td>
                                         <td className="px-6 py-4">
-                                            <span className={`px-2 py-1 rounded text-xs font-medium ${user.role === 'Admin' ? 'bg-purple-900/50 text-purple-400' :
-                                                user.role === 'Interpreter' ? 'bg-orange-900/50 text-orange-400' :
-                                                    'bg-blue-900/50 text-blue-400'
-                                                }`}>
-                                                {user.role}
-                                            </span>
+                                            {editingUserId === user.id ? (
+                                                <div className="flex items-center gap-2">
+                                                    <select
+                                                        value={selectedRole}
+                                                        onChange={(e) => setSelectedRole(e.target.value)}
+                                                        className="bg-slate-700 text-white text-xs rounded px-2 py-1 border border-slate-600 focus:outline-none focus:border-blue-500"
+                                                    >
+                                                        <option value="User">User</option>
+                                                        <option value="Admin">Admin</option>
+                                                        <option value="Interpreter">Interpreter</option>
+                                                    </select>
+                                                    <button onClick={() => handleUpdateRole(user.id)} className="text-green-400 hover:text-green-300">
+                                                        <Check size={16} />
+                                                    </button>
+                                                    <button onClick={() => setEditingUserId(null)} className="text-red-400 hover:text-red-300">
+                                                        <X size={16} />
+                                                    </button>
+                                                </div>
+                                            ) : (
+                                                <span className={`px-2 py-1 rounded text-xs font-medium ${user.role === 'Admin' ? 'bg-purple-900/50 text-purple-400' :
+                                                    user.role === 'Interpreter' ? 'bg-orange-900/50 text-orange-400' :
+                                                        'bg-blue-900/50 text-blue-400'
+                                                    }`}>
+                                                    {user.role}
+                                                </span>
+                                            )}
                                         </td>
                                         <td className="px-6 py-4">
                                             <span className={`inline-flex items-center gap-1.5 px-2 py-1 rounded text-xs font-medium ${user.status === 'Active' ? 'bg-emerald-900/50 text-emerald-400' : 'bg-slate-700 text-slate-400'
@@ -110,10 +166,32 @@ export default function UsersPage() {
                                         <td className="px-6 py-4 text-slate-400 text-sm">
                                             {user.lastActive ? new Date(user.lastActive).toLocaleDateString() : '-'}
                                         </td>
-                                        <td className="px-6 py-4 text-right">
-                                            <button className="text-slate-400 hover:text-white transition-colors">
+                                        <td className="px-6 py-4 text-right relative">
+                                            <button
+                                                onClick={(e) => {
+                                                    e.stopPropagation();
+                                                    setActiveMenuUserId(activeMenuUserId === user.id ? null : user.id);
+                                                }}
+                                                className="text-slate-400 hover:text-white transition-colors p-1 rounded-full hover:bg-slate-700"
+                                            >
                                                 <MoreVertical size={18} />
                                             </button>
+
+                                            {activeMenuUserId === user.id && (
+                                                <div
+                                                    ref={menuRef}
+                                                    className="absolute right-8 top-8 z-10 w-48 bg-slate-800 rounded-md shadow-lg border border-slate-700 py-1"
+                                                >
+                                                    <button
+                                                        onClick={() => startEditing(user)}
+                                                        className="w-full text-left px-4 py-2 text-sm text-slate-300 hover:bg-slate-700 hover:text-white flex items-center gap-2"
+                                                    >
+                                                        <Edit size={14} />
+                                                        Cambiar Rol
+                                                    </button>
+                                                    {/* Future actions like Delete or Ban */}
+                                                </div>
+                                            )}
                                         </td>
                                     </tr>
                                 ))

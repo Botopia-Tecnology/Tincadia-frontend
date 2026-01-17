@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { X, Loader2 } from 'lucide-react';
+import { X, Loader2, Eye, EyeOff } from 'lucide-react';
 import { type CredentialResponse } from '@react-oauth/google';
 import { appleAuthHelpers } from 'react-apple-signin-auth';
 import { useTranslation } from '@/hooks/useTranslation';
@@ -21,6 +21,7 @@ export function LoginPanel({ isOpen, onClose, onSignUpClick, onForgotPasswordCli
     const { login, loginWithOAuth, isLoading, error, clearError } = useAuth();
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const [showPassword, setShowPassword] = useState(false);
     const [localError, setLocalError] = useState<string | null>(null);
     const [oauthLoading, setOauthLoading] = useState(false);
 
@@ -147,15 +148,26 @@ export function LoginPanel({ isOpen, onClose, onSignUpClick, onForgotPasswordCli
                                     />
                                 </div>
 
-                                <div>
+                                <div className="relative">
                                     <input
-                                        type="password"
+                                        type={showPassword ? "text" : "password"}
                                         value={password}
                                         onChange={(e) => setPassword(e.target.value)}
-                                        className="w-full bg-transparent text-lg text-gray-900 placeholder-gray-400 border-0 border-b border-gray-300 focus:outline-none focus:border-gray-900 transition-colors pb-2"
+                                        className="w-full bg-transparent text-lg text-gray-900 placeholder-gray-400 border-0 border-b border-gray-300 focus:outline-none focus:border-gray-900 transition-colors pb-2 pr-10"
                                         placeholder={t('login.passwordPlaceholder')}
                                         required
                                     />
+                                    <button
+                                        type="button"
+                                        onClick={() => setShowPassword(!showPassword)}
+                                        className="absolute right-0 top-0 pb-2 text-gray-400 hover:text-gray-600 transition-colors"
+                                    >
+                                        {showPassword ? (
+                                            <EyeOff className="w-5 h-5" />
+                                        ) : (
+                                            <Eye className="w-5 h-5" />
+                                        )}
+                                    </button>
                                 </div>
 
                                 <div className="text-right">

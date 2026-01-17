@@ -7,6 +7,9 @@ import { formsService } from '@/services/forms.service';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
 
+// ... imports
+import { X } from 'lucide-react';
+
 interface JobSeekerFormData {
   nombreCompleto: string;
   documentoIdentidad: string;
@@ -20,14 +23,29 @@ interface JobSeekerFormData {
   experienciaLaboral: string;
   habilidadesTecnicas: string;
   habilidadesBlandas: string;
-  certificacionesCursos: string;
-  hojaVida: File | null;
+  certificacionesCursos: File | any | null;
+  hojaVida: File | any | null;
   recibirCapacitacion: 'si' | 'no' | '';
   autorizaTratamientoDatos: 'si' | 'no' | '';
 }
 
-export function JobSeekerRegistrationForm() {
+interface JobSeekerRegistrationFormProps {
+  initialData?: any;
+  submissionId?: string;
+  onSuccess?: () => void;
+  onCancel?: () => void;
+}
+
+const MAX_FILE_SIZE = 50 * 1024 * 1024; // 50MB
+
+export function JobSeekerRegistrationForm({
+  initialData,
+  submissionId,
+  onSuccess,
+  onCancel
+}: JobSeekerRegistrationFormProps = {}) {
   const t = useTranslation();
+  const isEditing = !!submissionId;
 
   const getArray = (key: string): string[] => {
     const value = t(key);
@@ -42,6 +60,8 @@ export function JobSeekerRegistrationForm() {
   const [otraAreaLaboral, setOtraAreaLaboral] = useState('');
   const [formId, setFormId] = useState<string | null>(null);
   const [formIdError, setFormIdError] = useState<string | null>(null);
+  const [submitStatus, setSubmitStatus] = useState<'idle' | 'success' | 'error'>('idle');
+  const [fileError, setFileError] = useState<string | null>(null);
 
   // Fetch form ID on mount
   const fetchFormId = async () => {
@@ -64,6 +84,20 @@ export function JobSeekerRegistrationForm() {
     fetchFormId();
   }, []);
 
+  // Initialize "Other" fields from initialData if necessary
+  useEffect(() => {
+    if (initialData) {
+      // Check if areaLaboralInteres has custom values
+      if (initialData.areaLaboralInteres && Array.isArray(initialData.areaLaboralInteres)) {
+        const lastOption = areasLaborales[areasLaborales.length - 1];
+        const customArea = initialData.areaLaboralInteres.find((a: string) => a.startsWith(lastOption + ' - '));
+        if (customArea) {
+          setOtraAreaLaboral(customArea.split(' - ')[1]);
+        }
+      }
+    }
+  }, [initialData, areasLaborales]);
+
   const validationSchema = Yup.object({
     nombreCompleto: Yup.string().required(t('forms.common.required') as string),
     documentoIdentidad: Yup.string().required(t('forms.common.required') as string),
@@ -84,28 +118,29 @@ export function JobSeekerRegistrationForm() {
 
   const formik = useFormik<JobSeekerFormData>({
     initialValues: {
-      nombreCompleto: '',
-      documentoIdentidad: '',
-      tipoDiscapacidad: '',
-      usaLSC: '',
-      ciudadResidencia: '',
-      telefonoWhatsapp: '',
-      correoElectronico: '',
-      nivelEducativo: '',
-      areaLaboralInteres: [],
-      experienciaLaboral: '',
-      habilidadesTecnicas: '',
-      habilidadesBlandas: '',
-      certificacionesCursos: '',
-      hojaVida: null,
-      recibirCapacitacion: '',
-      autorizaTratamientoDatos: '',
+      nombreCompleto: initialData?.nombreCompleto || '',
+      documentoIdentidad: initialData?.documentoIdentidad || '',
+      tipoDiscapacidad: initialData?.tipoDiscapacidad || '',
+      usaLSC: initialData?.usaLSC || '',
+      ciudadResidencia: initialData?.ciudadResidencia || '',
+      telefonoWhatsapp: initialData?.telefonoWhatsapp || '',
+      correoElectronico: initialData?.correoElectronico || '',
+      nivelEducativo: initialData?.nivelEducativo || '',
+      areaLaboralInteres: initialData?.areaLaboralInteres?.map((a: string) => a.split(' - ')[0]) || [],
+      experienciaLaboral: initialData?.experienciaLaboral || '',
+      habilidadesTecnicas: initialData?.habilidadesTecnicas || '',
+      habilidadesBlandas: initialData?.habilidadesBlandas || '',
+      certificacionesCursos: initialData?.certificacionesCursos || null,
+      hojaVida: initialData?.hojaVida || null,
+      recibirCapacitacion: initialData?.recibirCapacitacion || '',
+      autorizaTratamientoDatos: initialData?.autorizaTratamientoDatos || '',
     },
     validationSchema,
+    enableReinitialize: true,
     onSubmit: async (values, { resetForm }) => {
-      // Try to fetch formId if not available
+      // Try to fetch formId if not available (only for new submissions)
       let currentFormId = formId;
-      if (!currentFormId) {
+      if (!isEditing && !currentFormId) {
         try {
           const form = await formsService.findFormByType('job_seeker_registration');
           currentFormId = form.id;
@@ -123,48 +158,84 @@ export function JobSeekerRegistrationForm() {
         }
       }
 
+      setSubmitStatus('idle');
+
       try {
-        // Upload file first if present
-        let hojaVidaUrl: string | null = null;
-        if (values.hojaVida) {
+        let hojaVidaData = values.hojaVida;
+        let certificacionesData = values.certificacionesCursos;
+
+        // Upload Resume if file
+        if (values.hojaVida instanceof File) {
           try {
             console.log('📤 Uploading resume...');
             const uploadResult = await formsService.uploadFile(values.hojaVida);
-            hojaVidaUrl = uploadResult.url;
-            console.log('✅ Resume uploaded:', hojaVidaUrl);
+            hojaVidaData = {
+              url: uploadResult.url,
+              name: values.hojaVida.name,
+              size: values.hojaVida.size,
+              type: values.hojaVida.type
+            };
+            console.log('✅ Resume uploaded:', hojaVidaData.url);
           } catch (uploadError) {
             console.error('Error uploading file:', uploadError);
+            setSubmitStatus('error');
+            return;
+          }
+        }
+
+        // Upload Certifications if file
+        if (values.certificacionesCursos instanceof File) {
+          try {
+            console.log('📤 Uploading certifications...');
+            const uploadResult = await formsService.uploadFile(values.certificacionesCursos);
+            certificacionesData = {
+              url: uploadResult.url,
+              name: values.certificacionesCursos.name,
+              size: values.certificacionesCursos.size,
+              type: values.certificacionesCursos.type
+            };
+            console.log('✅ Certifications uploaded:', certificacionesData.url);
+          } catch (e) {
+            console.error('Error uploading certifications', e);
+            setSubmitStatus('error');
             return;
           }
         }
 
         const submissionData = {
           ...values,
-          hojaVida: hojaVidaUrl ? {
-            url: hojaVidaUrl,
-            name: values.hojaVida?.name,
-            size: values.hojaVida?.size,
-            type: values.hojaVida?.type
-          } : null,
+          hojaVida: hojaVidaData,
+          certificacionesCursos: certificacionesData,
           // Append custom string if selected
-          areaLaboralInteres: values.areaLaboralInteres.map(a => a === areasLaborales[areasLaborales.length - 1] ? `${a} - ${otraAreaLaboral}` : a),
+          areaLaboralInteres: values.areaLaboralInteres.map(a => a === areasLaborales[areasLaborales.length - 1] && otraAreaLaboral ? `${a} - ${otraAreaLaboral}` : a),
         };
 
-        console.log('📤 [Frontend] Submitting form:', {
-          formId,
-          dataKeys: Object.keys(submissionData),
-          hasHojaVida: !!submissionData.hojaVida,
-        });
+        if (isEditing && submissionId) {
+          // Update existing submission
+          await formsService.updateSubmission(submissionId, { data: submissionData });
+          console.log('✅ Formulario actualizado exitosamente');
+          if (onSuccess) onSuccess();
+        } else {
+          // Create New Submission
+          console.log('📤 [Frontend] Submitting new form');
+          const response = await formsService.submitForm(currentFormId!, submissionData);
+          console.log('✅ Formulario enviado exitosamente:', response);
 
-        const response = await formsService.submitForm(currentFormId, submissionData);
+          if (response.userStatus === 'registered') {
+            alert(t('forms.jobSeeker.messages.alreadyRegistered') || 'Usuario ya registrado. Por favor inicia sesión.');
+            window.location.href = '/login';
+            return;
+          }
 
-        console.log('✅ Formulario enviado exitosamente:', response);
+          setSubmitStatus('success');
+          setTimeout(() => setSubmitStatus('idle'), 5000);
+          resetForm();
+          setOtraAreaLaboral('');
+        }
 
-        // Reset form and state
-        resetForm();
-        setOtraAreaLaboral('');
       } catch (error) {
         console.error('Error submitting form:', error);
+        setSubmitStatus('error');
       }
     },
   });
@@ -178,416 +249,478 @@ export function JobSeekerRegistrationForm() {
     }
   };
 
-  const handleFileChange = (file: File | null) => {
-    formik.setFieldValue('hojaVida', file);
+  const handleFileChange = (field: 'hojaVida' | 'certificacionesCursos', file: File | null) => {
+    setFileError(null);
+    if (file) {
+      if (file.size > MAX_FILE_SIZE) {
+        setFileError(`El archivo pesa ${(file.size / (1024 * 1024)).toFixed(2)}MB. El máximo permitido es 50MB.`);
+        return;
+      }
+    }
+    formik.setFieldValue(field, file);
   };
 
   return (
-    <div className="bg-white rounded-2xl shadow-xl p-8 lg:p-10">
+    <div className="bg-white rounded-2xl shadow-xl p-8 lg:p-10 relative">
+      {onCancel && (
+        <button
+          onClick={onCancel}
+          className="absolute top-4 right-4 p-2 text-gray-400 hover:text-gray-600 rounded-full hover:bg-gray-100 transition-colors"
+        >
+          <X className="w-6 h-6" />
+        </button>
+      )}
+
       <div className="mb-8">
         <h2 className="text-2xl lg:text-3xl font-bold text-gray-900 mb-3">
-          {t('registration.jobSeeker.formTitle')}
+          {isEditing ? 'Editar Solicitud' : t('registration.jobSeeker.formTitle')}
         </h2>
         <p className="text-gray-600">
-          {t('registration.jobSeeker.formDescription')}
+          {isEditing ? 'Actualiza tu información, hoja de vida y certificaciones.' : t('registration.jobSeeker.formDescription')}
         </p>
       </div>
 
-      <form onSubmit={formik.handleSubmit} className="space-y-6">
-        {/* 1. Nombre completo */}
-        <div>
-          <label htmlFor="nombreCompleto" className="block text-sm font-semibold text-gray-700 mb-2">
-            1. {t('forms.jobSeeker.fields.fullName')} <span className="text-red-500">{t('forms.common.required')}</span>
-          </label>
-          <input
-            id="nombreCompleto"
-            name="nombreCompleto"
-            type="text"
-            onChange={formik.handleChange}
-            onBlur={formik.handleBlur}
-            value={formik.values.nombreCompleto}
-            className={`w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#83A98A] focus:border-transparent ${formik.touched.nombreCompleto && formik.errors.nombreCompleto ? 'border-red-500' : 'border-gray-300'}`}
-          />
-          {formik.touched.nombreCompleto && formik.errors.nombreCompleto && (
-            <p className="text-red-500 text-sm mt-1">{formik.errors.nombreCompleto}</p>
-          )}
-        </div>
-
-        {/* 2. Documento de identidad */}
-        <div>
-          <label htmlFor="documentoIdentidad" className="block text-sm font-semibold text-gray-700 mb-2">
-            2. {t('forms.jobSeeker.fields.documentId')} <span className="text-red-500">{t('forms.common.required')}</span>
-          </label>
-          <input
-            id="documentoIdentidad"
-            name="documentoIdentidad"
-            type="text"
-            onChange={formik.handleChange}
-            onBlur={formik.handleBlur}
-            value={formik.values.documentoIdentidad}
-            className={`w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#83A98A] focus:border-transparent ${formik.touched.documentoIdentidad && formik.errors.documentoIdentidad ? 'border-red-500' : 'border-gray-300'}`}
-          />
-          {formik.touched.documentoIdentidad && formik.errors.documentoIdentidad && (
-            <p className="text-red-500 text-sm mt-1">{formik.errors.documentoIdentidad}</p>
-          )}
-        </div>
-
-        {/* 3. Tipo de discapacidad */}
-        <div>
-          <label htmlFor="tipoDiscapacidad" className="block text-sm font-semibold text-gray-700 mb-2">
-            3. {t('forms.jobSeeker.fields.disabilityType')} <span className="text-red-500">{t('forms.common.required')}</span>
-          </label>
-          <select
-            id="tipoDiscapacidad"
-            name="tipoDiscapacidad"
-            value={formik.values.tipoDiscapacidad}
-            onChange={formik.handleChange}
-            onBlur={formik.handleBlur}
-            className={`w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#83A98A] focus:border-transparent ${formik.touched.tipoDiscapacidad && formik.errors.tipoDiscapacidad ? 'border-red-500' : 'border-gray-300'}`}
-          >
-            <option value="">{t('forms.common.selectOption')}</option>
-            {tiposDiscapacidad.map((tipo) => (
-              <option key={tipo} value={tipo}>
-                {tipo}
-              </option>
-            ))}
-          </select>
-          {formik.touched.tipoDiscapacidad && formik.errors.tipoDiscapacidad && (
-            <p className="text-red-500 text-sm mt-1">{formik.errors.tipoDiscapacidad}</p>
-          )}
-        </div>
-
-        {/* 4. ¿Usas Lengua de Señas Colombiana (LSC)? */}
-        <div>
-          <label htmlFor="usaLSC" className="block text-sm font-semibold text-gray-700 mb-2">
-            4. {t('forms.jobSeeker.fields.usesLSC')} <span className="text-red-500">{t('forms.common.required')}</span>
-          </label>
-          <select
-            id="usaLSC"
-            name="usaLSC"
-            value={formik.values.usaLSC}
-            onChange={formik.handleChange}
-            onBlur={formik.handleBlur}
-            className={`w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#83A98A] focus:border-transparent ${formik.touched.usaLSC && formik.errors.usaLSC ? 'border-red-500' : 'border-gray-300'}`}
-          >
-            <option value="">{t('forms.common.selectOption')}</option>
-            {nivelesLSC.map((nivel) => (
-              <option key={nivel} value={nivel}>
-                {nivel}
-              </option>
-            ))}
-          </select>
-          {formik.touched.usaLSC && formik.errors.usaLSC && (
-            <p className="text-red-500 text-sm mt-1">{formik.errors.usaLSC}</p>
-          )}
-        </div>
-
-        {/* 5. Ciudad de residencia */}
-        <div>
-          <label htmlFor="ciudadResidencia" className="block text-sm font-semibold text-gray-700 mb-2">
-            5. {t('forms.jobSeeker.fields.city')} <span className="text-red-500">{t('forms.common.required')}</span>
-          </label>
-          <input
-            id="ciudadResidencia"
-            name="ciudadResidencia"
-            type="text"
-            onChange={formik.handleChange}
-            onBlur={formik.handleBlur}
-            value={formik.values.ciudadResidencia}
-            className={`w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#83A98A] focus:border-transparent ${formik.touched.ciudadResidencia && formik.errors.ciudadResidencia ? 'border-red-500' : 'border-gray-300'}`}
-          />
-          {formik.touched.ciudadResidencia && formik.errors.ciudadResidencia && (
-            <p className="text-red-500 text-sm mt-1">{formik.errors.ciudadResidencia}</p>
-          )}
-        </div>
-
-        {/* 6. Teléfono / WhatsApp */}
-        <div>
-          <label htmlFor="telefonoWhatsapp" className="block text-sm font-semibold text-gray-700 mb-2">
-            6. {t('forms.jobSeeker.fields.phone')} <span className="text-red-500">{t('forms.common.required')}</span>
-          </label>
-          <input
-            id="telefonoWhatsapp"
-            name="telefonoWhatsapp"
-            type="tel"
-            onChange={formik.handleChange}
-            onBlur={formik.handleBlur}
-            value={formik.values.telefonoWhatsapp}
-            className={`w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#83A98A] focus:border-transparent ${formik.touched.telefonoWhatsapp && formik.errors.telefonoWhatsapp ? 'border-red-500' : 'border-gray-300'}`}
-          />
-          {formik.touched.telefonoWhatsapp && formik.errors.telefonoWhatsapp && (
-            <p className="text-red-500 text-sm mt-1">{formik.errors.telefonoWhatsapp}</p>
-          )}
-        </div>
-
-        {/* 7. Correo electrónico */}
-        <div>
-          <label htmlFor="correoElectronico" className="block text-sm font-semibold text-gray-700 mb-2">
-            7. {t('forms.jobSeeker.fields.email')} <span className="text-red-500">{t('forms.common.required')}</span>
-          </label>
-          <input
-            id="correoElectronico"
-            name="correoElectronico"
-            type="email"
-            onChange={formik.handleChange}
-            onBlur={formik.handleBlur}
-            value={formik.values.correoElectronico}
-            className={`w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#83A98A] focus:border-transparent ${formik.touched.correoElectronico && formik.errors.correoElectronico ? 'border-red-500' : 'border-gray-300'}`}
-          />
-          {formik.touched.correoElectronico && formik.errors.correoElectronico && (
-            <p className="text-red-500 text-sm mt-1">{formik.errors.correoElectronico}</p>
-          )}
-        </div>
-
-        {/* 8. Nivel educativo */}
-        <div>
-          <label htmlFor="nivelEducativo" className="block text-sm font-semibold text-gray-700 mb-2">
-            8. {t('forms.jobSeeker.fields.educationLevel')} <span className="text-red-500">{t('forms.common.required')}</span>
-          </label>
-          <select
-            id="nivelEducativo"
-            name="nivelEducativo"
-            value={formik.values.nivelEducativo}
-            onChange={formik.handleChange}
-            onBlur={formik.handleBlur}
-            className={`w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#83A98A] focus:border-transparent ${formik.touched.nivelEducativo && formik.errors.nivelEducativo ? 'border-red-500' : 'border-gray-300'}`}
-          >
-            <option value="">{t('forms.common.selectOption')}</option>
-            {nivelesEducativos.map((nivel) => (
-              <option key={nivel} value={nivel}>
-                {nivel}
-              </option>
-            ))}
-          </select>
-          {formik.touched.nivelEducativo && formik.errors.nivelEducativo && (
-            <p className="text-red-500 text-sm mt-1">{formik.errors.nivelEducativo}</p>
-          )}
-        </div>
-
-        {/* 9. Área laboral de interés */}
-        <div>
-          <label className="block text-sm font-semibold text-gray-700 mb-3">
-            9. {t('forms.jobSeeker.fields.workArea')} <span className="text-red-500">{t('forms.common.required')}</span>
-          </label>
-          <div className="space-y-2">
-            {areasLaborales.map((area) => (
-              <label key={area} className="flex items-center gap-2 cursor-pointer">
-                <input
-                  type="checkbox"
-                  checked={formik.values.areaLaboralInteres.includes(area)}
-                  onChange={() => handleCheckboxChange(area)}
-                  className="w-4 h-4 text-[#83A98A] focus:ring-[#83A98A] rounded"
-                />
-                <span className="text-gray-700">{area}</span>
-              </label>
-            ))}
-          </div>
-          {formik.touched.areaLaboralInteres && formik.errors.areaLaboralInteres && (
-            <p className="text-red-500 text-sm mt-1">{formik.errors.areaLaboralInteres}</p>
-          )}
-          {formik.values.areaLaboralInteres.includes(areasLaborales[areasLaborales.length - 1]) && (
-            <input
-              type="text"
-              value={otraAreaLaboral}
-              onChange={(e) => setOtraAreaLaboral(e.target.value)}
-              placeholder={t('forms.jobSeeker.fields.specifyOther')}
-              className="w-full mt-3 px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#83A98A] focus:border-transparent"
-            />
-          )}
-        </div>
-
-        {/* 10. Experiencia laboral */}
-        <div>
-          <label htmlFor="experienciaLaboral" className="block text-sm font-semibold text-gray-700 mb-2">
-            10. {t('forms.jobSeeker.fields.workExperience')} <span className="text-red-500">{t('forms.common.required')}</span>
-          </label>
-          <textarea
-            id="experienciaLaboral"
-            name="experienciaLaboral"
-            value={formik.values.experienciaLaboral}
-            onChange={formik.handleChange}
-            onBlur={formik.handleBlur}
-            rows={4}
-            className={`w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#83A98A] focus:border-transparent resize-vertical ${formik.touched.experienciaLaboral && formik.errors.experienciaLaboral ? 'border-red-500' : 'border-gray-300'}`}
-            placeholder={t('forms.jobSeeker.fields.describeExperience')}
-          />
-          {formik.touched.experienciaLaboral && formik.errors.experienciaLaboral && (
-            <p className="text-red-500 text-sm mt-1">{formik.errors.experienciaLaboral}</p>
-          )}
-        </div>
-
-        {/* 11. Habilidades técnicas */}
-        <div>
-          <label htmlFor="habilidadesTecnicas" className="block text-sm font-semibold text-gray-700 mb-2">
-            11. {t('forms.jobSeeker.fields.technicalSkills')} <span className="text-red-500">{t('forms.common.required')}</span>
-          </label>
-          <textarea
-            id="habilidadesTecnicas"
-            name="habilidadesTecnicas"
-            value={formik.values.habilidadesTecnicas}
-            onChange={formik.handleChange}
-            onBlur={formik.handleBlur}
-            rows={4}
-            className={`w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#83A98A] focus:border-transparent resize-vertical ${formik.touched.habilidadesTecnicas && formik.errors.habilidadesTecnicas ? 'border-red-500' : 'border-gray-300'}`}
-            placeholder={t('forms.jobSeeker.fields.describeTechnical')}
-          />
-          {formik.touched.habilidadesTecnicas && formik.errors.habilidadesTecnicas && (
-            <p className="text-red-500 text-sm mt-1">{formik.errors.habilidadesTecnicas}</p>
-          )}
-        </div>
-
-        {/* 12. Habilidades blandas */}
-        <div>
-          <label htmlFor="habilidadesBlandas" className="block text-sm font-semibold text-gray-700 mb-2">
-            12. {t('forms.jobSeeker.fields.softSkills')} <span className="text-red-500">{t('forms.common.required')}</span>
-          </label>
-          <textarea
-            id="habilidadesBlandas"
-            name="habilidadesBlandas"
-            value={formik.values.habilidadesBlandas}
-            onChange={formik.handleChange}
-            onBlur={formik.handleBlur}
-            rows={4}
-            className={`w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#83A98A] focus:border-transparent resize-vertical ${formik.touched.habilidadesBlandas && formik.errors.habilidadesBlandas ? 'border-red-500' : 'border-gray-300'}`}
-            placeholder={t('forms.jobSeeker.fields.describeSoft')}
-          />
-          {formik.touched.habilidadesBlandas && formik.errors.habilidadesBlandas && (
-            <p className="text-red-500 text-sm mt-1">{formik.errors.habilidadesBlandas}</p>
-          )}
-        </div>
-
-        {/* 13. Certificaciones, cursos o talleres */}
-        <div>
-          <label htmlFor="certificacionesCursos" className="block text-sm font-semibold text-gray-700 mb-2">
-            13. {t('forms.jobSeeker.fields.certifications')}
-          </label>
-          <textarea
-            id="certificacionesCursos"
-            name="certificacionesCursos"
-            value={formik.values.certificacionesCursos}
-            onChange={formik.handleChange}
-            onBlur={formik.handleBlur}
-            rows={4}
-            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#83A98A] focus:border-transparent resize-vertical"
-            placeholder={t('forms.jobSeeker.fields.listCertifications')}
-          />
-        </div>
-
-        {/* 14. Adjuntar hoja de vida (PDF) */}
-        <div>
-          <label className="block text-sm font-semibold text-gray-700 mb-2">
-            14. {t('forms.jobSeeker.fields.uploadCV')} <span className="text-red-500">{t('forms.common.required')}</span>
-          </label>
-          <div className="relative">
-            <input
-              type="file"
-              accept=".pdf"
-              onChange={(e) => handleFileChange(e.target.files?.[0] || null)}
-              className="hidden"
-              id="hojaVida"
-            />
-            <label
-              htmlFor="hojaVida"
-              className={`flex items-center justify-center gap-2 w-full px-4 py-3 border-2 border-dashed rounded-lg hover:border-[#83A98A] cursor-pointer transition-all group ${formik.touched.hojaVida && formik.errors.hojaVida ? 'border-red-500' : 'border-gray-300'}`}
-            >
-              <FileText className="w-5 h-5 text-gray-400 group-hover:text-[#83A98A]" />
-              <span className="text-sm text-gray-600 group-hover:text-[#83A98A]">
-                {formik.values.hojaVida ? formik.values.hojaVida.name : t('forms.jobSeeker.fields.selectFile')}
-              </span>
-            </label>
-            {formik.touched.hojaVida && formik.errors.hojaVida && (
-              <p className="text-red-500 text-sm mt-1">{formik.errors.hojaVida}</p>
+      {
+        submitStatus === 'success' ? (
+          <div className="bg-green-50 border border-green-200 rounded-xl p-8 text-center animate-in fade-in duration-300">
+            <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
+              <svg className="w-8 h-8 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+              </svg>
+            </div>
+            <h3 className="text-2xl font-bold text-gray-900 mb-2">¡{isEditing ? 'Actualización Exitosa' : 'Solicitud Enviada'}!</h3>
+            <p className="text-gray-600">
+              {isEditing ? 'Tu solicitud ha sido actualizada correctamente.' : 'Hemos recibido tu información correctamente. Te contactaremos pronto.'}
+            </p>
+            {!isEditing ? (
+              <button
+                onClick={() => setSubmitStatus('idle')}
+                className="mt-6 text-[#83A98A] font-semibold hover:underline"
+              >
+                Enviar otra solicitud
+              </button>
+            ) : (
+              <button
+                onClick={onSuccess}
+                className="mt-6 px-6 py-2 bg-[#83A98A] text-white rounded-lg hover:bg-[#6e9175]"
+              >
+                Finalizar
+              </button>
             )}
           </div>
-        </div>
-
-        {/* 15. ¿Te gustaría recibir capacitación gratuita de TINCADIA? */}
-        <div>
-          <label className="block text-sm font-semibold text-gray-700 mb-3">
-            15. {t('forms.jobSeeker.fields.training')}{' '}
-            <span className="text-red-500">{t('forms.common.required')}</span>
-          </label>
-          <div className="flex gap-6">
-            <label className="flex items-center gap-2 cursor-pointer">
+        ) : (
+          <form onSubmit={formik.handleSubmit} className="space-y-6">
+            {/* 1. Nombre completo */}
+            <div>
+              <label htmlFor="nombreCompleto" className="block text-sm font-semibold text-gray-700 mb-2">
+                1. {t('forms.jobSeeker.fields.fullName')} <span className="text-red-500">{t('forms.common.required')}</span>
+              </label>
               <input
-                type="radio"
-                name="recibirCapacitacion"
-                value="si"
-                checked={formik.values.recibirCapacitacion === 'si'}
+                id="nombreCompleto"
+                name="nombreCompleto"
+                type="text"
                 onChange={formik.handleChange}
-                className="w-4 h-4 text-[#83A98A] focus:ring-[#83A98A]"
+                onBlur={formik.handleBlur}
+                value={formik.values.nombreCompleto}
+                className={`w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#83A98A] focus:border-transparent ${formik.touched.nombreCompleto && formik.errors.nombreCompleto ? 'border-red-500' : 'border-gray-300'}`}
               />
-              <span className="text-gray-700">{t('forms.common.yes')}</span>
-            </label>
-            <label className="flex items-center gap-2 cursor-pointer">
-              <input
-                type="radio"
-                name="recibirCapacitacion"
-                value="no"
-                checked={formik.values.recibirCapacitacion === 'no'}
-                onChange={formik.handleChange}
-                className="w-4 h-4 text-[#83A98A] focus:ring-[#83A98A]"
-              />
-              <span className="text-gray-700">{t('forms.common.no')}</span>
-            </label>
-          </div>
-          {formik.touched.recibirCapacitacion && formik.errors.recibirCapacitacion && (
-            <p className="text-red-500 text-sm mt-1">{formik.errors.recibirCapacitacion}</p>
-          )}
-        </div>
+              {formik.touched.nombreCompleto && formik.errors.nombreCompleto && (
+                <p className="text-red-500 text-sm mt-1">{formik.errors.nombreCompleto}</p>
+              )}
+            </div>
 
-        {/* 16. Autorizo tratamiento de datos personales */}
-        <div>
-          <label className="block text-sm font-semibold text-gray-700 mb-3">
-            16. {t('forms.jobSeeker.fields.dataAuthorization')}{' '}
-            <span className="text-red-500">{t('forms.common.required')}</span>
-          </label>
-          <div className="flex gap-6">
-            <label className="flex items-center gap-2 cursor-pointer">
+            {/* 2. Documento de identidad */}
+            <div>
+              <label htmlFor="documentoIdentidad" className="block text-sm font-semibold text-gray-700 mb-2">
+                2. {t('forms.jobSeeker.fields.documentId')} <span className="text-red-500">{t('forms.common.required')}</span>
+              </label>
               <input
-                type="radio"
-                name="autorizaTratamientoDatos"
-                value="si"
-                checked={formik.values.autorizaTratamientoDatos === 'si'}
+                id="documentoIdentidad"
+                name="documentoIdentidad"
+                type="text"
                 onChange={formik.handleChange}
-                className="w-4 h-4 text-[#83A98A] focus:ring-[#83A98A]"
+                onBlur={formik.handleBlur}
+                value={formik.values.documentoIdentidad}
+                className={`w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#83A98A] focus:border-transparent ${formik.touched.documentoIdentidad && formik.errors.documentoIdentidad ? 'border-red-500' : 'border-gray-300'}`}
               />
-              <span className="text-gray-700">{t('forms.common.yes')}</span>
-            </label>
-            <label className="flex items-center gap-2 cursor-pointer">
+              {formik.touched.documentoIdentidad && formik.errors.documentoIdentidad && (
+                <p className="text-red-500 text-sm mt-1">{formik.errors.documentoIdentidad}</p>
+              )}
+            </div>
+
+            {/* 3. Tipo de discapacidad */}
+            <div>
+              <label htmlFor="tipoDiscapacidad" className="block text-sm font-semibold text-gray-700 mb-2">
+                3. {t('forms.jobSeeker.fields.disabilityType')} <span className="text-red-500">{t('forms.common.required')}</span>
+              </label>
+              <select
+                id="tipoDiscapacidad"
+                name="tipoDiscapacidad"
+                value={formik.values.tipoDiscapacidad}
+                onChange={formik.handleChange}
+                onBlur={formik.handleBlur}
+                className={`w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#83A98A] focus:border-transparent ${formik.touched.tipoDiscapacidad && formik.errors.tipoDiscapacidad ? 'border-red-500' : 'border-gray-300'}`}
+              >
+                <option value="">{t('forms.common.selectOption')}</option>
+                {tiposDiscapacidad.map((tipo) => (
+                  <option key={tipo} value={tipo}>
+                    {tipo}
+                  </option>
+                ))}
+              </select>
+              {formik.touched.tipoDiscapacidad && formik.errors.tipoDiscapacidad && (
+                <p className="text-red-500 text-sm mt-1">{formik.errors.tipoDiscapacidad}</p>
+              )}
+            </div>
+
+            {/* 4. ¿Usas Lengua de Señas Colombiana (LSC)? */}
+            <div>
+              <label htmlFor="usaLSC" className="block text-sm font-semibold text-gray-700 mb-2">
+                4. {t('forms.jobSeeker.fields.usesLSC')} <span className="text-red-500">{t('forms.common.required')}</span>
+              </label>
+              <select
+                id="usaLSC"
+                name="usaLSC"
+                value={formik.values.usaLSC}
+                onChange={formik.handleChange}
+                onBlur={formik.handleBlur}
+                className={`w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#83A98A] focus:border-transparent ${formik.touched.usaLSC && formik.errors.usaLSC ? 'border-red-500' : 'border-gray-300'}`}
+              >
+                <option value="">{t('forms.common.selectOption')}</option>
+                {nivelesLSC.map((nivel) => (
+                  <option key={nivel} value={nivel}>
+                    {nivel}
+                  </option>
+                ))}
+              </select>
+              {formik.touched.usaLSC && formik.errors.usaLSC && (
+                <p className="text-red-500 text-sm mt-1">{formik.errors.usaLSC}</p>
+              )}
+            </div>
+
+            {/* 5. Ciudad de residencia */}
+            <div>
+              <label htmlFor="ciudadResidencia" className="block text-sm font-semibold text-gray-700 mb-2">
+                5. {t('forms.jobSeeker.fields.city')} <span className="text-red-500">{t('forms.common.required')}</span>
+              </label>
               <input
-                type="radio"
-                name="autorizaTratamientoDatos"
-                value="no"
-                checked={formik.values.autorizaTratamientoDatos === 'no'}
+                id="ciudadResidencia"
+                name="ciudadResidencia"
+                type="text"
                 onChange={formik.handleChange}
-                className="w-4 h-4 text-[#83A98A] focus:ring-[#83A98A]"
+                onBlur={formik.handleBlur}
+                value={formik.values.ciudadResidencia}
+                className={`w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#83A98A] focus:border-transparent ${formik.touched.ciudadResidencia && formik.errors.ciudadResidencia ? 'border-red-500' : 'border-gray-300'}`}
               />
-              <span className="text-gray-700">{t('forms.common.no')}</span>
-            </label>
-          </div>
-          {formik.touched.autorizaTratamientoDatos && formik.errors.autorizaTratamientoDatos && (
-            <p className="text-red-500 text-sm mt-1">{formik.errors.autorizaTratamientoDatos}</p>
-          )}
-        </div>
+              {formik.touched.ciudadResidencia && formik.errors.ciudadResidencia && (
+                <p className="text-red-500 text-sm mt-1">{formik.errors.ciudadResidencia}</p>
+              )}
+            </div>
 
-        {/* Error message if formId not loaded */}
-        {formIdError && (
-          <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg mt-4">
-            <p className="text-sm">{formIdError}</p>
-          </div>
-        )}
+            {/* 6. Teléfono / WhatsApp */}
+            <div>
+              <label htmlFor="telefonoWhatsapp" className="block text-sm font-semibold text-gray-700 mb-2">
+                6. {t('forms.jobSeeker.fields.phone')} <span className="text-red-500">{t('forms.common.required')}</span>
+              </label>
+              <input
+                id="telefonoWhatsapp"
+                name="telefonoWhatsapp"
+                type="tel"
+                onChange={formik.handleChange}
+                onBlur={formik.handleBlur}
+                value={formik.values.telefonoWhatsapp}
+                className={`w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#83A98A] focus:border-transparent ${formik.touched.telefonoWhatsapp && formik.errors.telefonoWhatsapp ? 'border-red-500' : 'border-gray-300'}`}
+              />
+              {formik.touched.telefonoWhatsapp && formik.errors.telefonoWhatsapp && (
+                <p className="text-red-500 text-sm mt-1">{formik.errors.telefonoWhatsapp}</p>
+              )}
+            </div>
 
-        {/* Botón Submit */}
-        <button
-          type="submit"
-          className="w-full bg-[#83A98A] text-white font-semibold py-3.5 px-6 rounded-lg hover:bg-[#6D8F75] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#83A98A] transition-all duration-300 shadow-lg hover:shadow-xl mt-8 disabled:opacity-50"
-          disabled={formik.isSubmitting || !!formIdError}
-        >
-          {formik.isSubmitting ? t('forms.common.sending') : t('registration.jobSeeker.submitForm')}
-        </button>
-      </form>
-    </div>
+            {/* 7. Correo electrónico */}
+            <div>
+              <label htmlFor="correoElectronico" className="block text-sm font-semibold text-gray-700 mb-2">
+                7. {t('forms.jobSeeker.fields.email')} <span className="text-red-500">{t('forms.common.required')}</span>
+              </label>
+              <input
+                id="correoElectronico"
+                name="correoElectronico"
+                type="email"
+                onChange={formik.handleChange}
+                onBlur={formik.handleBlur}
+                value={formik.values.correoElectronico}
+                className={`w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#83A98A] focus:border-transparent ${formik.touched.correoElectronico && formik.errors.correoElectronico ? 'border-red-500' : 'border-gray-300'}`}
+              />
+              {formik.touched.correoElectronico && formik.errors.correoElectronico && (
+                <p className="text-red-500 text-sm mt-1">{formik.errors.correoElectronico}</p>
+              )}
+            </div>
+
+            {/* 8. Nivel educativo */}
+            <div>
+              <label htmlFor="nivelEducativo" className="block text-sm font-semibold text-gray-700 mb-2">
+                8. {t('forms.jobSeeker.fields.educationLevel')} <span className="text-red-500">{t('forms.common.required')}</span>
+              </label>
+              <select
+                id="nivelEducativo"
+                name="nivelEducativo"
+                value={formik.values.nivelEducativo}
+                onChange={formik.handleChange}
+                onBlur={formik.handleBlur}
+                className={`w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#83A98A] focus:border-transparent ${formik.touched.nivelEducativo && formik.errors.nivelEducativo ? 'border-red-500' : 'border-gray-300'}`}
+              >
+                <option value="">{t('forms.common.selectOption')}</option>
+                {nivelesEducativos.map((nivel) => (
+                  <option key={nivel} value={nivel}>
+                    {nivel}
+                  </option>
+                ))}
+              </select>
+              {formik.touched.nivelEducativo && formik.errors.nivelEducativo && (
+                <p className="text-red-500 text-sm mt-1">{formik.errors.nivelEducativo}</p>
+              )}
+            </div>
+
+            {/* 9. Área laboral de interés */}
+            <div>
+              <label className="block text-sm font-semibold text-gray-700 mb-3">
+                9. {t('forms.jobSeeker.fields.workArea')} <span className="text-red-500">{t('forms.common.required')}</span>
+              </label>
+              <div className="space-y-2">
+                {areasLaborales.map((area) => (
+                  <label key={area} className="flex items-center gap-2 cursor-pointer">
+                    <input
+                      type="checkbox"
+                      checked={formik.values.areaLaboralInteres.includes(area)}
+                      onChange={() => handleCheckboxChange(area)}
+                      className="w-4 h-4 text-[#83A98A] focus:ring-[#83A98A] rounded"
+                    />
+                    <span className="text-gray-700">{area}</span>
+                  </label>
+                ))}
+              </div>
+              {formik.touched.areaLaboralInteres && formik.errors.areaLaboralInteres && (
+                <p className="text-red-500 text-sm mt-1">{formik.errors.areaLaboralInteres}</p>
+              )}
+              {formik.values.areaLaboralInteres.includes(areasLaborales[areasLaborales.length - 1]) && (
+                <input
+                  type="text"
+                  value={otraAreaLaboral}
+                  onChange={(e) => setOtraAreaLaboral(e.target.value)}
+                  placeholder={t('forms.jobSeeker.fields.specifyOther')}
+                  className="w-full mt-3 px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#83A98A] focus:border-transparent"
+                />
+              )}
+            </div>
+
+            {/* 10. Experiencia laboral */}
+            <div>
+              <label htmlFor="experienciaLaboral" className="block text-sm font-semibold text-gray-700 mb-2">
+                10. {t('forms.jobSeeker.fields.workExperience')} <span className="text-red-500">{t('forms.common.required')}</span>
+              </label>
+              <textarea
+                id="experienciaLaboral"
+                name="experienciaLaboral"
+                value={formik.values.experienciaLaboral}
+                onChange={formik.handleChange}
+                onBlur={formik.handleBlur}
+                rows={4}
+                className={`w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#83A98A] focus:border-transparent resize-vertical ${formik.touched.experienciaLaboral && formik.errors.experienciaLaboral ? 'border-red-500' : 'border-gray-300'}`}
+                placeholder={t('forms.jobSeeker.fields.describeExperience')}
+              />
+              {formik.touched.experienciaLaboral && formik.errors.experienciaLaboral && (
+                <p className="text-red-500 text-sm mt-1">{formik.errors.experienciaLaboral}</p>
+              )}
+            </div>
+
+            {/* 11. Habilidades técnicas */}
+            <div>
+              <label htmlFor="habilidadesTecnicas" className="block text-sm font-semibold text-gray-700 mb-2">
+                11. {t('forms.jobSeeker.fields.technicalSkills')} <span className="text-red-500">{t('forms.common.required')}</span>
+              </label>
+              <textarea
+                id="habilidadesTecnicas"
+                name="habilidadesTecnicas"
+                value={formik.values.habilidadesTecnicas}
+                onChange={formik.handleChange}
+                onBlur={formik.handleBlur}
+                rows={4}
+                className={`w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#83A98A] focus:border-transparent resize-vertical ${formik.touched.habilidadesTecnicas && formik.errors.habilidadesTecnicas ? 'border-red-500' : 'border-gray-300'}`}
+                placeholder={t('forms.jobSeeker.fields.describeTechnical')}
+              />
+              {formik.touched.habilidadesTecnicas && formik.errors.habilidadesTecnicas && (
+                <p className="text-red-500 text-sm mt-1">{formik.errors.habilidadesTecnicas}</p>
+              )}
+            </div>
+
+            {/* 12. Habilidades blandas */}
+            <div>
+              <label htmlFor="habilidadesBlandas" className="block text-sm font-semibold text-gray-700 mb-2">
+                12. {t('forms.jobSeeker.fields.softSkills')} <span className="text-red-500">{t('forms.common.required')}</span>
+              </label>
+              <textarea
+                id="habilidadesBlandas"
+                name="habilidadesBlandas"
+                value={formik.values.habilidadesBlandas}
+                onChange={formik.handleChange}
+                onBlur={formik.handleBlur}
+                rows={4}
+                className={`w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#83A98A] focus:border-transparent resize-vertical ${formik.touched.habilidadesBlandas && formik.errors.habilidadesBlandas ? 'border-red-500' : 'border-gray-300'}`}
+                placeholder={t('forms.jobSeeker.fields.describeSoft')}
+              />
+              {formik.touched.habilidadesBlandas && formik.errors.habilidadesBlandas && (
+                <p className="text-red-500 text-sm mt-1">{formik.errors.habilidadesBlandas}</p>
+              )}
+            </div>
+
+            {/* 13. Certificaciones, cursos o talleres */}
+            <div>
+              <label className="block text-sm font-semibold text-gray-700 mb-2">
+                13. {t('forms.jobSeeker.fields.certifications')}
+              </label>
+              <div className="relative">
+                <input
+                  type="file"
+                  accept=".pdf"
+                  onChange={(e) => handleFileChange('certificacionesCursos', e.target.files?.[0] || null)}
+                  className="hidden"
+                  id="certificacionesCursos"
+                />
+                <label
+                  htmlFor="certificacionesCursos"
+                  className={`flex items-center justify-center gap-2 w-full px-4 py-3 border-2 border-dashed rounded-lg hover:border-[#83A98A] cursor-pointer transition-all group ${formik.touched.certificacionesCursos && formik.errors.certificacionesCursos ? 'border-red-500' : 'border-gray-300'}`}
+                >
+                  <FileText className="w-5 h-5 text-gray-400 group-hover:text-[#83A98A]" />
+                  <span className="text-sm text-gray-600 group-hover:text-[#83A98A]">
+                    {formik.values.certificacionesCursos ? formik.values.certificacionesCursos?.name : t('forms.jobSeeker.fields.selectFile')}
+                  </span>
+                </label>
+                {formik.touched.certificacionesCursos && formik.errors.certificacionesCursos && (
+                  <p className="text-red-500 text-sm mt-1">{formik.errors.certificacionesCursos as string}</p>
+                )}
+                {fileError && <p className="text-red-500 text-sm mt-1">{fileError}</p>}
+              </div>
+            </div>
+
+            {/* 14. Adjuntar hoja de vida (PDF) */}
+            <div>
+              <label className="block text-sm font-semibold text-gray-700 mb-2">
+                14. {t('forms.jobSeeker.fields.uploadCV')} <span className="text-red-500">{t('forms.common.required')}</span>
+              </label>
+              <div className="relative">
+                <input
+                  type="file"
+                  accept=".pdf"
+                  onChange={(e) => handleFileChange('hojaVida', e.target.files?.[0] || null)}
+                  className="hidden"
+                  id="hojaVida"
+                />
+                <label
+                  htmlFor="hojaVida"
+                  className={`flex items-center justify-center gap-2 w-full px-4 py-3 border-2 border-dashed rounded-lg hover:border-[#83A98A] cursor-pointer transition-all group ${formik.touched.hojaVida && formik.errors.hojaVida ? 'border-red-500' : 'border-gray-300'}`}
+                >
+                  <FileText className="w-5 h-5 text-gray-400 group-hover:text-[#83A98A]" />
+                  <span className="text-sm text-gray-600 group-hover:text-[#83A98A]">
+                    {formik.values.hojaVida ? formik.values.hojaVida?.name : t('forms.jobSeeker.fields.selectFile')}
+                  </span>
+                </label>
+                {formik.touched.hojaVida && formik.errors.hojaVida && (
+                  <p className="text-red-500 text-sm mt-1">{formik.errors.hojaVida as string}</p>
+                )}
+              </div>
+            </div>
+
+            {/* 15. ¿Te gustaría recibir capacitación gratuita de TINCADIA? */}
+            <div>
+              <label className="block text-sm font-semibold text-gray-700 mb-3">
+                15. {t('forms.jobSeeker.fields.training')}{' '}
+                <span className="text-red-500">{t('forms.common.required')}</span>
+              </label>
+              <div className="flex gap-6">
+                <label className="flex items-center gap-2 cursor-pointer">
+                  <input
+                    type="radio"
+                    name="recibirCapacitacion"
+                    value="si"
+                    checked={formik.values.recibirCapacitacion === 'si'}
+                    onChange={formik.handleChange}
+                    className="w-4 h-4 text-[#83A98A] focus:ring-[#83A98A]"
+                  />
+                  <span className="text-gray-700">{t('forms.common.yes')}</span>
+                </label>
+                <label className="flex items-center gap-2 cursor-pointer">
+                  <input
+                    type="radio"
+                    name="recibirCapacitacion"
+                    value="no"
+                    checked={formik.values.recibirCapacitacion === 'no'}
+                    onChange={formik.handleChange}
+                    className="w-4 h-4 text-[#83A98A] focus:ring-[#83A98A]"
+                  />
+                  <span className="text-gray-700">{t('forms.common.no')}</span>
+                </label>
+              </div>
+              {formik.touched.recibirCapacitacion && formik.errors.recibirCapacitacion && (
+                <p className="text-red-500 text-sm mt-1">{formik.errors.recibirCapacitacion}</p>
+              )}
+            </div>
+
+            {/* 16. Autorizo tratamiento de datos personales */}
+            <div>
+              <label className="block text-sm font-semibold text-gray-700 mb-3">
+                16. {t('forms.jobSeeker.fields.dataAuthorization')}{' '}
+                <span className="text-red-500">{t('forms.common.required')}</span>
+              </label>
+              <div className="flex gap-6">
+                <label className="flex items-center gap-2 cursor-pointer">
+                  <input
+                    type="radio"
+                    name="autorizaTratamientoDatos"
+                    value="si"
+                    checked={formik.values.autorizaTratamientoDatos === 'si'}
+                    onChange={formik.handleChange}
+                    className="w-4 h-4 text-[#83A98A] focus:ring-[#83A98A]"
+                  />
+                  <span className="text-gray-700">{t('forms.common.yes')}</span>
+                </label>
+                <label className="flex items-center gap-2 cursor-pointer">
+                  <input
+                    type="radio"
+                    name="autorizaTratamientoDatos"
+                    value="no"
+                    checked={formik.values.autorizaTratamientoDatos === 'no'}
+                    onChange={formik.handleChange}
+                    className="w-4 h-4 text-[#83A98A] focus:ring-[#83A98A]"
+                  />
+                  <span className="text-gray-700">{t('forms.common.no')}</span>
+                </label>
+              </div>
+              {formik.touched.autorizaTratamientoDatos && formik.errors.autorizaTratamientoDatos && (
+                <p className="text-red-500 text-sm mt-1">{formik.errors.autorizaTratamientoDatos}</p>
+              )}
+            </div>
+
+            {/* Error message if formId not loaded */}
+            {formIdError && (
+              <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg mt-4">
+                <p className="text-sm">{formIdError}</p>
+              </div>
+            )}
+
+            {/* Botón Submit */}
+            <button
+              type="submit"
+              className="w-full bg-[#83A98A] text-white font-semibold py-3.5 px-6 rounded-lg hover:bg-[#6D8F75] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#83A98A] transition-all duration-300 shadow-lg hover:shadow-xl mt-8 disabled:opacity-50"
+              disabled={formik.isSubmitting || !!formIdError}
+            >
+              {formik.isSubmitting
+                ? (isEditing ? 'Actualizando...' : t('forms.common.sending'))
+                : (isEditing ? 'Actualizar Solicitud' : t('registration.jobSeeker.submitForm'))
+              }
+            </button>
+          </form>
+        )
+      }
+    </div >
   );
-}
 
+}
