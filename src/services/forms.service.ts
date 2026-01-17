@@ -46,14 +46,14 @@ export const formsService = {
             hasData: !!data,
             submittedBy,
         });
-        
+
         try {
             const response = await api.post<FormSubmissionResponse>(FORMS_ENDPOINTS.SUBMIT, {
                 formId,
                 data,
                 submittedBy,
             });
-            
+
             console.log('✅ [Forms Service] Form submitted successfully:', response);
             return response;
         } catch (error) {
@@ -83,6 +83,27 @@ export const formsService = {
         }
 
         return response.json();
+    },
+
+    /**
+     * Get applications submitted by the current user
+     * 
+     * @param userId - The user ID
+     */
+    async getMyApplications(userId: string, email?: string, documentNumber?: string): Promise<any[]> {
+        const params: Record<string, string> = { userId };
+        if (email) params.email = email;
+        if (documentNumber) params.documentNumber = documentNumber;
+
+        const queryString = new URLSearchParams(params).toString();
+        return api.get<any[]>(`/forms/my-applications?${queryString}`);
+    },
+
+    /**
+     * Update an existing submission
+     */
+    async updateSubmission(id: string, data: any): Promise<any> {
+        return api.put(`/forms/submissions/${id}`, { data });
     }
 };
 

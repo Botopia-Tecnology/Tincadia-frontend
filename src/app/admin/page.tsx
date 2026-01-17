@@ -58,13 +58,6 @@ export default function AdminDashboard() {
                 console.warn('Could not fetch users:', e);
             }
 
-            // Fetch form submissions
-            const submissionsResponse = await fetch(`${apiUrl}/forms/submissions`);
-            let submissions: any[] = [];
-            if (submissionsResponse.ok) {
-                submissions = await submissionsResponse.json();
-            }
-
             // Fetch courses
             let courses: any[] = [];
             try {
@@ -78,7 +71,7 @@ export default function AdminDashboard() {
 
             setStats({
                 totalUsers: users.length,
-                totalSubmissions: Array.isArray(submissions) ? submissions.length : 0,
+                totalSubmissions: 0, // Disabled to prevent ECONNREFUSED on dashboard load
                 totalCourses: Array.isArray(courses) ? courses.length : 0,
                 recentUsers: users.slice(0, 5).map((u: any) => ({
                     id: u.id,

@@ -2,6 +2,7 @@
 
 import { useState, useCallback, useRef, useEffect, useMemo } from 'react';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import { Menu, ChevronDown, Building2, MessageSquare, LogOut, User, LayoutDashboard } from 'lucide-react';
 import { Logo } from '@/components/ui/Logo';
 import { MobileMenu } from './MobileMenu';
@@ -12,13 +13,21 @@ import { useUI } from '@/contexts/UIContext';
 import { useAuth } from '@/contexts/AuthContext';
 
 export function Navbar() {
+  const router = useRouter();
   const t = useTranslation();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [servicesDropdownOpen, setServicesDropdownOpen] = useState(false);
+  const [userDropdownOpen, setUserDropdownOpen] = useState(false);
   const servicesDropdownRef = useRef<HTMLDivElement>(null);
+  const userDropdownRef = useRef<HTMLDivElement>(null);
   const timeoutRef = useRef<NodeJS.Timeout | null>(null);
   const { openLoginPanel } = useUI();
   const { user, isAuthenticated, logout, isLoading } = useAuth();
+
+  const handleLogout = async () => {
+    await logout();
+    router.push('/');
+  };
 
   const navigation = useMemo(() => [
     { name: t('navbar.about'), href: '/nosotros' },
@@ -65,16 +74,22 @@ export function Navbar() {
       ) {
         setServicesDropdownOpen(false);
       }
+      if (
+        userDropdownRef.current &&
+        !userDropdownRef.current.contains(event.target as Node)
+      ) {
+        setUserDropdownOpen(false);
+      }
     };
 
-    if (servicesDropdownOpen) {
+    if (servicesDropdownOpen || userDropdownOpen) {
       document.addEventListener('mousedown', handleClickOutside);
     }
 
     return () => {
       document.removeEventListener('mousedown', handleClickOutside);
     };
-  }, [servicesDropdownOpen]);
+  }, [servicesDropdownOpen, userDropdownOpen]);
 
   const handleMouseEnter = () => {
     if (timeoutRef.current) {
@@ -214,27 +229,52 @@ export function Navbar() {
                   </Link>
                 )}
 
-                {/* User greeting with avatar */}
-                <div className="flex items-center gap-3 pl-4 pr-2 py-1 rounded-full bg-gradient-to-r from-gray-50 to-gray-100 dark:from-gray-100 dark:to-gray-200 border border-gray-200/80 dark:border-gray-300 shadow-sm">
-                  <span className="text-sm font-medium text-gray-600 dark:text-gray-800">
-                    Hola, <span className="text-gray-900 dark:text-black font-semibold">{user.firstName}</span>
-                  </span>
-                  {/* Avatar with initials */}
-                  <div className="w-8 h-8 rounded-full bg-gradient-to-br from-[#83A98A] to-[#6D8F75] flex items-center justify-center shadow-inner">
-                    <span className="text-xs font-bold text-white uppercase">
-                      {user.firstName?.charAt(0)}{user.lastName?.charAt(0)}
+                {/* User Dropdown */}
+                <div className="relative" ref={userDropdownRef}>
+                  <button
+                    onClick={() => setUserDropdownOpen(!userDropdownOpen)}
+                    className="flex items-center gap-3 pl-4 pr-2 py-1 rounded-full bg-gradient-to-r from-gray-50 to-gray-100 dark:from-gray-100 dark:to-gray-200 border border-gray-200/80 dark:border-gray-300 shadow-sm hover:shadow-md transition-all duration-200 group focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#83A98A]"
+                  >
+                    <span className="text-sm font-medium text-gray-600 dark:text-gray-800 group-hover:text-[#83A98A] transition-colors">
+                      Hola, <span className="font-semibold">{user.firstName}</span>
                     </span>
-                  </div>
+                    {/* Avatar with initials */}
+                    <div className="w-8 h-8 rounded-full bg-gradient-to-br from-[#83A98A] to-[#6D8F75] flex items-center justify-center shadow-inner group-hover:scale-105 transition-transform">
+                      <span className="text-xs font-bold text-white uppercase">
+                        {user.firstName?.charAt(0)}{user.lastName?.charAt(0)}
+                      </span>
+                    </div>
+                    <ChevronDown className={`w-4 h-4 text-gray-400 transition-transform duration-200 ${userDropdownOpen ? 'rotate-180' : ''}`} />
+                  </button>
+
+                  {/* Dropdown Menu */}
+                  {userDropdownOpen && (
+                    <div className="absolute right-0 top-full mt-2 w-48 bg-white rounded-xl shadow-xl border border-gray-100 py-1 z-50 animate-in fade-in slide-in-from-top-2 origin-top-right">
+                      <div className="px-4 py-2 border-b border-gray-50">
+                        <p className="text-xs text-gray-500 font-medium">Cuenta</p>
+                        <p className="text-sm font-semibold truncate text-gray-900">{user.email}</p>
+                      </div>
+                      <Link
+                        href="/perfil"
+                        className="flex items-center gap-2 px-4 py-2.5 text-sm text-gray-700 hover:bg-gray-50 hover:text-[#83A98A] transition-colors"
+                        onClick={() => setUserDropdownOpen(false)}
+                      >
+                        <User className="w-4 h-4" />
+                        Perfil
+                      </Link>
+                      <button
+                        onClick={() => {
+                          setUserDropdownOpen(false);
+                          handleLogout();
+                        }}
+                        className="w-full flex items-center gap-2 px-4 py-2.5 text-sm text-red-600 hover:bg-red-50 hover:text-red-700 transition-colors text-left"
+                      >
+                        <LogOut className="w-4 h-4" />
+                        Cerrar sesión
+                      </button>
+                    </div>
+                  )}
                 </div>
-                {/* Logout button */}
-                <button
-                  onClick={logout}
-                  className="group flex items-center gap-2 px-3 py-2 rounded-full text-sm font-medium text-gray-500 hover:text-red-600 hover:bg-red-50 transition-all duration-200"
-                  title="Cerrar sesión"
-                >
-                  <LogOut className="w-4 h-4 transition-transform group-hover:-translate-x-0.5" />
-                  <span className="hidden xl:inline">Salir</span>
-                </button>
               </div>
             ) : (
               <button

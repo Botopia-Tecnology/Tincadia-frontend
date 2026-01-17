@@ -208,18 +208,7 @@ export function FormSubmissionModal({ submission, onClose, onDeleted }: FormSubm
                             </h3>
                             {(() => {
                                 // Filter out fields already shown in Quick info to avoid duplicates
-                                const data = submission.data || {};
-                                const fieldsToExclude = [
-                                    'nombreCompleto',
-                                    'correoElectronico',
-                                    'telefono',
-                                    'telefonoWhatsapp',
-                                    'documentoIdentidad',
-                                ];
-                                const filteredData = Object.fromEntries(
-                                    Object.entries(data).filter(([key]) => !fieldsToExclude.includes(key))
-                                );
-                                return <OrganizedDataRenderer data={filteredData} />;
+                                return <OrganizedDataRenderer data={submission.data || {}} />;
                             })()}
                         </div>
                     </div>

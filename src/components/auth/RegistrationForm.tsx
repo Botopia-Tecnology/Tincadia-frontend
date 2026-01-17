@@ -1,6 +1,8 @@
 'use client';
 
+import { useState } from 'react';
 import Link from 'next/link';
+import { Eye, EyeOff } from 'lucide-react';
 import { useTranslation } from '@/hooks/useTranslation';
 import { DOCUMENT_TYPES, type DocumentTypeId } from '@/types/auth.types';
 import { useFormik } from 'formik';
@@ -35,6 +37,8 @@ export function RegistrationForm({
     error,
 }: RegistrationFormProps) {
     const t = useTranslation();
+    const [showPassword, setShowPassword] = useState(false);
+    const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
     const validationSchema = Yup.object({
         nombre: Yup.string().required(t('forms.common.required') as string),
@@ -166,31 +170,45 @@ export function RegistrationForm({
                 />
             </div>
 
-            <div>
+            <div className="relative">
                 <input
-                    type="password"
+                    type={showPassword ? "text" : "password"}
                     name="password"
                     onChange={formik.handleChange}
                     onBlur={formik.handleBlur}
                     value={formik.values.password}
-                    className={`w-full bg-transparent text-lg text-gray-900 placeholder-gray-400 border-0 border-b focus:outline-none focus:border-gray-900 transition-colors pb-2 ${formik.touched.password && formik.errors.password ? 'border-red-500' : 'border-gray-300'}`}
+                    className={`w-full bg-transparent text-lg text-gray-900 placeholder-gray-400 border-0 border-b focus:outline-none focus:border-gray-900 transition-colors pb-2 pr-10 ${formik.touched.password && formik.errors.password ? 'border-red-500' : 'border-gray-300'}`}
                     placeholder={t('registration.panel.password')}
                 />
+                <button
+                    type="button"
+                    onClick={() => setShowPassword(!showPassword)}
+                    className="absolute right-0 top-0 pb-2 text-gray-400 hover:text-gray-600 transition-colors"
+                >
+                    {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
+                </button>
                 {formik.touched.password && formik.errors.password && (
                     <p className="text-red-500 text-sm mt-1">{formik.errors.password}</p>
                 )}
             </div>
 
-            <div>
+            <div className="relative">
                 <input
-                    type="password"
+                    type={showConfirmPassword ? "text" : "password"}
                     name="confirmPassword"
                     onChange={formik.handleChange}
                     onBlur={formik.handleBlur}
                     value={formik.values.confirmPassword}
-                    className={`w-full bg-transparent text-lg text-gray-900 placeholder-gray-400 border-0 border-b pb-2 focus:outline-none transition-colors ${formik.touched.confirmPassword && formik.errors.confirmPassword ? 'border-red-400 focus:border-red-500' : 'border-gray-300 focus:border-gray-900'}`}
+                    className={`w-full bg-transparent text-lg text-gray-900 placeholder-gray-400 border-0 border-b pb-2 pr-10 focus:outline-none transition-colors ${formik.touched.confirmPassword && formik.errors.confirmPassword ? 'border-red-400 focus:border-red-500' : 'border-gray-300 focus:border-gray-900'}`}
                     placeholder={t('registration.panel.confirmPassword')}
                 />
+                <button
+                    type="button"
+                    onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                    className="absolute right-0 top-0 pb-2 text-gray-400 hover:text-gray-600 transition-colors"
+                >
+                    {showConfirmPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
+                </button>
                 {formik.touched.confirmPassword && formik.errors.confirmPassword && (
                     <p className="text-sm text-red-500 mt-1">{formik.errors.confirmPassword}</p>
                 )}

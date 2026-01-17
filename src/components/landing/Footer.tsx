@@ -18,6 +18,8 @@ export function Footer() {
       <div className="mx-auto max-w-7xl px-6 lg:px-8 py-12 lg:py-16">
         <div className="flex flex-col items-center justify-center">
 
+
+
           {/* Social Media Section */}
           <div className="text-center">
             <h3 className="text-sm font-semibold text-gray-900 uppercase tracking-wider mb-6">
@@ -122,8 +124,19 @@ export function Footer() {
             </div>
           </div>
 
+          {/* Legal Links */}
+          <div className="mt-10 flex gap-6 text-sm text-gray-500">
+            <Link href="/terminos" className="hover:text-[#83A98A] transition-colors hover:underline">
+              Términos y Condiciones
+            </Link>
+            <span className="text-gray-300">|</span>
+            <Link href="/privacidad" className="hover:text-[#83A98A] transition-colors hover:underline">
+              Política de Privacidad
+            </Link>
+          </div>
+
           {/* Copyright */}
-          <div className="mt-12 pt-8 border-t border-gray-200 w-full">
+          <div className="mt-8 pt-8 border-t border-gray-200 w-full">
             <p className="text-xs sm:text-sm text-gray-600 text-center">
               {t('footer.copyright')}
             </p>

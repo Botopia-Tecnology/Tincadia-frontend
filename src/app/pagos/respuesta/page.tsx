@@ -95,29 +95,40 @@ function PaymentResponseContent() {
 
     const transactionId = searchParams.get('id');
     const statusParam = searchParams.get('status');
+    const reasonParam = searchParams.get('reason');
 
     useEffect(() => {
         const verifyPayment = async () => {
-            if (!transactionId) {
-                setStatus('ERROR');
-                setError('No se encontró el ID de la transacción');
+            if (!transactionId || transactionId === 'approved' || transactionId === 'failed') {
+                // If it's a placeholder ID, use the status param directly
+                if (statusParam === 'success') setStatus('APPROVED');
+                else if (statusParam === 'failed') {
+                    setStatus('DECLINED');
+                    if (reasonParam) setError(`Razón: ${decodeURIComponent(reasonParam)}`);
+                }
+                else {
+                    setStatus('ERROR');
+                    setError('No se encontró el ID de la transacción');
+                }
                 return;
             }
 
             try {
                 // Verificar el estado con Wompi a través de nuestro backend
                 const data = await paymentsService.verifyPayment(transactionId);
-                
+
                 setTransaction(data);
                 setStatus(data.status as PaymentStatus);
             } catch (err) {
-                console.error('Error verifying payment:', err);
                 // Si falla la verificación, usar el status del parámetro si existe
                 if (statusParam === 'success') {
                     setStatus('APPROVED');
+                    // No logueamos error porque tenemos fallback
                 } else if (statusParam === 'failed') {
                     setStatus('DECLINED');
+                    // No logueamos error porque tenemos fallback
                 } else {
+                    console.error('Error verifying payment:', err);
                     setStatus('ERROR');
                     setError('No se pudo verificar el estado del pago');
                 }
@@ -201,10 +212,10 @@ function PaymentResponseContent() {
                     {status === 'APPROVED' ? (
                         <>
                             <Link
-                                href="/admin"
+                                href="/perfil"
                                 className="flex-1 flex items-center justify-center gap-2 bg-[#83A98A] text-white rounded-lg px-6 py-3 font-semibold hover:bg-[#6B8E71] transition-colors"
                             >
-                                Ir a Mi Cuenta
+                                Ir a Mi Perfil
                             </Link>
                             <Link
                                 href="/"

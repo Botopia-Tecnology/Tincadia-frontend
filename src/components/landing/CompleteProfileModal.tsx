@@ -19,6 +19,19 @@ interface CompleteProfileModalProps {
     onClose: () => void;
 }
 
+const COUNTRIES = [
+    { code: 'CO', name: 'Colombia', flag: '🇨🇴', dialCode: '+57' },
+    { code: 'US', name: 'United States', flag: '🇺🇸', dialCode: '+1' },
+    { code: 'MX', name: 'Mexico', flag: '🇲🇽', dialCode: '+52' },
+    { code: 'ES', name: 'Spain', flag: '🇪🇸', dialCode: '+34' },
+    { code: 'AR', name: 'Argentina', flag: '🇦🇷', dialCode: '+54' },
+    { code: 'CL', name: 'Chile', flag: '🇨🇱', dialCode: '+56' },
+    { code: 'PE', name: 'Peru', flag: '🇵🇪', dialCode: '+51' },
+    { code: 'EC', name: 'Ecuador', flag: '🇪🇨', dialCode: '+593' },
+    { code: 'VE', name: 'Venezuela', flag: '🇻🇪', dialCode: '+58' },
+    { code: 'BR', name: 'Brazil', flag: '🇧🇷', dialCode: '+55' },
+];
+
 export function CompleteProfileModal({ isOpen, onClose }: CompleteProfileModalProps) {
     const t = useTranslation();
     const { user, updateProfile, isLoading, error, clearError, profileComplete } = useAuth();
@@ -28,6 +41,7 @@ export function CompleteProfileModal({ isOpen, onClose }: CompleteProfileModalPr
         documentNumber: '',
         phone: '',
     });
+    const [selectedCountry, setSelectedCountry] = useState(COUNTRIES[0]);
     const [formError, setFormError] = useState<string | null>(null);
     const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -62,7 +76,7 @@ export function CompleteProfileModal({ isOpen, onClose }: CompleteProfileModalPr
             await updateProfile({
                 documentTypeId: formData.documentTypeId as number,
                 documentNumber: formData.documentNumber,
-                phone: formData.phone,
+                phone: `${selectedCountry.dialCode}${formData.phone}`,
             });
             onClose();
         } catch (err) {
@@ -167,16 +181,32 @@ export function CompleteProfileModal({ isOpen, onClose }: CompleteProfileModalPr
                             <label htmlFor="phone" className="block text-sm font-medium text-gray-700 mb-1">
                                 Teléfono *
                             </label>
-                            <input
-                                type="tel"
-                                id="phone"
-                                name="phone"
-                                value={formData.phone}
-                                onChange={handleInputChange}
-                                required
-                                placeholder="Ej: +57 300 123 4567"
-                                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#83A98A] focus:border-transparent transition-all"
-                            />
+                            <div className="flex gap-2">
+                                <select
+                                    className="w-[120px] px-2 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#83A98A] focus:border-transparent transition-all bg-white"
+                                    value={selectedCountry.code}
+                                    onChange={(e) => {
+                                        const country = COUNTRIES.find(c => c.code === e.target.value);
+                                        if (country) setSelectedCountry(country);
+                                    }}
+                                >
+                                    {COUNTRIES.map((country) => (
+                                        <option key={country.code} value={country.code}>
+                                            {country.flag} {country.dialCode}
+                                        </option>
+                                    ))}
+                                </select>
+                                <input
+                                    type="tel"
+                                    id="phone"
+                                    name="phone"
+                                    value={formData.phone}
+                                    onChange={handleInputChange}
+                                    required
+                                    placeholder="300 123 4567"
+                                    className="flex-1 px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#83A98A] focus:border-transparent transition-all"
+                                />
+                            </div>
                         </div>
 
                         {/* Error Message */}
