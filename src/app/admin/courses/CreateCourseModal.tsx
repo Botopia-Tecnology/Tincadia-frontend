@@ -17,9 +17,11 @@ export default function CreateCourseModal({ isOpen, onClose, onSuccess }: Create
     const [categoryId, setCategoryId] = useState('');
     const [thumbnailFile, setThumbnailFile] = useState<File | null>(null);
     const [isLoading, setIsLoading] = useState(false);
-const [accessScope, setAccessScope] = useState<'course' | 'module' | 'lesson'>('course');
-const [isPaid, setIsPaid] = useState(false);
-const [previewLimit, setPreviewLimit] = useState<number>(3);
+    const [accessScope, setAccessScope] = useState<'course' | 'module' | 'lesson'>('course');
+    const [isPaid, setIsPaid] = useState(false);
+    const [previewLimit, setPreviewLimit] = useState<number>(3);
+    const [price, setPrice] = useState<number>(0);
+    const [learningPointsText, setLearningPointsText] = useState('');
 
     // Category creation state
     const [isCreatingCategory, setIsCreatingCategory] = useState(false);
@@ -79,6 +81,8 @@ const [previewLimit, setPreviewLimit] = useState<number>(3);
                 accessScope,
                 isPaid: accessScope === 'course' ? isPaid : false,
                 previewLimit,
+                priceInCents: (isPaid && price > 0) ? price * 100 : 0,
+                learningPoints: learningPointsText.split('\n').filter(line => line.trim() !== '')
             });
 
             // 2. Upload Thumbnail if exists
@@ -125,8 +129,18 @@ const [previewLimit, setPreviewLimit] = useState<number>(3);
                             required
                             value={description}
                             onChange={(e) => setDescription(e.target.value)}
-                            className="w-full bg-slate-800 border border-slate-700 rounded-lg p-2.5 text-white focus:ring-2 focus:ring-blue-500 h-24"
+                            className="w-full bg-slate-800 border border-slate-700 rounded-lg p-2.5 text-white focus:ring-2 focus:ring-blue-500 h-24 mb-4"
                             placeholder="Course summary..."
+                        />
+                    </div>
+
+                    <div>
+                        <label className="block text-sm font-medium text-slate-400 mb-1">Lo que aprenderás (uno por línea)</label>
+                        <textarea
+                            value={learningPointsText}
+                            onChange={(e) => setLearningPointsText(e.target.value)}
+                            className="w-full bg-slate-800 border border-slate-700 rounded-lg p-2.5 text-white focus:ring-2 focus:ring-blue-500 h-24"
+                            placeholder="- Fundamentos sólidos&#10;- Proyectos prácticos&#10;- Mejores prácticas"
                         />
                     </div>
 
@@ -196,32 +210,52 @@ const [previewLimit, setPreviewLimit] = useState<number>(3);
                         </div>
 
                         {accessScope === 'course' && (
-                            <div>
-                                <label className="block text-sm font-medium text-slate-400 mb-1">Curso de pago</label>
-                                <div className="flex items-center gap-3">
-                                    <button
-                                        type="button"
-                                        onClick={() => setIsPaid(!isPaid)}
-                                        className={`flex-1 px-3 py-2 rounded-lg border text-white ${isPaid
-                                            ? 'bg-amber-500/10 border-amber-500/40 text-amber-200'
-                                            : 'bg-emerald-500/10 border-emerald-500/40 text-emerald-200'
-                                            }`}
-                                    >
-                                        {isPaid ? 'De pago' : 'Libre'}
-                                    </button>
-                                    <div className="flex flex-col">
-                                        <label className="text-xs text-slate-400">Videos gratis</label>
-                                        <input
-                                            type="number"
-                                            min={0}
-                                            max={10}
-                                            value={previewLimit}
-                                            onChange={(e) => setPreviewLimit(Number(e.target.value))}
-                                            className="w-24 bg-slate-800 border border-slate-700 rounded-lg p-2 text-white focus:ring-2 focus:ring-blue-500"
-                                        />
+                            <div className="space-y-4">
+                                <div>
+                                    <label className="block text-sm font-medium text-slate-400 mb-1">Curso de pago</label>
+                                    <div className="flex items-center gap-3">
+                                        <button
+                                            type="button"
+                                            onClick={() => setIsPaid(!isPaid)}
+                                            className={`flex-1 px-3 py-2 rounded-lg border text-white ${isPaid
+                                                ? 'bg-amber-500/10 border-amber-500/40 text-amber-200'
+                                                : 'bg-emerald-500/10 border-emerald-500/40 text-emerald-200'
+                                                }`}
+                                        >
+                                            {isPaid ? 'De pago' : 'Libre'}
+                                        </button>
+                                        <div className="flex flex-col">
+                                            <label className="text-xs text-slate-400">Videos gratis</label>
+                                            <input
+                                                type="number"
+                                                min={0}
+                                                max={10}
+                                                value={previewLimit}
+                                                onChange={(e) => setPreviewLimit(Number(e.target.value))}
+                                                className="w-24 bg-slate-800 border border-slate-700 rounded-lg p-2 text-white focus:ring-2 focus:ring-blue-500"
+                                            />
+                                        </div>
                                     </div>
+                                    <p className="text-xs text-slate-500 mt-1">Recomendado: 3-4 videos libres.</p>
                                 </div>
-                                <p className="text-xs text-slate-500 mt-1">Recomendado: 3-4 videos libres.</p>
+
+                                {isPaid && (
+                                    <div>
+                                        <label className="block text-sm font-medium text-slate-400 mb-1">Precio (COP)</label>
+                                        <div className="relative">
+                                            <span className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400">$</span>
+                                            <input
+                                                type="number"
+                                                min={0}
+                                                step={1000}
+                                                value={price}
+                                                onChange={(e) => setPrice(Number(e.target.value))}
+                                                className="w-full bg-slate-800 border border-slate-700 rounded-lg pl-8 p-2.5 text-white focus:ring-2 focus:ring-blue-500"
+                                                placeholder="50,000"
+                                            />
+                                        </div>
+                                    </div>
+                                )}
                             </div>
                         )}
                     </div>

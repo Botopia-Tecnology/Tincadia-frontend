@@ -18,6 +18,8 @@ export interface Course {
     accessScope?: 'course' | 'module' | 'lesson';
     isPaid?: boolean;
     previewLimit?: number | null;
+    priceInCents?: number;
+    learningPoints?: string[];
     modules?: any[];
 }
 
