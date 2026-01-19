@@ -35,8 +35,8 @@ export function Services() {
       description: t('services.signLanguage.description'),
       primaryAction: { text: t('services.signLanguage.primaryAction'), href: '#agendar' },
       secondaryAction: { text: t('services.signLanguage.secondaryAction'), href: '#info-clases' },
-      backgroundImage: config['service_1_bg'] || 'https://images.unsplash.com/photo-1503676260728-1c00da094a0b?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80',
-      hoverImage: config['service_1_hover'] || 'https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExbmV5Y3V5Y3V5Y3V5Y3V5Y3V5Y3V5Y3V5Y3V5Y3V5Y3V5Y3V5/3o7TKrEzvLbsVAud8I/giphy.gif',
+      backgroundImage: config['service_1_bg'] || '',
+      hoverImage: config['service_1_hover'] || '',
     },
     {
       id: 'traductor-senas',
@@ -47,8 +47,8 @@ export function Services() {
       description: t('services.translator.description'),
       primaryAction: { text: t('services.translator.primaryAction'), href: '#probar-traductor' },
       secondaryAction: { text: t('services.translator.secondaryAction'), href: '#demo' },
-      backgroundImage: config['service_2_bg'] || 'https://images.unsplash.com/photo-1521737604893-d14cc237f11d?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80',
-      hoverImage: config['service_2_hover'] || 'https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExbmV5Y3V5Y3V5Y3V5Y3V5Y3V5Y3V5Y3V5Y3V5Y3V5Y3V5Y3V5/l41lVz7dG0s5z5b5S/giphy.gif',
+      backgroundImage: config['service_2_bg'] || '',
+      hoverImage: config['service_2_hover'] || '',
     },
     {
       id: 'asistente-redaccion',
@@ -59,8 +59,8 @@ export function Services() {
       description: t('services.writingAssistant.description'),
       primaryAction: { text: t('services.writingAssistant.primaryAction'), href: '#usar-asistente' },
       secondaryAction: { text: t('services.writingAssistant.secondaryAction'), href: '#como-funciona' },
-      backgroundImage: config['service_3_bg'] || 'https://images.unsplash.com/photo-1455390582262-044cdead277a?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80',
-      hoverImage: config['service_3_hover'] || 'https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExbmV5Y3V5Y3V5Y3V5Y3V5Y3V5Y3V5Y3V5Y3V5Y3V5Y3V5Y3V5/3o6Zt6ML6JBC02opAA/giphy.gif',
+      backgroundImage: config['service_3_bg'] || '',
+      hoverImage: config['service_3_hover'] || '',
     },
   ], [t, config]);
 

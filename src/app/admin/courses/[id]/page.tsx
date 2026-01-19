@@ -3,7 +3,7 @@
 import { useEffect, useState, useCallback } from 'react';
 import { useParams } from 'next/navigation';
 import { contentService, Course } from '@/services/content.service';
-import { ArrowLeft, Plus, Video, Trash2, UploadCloud, ChevronDown, PlayCircle, Loader2 } from 'lucide-react';
+import { ArrowLeft, Plus, Video, Trash2, UploadCloud, ChevronDown, PlayCircle, Loader2, Edit2, Save, X } from 'lucide-react';
 import Link from 'next/link';
 import Image from 'next/image';
 
@@ -28,59 +28,93 @@ interface Module {
 }
 
 export default function CourseDetailsPage() {
-const params = useParams();
+    const params = useParams();
     const courseId = params.id as string;
 
     const [course, setCourse] = useState<Course | null>(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
 
-// Access control state
-const [accessScope, setAccessScope] = useState<'course' | 'module' | 'lesson'>('course');
-const [courseIsPaid, setCourseIsPaid] = useState(false);
-const [previewLimit, setPreviewLimit] = useState<number>(3);
-const [savingAccess, setSavingAccess] = useState(false);
+    // Access control state
+    const [accessScope, setAccessScope] = useState<'course' | 'module' | 'lesson'>('course');
+    const [courseIsPaid, setCourseIsPaid] = useState(false);
+    const [previewLimit, setPreviewLimit] = useState<number>(3);
+    const [savingAccess, setSavingAccess] = useState(false);
 
-// Module Creation State
-const [showModuleModal, setShowModuleModal] = useState(false);
-const [newModuleTitle, setNewModuleTitle] = useState('');
-const [creatingModule, setCreatingModule] = useState(false);
-const [newModulePaid, setNewModulePaid] = useState(false);
+    // --- Edit Course Info State ---
+    const [isEditingInfo, setIsEditingInfo] = useState(false);
+    const [editDescription, setEditDescription] = useState('');
+    const [editPrice, setEditPrice] = useState<number>(0);
+    const [savingInfo, setSavingInfo] = useState(false);
 
-// Lesson Creation State
-const [showLessonModal, setShowLessonModal] = useState<string | null>(null); // moduleId if open
-const [newLessonTitle, setNewLessonTitle] = useState('');
-const [creatingLesson, setCreatingLesson] = useState(false);
-const [newLessonPaid, setNewLessonPaid] = useState(false);
-const [newLessonPreview, setNewLessonPreview] = useState(false);
+    // Module Creation State
+    const [showModuleModal, setShowModuleModal] = useState(false);
+    const [newModuleTitle, setNewModuleTitle] = useState('');
+    const [creatingModule, setCreatingModule] = useState(false);
+    const [newModulePaid, setNewModulePaid] = useState(false);
 
-// Video Upload State
-const [uploadingLessonId, setUploadingLessonId] = useState<string | null>(null);
+    // Lesson Creation State
+    const [showLessonModal, setShowLessonModal] = useState<string | null>(null); // moduleId if open
+    const [newLessonTitle, setNewLessonTitle] = useState('');
+    const [creatingLesson, setCreatingLesson] = useState(false);
+    const [newLessonPaid, setNewLessonPaid] = useState(false);
+    const [newLessonPreview, setNewLessonPreview] = useState(false);
 
-const fetchCourse = useCallback(async () => {
-    try {
-        setLoading(true);
-        const data = await contentService.getCourseById(courseId);
-        setCourse(data);
-        syncAccessState(data);
-    } catch {
-        setError('Failed to load course details');
-    } finally {
-        setLoading(false);
-    }
-}, [courseId]);
+    // Video Upload State
+    const [uploadingLessonId, setUploadingLessonId] = useState<string | null>(null);
 
-useEffect(() => {
-    if (courseId) {
-        fetchCourse();
-    }
-}, [courseId, fetchCourse]);
+    const fetchCourse = useCallback(async () => {
+        try {
+            setLoading(true);
+            const data = await contentService.getCourseById(courseId);
+            setCourse(data);
+            syncAccessState(data);
+        } catch {
+            setError('Failed to load course details');
+        } finally {
+            setLoading(false);
+        }
+    }, [courseId]);
 
-const syncAccessState = (data: Course) => {
-    setAccessScope((data.accessScope as 'course' | 'module' | 'lesson' | undefined) || 'course');
-    setCourseIsPaid(!!data.isPaid);
-    setPreviewLimit(typeof data.previewLimit === 'number' ? data.previewLimit : 3);
-};
+    useEffect(() => {
+        if (courseId) {
+            fetchCourse();
+        }
+    }, [courseId, fetchCourse]);
+
+    const syncAccessState = (data: Course) => {
+        setAccessScope((data.accessScope as 'course' | 'module' | 'lesson' | undefined) || 'course');
+        setCourseIsPaid(!!data.isPaid);
+        setPreviewLimit(typeof data.previewLimit === 'number' ? data.previewLimit : 3);
+        // Sync edit fields
+        setEditDescription(data.description || '');
+        setEditPrice(data.priceInCents ? data.priceInCents / 100 : 0);
+    };
+
+    const handleStartEditing = () => {
+        if (course) {
+            setEditDescription(course.description || '');
+            setEditPrice(course.priceInCents ? course.priceInCents / 100 : 0);
+            setIsEditingInfo(true);
+        }
+    };
+
+    const handleSaveInfo = async () => {
+        if (!course) return;
+        try {
+            setSavingInfo(true);
+            const updated = await contentService.updateCourse(courseId, {
+                description: editDescription,
+                priceInCents: Math.round(editPrice * 100),
+            });
+            setCourse(updated);
+            setIsEditingInfo(false);
+        } catch {
+            alert('No se pudo actualizar la información del curso');
+        } finally {
+            setSavingInfo(false);
+        }
+    };
 
     const handleCreateModule = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -88,9 +122,9 @@ const syncAccessState = (data: Course) => {
 
         try {
             setCreatingModule(true);
-        await contentService.createModule(courseId, { title: newModuleTitle, isPaid: newModulePaid });
+            await contentService.createModule(courseId, { title: newModuleTitle, isPaid: newModulePaid });
             setNewModuleTitle('');
-        setNewModulePaid(false);
+            setNewModulePaid(false);
             setShowModuleModal(false);
             fetchCourse(); // Refresh to show new module
         } catch {
@@ -106,10 +140,10 @@ const syncAccessState = (data: Course) => {
 
         try {
             setCreatingLesson(true);
-        await contentService.createLesson(showLessonModal, { title: newLessonTitle, isPaid: newLessonPaid, isFreePreview: newLessonPreview });
+            await contentService.createLesson(showLessonModal, { title: newLessonTitle, isPaid: newLessonPaid, isFreePreview: newLessonPreview });
             setNewLessonTitle('');
-        setNewLessonPaid(false);
-        setNewLessonPreview(false);
+            setNewLessonPaid(false);
+            setNewLessonPreview(false);
             setShowLessonModal(null);
             fetchCourse(); // Refresh
         } catch {
@@ -176,51 +210,51 @@ const syncAccessState = (data: Course) => {
         }
     };
 
-const handleSaveAccessSettings = async () => {
-    try {
-        setSavingAccess(true);
-        const updated = await contentService.updateCourse(courseId, {
-            accessScope,
-            isPaid: accessScope === 'course' ? courseIsPaid : false,
-            previewLimit: previewLimit ?? null,
-        });
-        setCourse(updated);
-        syncAccessState(updated);
-    } catch {
-        alert('No se pudo actualizar el acceso del curso');
-    } finally {
-        setSavingAccess(false);
-    }
-};
+    const handleSaveAccessSettings = async () => {
+        try {
+            setSavingAccess(true);
+            const updated = await contentService.updateCourse(courseId, {
+                accessScope,
+                isPaid: accessScope === 'course' ? courseIsPaid : false,
+                previewLimit: previewLimit ?? null,
+            });
+            setCourse(updated);
+            syncAccessState(updated);
+        } catch {
+            alert('No se pudo actualizar el acceso del curso');
+        } finally {
+            setSavingAccess(false);
+        }
+    };
 
-const handleModuleAccess = async (moduleId: string, isPaid: boolean) => {
-    if (accessScope !== 'module') return;
-    try {
-        await contentService.updateModule(moduleId, { isPaid });
-        fetchCourse();
-    } catch {
-        alert('No se pudo actualizar el acceso del módulo');
-    }
-};
+    const handleModuleAccess = async (moduleId: string, isPaid: boolean) => {
+        if (accessScope !== 'module') return;
+        try {
+            await contentService.updateModule(moduleId, { isPaid });
+            fetchCourse();
+        } catch {
+            alert('No se pudo actualizar el acceso del módulo');
+        }
+    };
 
-const handleLessonAccess = async (lessonId: string, isPaid: boolean) => {
-    if (accessScope !== 'lesson') return;
-    try {
-        await contentService.updateLesson(lessonId, { isPaid });
-        fetchCourse();
-    } catch {
-        alert('No se pudo actualizar el acceso de la lección');
-    }
-};
+    const handleLessonAccess = async (lessonId: string, isPaid: boolean) => {
+        if (accessScope !== 'lesson') return;
+        try {
+            await contentService.updateLesson(lessonId, { isPaid });
+            fetchCourse();
+        } catch {
+            alert('No se pudo actualizar el acceso de la lección');
+        }
+    };
 
-const handleLessonPreview = async (lessonId: string, isFreePreview: boolean) => {
-    try {
-        await contentService.updateLesson(lessonId, { isFreePreview });
-        fetchCourse();
-    } catch {
-        alert('No se pudo marcar la lección como previa gratuita');
-    }
-};
+    const handleLessonPreview = async (lessonId: string, isFreePreview: boolean) => {
+        try {
+            await contentService.updateLesson(lessonId, { isFreePreview });
+            fetchCourse();
+        } catch {
+            alert('No se pudo marcar la lección como previa gratuita');
+        }
+    };
 
     if (loading) return <div className="flex justify-center p-12"><Loader2 className="animate-spin text-indigo-500" size={32} /></div>;
     if (error || !course) return <div className="text-center p-12 text-red-400">{error || 'Course not found'}</div>;
@@ -252,21 +286,102 @@ const handleLessonPreview = async (lessonId: string, isFreePreview: boolean) => 
                 </div>
             </div>
 
-            {/* Course Overview Card */}
-            <div className="bg-slate-800 rounded-xl border border-slate-700 p-6 flex gap-6">
-                <div className="w-48 h-28 bg-slate-900 rounded-lg overflow-hidden flex-shrink-0 relative">
-                    {course.thumbnailUrl ? (
-                        <Image src={course.thumbnailUrl} alt="Thumbnail" fill className="object-cover" sizes="192px" />
+            {/* Course Overview Card - Editable */}
+            <div className="bg-slate-800 rounded-xl border border-slate-700 p-6">
+                <div className="flex justify-between items-start mb-4">
+                    <h3 className="text-lg font-semibold text-white">Información del curso</h3>
+                    {!isEditingInfo ? (
+                        <button
+                            onClick={handleStartEditing}
+                            className="flex items-center gap-2 text-sm text-indigo-400 hover:text-indigo-300 transition-colors"
+                        >
+                            <Edit2 size={16} /> Editar
+                        </button>
                     ) : (
-                        <div className="flex items-center justify-center h-full text-slate-600"><Video size={32} /></div>
+                        <div className="flex gap-2">
+                            <button
+                                onClick={() => setIsEditingInfo(false)}
+                                className="flex items-center gap-1 text-sm text-slate-400 hover:text-white transition-colors"
+                            >
+                                <X size={16} /> Cancelar
+                            </button>
+                            <button
+                                onClick={handleSaveInfo}
+                                disabled={savingInfo}
+                                className="flex items-center gap-1 text-sm bg-indigo-600 hover:bg-indigo-700 text-white px-3 py-1 rounded-lg transition-colors disabled:opacity-60"
+                            >
+                                {savingInfo ? <Loader2 size={16} className="animate-spin" /> : <Save size={16} />}
+                                Guardar
+                            </button>
+                        </div>
                     )}
                 </div>
-                <div className="flex-1">
-                    <h3 className="text-lg font-semibold text-white mb-2">About this course</h3>
-                    <p className="text-slate-400 text-sm mb-4">{course.description || 'No description provided.'}</p>
-                    <div className="flex gap-4 text-xs text-slate-500 uppercase tracking-wider font-semibold">
-                        <span>{course.modules?.length || 0} Modules</span>
-                        <span>{course.isPublished ? 'Published' : 'Draft'}</span>
+
+                <div className="flex gap-6">
+                    <div className="w-48 h-28 bg-slate-900 rounded-lg overflow-hidden flex-shrink-0 relative">
+                        {course.thumbnailUrl ? (
+                            <Image src={course.thumbnailUrl} alt="Thumbnail" fill className="object-cover" sizes="192px" />
+                        ) : (
+                            <div className="flex items-center justify-center h-full text-slate-600"><Video size={32} /></div>
+                        )}
+                    </div>
+                    <div className="flex-1 space-y-4">
+                        {isEditingInfo ? (
+                            <>
+                                <div>
+                                    <label className="block text-sm font-medium text-slate-400 mb-1">Descripción</label>
+                                    <textarea
+                                        value={editDescription}
+                                        onChange={(e) => setEditDescription(e.target.value)}
+                                        className="w-full bg-slate-900 border border-slate-700 rounded-lg p-2.5 text-white focus:ring-2 focus:ring-indigo-500 h-20 text-sm"
+                                        placeholder="Describe el contenido del curso..."
+                                    />
+                                </div>
+                                <div>
+                                    <label className="block text-sm font-medium text-slate-400 mb-1">Precio (COP)</label>
+                                    <div className="relative w-48">
+                                        <span className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400">$</span>
+                                        <input
+                                            type="number"
+                                            min={0}
+                                            step={1000}
+                                            value={editPrice}
+                                            onChange={(e) => setEditPrice(Number(e.target.value))}
+                                            className="w-full bg-slate-900 border border-slate-700 rounded-lg pl-8 p-2.5 text-white focus:ring-2 focus:ring-indigo-500"
+                                            placeholder="50000"
+                                        />
+                                    </div>
+                                    <p className="text-xs text-slate-500 mt-1">Deja en 0 si es un curso gratuito.</p>
+                                </div>
+                            </>
+                        ) : (
+                            <>
+                                <div>
+                                    <span className="text-xs text-slate-500 uppercase tracking-wider font-semibold">Descripción</span>
+                                    <p className="text-slate-300 text-sm mt-1">{course.description || 'Sin descripción.'}</p>
+                                </div>
+                                <div className="flex gap-6">
+                                    <div>
+                                        <span className="text-xs text-slate-500 uppercase tracking-wider font-semibold">Precio</span>
+                                        <p className="text-white font-semibold mt-1">
+                                            {course.priceInCents && course.priceInCents > 0
+                                                ? `$${(course.priceInCents / 100).toLocaleString('es-CO')} COP`
+                                                : 'Gratis'}
+                                        </p>
+                                    </div>
+                                    <div>
+                                        <span className="text-xs text-slate-500 uppercase tracking-wider font-semibold">Módulos</span>
+                                        <p className="text-white font-semibold mt-1">{course.modules?.length || 0}</p>
+                                    </div>
+                                    <div>
+                                        <span className="text-xs text-slate-500 uppercase tracking-wider font-semibold">Estado</span>
+                                        <p className={`font-semibold mt-1 ${course.isPublished ? 'text-emerald-400' : 'text-yellow-400'}`}>
+                                            {course.isPublished ? 'Publicado' : 'Borrador'}
+                                        </p>
+                                    </div>
+                                </div>
+                            </>
+                        )}
                     </div>
                 </div>
             </div>

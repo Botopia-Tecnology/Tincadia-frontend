@@ -632,6 +632,41 @@
     "noAccount": "¿No tienes una cuenta?",
     "signUp": "Regístrate"
   },
+  "aboutUs": {
+    "mission": {
+      "title": "Misión",
+      "description": "Impulsar la inclusión social y la igualdad de oportunidades mediante el desarrollo de tecnología innovadora y soluciones de inteligencia artificial. Nos dedicamos a eliminar las barreras de comunicación para personas con discapacidad auditiva y otras condiciones, conectando sectores estratégicos y facilitando entornos accesibles que potencien la autonomía y el talento de cada individuo."
+    },
+    "vision": {
+      "title": "Visión",
+      "description": "Convertirnos en el referente líder de tecnología inclusiva a nivel regional, transformando la manera en que la sociedad y las empresas interactúan con la discapacidad. Aspiramos a un futuro donde la tecnología de TINCADIA sea el estándar global de accesibilidad, logrando un mundo plenamente integrado donde las barreras de comunicación sean cosa del pasado."
+    },
+    "values": {
+      "title": "Nuestros Valores",
+      "items": [
+        {
+          "title": "1. Empatía Tecnológica",
+          "description": "No desarrollamos tecnología por el simple hecho de innovar; diseñamos soluciones desde la comprensión profunda de las necesidades y retos diarios de las personas con discapacidad. Ponemos el factor humano en el centro de cada línea de código."
+        },
+        {
+          "title": "2. Compromiso con la Equidad",
+          "description": "Trabajamos incansablemente para nivelar el campo de juego. Creemos que el acceso a la comunicación y a la información es un derecho fundamental, y nuestras herramientas son el medio para garantizarlo."
+        },
+        {
+          "title": "3. Innovación Disruptiva e Inclusiva",
+          "description": "Buscamos constantemente en la Inteligencia Artificial y las nuevas tecnologías formas creativas de romper barreras. Si existe una limitación, buscamos la manera tecnológica de superarla."
+        },
+        {
+          "title": "4. Integridad y Transparencia",
+          "description": "Actuamos con honestidad en el manejo de datos y en nuestras relaciones comerciales. La confianza es la base de nuestra comunidad, especialmente cuando gestionamos información que impacta la vida de las personas."
+        },
+        {
+          "title": "5. Colaboración Radical",
+          "description": "Entendemos que la inclusión es una tarea colectiva. Fomentamos alianzas entre sectores públicos, privados y organizaciones sociales para crear un ecosistema donde la accesibilidad sea la norma, no la excepción."
+        }
+      ]
+    }
+  },
   "impact": {
     "title": "¿Por qué elegirnos?",
     "subtitle": "TINCADIA no solo conecta talento: educa, sensibiliza y mide el impacto social para transformar la inclusión en acciones reales.",

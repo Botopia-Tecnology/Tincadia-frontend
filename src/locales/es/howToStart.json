@@ -15,25 +15,25 @@
             ]
         },
         "translation": {
-            "title": "Traducción automática",
-            "subtitle": "Accede a contenidos en cualquier formato",
-            "description": "Traduce noticias, videos, películas y documentos automáticamente. Accede a subtítulos CC y contenido accesible en múltiples plataformas.",
+            "title": "Formación Accesible",
+            "subtitle": "Aprende sin barreras",
+            "description": "Accede a cursos educativos diseñados para todos, con contenido adaptado, módulos interactivos y seguimiento de progreso.",
             "steps": [
-                "Sube o selecciona el contenido a traducir",
-                "Elige el formato de salida (texto o subtítulos)",
-                "La IA procesa y traduce el contenido",
-                "Disfruta del contenido totalmente accesible"
+                "Explora nuestro catálogo de cursos",
+                "Inscríbete en el tema de tu interés",
+                "Aprende con lecciones adaptadas",
+                "Obtén tu certificación"
             ]
         },
         "interpretation": {
-            "title": "Interpretación en LSC",
-            "subtitle": "Conéctate con intérpretes profesionales",
-            "description": "Accede a intérpretes de Lengua de Señas Colombiana por videollamada o escanea códigos QR en empresas, hospitales y universidades.",
+            "title": "Intérprete LSC con IA",
+            "subtitle": "Comunicación en tiempo real",
+            "description": "Nuestra avanzada Inteligencia Artificial reconoce y traduce la Lengua de Señas Colombiana a texto y voz al instante, eliminando barreras de comunicación.",
             "steps": [
-                "Escanea el código QR o abre la videollamada",
-                "Conecta con un intérprete disponible",
-                "Comunícate en tiempo real en LSC",
-                "Finaliza la sesión y califica el servicio"
+                "Activa la cámara en la aplicación",
+                "Realiza las señas frente a la cámara",
+                "La IA interpreta y traduce al instante",
+                "Tu mensaje es escuchado o leído"
             ]
         },
         "writingAssistant": {

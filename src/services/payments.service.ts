@@ -117,6 +117,13 @@ class PaymentsService {
     }
 
     /**
+     * Verifica si el usuario ha comprado un producto
+     */
+    async checkPurchaseStatus(userId: string, productId: string, productType: string = 'COURSE'): Promise<boolean> {
+        return api.get<boolean>(`${this.baseUrl}/purchases/check?userId=${userId}&productId=${productId}&productType=${productType}`);
+    }
+
+    /**
      * Lista todos los pagos del usuario
      */
     /**
