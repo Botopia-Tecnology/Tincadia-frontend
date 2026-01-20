@@ -112,7 +112,7 @@ export default function FinancePage() {
             </div>
 
             {/* Main Content Area */}
-            <div className="bg-gray-800 rounded-xl border border-gray-700 overflow-hidden">
+            <div className="bg-gray-800 rounded-xl border border-gray-700 overflow-hidden overflow-x-auto">
                 <div className="p-6 border-b border-gray-700 flex flex-col md:flex-row justify-between gap-4">
                     {/* View Switcher */}
                     <div className="flex bg-gray-900 rounded-lg p-1 w-fit">

@@ -1,25 +1,53 @@
 'use client';
 
-import { useState, useMemo } from 'react';
+import { useState, useEffect } from 'react';
 import { ChevronDown } from 'lucide-react';
 import { useTranslation } from '@/hooks/useTranslation';
+import { api } from '@/lib/api-client';
+
+interface FAQItem {
+  id: string;
+  question: string;
+  answer: string;
+}
 
 export function FAQ() {
   const t = useTranslation();
-  const [openId, setOpenId] = useState<number | null>(null);
+  const [openId, setOpenId] = useState<string | null>(null);
+  const [faqs, setFaqs] = useState<FAQItem[]>([]);
+  const [loading, setLoading] = useState(true);
 
-  const faqs = useMemo(() => {
-    const questions = t('faq.questions');
-    // Verificar que sea un array
-    if (Array.isArray(questions)) {
-      return questions as Array<{ question: string; answer: string }>;
-    }
-    return [];
-  }, [t]);
+  useEffect(() => {
+    const fetchFaqs = async () => {
+      try {
+        const data = await api.get<FAQItem[]>('/content/faqs');
+        setFaqs(data);
+      } catch (error) {
+        console.error('Failed to fetch FAQs:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchFaqs();
+  }, []);
 
-  const toggleQuestion = (id: number) => {
+  const toggleQuestion = (id: string) => {
     setOpenId(openId === id ? null : id);
   };
+
+  if (loading) {
+    return (
+      <section className="py-16 lg:py-20 bg-transparent">
+        <div className="mx-auto max-w-4xl px-6 lg:px-8 text-center">
+          <p className="text-gray-500">Cargando preguntas frecuentes...</p>
+        </div>
+      </section>
+    );
+  }
+
+  if (faqs.length === 0) {
+    return null;
+  }
 
   return (
     <section
@@ -42,19 +70,19 @@ export function FAQ() {
 
         {/* Acordeón de preguntas */}
         <div className="space-y-4">
-          {faqs.map((faq, index) => {
-            const isOpen = openId === index + 1;
+          {faqs.map((faq) => {
+            const isOpen = openId === faq.id;
 
             return (
               <div
-                key={index}
+                key={faq.id}
                 className="bg-white rounded-xl shadow-md hover:shadow-lg transition-shadow duration-300 overflow-hidden"
               >
                 <button
-                  onClick={() => toggleQuestion(index + 1)}
+                  onClick={() => toggleQuestion(faq.id)}
                   className="w-full px-6 py-5 flex items-center justify-between text-left focus:outline-none focus:ring-2 focus:ring-inset focus:ring-[#83A98A] transition-colors hover:bg-gray-50"
                   aria-expanded={isOpen}
-                  aria-controls={`faq-answer-${index + 1}`}
+                  aria-controls={`faq-answer-${faq.id}`}
                 >
                   <span className="text-base lg:text-lg font-semibold text-gray-900 pr-8">
                     {faq.question}
@@ -70,7 +98,7 @@ export function FAQ() {
 
                 {/* Respuesta (expandible) */}
                 <div
-                  id={`faq-answer-${index + 1}`}
+                  id={`faq-answer-${faq.id}`}
                   className={`
                     px-6 overflow-hidden transition-all duration-300 ease-in-out
                     ${isOpen ? 'max-h-96 pb-5' : 'max-h-0'}
@@ -102,4 +130,3 @@ export function FAQ() {
     </section>
   );
 }
-

@@ -29,7 +29,16 @@ export function AboutContent() {
     const icons = [Heart, Scale, Lightbulb, Shield, Users];
 
     return (
-        <section className="py-20 px-6 lg:px-8 max-w-7xl mx-auto">
+        <section className="pt-10 pb-20 px-6 lg:px-8 max-w-7xl mx-auto">
+
+            {/* Section Title */}
+            <div className="text-center mb-16">
+                <h1 className="text-5xl font-bold text-gray-900 mb-4">¿Quiénes Somos?</h1>
+                <p className="text-xl text-gray-600 max-w-2xl mx-auto">
+                    Conoce nuestra misión, visión y los valores que nos guían
+                </p>
+                <div className="w-24 h-1 bg-[#83A98A] mx-auto rounded-full mt-6"></div>
+            </div>
 
             {/* Mission & Vision Grid */}
             <div className="grid md:grid-cols-2 gap-12 mb-24">

@@ -1,51 +1,61 @@
 'use client';
 
-import { useState, useMemo } from 'react';
+import { useState, useEffect } from 'react';
 import { ChevronLeft, ChevronRight, Star } from 'lucide-react';
-import Image from 'next/image';
 import { useTranslation } from '@/hooks/useTranslation';
+import { api } from '@/lib/api-client';
+
+interface Testimonial {
+  id: string;
+  authorName: string;
+  authorRole: string;
+  quote: string;
+  rating: number;
+}
 
 export function Testimonials() {
   const t = useTranslation();
-
-  const testimonials = useMemo(() => {
-    const getTestimonials = (): Array<{ name: string; role: string; company: string; text: string }> => {
-      const value = t('testimonials.testimonials');
-      return Array.isArray(value) ? value : [];
-    };
-
-    const testimonialsData = getTestimonials();
-    return testimonialsData.map((testimonial, index) => ({
-      id: index + 1,
-      name: testimonial.name,
-      role: testimonial.role,
-      company: testimonial.company,
-      rating: 5,
-      text: testimonial.text,
-      avatar: `/media/images/avatar-${index + 1}.jpg`,
-    }));
-  }, [t]);
+  const [testimonials, setTestimonials] = useState<Testimonial[]>([]);
   const [currentIndex, setCurrentIndex] = useState(0);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchTestimonials = async () => {
+      try {
+        const data = await api.get<Testimonial[]>('/content/testimonials');
+        setTestimonials(data);
+      } catch (error) {
+        console.error('Failed to fetch testimonials:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchTestimonials();
+  }, []);
 
   const nextTestimonial = () => {
-    setCurrentIndex((prev) => (prev + 1) % testimonials.length);
+    if (testimonials.length > 0) {
+      setCurrentIndex((prev) => (prev + 1) % testimonials.length);
+    }
   };
 
   const prevTestimonial = () => {
-    setCurrentIndex((prev) => (prev - 1 + testimonials.length) % testimonials.length);
+    if (testimonials.length > 0) {
+      setCurrentIndex((prev) => (prev - 1 + testimonials.length) % testimonials.length);
+    }
   };
 
   const getCardStyle = (index: number) => {
     const total = testimonials.length;
+    if (total === 0) return { opacity: 0 };
+
     let position = (index - currentIndex + total) % total;
 
-    // Ajustar para mostrar: prev, current, next
     if (position > total / 2) {
       position = position - total;
     }
 
     if (position === 0) {
-      // Tarjeta central (activa)
       return {
         transform: 'translateX(0%) scale(1)',
         opacity: 1,
@@ -53,7 +63,6 @@ export function Testimonials() {
         filter: 'blur(0px)',
       };
     } else if (position === 1) {
-      // Tarjeta derecha
       return {
         transform: 'translateX(60%) scale(0.85)',
         opacity: 0.5,
@@ -61,7 +70,6 @@ export function Testimonials() {
         filter: 'blur(2px)',
       };
     } else if (position === -1) {
-      // Tarjeta izquierda
       return {
         transform: 'translateX(-60%) scale(0.85)',
         opacity: 0.5,
@@ -69,7 +77,6 @@ export function Testimonials() {
         filter: 'blur(2px)',
       };
     } else {
-      // Tarjetas ocultas
       return {
         transform: position > 0 ? 'translateX(100%) scale(0.7)' : 'translateX(-100%) scale(0.7)',
         opacity: 0,
@@ -78,6 +85,20 @@ export function Testimonials() {
       };
     }
   };
+
+  if (loading) {
+    return (
+      <section className="py-12 lg:py-16 bg-transparent">
+        <div className="mx-auto max-w-7xl px-6 lg:px-8 text-center">
+          <p className="text-gray-500">Cargando testimonios...</p>
+        </div>
+      </section>
+    );
+  }
+
+  if (testimonials.length === 0) {
+    return null;
+  }
 
   return (
     <section
@@ -131,7 +152,7 @@ export function Testimonials() {
 
                       {/* Texto del testimonio */}
                       <blockquote className="text-gray-700 text-base leading-relaxed mb-6">
-                        "{testimonial.text}"
+                        &quot;{testimonial.quote}&quot;
                       </blockquote>
                     </div>
 
@@ -141,7 +162,7 @@ export function Testimonials() {
                       <div className="relative w-14 h-14 rounded-full overflow-hidden bg-white/20 flex-shrink-0">
                         <div className="w-full h-full bg-white/30 flex items-center justify-center">
                           <span className="text-white text-xl font-bold">
-                            {testimonial.name.charAt(0)}
+                            {testimonial.authorName.charAt(0)}
                           </span>
                         </div>
                       </div>
@@ -149,10 +170,10 @@ export function Testimonials() {
                       {/* Info */}
                       <div className="flex-1">
                         <p className="text-white font-bold text-lg">
-                          {testimonial.name}
+                          {testimonial.authorName}
                         </p>
                         <p className="text-white/90 text-sm">
-                          {testimonial.role}
+                          {testimonial.authorRole}
                         </p>
                       </div>
                     </div>
@@ -200,4 +221,3 @@ export function Testimonials() {
     </section>
   );
 }
-

@@ -148,7 +148,7 @@ export function CompleteProfileModal({ isOpen, onClose }: CompleteProfileModalPr
                                 value={formData.documentTypeId}
                                 onChange={handleInputChange}
                                 required
-                                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#83A98A] focus:border-transparent transition-all"
+                                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#83A98A] focus:border-transparent transition-all text-gray-900 bg-white"
                             >
                                 <option value="">Seleccionar tipo...</option>
                                 {DOCUMENT_TYPES.map((docType) => (
@@ -172,7 +172,7 @@ export function CompleteProfileModal({ isOpen, onClose }: CompleteProfileModalPr
                                 onChange={handleInputChange}
                                 required
                                 placeholder="Ej: 1234567890"
-                                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#83A98A] focus:border-transparent transition-all"
+                                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#83A98A] focus:border-transparent transition-all text-gray-900 bg-white"
                             />
                         </div>
 
@@ -183,7 +183,7 @@ export function CompleteProfileModal({ isOpen, onClose }: CompleteProfileModalPr
                             </label>
                             <div className="flex gap-2">
                                 <select
-                                    className="w-[120px] px-2 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#83A98A] focus:border-transparent transition-all bg-white"
+                                    className="w-[120px] px-2 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#83A98A] focus:border-transparent transition-all bg-white text-gray-900"
                                     value={selectedCountry.code}
                                     onChange={(e) => {
                                         const country = COUNTRIES.find(c => c.code === e.target.value);
@@ -204,7 +204,7 @@ export function CompleteProfileModal({ isOpen, onClose }: CompleteProfileModalPr
                                     onChange={handleInputChange}
                                     required
                                     placeholder="300 123 4567"
-                                    className="flex-1 px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#83A98A] focus:border-transparent transition-all"
+                                    className="flex-1 px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#83A98A] focus:border-transparent transition-all text-gray-900 bg-white"
                                 />
                             </div>
                         </div>

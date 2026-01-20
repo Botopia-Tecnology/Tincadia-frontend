@@ -8,7 +8,6 @@ import { api } from '@/lib/api-client';
 import { ServiceCard } from './ServiceCard';
 
 export function Services() {
-  // Force rebuild
   const t = useTranslation();
   const [config, setConfig] = useState<Record<string, string>>({});
 
@@ -36,7 +35,6 @@ export function Services() {
       primaryAction: { text: t('services.signLanguage.primaryAction'), href: '#agendar' },
       secondaryAction: { text: t('services.signLanguage.secondaryAction'), href: '#info-clases' },
       backgroundImage: config['service_1_bg'] || '',
-      hoverImage: config['service_1_hover'] || '',
     },
     {
       id: 'traductor-senas',
@@ -48,7 +46,6 @@ export function Services() {
       primaryAction: { text: t('services.translator.primaryAction'), href: '#probar-traductor' },
       secondaryAction: { text: t('services.translator.secondaryAction'), href: '#demo' },
       backgroundImage: config['service_2_bg'] || '',
-      hoverImage: config['service_2_hover'] || '',
     },
     {
       id: 'asistente-redaccion',
@@ -60,7 +57,6 @@ export function Services() {
       primaryAction: { text: t('services.writingAssistant.primaryAction'), href: '#usar-asistente' },
       secondaryAction: { text: t('services.writingAssistant.secondaryAction'), href: '#como-funciona' },
       backgroundImage: config['service_3_bg'] || '',
-      hoverImage: config['service_3_hover'] || '',
     },
   ], [t, config]);
 
@@ -92,7 +88,6 @@ export function Services() {
               subtitle={service.subtitle}
               description={service.description}
               backgroundImage={service.backgroundImage}
-              hoverImage={service.hoverImage}
               primaryAction={service.primaryAction}
               secondaryAction={service.secondaryAction}
             />
@@ -102,4 +97,3 @@ export function Services() {
     </section>
   );
 }
-
