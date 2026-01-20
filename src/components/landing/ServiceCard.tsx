@@ -7,7 +7,6 @@ interface ServiceCardProps {
     subtitle: string;
     description: string;
     backgroundImage: string;
-    hoverImage?: string;
     primaryAction: { text: string; href: string };
     secondaryAction: { text: string; href: string };
 }
@@ -17,7 +16,6 @@ export function ServiceCard({
     subtitle,
     description,
     backgroundImage,
-    hoverImage,
     primaryAction,
     secondaryAction,
 }: ServiceCardProps) {
@@ -26,19 +24,15 @@ export function ServiceCard({
             <div
                 className={cn(
                     "group w-full cursor-pointer overflow-hidden relative card h-96 rounded-md shadow-xl mx-auto flex flex-col justify-end p-4 border border-transparent dark:border-neutral-800",
-                    "bg-[image:var(--bg-image)] bg-cover bg-center",
-                    // Preload hover image by setting it in a pseudo-element
-                    "before:bg-[image:var(--hover-image)] before:absolute before:inset-0 before:opacity-0 before:z-[-1]",
-                    "hover:bg-[image:var(--hover-image)]",
+                    "bg-cover bg-center",
                     // Permanent dark overlay for better text visibility
                     "after:content-[''] after:absolute after:inset-0 after:bg-black after:opacity-60",
                     "hover:after:opacity-70",
                     "transition-all duration-500"
                 )}
                 style={{
-                    '--bg-image': `url(${backgroundImage})`,
-                    '--hover-image': `url(${hoverImage})`,
-                } as React.CSSProperties}
+                    backgroundImage: `url(${backgroundImage})`,
+                }}
             >
                 <div className="text relative z-50">
                     <h1 className="font-bold text-xl md:text-2xl text-gray-50 relative drop-shadow-md">

@@ -13,6 +13,7 @@
     "lint": "eslint"
   },
   "dependencies": {
+    "@microsoft/clarity": "^1.0.2",
     "@radix-ui/react-slot": "^1.2.4",
     "@react-oauth/google": "^0.12.2",
     "@react-three/drei": "^10.7.7",
@@ -27,7 +28,7 @@
     "formik": "^2.4.9",
     "lucide-react": "^0.554.0",
     "next": "16.0.10",
-    "posthog-js": "^1.311.0",
+    "posthog-js": "^1.331.0",
     "react": "19.2.3",
     "react-apple-signin-auth": "^1.1.2",
     "react-dom": "19.2.3",

@@ -10,7 +10,8 @@ import {
     CreditCard,
     LogOut,
     FileText,
-    Home
+    Home,
+    BarChart3
 } from 'lucide-react';
 import React from 'react';
 import { useAuth } from '@/contexts/AuthContext';
@@ -56,6 +57,7 @@ export function AdminSidebar() {
                 <SidebarItem href="/admin/pricing" icon={CreditCard} label="Precios" />
                 <SidebarItem href="/admin/forms" icon={FileText} label="Formularios" />
                 <SidebarItem href="/admin/landing" icon={Settings} label="Landing Page" />
+                <SidebarItem href="/admin/analytics" icon={BarChart3} label="Analytics" />
             </nav>
 
             <div className="p-4 border-t border-slate-800 space-y-2">

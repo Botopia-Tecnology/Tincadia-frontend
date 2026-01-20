@@ -7,6 +7,9 @@ import { AccessibilityProvider } from "@/contexts/AccessibilityContext";
 import { AuthProvider } from "@/contexts/AuthContext";
 import { GoogleAuthProvider } from "@/contexts/GoogleAuthProvider";
 import { ConditionalLayout } from "@/components/layout/ConditionalLayout";
+import ClarityAnalytics from "@/components/clarity/ClarityAnalytics";
+import { PostHogProvider } from "@/components/analytics/PostHogProvider";
+import { PostHogPageView } from "@/components/analytics/PostHogPageView";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -38,21 +41,24 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        <I18nProvider defaultLocale="es">
-          <UIProvider>
-            <GoogleAuthProvider>
-              <AuthProvider>
-                <AccessibilityProvider>
-                  <ConditionalLayout>
-                    {children}
-                  </ConditionalLayout>
-                </AccessibilityProvider>
-              </AuthProvider>
-            </GoogleAuthProvider>
-          </UIProvider>
-        </I18nProvider>
+        <PostHogProvider>
+          <ClarityAnalytics />
+          <PostHogPageView />
+          <I18nProvider defaultLocale="es">
+            <UIProvider>
+              <GoogleAuthProvider>
+                <AuthProvider>
+                  <AccessibilityProvider>
+                    <ConditionalLayout>
+                      {children}
+                    </ConditionalLayout>
+                  </AccessibilityProvider>
+                </AuthProvider>
+              </GoogleAuthProvider>
+            </UIProvider>
+          </I18nProvider>
+        </PostHogProvider>
       </body>
     </html>
   );
 }
-
