@@ -14,7 +14,7 @@ export function FormSubmissionTable({ submissions, onViewDetails }: FormSubmissi
     }
 
     return (
-        <div className="bg-slate-800/50 rounded-lg border border-slate-700 overflow-hidden">
+        <div className="bg-slate-800/50 rounded-lg border border-slate-700 overflow-hidden overflow-x-auto">
             <table className="w-full">
                 <thead className="bg-slate-800">
                     <tr>

@@ -93,7 +93,7 @@ export default function UsersPage() {
                 </div>
             </div>
 
-            <div className="bg-slate-800 rounded-xl border border-slate-700 overflow-hidden">
+            <div className="bg-slate-800 rounded-xl border border-slate-700 overflow-hidden overflow-x-auto">
                 {loading ? (
                     <div className="flex justify-center p-12">
                         <Loader2 className="animate-spin text-blue-500" size={32} />

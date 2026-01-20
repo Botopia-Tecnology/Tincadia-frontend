@@ -58,13 +58,40 @@ export default function CoursePage() {
             setUserId(user?.id || null);
             setUserEmail(user?.email);
 
-            // Access Logic
+            // Wompi Transaction Verification (Return from Payment)
+            const searchParams = new URL(window.location.href).searchParams;
+            const transactionId = searchParams.get('id');
+            const env = searchParams.get('env');
+
+            if (transactionId && env) { // Only if returned from Wompi
+                toast.loading('Verificando pago...');
+                try {
+                    const verification = await paymentsService.verifyPayment(transactionId);
+                    if (verification.status === 'APPROVED') {
+                        toast.dismiss();
+                        toast.success('¡Pago aprobado! El curso ha sido habilitado.');
+                        setHasAccess(true);
+                        // Clear URL params to avoid re-verification
+                        window.history.replaceState({}, '', window.location.pathname);
+                        return; // Skip standard check as we already confirmed it
+                    } else if (verification.status === 'DECLINED' || verification.status === 'ERROR') {
+                        toast.dismiss();
+                        toast.error(`El pago no fue aprobado: ${verification.status}`);
+                    }
+                } catch (err) {
+                    console.error('Verification failed', err);
+                    toast.dismiss();
+                    toast.error('Error verificando la transacción');
+                }
+            }
+
+            // Standard Access Logic (if not verified above or if verifying failed/pending)
             if (!courseData.isPaid) {
                 setHasAccess(true); // Free course
             } else if (user) {
                 // Check if bought
                 const purchased = await paymentsService.checkPurchaseStatus(user.id, courseId, 'COURSE');
-                setHasAccess(purchased);
+                if (purchased) setHasAccess(true);
             } else {
                 setHasAccess(false); // Paid and not logged in
             }
