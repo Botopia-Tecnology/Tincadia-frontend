@@ -271,7 +271,7 @@ export function Hero({ disableAnimations = false }: HeroProps) {
                     aria-label="Video de presentación de Tincadia"
                   >
                     <source
-                      src="https://res.cloudinary.com/do1mvhvms/video/upload/v1767786925/1_qlrdln.mp4"
+                      src="https://res.cloudinary.com/dzi2p0pqa/video/upload/v1768965559/c7q4e37io3ahtjscooxx.mp4"
                       type="video/mp4"
                     />
                     Tu navegador no soporta el elemento de video.
