@@ -2,11 +2,12 @@
 
 import { useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
-import { X, ChevronDown, Building2, MessageSquare } from 'lucide-react';
+import { X, ChevronDown, Building2, MessageSquare, User, LogOut, LayoutDashboard } from 'lucide-react';
 import { Logo } from '@/components/ui/Logo';
 import { LanguageSelector } from '@/components/ui/LanguageSelector';
 import { useTranslation } from '@/hooks/useTranslation';
 import { useUI } from '@/contexts/UIContext';
+import { useAuth } from '@/contexts/AuthContext';
 
 interface MobileMenuProps {
   isOpen: boolean;
@@ -34,6 +35,7 @@ const servicesDropdownItems = [
 export function MobileMenu({ isOpen, onClose, navigation }: MobileMenuProps) {
   const t = useTranslation();
   const { openLoginPanel } = useUI();
+  const { user, isAuthenticated, logout } = useAuth();
   const menuRef = useRef<HTMLDivElement>(null);
   const [servicesDropdownOpen, setServicesDropdownOpen] = useState(false);
 
@@ -101,6 +103,38 @@ export function MobileMenu({ isOpen, onClose, navigation }: MobileMenuProps) {
         {/* Links del menú */}
         <nav className="flex-1 overflow-y-auto" aria-label="Navegación móvil">
           <div className="px-6 py-8 space-y-6">
+
+            {/* User Profile Section (Top) */}
+            {isAuthenticated && user && (
+              <div className="space-y-4 pb-6 border-b border-gray-100">
+                <div className="px-4 py-2 bg-gray-50 rounded-lg">
+                  <p className="text-sm text-gray-500 font-medium">Hola,</p>
+                  <p className="text-lg font-bold text-gray-900">{user.firstName} {user.lastName}</p>
+                  <p className="text-xs text-gray-400 truncate">{user.email}</p>
+                </div>
+
+                {user.role === 'Admin' && (
+                  <Link
+                    href="/admin"
+                    className="flex items-center justify-center gap-2 w-full rounded-xl bg-slate-800 px-6 py-3 text-center text-lg font-semibold text-white shadow-md hover:bg-slate-700 transition-all"
+                    onClick={onClose}
+                  >
+                    <LayoutDashboard className="w-5 h-5" />
+                    Panel Control
+                  </Link>
+                )}
+
+                <Link
+                  href="/perfil"
+                  className="flex items-center justify-center gap-2 w-full rounded-xl bg-white border-2 border-[#83A98A] px-6 py-3 text-center text-lg font-semibold text-[#83A98A] hover:bg-gray-50 transition-all"
+                  onClick={onClose}
+                >
+                  <User className="w-5 h-5" />
+                  Mi Perfil
+                </Link>
+              </div>
+            )}
+
             {navigation.map((item) => {
               if (item.hasDropdown) {
                 return (
@@ -171,17 +205,31 @@ export function MobileMenu({ isOpen, onClose, navigation }: MobileMenuProps) {
               );
             })}
 
-            {/* Login Button */}
-            <div className="pt-4">
-              <button
-                onClick={() => {
-                  openLoginPanel();
-                  onClose();
-                }}
-                className="block w-full rounded-xl bg-[#83A98A] px-6 py-4 text-center text-lg font-semibold text-white shadow-lg hover:bg-[#6D8F75] transition-all active:scale-95 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#83A98A]"
-              >
-                {t('login.loginButton')}
-              </button>
+            {/* Bottom Actions: Login or Logout */}
+            <div className="pt-4 border-t border-gray-100 mt-4">
+              {isAuthenticated && user ? (
+                <button
+                  onClick={async () => {
+                    await logout();
+                    onClose();
+                    window.location.href = '/';
+                  }}
+                  className="flex items-center justify-center gap-2 w-full text-red-600 font-medium hover:bg-red-50 p-3 rounded-lg transition-colors bg-red-50/50"
+                >
+                  <LogOut className="w-5 h-5" />
+                  Cerrar Sesión
+                </button>
+              ) : (
+                <button
+                  onClick={() => {
+                    openLoginPanel();
+                    onClose();
+                  }}
+                  className="block w-full rounded-xl bg-[#83A98A] px-6 py-4 text-center text-lg font-semibold text-white shadow-lg hover:bg-[#6D8F75] transition-all active:scale-95 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#83A98A]"
+                >
+                  {t('login.loginButton')}
+                </button>
+              )}
             </div>
           </div>
         </nav>

@@ -56,6 +56,8 @@ export const AUTH_ENDPOINTS = {
     VERIFY_TOKEN: '/auth/verify-token',
     /** POST - Request reset password email */
     RESET_PASSWORD: '/auth/reset-password',
+    /** GET - Check if document exists */
+    CHECK_DOCUMENT: '/auth/check-document',
     /** POST - Promote user to interpreter (Admin) */
     PROMOTE_INTERPRETER: '/auth/promote-interpreter',
 } as const;
@@ -183,13 +185,13 @@ export const buildUrl = (endpoint: string): string => {
         console.warn('API_BASE_URL is not configured. Check NEXT_PUBLIC_API_URL environment variable.');
         return endpoint; // Fallback to relative URL
     }
-    
+
     // Normalizar baseUrl: remover trailing slash si existe
     const baseUrl = API_BASE_URL.trim().replace(/\/$/, '');
-    
+
     // Asegurar que el endpoint empiece con /
     const normalizedEndpoint = endpoint.startsWith('/') ? endpoint : `/${endpoint}`;
-    
+
     return `${baseUrl}${normalizedEndpoint}`;
 };
 

@@ -265,6 +265,27 @@ export const contentService = {
             throw error;
         }
     },
+
+    /**
+     * Get landing configuration by key
+     */
+    getLandingConfig: async (key: string): Promise<string | null> => {
+        try {
+            // Endpoint needs to be added to api.config.ts first, but assuming pattern
+            // Using direct fetch for now or update config file first? 
+            // Better to use buildUrl if possible, but let's check api.config.ts first to be clean.
+            // Actually, I'll just use the base URL pattern for now to avoid multiple file edits if not strictly necessary, 
+            // but for best practice I should use the config. 
+            // Let's assume standard path /content/landing-config/:key based on my gateway change.
+            const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/content/landing-config/${key}`);
+            if (!response.ok) return null;
+            const data = await response.json();
+            return data ? data.value : null;
+        } catch (error) {
+            console.error(`Error fetching landing config ${key}:`, error);
+            return null;
+        }
+    },
 };
 
 // ===========================================

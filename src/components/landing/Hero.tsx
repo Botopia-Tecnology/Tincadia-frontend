@@ -4,6 +4,7 @@ import Image from 'next/image';
 import { useEffect, useRef, useState, useMemo } from 'react';
 import { useTranslation } from '@/hooks/useTranslation';
 import { useUI } from '@/contexts/UIContext';
+import { contentService } from '@/services/content.service';
 
 // Letras del título principal
 const TINCADIA_LETTERS = ['T', 'I', 'N', 'C', 'A', 'D', 'I', 'A'];
@@ -15,6 +16,30 @@ interface HeroProps {
 export function Hero({ disableAnimations = false }: HeroProps) {
   const t = useTranslation();
   const videoRef = useRef<HTMLVideoElement>(null);
+
+  // Default fallback video
+  const [videoUrl, setVideoUrl] = useState<string>('https://res.cloudinary.com/do1mvhvms/video/upload/v1767786925/1_qlrdln.mp4');
+
+  // Fetch video URL from DB
+  useEffect(() => {
+    const fetchVideoUrl = async () => {
+      try {
+        const url = await contentService.getLandingConfig('hero_video_url');
+        console.log('Hero Video URL from DB:', url);
+        if (url) {
+          setVideoUrl(url);
+        } else {
+          // Fallback to default if DB is empty
+          setVideoUrl('https://res.cloudinary.com/do1mvhvms/video/upload/v1767786925/1_qlrdln.mp4');
+        }
+      } catch (error) {
+        console.error('Error fetching hero video url:', error);
+        // Fallback on error
+        setVideoUrl('https://res.cloudinary.com/do1mvhvms/video/upload/v1767786925/1_qlrdln.mp4');
+      }
+    };
+    fetchVideoUrl();
+  }, []);
 
   const [currentStep, setCurrentStep] = useState(0);
   const [showDescription, setShowDescription] = useState(false);
@@ -115,6 +140,7 @@ export function Hero({ disableAnimations = false }: HeroProps) {
       }
     };
   }, [disableAnimations]);
+
 
   // Animación inicial: mostrar TINCADIA, video, texto y arrancar ciclo de conceptos
   useEffect(() => {
@@ -271,7 +297,7 @@ export function Hero({ disableAnimations = false }: HeroProps) {
                     aria-label="Video de presentación de Tincadia"
                   >
                     <source
-                      src="https://res.cloudinary.com/dzi2p0pqa/video/upload/v1768965559/c7q4e37io3ahtjscooxx.mp4"
+                      src={videoUrl}
                       type="video/mp4"
                     />
                     Tu navegador no soporta el elemento de video.

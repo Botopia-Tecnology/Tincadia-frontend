@@ -104,6 +104,20 @@ export const formsService = {
      */
     async updateSubmission(id: string, data: any): Promise<any> {
         return api.put(`/forms/submissions/${id}`, { data });
+    },
+
+    /**
+     * Delete a submission
+     */
+    async deleteSubmission(id: string): Promise<void> {
+        return api.delete(`/forms/submissions/${id}`);
+    },
+
+    /**
+     * Get all submissions (Admin)
+     */
+    async getAllSubmissions(): Promise<any[]> {
+        return api.get<any[]>('/forms/submissions');
     }
 };
 
