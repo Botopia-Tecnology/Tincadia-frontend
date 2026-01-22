@@ -27,7 +27,6 @@ export function SocialLoginButtons({
                     shape="rectangular"
                     text={googleText}
                     locale="es"
-                    width="100%"
                 />
             </div>
 

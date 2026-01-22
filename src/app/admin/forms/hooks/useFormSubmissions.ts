@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { FormSubmission } from '../types';
+import { formsService } from '@/services/forms.service';
 
 export function useFormSubmissions() {
     const [submissions, setSubmissions] = useState<FormSubmission[]>([]);
@@ -10,16 +11,24 @@ export function useFormSubmissions() {
         setLoading(true);
         setError(null);
         try {
-            const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001';
-            const response = await fetch(`${apiUrl}/forms/submissions`);
-            if (!response.ok) throw new Error('Failed to fetch submissions');
-            const data = await response.json();
+            const data = await formsService.getAllSubmissions();
             setSubmissions(Array.isArray(data) ? data : []);
         } catch (err) {
             setError(err instanceof Error ? err.message : 'Error loading submissions');
             setSubmissions([]);
         } finally {
             setLoading(false);
+        }
+    };
+
+    const deleteSubmission = async (id: string) => {
+        try {
+            await formsService.deleteSubmission(id);
+            setSubmissions(prev => prev.filter(s => s.id !== id));
+            return true;
+        } catch (err) {
+            console.error('Error deleting submission:', err);
+            throw err;
         }
     };
 
@@ -32,6 +41,7 @@ export function useFormSubmissions() {
         loading,
         error,
         refetch: fetchSubmissions,
+        deleteSubmission,
     };
 }
 

@@ -4,11 +4,12 @@ import { useState, useEffect } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
 import { api } from '@/lib/api-client';
 import { LandingConfigItem, Testimonial, FAQ } from './types';
-import { Plus, Trash2, Star, Save, Handshake, QrCode, Wrench, Map, MessageSquareQuote, HelpCircle, MoreHorizontal } from 'lucide-react';
+import { Plus, Trash2, Star, Save, Handshake, QrCode, Wrench, Map, MessageSquareQuote, HelpCircle, MoreHorizontal, Loader2 } from 'lucide-react';
+import { CloudinaryUploadWidget } from '@/components/common/CloudinaryUploadWidget';
 
 // Define which keys belong to which section
 const EXCLUDED_KEYS = ['appstore_icon', 'playstore_icon', 'download_image_1', 'download_image_2'];
-const ALLIANCE_KEYS = ['logo_almia', 'logo_daste', 'logo_educatics', 'logo_parquete']; // Legacy, now alliances are dynamic
+const ALLIANCE_KEYS = ['logo_almia', 'logo_daste', 'logo_educatics', 'logo_parquete'];
 const QR_KEYS = ['qr_code_appstore', 'qr_code_generic'];
 const SERVICE_KEYS = ['service_1_bg', 'service_2_bg', 'service_3_bg'];
 const MAP_KEYS = ['world_map_dark', 'world_map_light'];
@@ -24,11 +25,9 @@ const TABS = [
     { id: 'otros', label: 'Otros', icon: MoreHorizontal },
 ];
 
-// Helper to categorize configs
 function categorizeConfigs(configs: LandingConfigItem[]) {
     const filtered = configs.filter(c => !EXCLUDED_KEYS.includes(c.key) && !c.key.includes('_hover'));
     return {
-        // Alliances: any key starting with 'logo_' or 'alliance_'
         alianzas: filtered.filter(c => c.key.startsWith('logo_') || c.key.startsWith('alliance_')),
         qrs: filtered.filter(c => QR_KEYS.includes(c.key)),
         servicios: filtered.filter(c => SERVICE_KEYS.includes(c.key)),
@@ -62,41 +61,60 @@ function ConfigSection({ items, onSave, saving }: {
     };
 
     if (items.length === 0) {
-        return <p className="text-gray-500 text-center py-8">No hay elementos en esta sección.</p>;
+        return <p className="text-slate-500 text-center py-12">No hay elementos en esta sección.</p>;
     }
 
     return (
-        <div className="grid gap-4">
-            {localItems.map((item) => (
-                <div key={item.key} className="bg-white p-4 rounded-lg shadow-sm border border-gray-200">
-                    <div className="flex justify-between items-start mb-3">
-                        <div>
-                            <h3 className="text-md font-semibold text-gray-900">{item.key}</h3>
-                            <p className="text-xs text-gray-500">{item.description}</p>
+        <div className="grid gap-6 md:grid-cols-2">
+            {localItems.map((item) => {
+                const isImage = item.value.match(/\.(jpeg|jpg|gif|png|webp)$/i) || item.key.includes('map') || item.key.includes('bg') || item.key.includes('qr') || item.key.includes('logo');
+                const isVideo = item.value.match(/\.(mp4|webm|mov|avi)$/i) || item.key.includes('video');
+
+                return (
+                    <div key={item.key} className="bg-slate-800/40 p-5 rounded-xl border border-white/5 hover:border-white/10 transition-all flex flex-col gap-4 group">
+                        <div className="flex justify-between items-start">
+                            <div>
+                                <h3 className="font-medium text-white">{item.description || item.key}</h3>
+                                <p className="text-xs text-slate-500 font-mono mt-1">{item.key}</p>
+                            </div>
                         </div>
-                        <button
-                            onClick={() => onSave({ ...item, value: localItems.find(i => i.key === item.key)?.value || item.value })}
-                            disabled={saving === item.key}
-                            className={`px-3 py-1.5 rounded-md text-xs font-medium text-white transition-colors flex items-center gap-1
-                                ${saving === item.key ? 'bg-gray-400 cursor-not-allowed' : 'bg-indigo-600 hover:bg-indigo-700'}`}
-                        >
-                            <Save className="w-3 h-3" />
-                            {saving === item.key ? 'Guardando...' : 'Guardar'}
-                        </button>
+
+                        <div className="flex-1 space-y-3">
+                            {(isImage || isVideo) && (
+                                <CloudinaryUploadWidget
+                                    onUpload={(url) => handleChange(item.key, url)}
+                                    currentImage={localItems.find(i => i.key === item.key)?.value}
+                                    folder={isVideo ? "tincadia/landing/videos" : "tincadia/landing/config"}
+                                    buttonText={isVideo ? "Subir Video" : "Cambiar Imagen"}
+                                    resourceType={isVideo ? 'video' : 'image'}
+                                />
+                            )}
+
+                            <div className="space-y-1">
+                                <label className="text-xs text-slate-500 font-medium ml-1">Valor / URL</label>
+                                <input
+                                    type="text"
+                                    value={localItems.find(i => i.key === item.key)?.value || ''}
+                                    onChange={(e) => handleChange(item.key, e.target.value)}
+                                    className="w-full rounded-lg bg-slate-900/50 border border-white/10 p-3 text-white text-sm placeholder:text-slate-500 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all outline-none"
+                                />
+                            </div>
+                        </div>
+
+                        <div className="flex justify-end pt-2">
+                            <button
+                                onClick={() => onSave({ ...item, value: localItems.find(i => i.key === item.key)?.value || item.value })}
+                                disabled={saving === item.key}
+                                className={`w-full py-2.5 rounded-lg text-xs font-bold uppercase tracking-wider text-white transition-all flex items-center justify-center gap-2
+                                    ${saving === item.key ? 'bg-slate-700 cursor-not-allowed' : 'bg-blue-600/80 hover:bg-blue-600 shadow-lg shadow-blue-900/20'}`}
+                            >
+                                {saving === item.key ? <Loader2 className="w-3 h-3 animate-spin" /> : <Save className="w-3 h-3" />}
+                                {saving === item.key ? 'Guardando...' : 'Guardar'}
+                            </button>
+                        </div>
                     </div>
-                    <input
-                        type="text"
-                        value={localItems.find(i => i.key === item.key)?.value || ''}
-                        onChange={(e) => handleChange(item.key, e.target.value)}
-                        className="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 text-sm p-2 border text-gray-900 bg-white"
-                    />
-                    {(localItems.find(i => i.key === item.key)?.value || '').match(/\.(jpeg|jpg|gif|png|webp)$/i) && (
-                        <div className="mt-2 p-2 bg-gray-50 rounded border border-gray-200">
-                            <img src={localItems.find(i => i.key === item.key)?.value || ''} alt="Preview" className="h-20 object-contain" />
-                        </div>
-                    )}
-                </div>
-            ))}
+                )
+            })}
         </div>
     );
 }
@@ -125,7 +143,6 @@ function AllianceSection({ items, onSave, onDelete, onCreate, saving }: {
 
     const handleCreate = () => {
         if (!newItem.name || !newItem.url) return;
-        // Generate a unique key like alliance_nombre
         const key = `alliance_${newItem.name.toLowerCase().replace(/\s+/g, '_')}`;
         onCreate(key, newItem.url, `Logo ${newItem.name}`);
         setNewItem({ name: '', url: '' });
@@ -138,88 +155,102 @@ function AllianceSection({ items, onSave, onDelete, onCreate, saving }: {
     };
 
     return (
-        <div>
-            <div className="flex justify-end mb-4">
+        <div className="space-y-6">
+            <div className="flex justify-end">
                 <button
                     onClick={() => setShowForm(!showForm)}
-                    className="px-3 py-1.5 rounded-md text-xs font-medium text-white bg-green-600 hover:bg-green-700 flex items-center gap-1"
+                    className="px-4 py-2 rounded-lg text-sm font-medium text-white bg-blue-600 hover:bg-blue-500 shadow-lg shadow-blue-900/20 flex items-center gap-2 transition-all"
                 >
-                    <Plus className="w-3 h-3" /> Nueva Alianza
+                    <Plus className="w-4 h-4" /> Nueva Alianza
                 </button>
             </div>
 
             {showForm && (
-                <div className="bg-green-50 p-4 rounded-lg border border-green-200 mb-4">
-                    <h3 className="font-semibold mb-3 text-gray-900">Nueva Alianza</h3>
-                    <div className="grid gap-3">
-                        <input
-                            type="text"
-                            placeholder="Nombre de la alianza (ej: Microsoft)"
-                            value={newItem.name}
-                            onChange={(e) => setNewItem({ ...newItem, name: e.target.value })}
-                            className="w-full rounded-md border-gray-300 shadow-sm text-sm p-2 border text-gray-900 bg-white"
-                        />
-                        <input
-                            type="text"
-                            placeholder="URL del logo (ej: https://...)"
-                            value={newItem.url}
-                            onChange={(e) => setNewItem({ ...newItem, url: e.target.value })}
-                            className="w-full rounded-md border-gray-300 shadow-sm text-sm p-2 border text-gray-900 bg-white"
-                        />
-                        {newItem.url && newItem.url.match(/\.(jpeg|jpg|gif|png|webp)$/i) && (
-                            <div className="p-2 bg-white rounded border border-gray-200">
-                                <img src={newItem.url} alt="Preview" className="h-16 object-contain" />
+                <div className="bg-slate-800/50 p-6 rounded-xl border border-white/10 mb-6 backdrop-blur-sm animate-in fade-in slide-in-from-top-4">
+                    <h3 className="font-semibold mb-4 text-white text-lg">Nueva Alianza</h3>
+                    <div className="space-y-4">
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <input
+                                type="text"
+                                placeholder="Nombre de la alianza"
+                                value={newItem.name}
+                                onChange={(e) => setNewItem({ ...newItem, name: e.target.value })}
+                                className="w-full rounded-lg bg-slate-900/50 border border-white/10 p-3 text-white placeholder:text-slate-500 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all outline-none"
+                            />
+                            <div className="space-y-2">
+                                <input
+                                    type="text"
+                                    placeholder="URL del logo"
+                                    value={newItem.url}
+                                    onChange={(e) => setNewItem({ ...newItem, url: e.target.value })}
+                                    className="w-full rounded-lg bg-slate-900/50 border border-white/10 p-3 text-white placeholder:text-slate-500 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all outline-none"
+                                />
+                                <CloudinaryUploadWidget
+                                    onUpload={(url) => setNewItem(prev => ({ ...prev, url }))}
+                                    folder="tincadia/landing/alliances"
+                                    currentImage={newItem.url}
+                                />
                             </div>
-                        )}
-                        <button
-                            onClick={handleCreate}
-                            className="px-4 py-2 rounded-md text-sm font-medium text-white bg-green-600 hover:bg-green-700"
-                        >
-                            Crear Alianza
-                        </button>
+                        </div>
+                        <div className="flex justify-end pt-2">
+                            <button
+                                onClick={handleCreate}
+                                className="px-6 py-2 rounded-lg text-sm font-medium text-white bg-emerald-600 hover:bg-emerald-500 transition-colors"
+                            >
+                                Crear Alianza
+                            </button>
+                        </div>
                     </div>
                 </div>
             )}
 
-            <div className="grid gap-4">
+            <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
                 {localItems.length === 0 ? (
-                    <p className="text-gray-500 text-center py-8">No hay alianzas. Crea la primera.</p>
+                    <div className="col-span-full text-center py-12 text-slate-500 bg-slate-800/20 rounded-xl border border-white/5 border-dashed">
+                        No hay alianzas configuradas.
+                    </div>
                 ) : localItems.map((item) => (
-                    <div key={item.key} className="bg-white p-4 rounded-lg shadow-sm border border-gray-200">
-                        <div className="flex justify-between items-start mb-3">
+                    <div key={item.key} className="bg-slate-800/40 p-5 rounded-xl border border-white/5 hover:border-white/10 transition-all flex flex-col gap-4 group hover:bg-slate-800/60">
+                        <div className="flex justify-between items-start">
                             <div>
-                                <h3 className="text-md font-semibold text-gray-900">{item.description || item.key}</h3>
-                                <p className="text-xs text-gray-500">{item.key}</p>
+                                <h3 className="font-medium text-white">{item.description || item.key}</h3>
+                                <p className="text-xs text-slate-500 font-mono mt-1">{item.key}</p>
                             </div>
-                            <div className="flex gap-2">
-                                <button
-                                    onClick={() => onSave({ ...item, value: localItems.find(i => i.key === item.key)?.value || item.value })}
-                                    disabled={saving === item.key}
-                                    className={`px-3 py-1.5 rounded-md text-xs font-medium text-white transition-colors flex items-center gap-1
-                                        ${saving === item.key ? 'bg-gray-400 cursor-not-allowed' : 'bg-indigo-600 hover:bg-indigo-700'}`}
-                                >
-                                    <Save className="w-3 h-3" />
-                                    {saving === item.key ? 'Guardando...' : 'Guardar'}
-                                </button>
-                                <button
-                                    onClick={() => handleDelete(item.key)}
-                                    className="px-3 py-1.5 rounded-md text-xs font-medium text-white bg-red-600 hover:bg-red-700 flex items-center gap-1"
-                                >
-                                    <Trash2 className="w-3 h-3" />
-                                </button>
-                            </div>
+                            <button
+                                onClick={() => handleDelete(item.key)}
+                                className="p-1.5 rounded-lg text-slate-400 hover:text-red-400 hover:bg-red-500/10 transition-colors opacity-0 group-hover:opacity-100"
+                            >
+                                <Trash2 className="w-4 h-4" />
+                            </button>
                         </div>
-                        <input
-                            type="text"
-                            value={localItems.find(i => i.key === item.key)?.value || ''}
-                            onChange={(e) => handleChange(item.key, e.target.value)}
-                            className="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 text-sm p-2 border text-gray-900 bg-white"
-                        />
-                        {(localItems.find(i => i.key === item.key)?.value || '').match(/\.(jpeg|jpg|gif|png|webp)$/i) && (
-                            <div className="mt-2 p-2 bg-gray-50 rounded border border-gray-200">
-                                <img src={localItems.find(i => i.key === item.key)?.value || ''} alt="Preview" className="h-20 object-contain" />
-                            </div>
-                        )}
+
+                        <div className="space-y-3 flex-1 flex flex-col">
+                            <CloudinaryUploadWidget
+                                onUpload={(url) => handleChange(item.key, url)}
+                                currentImage={localItems.find(i => i.key === item.key)?.value}
+                                folder="tincadia/landing/alliances"
+                                buttonText="Cambiar Logo"
+                            />
+
+                            <input
+                                type="text"
+                                value={localItems.find(i => i.key === item.key)?.value || ''}
+                                onChange={(e) => handleChange(item.key, e.target.value)}
+                                className="mt-auto w-full text-xs rounded-lg bg-slate-900/50 border border-white/10 p-2 text-slate-400 font-mono focus:text-white focus:border-blue-500/50 outline-none transition-colors"
+                            />
+                        </div>
+
+                        <div className="flex justify-end pt-2">
+                            <button
+                                onClick={() => onSave({ ...item, value: localItems.find(i => i.key === item.key)?.value || item.value })}
+                                disabled={saving === item.key}
+                                className={`w-full py-2 rounded-lg text-xs font-bold uppercase tracking-wider text-white transition-all flex items-center justify-center gap-2
+                                    ${saving === item.key ? 'bg-slate-700 cursor-not-allowed' : 'bg-blue-600/80 hover:bg-blue-600'}`}
+                            >
+                                {saving === item.key ? <Loader2 className="w-3 h-3 animate-spin" /> : <Save className="w-3 h-3" />}
+                                {saving === item.key ? 'Guardando...' : 'Guardar Cambios'}
+                            </button>
+                        </div>
                     </div>
                 ))}
             </div>
@@ -286,118 +317,137 @@ function TestimonialsSection({ testimonials, onUpdate }: {
     };
 
     return (
-        <div>
-            <div className="flex justify-end mb-4">
+        <div className="space-y-6">
+            <div className="flex justify-end">
                 <button
                     onClick={() => setShowForm(!showForm)}
-                    className="px-3 py-1.5 rounded-md text-xs font-medium text-white bg-green-600 hover:bg-green-700 flex items-center gap-1"
+                    className="px-4 py-2 rounded-lg text-sm font-medium text-white bg-blue-600 hover:bg-blue-500 shadow-lg shadow-blue-900/20 flex items-center gap-2 transition-all"
                 >
-                    <Plus className="w-3 h-3" /> Nuevo Testimonio
+                    <Plus className="w-4 h-4" /> Nuevo Testimonio
                 </button>
             </div>
 
             {showForm && (
-                <div className="bg-green-50 p-4 rounded-lg border border-green-200 mb-4">
-                    <h3 className="font-semibold mb-3">Nuevo Testimonio</h3>
-                    <div className="grid gap-3">
-                        <input
-                            type="text"
-                            placeholder="Nombre del autor"
-                            value={newItem.authorName}
-                            onChange={(e) => setNewItem({ ...newItem, authorName: e.target.value })}
-                            className="w-full rounded-md border-gray-300 shadow-sm text-sm p-2 border text-gray-900 bg-white"
-                        />
-                        <input
-                            type="text"
-                            placeholder="Rol / Empresa"
-                            value={newItem.authorRole}
-                            onChange={(e) => setNewItem({ ...newItem, authorRole: e.target.value })}
-                            className="w-full rounded-md border-gray-300 shadow-sm text-sm p-2 border text-gray-900 bg-white"
-                        />
+                <div className="bg-slate-800/50 p-6 rounded-xl border border-white/10 mb-6 backdrop-blur-sm animate-in fade-in slide-in-from-top-4">
+                    <h3 className="font-semibold mb-4 text-white text-lg">Nuevo Testimonio</h3>
+                    <div className="grid gap-4">
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <input
+                                type="text"
+                                placeholder="Nombre del autor"
+                                value={newItem.authorName}
+                                onChange={(e) => setNewItem({ ...newItem, authorName: e.target.value })}
+                                className="w-full rounded-lg bg-slate-900/50 border border-white/10 p-3 text-white placeholder:text-slate-500 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all outline-none"
+                            />
+                            <input
+                                type="text"
+                                placeholder="Rol / Empresa"
+                                value={newItem.authorRole}
+                                onChange={(e) => setNewItem({ ...newItem, authorRole: e.target.value })}
+                                className="w-full rounded-lg bg-slate-900/50 border border-white/10 p-3 text-white placeholder:text-slate-500 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all outline-none"
+                            />
+                        </div>
                         <textarea
                             placeholder="Testimonio"
                             value={newItem.quote}
                             onChange={(e) => setNewItem({ ...newItem, quote: e.target.value })}
-                            className="w-full rounded-md border-gray-300 shadow-sm text-sm p-2 border text-gray-900 bg-white"
+                            className="w-full rounded-lg bg-slate-900/50 border border-white/10 p-3 text-white placeholder:text-slate-500 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all outline-none"
                             rows={3}
                         />
-                        <div className="flex items-center gap-2">
-                            <label className="text-sm">Rating:</label>
-                            <select
-                                value={newItem.rating}
-                                onChange={(e) => setNewItem({ ...newItem, rating: Number(e.target.value) })}
-                                className="rounded-md border-gray-300 shadow-sm text-sm p-1 border text-gray-900 bg-white"
-                            >
-                                {[1, 2, 3, 4, 5].map(r => <option key={r} value={r}>{r}</option>)}
-                            </select>
+                        <div className="flex items-center gap-4">
+                            <label className="text-sm text-slate-400">Rating:</label>
+                            <div className="flex items-center gap-1">
+                                {[1, 2, 3, 4, 5].map(star => (
+                                    <button
+                                        key={star}
+                                        onClick={() => setNewItem({ ...newItem, rating: star })}
+                                        className="focus:outline-none transition-transform hover:scale-110"
+                                    >
+                                        <Star className={`w-6 h-6 ${star <= newItem.rating ? 'fill-yellow-400 text-yellow-400' : 'text-slate-600'}`} />
+                                    </button>
+                                ))}
+                            </div>
                         </div>
-                        <button
-                            onClick={handleCreate}
-                            className="px-4 py-2 rounded-md text-sm font-medium text-white bg-green-600 hover:bg-green-700"
-                        >
-                            Crear Testimonio
-                        </button>
+                        <div className="flex justify-end pt-2">
+                            <button
+                                onClick={handleCreate}
+                                className="px-6 py-2 rounded-lg text-sm font-medium text-white bg-emerald-600 hover:bg-emerald-500 transition-colors"
+                            >
+                                Crear Testimonio
+                            </button>
+                        </div>
                     </div>
                 </div>
             )}
 
-            <div className="grid gap-4">
+            <div className="grid gap-6 md:grid-cols-2">
                 {items.length === 0 ? (
-                    <p className="text-gray-500 text-center py-8">No hay testimonios. Crea el primero.</p>
+                    <div className="col-span-full text-center py-12 text-slate-500 bg-slate-800/20 rounded-xl border border-white/5 border-dashed">
+                        No hay testimonios. Crea el primero.
+                    </div>
                 ) : items.map((item) => (
-                    <div key={item.id} className="bg-white p-4 rounded-lg shadow-sm border border-gray-200">
-                        <div className="flex justify-between items-start mb-3">
+                    <div key={item.id} className="bg-slate-800/40 p-5 rounded-xl border border-white/5 hover:border-white/10 transition-all flex flex-col gap-4 group hover:bg-slate-800/60">
+                        <div className="flex justify-between items-start">
                             <div className="flex items-center gap-1">
-                                {[...Array(item.rating)].map((_, i) => (
-                                    <Star key={i} className="w-4 h-4 fill-yellow-400 text-yellow-400" />
+                                {[...Array(5)].map((_, i) => (
+                                    <Star key={i} className={`w-4 h-4 ${i < item.rating ? 'fill-yellow-400 text-yellow-400' : 'text-slate-600'}`} />
                                 ))}
                             </div>
-                            <div className="flex gap-2">
-                                <button
-                                    onClick={() => handleSave(item)}
-                                    disabled={saving === item.id}
-                                    className={`px-3 py-1.5 rounded-md text-xs font-medium text-white transition-colors flex items-center gap-1
-                                        ${saving === item.id ? 'bg-gray-400' : 'bg-indigo-600 hover:bg-indigo-700'}`}
-                                >
-                                    <Save className="w-3 h-3" /> Guardar
-                                </button>
-                                <button
-                                    onClick={() => handleDelete(item.id)}
-                                    className="px-3 py-1.5 rounded-md text-xs font-medium text-white bg-red-600 hover:bg-red-700 flex items-center gap-1"
-                                >
-                                    <Trash2 className="w-3 h-3" />
-                                </button>
-                            </div>
+                            <button
+                                onClick={() => handleDelete(item.id)}
+                                className="p-1.5 rounded-lg text-slate-400 hover:text-red-400 hover:bg-red-500/10 transition-colors opacity-0 group-hover:opacity-100"
+                            >
+                                <Trash2 className="w-4 h-4" />
+                            </button>
                         </div>
-                        <div className="grid gap-2">
-                            <input
-                                type="text"
-                                value={item.authorName}
-                                onChange={(e) => handleChange(item.id, 'authorName', e.target.value)}
-                                placeholder="Nombre"
-                                className="w-full rounded-md border-gray-300 shadow-sm text-sm p-2 border text-gray-900 bg-white"
-                            />
-                            <input
-                                type="text"
-                                value={item.authorRole}
-                                onChange={(e) => handleChange(item.id, 'authorRole', e.target.value)}
-                                placeholder="Rol"
-                                className="w-full rounded-md border-gray-300 shadow-sm text-sm p-2 border text-gray-900 bg-white"
-                            />
+
+                        <div className="space-y-3 flex-1">
                             <textarea
                                 value={item.quote}
                                 onChange={(e) => handleChange(item.id, 'quote', e.target.value)}
                                 placeholder="Testimonio"
-                                className="w-full rounded-md border-gray-300 shadow-sm text-sm p-2 border text-gray-900 bg-white"
-                                rows={2}
+                                className="w-full rounded-lg bg-slate-900/50 border border-white/10 p-3 text-white text-sm placeholder:text-slate-500 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all outline-none min-h-[100px]"
                             />
-                            <select
-                                value={item.rating}
-                                onChange={(e) => handleChange(item.id, 'rating', Number(e.target.value))}
-                                className="w-32 rounded-md border-gray-300 shadow-sm text-sm p-1 border text-gray-900 bg-white"
+                            <div className="grid grid-cols-2 gap-3">
+                                <input
+                                    type="text"
+                                    value={item.authorName}
+                                    onChange={(e) => handleChange(item.id, 'authorName', e.target.value)}
+                                    placeholder="Nombre"
+                                    className="w-full rounded-lg bg-slate-900/50 border border-white/10 p-2 text-white text-xs font-bold placeholder:text-slate-500 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all outline-none"
+                                />
+                                <input
+                                    type="text"
+                                    value={item.authorRole}
+                                    onChange={(e) => handleChange(item.id, 'authorRole', e.target.value)}
+                                    placeholder="Rol"
+                                    className="w-full rounded-lg bg-slate-900/50 border border-white/10 p-2 text-slate-300 text-xs placeholder:text-slate-500 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all outline-none"
+                                />
+                            </div>
+                            <div className="flex items-center gap-2 mt-2">
+                                <span className="text-xs text-slate-500">Rating:</span>
+                                <input
+                                    type="range"
+                                    min="1"
+                                    max="5"
+                                    value={item.rating}
+                                    onChange={(e) => handleChange(item.id, 'rating', Number(e.target.value))}
+                                    className="w-24 accent-yellow-400 h-1 bg-slate-700 rounded-lg appearance-none cursor-pointer"
+                                />
+                                <span className="text-xs text-yellow-400 font-bold">{item.rating}</span>
+                            </div>
+                        </div>
+
+                        <div className="flex justify-end pt-2">
+                            <button
+                                onClick={() => handleSave(item)}
+                                disabled={saving === item.id}
+                                className={`w-full py-2 rounded-lg text-xs font-bold uppercase tracking-wider text-white transition-all flex items-center justify-center gap-2
+                                    ${saving === item.id ? 'bg-slate-700 cursor-not-allowed' : 'bg-blue-600/80 hover:bg-blue-600 shadow-lg shadow-blue-900/20'}`}
                             >
-                                {[1, 2, 3, 4, 5].map(r => <option key={r} value={r}>{r} estrellas</option>)}
-                            </select>
+                                {saving === item.id ? <Loader2 className="w-3 h-3 animate-spin" /> : <Save className="w-3 h-3" />}
+                                {saving === item.id ? 'Guardando...' : 'Guardar'}
+                            </button>
                         </div>
                     </div>
                 ))}
@@ -463,81 +513,88 @@ function FAQSection({ faqs, onUpdate }: {
     };
 
     return (
-        <div>
-            <div className="flex justify-end mb-4">
+        <div className="space-y-6">
+            <div className="flex justify-end">
                 <button
                     onClick={() => setShowForm(!showForm)}
-                    className="px-3 py-1.5 rounded-md text-xs font-medium text-white bg-green-600 hover:bg-green-700 flex items-center gap-1"
+                    className="px-4 py-2 rounded-lg text-sm font-medium text-white bg-blue-600 hover:bg-blue-500 shadow-lg shadow-blue-900/20 flex items-center gap-2 transition-all"
                 >
-                    <Plus className="w-3 h-3" /> Nueva Pregunta
+                    <Plus className="w-4 h-4" /> Nueva Pregunta
                 </button>
             </div>
 
             {showForm && (
-                <div className="bg-green-50 p-4 rounded-lg border border-green-200 mb-4">
-                    <h3 className="font-semibold mb-3">Nueva Pregunta</h3>
-                    <div className="grid gap-3">
+                <div className="bg-slate-800/50 p-6 rounded-xl border border-white/10 mb-6 backdrop-blur-sm animate-in fade-in slide-in-from-top-4">
+                    <h3 className="font-semibold mb-4 text-white text-lg">Nueva Pregunta Frecuente</h3>
+                    <div className="space-y-4">
                         <input
                             type="text"
                             placeholder="Pregunta"
                             value={newItem.question}
                             onChange={(e) => setNewItem({ ...newItem, question: e.target.value })}
-                            className="w-full rounded-md border-gray-300 shadow-sm text-sm p-2 border text-gray-900 bg-white"
+                            className="w-full rounded-lg bg-slate-900/50 border border-white/10 p-3 text-white placeholder:text-slate-500 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all outline-none"
                         />
                         <textarea
                             placeholder="Respuesta"
                             value={newItem.answer}
                             onChange={(e) => setNewItem({ ...newItem, answer: e.target.value })}
-                            className="w-full rounded-md border-gray-300 shadow-sm text-sm p-2 border text-gray-900 bg-white"
+                            className="w-full rounded-lg bg-slate-900/50 border border-white/10 p-3 text-white placeholder:text-slate-500 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all outline-none"
                             rows={3}
                         />
-                        <button
-                            onClick={handleCreate}
-                            className="px-4 py-2 rounded-md text-sm font-medium text-white bg-green-600 hover:bg-green-700"
-                        >
-                            Crear Pregunta
-                        </button>
+                        <div className="flex justify-end pt-2">
+                            <button
+                                onClick={handleCreate}
+                                className="px-6 py-2 rounded-lg text-sm font-medium text-white bg-emerald-600 hover:bg-emerald-500 transition-colors"
+                            >
+                                Crear Pregunta
+                            </button>
+                        </div>
                     </div>
                 </div>
             )}
 
             <div className="grid gap-4">
                 {items.length === 0 ? (
-                    <p className="text-gray-500 text-center py-8">No hay preguntas frecuentes. Crea la primera.</p>
+                    <div className="col-span-full text-center py-12 text-slate-500 bg-slate-800/20 rounded-xl border border-white/5 border-dashed">
+                        No hay preguntas frecuentes. Crea la primera.
+                    </div>
                 ) : items.map((item) => (
-                    <div key={item.id} className="bg-white p-4 rounded-lg shadow-sm border border-gray-200">
-                        <div className="flex justify-end gap-2 mb-3">
-                            <button
-                                onClick={() => handleSave(item)}
-                                disabled={saving === item.id}
-                                className={`px-3 py-1.5 rounded-md text-xs font-medium text-white transition-colors flex items-center gap-1
-                                    ${saving === item.id ? 'bg-gray-400' : 'bg-indigo-600 hover:bg-indigo-700'}`}
-                            >
-                                <Save className="w-3 h-3" /> Guardar
-                            </button>
-                            <button
-                                onClick={() => handleDelete(item.id)}
-                                className="px-3 py-1.5 rounded-md text-xs font-medium text-white bg-red-600 hover:bg-red-700 flex items-center gap-1"
-                            >
-                                <Trash2 className="w-3 h-3" />
-                            </button>
+                    <div key={item.id} className="bg-slate-800/40 p-5 rounded-xl border border-white/5 hover:border-white/10 transition-all flex flex-col gap-4 group hover:bg-slate-800/60">
+                        <div className="flex justify-between items-start">
+                            <div className="flex-1 mr-4">
+                                <input
+                                    type="text"
+                                    value={item.question}
+                                    onChange={(e) => handleChange(item.id, 'question', e.target.value)}
+                                    placeholder="Pregunta"
+                                    className="w-full bg-transparent text-white font-medium border-none focus:ring-0 p-0 text-lg placeholder:text-slate-600 mb-2"
+                                />
+                            </div>
+                            <div className="flex gap-2">
+                                <button
+                                    onClick={() => handleSave(item)}
+                                    disabled={saving === item.id}
+                                    className={`px-3 py-1.5 rounded-lg text-xs font-bold uppercase tracking-wider text-white transition-all flex items-center justify-center gap-2
+                                        ${saving === item.id ? 'bg-slate-700 cursor-not-allowed' : 'bg-blue-600/80 hover:bg-blue-600 shadow-lg shadow-blue-900/20'}`}
+                                >
+                                    {saving === item.id ? <Loader2 className="w-3 h-3 animate-spin" /> : <Save className="w-3 h-3" />}
+                                    {saving === item.id ? '...' : 'Guardar'}
+                                </button>
+                                <button
+                                    onClick={() => handleDelete(item.id)}
+                                    className="p-1.5 rounded-lg text-slate-400 hover:text-red-400 hover:bg-red-500/10 transition-colors"
+                                >
+                                    <Trash2 className="w-4 h-4" />
+                                </button>
+                            </div>
                         </div>
-                        <div className="grid gap-2">
-                            <input
-                                type="text"
-                                value={item.question}
-                                onChange={(e) => handleChange(item.id, 'question', e.target.value)}
-                                placeholder="Pregunta"
-                                className="w-full rounded-md border-gray-300 shadow-sm text-sm p-2 border font-medium text-gray-900 bg-white"
-                            />
-                            <textarea
-                                value={item.answer}
-                                onChange={(e) => handleChange(item.id, 'answer', e.target.value)}
-                                placeholder="Respuesta"
-                                className="w-full rounded-md border-gray-300 shadow-sm text-sm p-2 border text-gray-900 bg-white"
-                                rows={3}
-                            />
-                        </div>
+                        <textarea
+                            value={item.answer}
+                            onChange={(e) => handleChange(item.id, 'answer', e.target.value)}
+                            placeholder="Respuesta"
+                            className="w-full rounded-lg bg-slate-900/50 border border-white/10 p-3 text-slate-300 text-sm placeholder:text-slate-500 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all outline-none"
+                            rows={3}
+                        />
                     </div>
                 ))}
             </div>
@@ -585,7 +642,7 @@ export default function LandingConfigPage() {
                 value: item.value,
                 description: item.description
             });
-            await fetchData(); // Refresh data after save
+            await fetchData();
         } catch (error) {
             console.error('Error saving:', error);
         } finally {
@@ -600,7 +657,7 @@ export default function LandingConfigPage() {
                 value,
                 description
             });
-            await fetchData(); // Refresh data after create
+            await fetchData();
         } catch (error) {
             console.error('Error creating:', error);
         }
@@ -609,19 +666,22 @@ export default function LandingConfigPage() {
     const handleDeleteConfig = async (key: string) => {
         try {
             await api.delete(`/content/landing-config/${key}`);
-            await fetchData(); // Refresh data after delete
+            await fetchData();
         } catch (error) {
             console.error('Error deleting:', error);
         }
     };
 
-    if (loading) return <div className="p-8">Cargando configuración...</div>;
+    if (loading) return (
+        <div className="flex items-center justify-center min-h-screen text-blue-500">
+            <Loader2 size={40} className="animate-spin" />
+        </div>
+    );
 
     const categorized = categorizeConfigs(configs);
 
-    // Filter tabs that have no items (always show alianzas, testimonios, faqs)
     const visibleTabs = TABS.filter(tab => {
-        if (tab.id === 'alianzas') return true; // Always show
+        if (tab.id === 'alianzas') return true;
         if (tab.id === 'testimonios') return true;
         if (tab.id === 'faqs') return true;
         if (tab.id === 'otros') return categorized.otros.length > 0;
@@ -650,38 +710,50 @@ export default function LandingConfigPage() {
     };
 
     return (
-        <div className="p-6 max-w-5xl mx-auto">
-            <h1 className="text-2xl font-bold mb-6">Configuración Landing Page</h1>
+        <div className="p-8 max-w-7xl mx-auto min-h-screen">
+            <header className="mb-10">
+                <h1 className="text-4xl font-bold bg-gradient-to-r from-blue-400 via-indigo-400 to-violet-400 bg-clip-text text-transparent mb-2">
+                    Configuración Landing Page
+                </h1>
+                <p className="text-slate-400 text-lg">
+                    Personaliza el contenido visible en la página de inicio
+                </p>
+            </header>
 
-            {/* Tab Navigation */}
-            <div className="border-b border-gray-200 mb-6">
-                <nav className="flex flex-wrap gap-1 -mb-px">
-                    {visibleTabs.map((tab) => {
-                        const Icon = tab.icon;
-                        const isActive = activeTab === tab.id;
-                        return (
-                            <button
-                                key={tab.id}
-                                onClick={() => setActiveTab(tab.id)}
-                                className={`
-                                    flex items-center gap-2 px-4 py-3 text-sm font-medium border-b-2 transition-colors
-                                    ${isActive
-                                        ? 'border-indigo-600 text-indigo-600'
-                                        : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
-                                    }
-                                `}
-                            >
-                                <Icon className="w-4 h-4" />
-                                {tab.label}
-                            </button>
-                        );
-                    })}
-                </nav>
-            </div>
+            <div className="bg-slate-900/60 backdrop-blur-xl border border-white/10 rounded-2xl overflow-hidden shadow-2xl">
+                {/* Tabs */}
+                <div className="border-b border-white/10 overflow-x-auto">
+                    <nav className="flex min-w-max">
+                        {visibleTabs.map((tab) => {
+                            const Icon = tab.icon;
+                            const isActive = activeTab === tab.id;
+                            return (
+                                <button
+                                    key={tab.id}
+                                    onClick={() => setActiveTab(tab.id)}
+                                    className={`
+                                        flex items-center gap-2 px-6 py-4 text-sm font-medium transition-all relative
+                                        ${isActive
+                                            ? 'text-white'
+                                            : 'text-slate-400 hover:text-white hover:bg-white/5'
+                                        }
+                                    `}
+                                >
+                                    <Icon className={`w-4 h-4 ${isActive ? 'text-blue-400' : ''}`} />
+                                    {tab.label}
+                                    {isActive && (
+                                        <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-blue-500 shadow-[0_0_10px_rgba(59,130,246,0.5)]" />
+                                    )}
+                                </button>
+                            );
+                        })}
+                    </nav>
+                </div>
 
-            {/* Tab Content */}
-            <div className="min-h-[400px]">
-                {renderTabContent()}
+                {/* Content */}
+                <div className="p-6 md:p-8 min-h-[400px]">
+                    {renderTabContent()}
+                </div>
             </div>
         </div>
     );

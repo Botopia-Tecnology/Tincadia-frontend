@@ -4,8 +4,10 @@ import { useState, useEffect, useMemo } from 'react';
 import { Upload, FileText, X } from 'lucide-react';
 import { useTranslation } from '@/hooks/useTranslation';
 import { formsService } from '@/services/forms.service';
+import { authService } from '@/services/auth.service';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
+import Link from 'next/link';
 
 interface FileData {
   name: string;
@@ -65,6 +67,25 @@ export function InterpreterRegistrationForm({
   const [otraAreaEspecialidad, setOtraAreaEspecialidad] = useState('');
   const [otroTipoServicio, setOtroTipoServicio] = useState('');
   const [formId, setFormId] = useState<string | null>(null);
+
+  const handleDocumentBlur = async (e: React.FocusEvent<HTMLInputElement>) => {
+    formik.handleBlur(e);
+    const docNumber = e.target.value;
+
+    // Solo validar si tiene una longitud mínima razonable (ej. 5)
+    if (docNumber && docNumber.length > 4) {
+      try {
+        const { exists } = await authService.checkDocumentExists(docNumber);
+        if (!exists) {
+          formik.setFieldError('documentoIdentidad', 'Este documento no se encuentra registrado. Debes registrarte como usuario primero.');
+        }
+      } catch (error) {
+        console.error('Error validating document:', error);
+      }
+    }
+  };
+
+  // ... rest of state ...
   const [formIdError, setFormIdError] = useState<string | null>(null);
   const [submitStatus, setSubmitStatus] = useState<'idle' | 'success' | 'error'>('idle');
   const [fileErrors, setFileErrors] = useState<{ [key: string]: string | null }>({});
@@ -357,7 +378,7 @@ export function InterpreterRegistrationForm({
                 name="documentoIdentidad"
                 type="text"
                 onChange={formik.handleChange}
-                onBlur={formik.handleBlur}
+                onBlur={handleDocumentBlur} // Use custom handler
                 value={formik.values.documentoIdentidad}
                 className={`w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#83A98A] focus:border-transparent ${formik.touched.documentoIdentidad && formik.errors.documentoIdentidad ? 'border-red-500' : 'border-gray-300'}`}
               />
@@ -610,6 +631,7 @@ export function InterpreterRegistrationForm({
             <div>
               <label className="block text-sm font-semibold text-gray-700 mb-2">
                 12. {t('forms.interpreter.fields.uploadCV')} <span className="text-red-500">{t('forms.common.required')}</span>
+                <span className="block text-xs font-normal text-gray-500 mt-1">(Formato PDF, Máximo 50MB)</span>
               </label>
               <div className="relative">
                 <input
@@ -639,6 +661,7 @@ export function InterpreterRegistrationForm({
             <div>
               <label className="block text-sm font-semibold text-gray-700 mb-2">
                 13. {t('forms.interpreter.fields.certifications')}
+                <span className="block text-xs font-normal text-gray-500 mt-1">(Formato PDF/JPG/PNG, Máximo 50MB)</span>
               </label>
               <div className="relative">
                 <input
@@ -722,16 +745,40 @@ export function InterpreterRegistrationForm({
               </div>
             )}
 
+            {/* Error Message Global */}
+            {submitStatus === 'error' && (
+              <div className="bg-red-50 border border-red-200 rounded-lg p-4 mb-6 animate-in fade-in slide-in-from-bottom-2">
+                <div className="flex items-start gap-3">
+                  <div className="p-2 bg-red-100 rounded-full shrink-0">
+                    <X className="w-5 h-5 text-red-600" />
+                  </div>
+                  <div>
+                    <h3 className="text-sm font-bold text-red-900">No pudimos enviar tu solicitud</h3>
+                    <p className="text-sm text-red-700 mt-1">
+                      Hubo un error técnico o de conexión. Por favor, verifica que tus archivos no superen los 50MB e inténtalo nuevamente.
+                    </p>
+                  </div>
+                </div>
+              </div>
+            )}
+
             {/* Botón Submit */}
             <button
               type="submit"
-              className="w-full bg-[#83A98A] text-white font-semibold py-3.5 px-6 rounded-lg hover:bg-[#6D8F75] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#83A98A] transition-all duration-300 shadow-lg hover:shadow-xl mt-8 disabled:opacity-50"
+              className="w-full bg-[#83A98A] text-white font-semibold py-3.5 px-6 rounded-lg hover:bg-[#6D8F75] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#83A98A] transition-all duration-300 shadow-lg hover:shadow-xl mt-2 disabled:opacity-50 disabled:cursor-not-allowed flex justify-center items-center gap-2"
               disabled={formik.isSubmitting || !!formIdError}
             >
-              {formik.isSubmitting
-                ? (isEditing ? 'Actualizando...' : t('forms.common.sending'))
-                : (isEditing ? 'Actualizar Solicitud' : t('registration.interpreterForm.submitForm'))
-              }
+              {formik.isSubmitting ? (
+                <>
+                  <svg className="animate-spin h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                  </svg>
+                  <span>{isEditing ? 'Actualizando...' : t('forms.common.sending')}</span>
+                </>
+              ) : (
+                isEditing ? 'Actualizar Solicitud' : t('registration.interpreterForm.submitForm')
+              )}
             </button>
           </form>
         )}

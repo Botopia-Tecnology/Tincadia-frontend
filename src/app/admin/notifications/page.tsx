@@ -90,58 +90,66 @@ export default function NotificationsPage() {
     };
 
     return (
-        <div className="p-6">
-            <h1 className="text-3xl font-bold bg-gradient-to-r from-blue-400 to-indigo-400 bg-clip-text text-transparent mb-8">
-                Gestión de Comunicaciones
-            </h1>
+        <div className="p-8 max-w-7xl mx-auto">
+            <header className="mb-10 flex flex-col gap-2">
+                <h1 className="text-4xl font-bold bg-gradient-to-r from-blue-400 via-indigo-400 to-purple-400 bg-clip-text text-transparent">
+                    Centro de Comunicaciones
+                </h1>
+                <p className="text-slate-400 text-lg">Gestiona y envía notificaciones a todos tus usuarios.</p>
+            </header>
 
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-                {/* Create Notification Form */}
-                <div className="lg:col-span-1 space-y-6">
-                    <div className="bg-slate-800 p-6 rounded-xl border border-slate-700 shadow-xl">
-                        <h2 className="text-xl font-bold text-white mb-6 flex items-center gap-2">
-                            <Send size={20} className="text-blue-400" />
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
+                {/* Create Notification Form - Takes up 4 columns */}
+                <div className="lg:col-span-4 space-y-6">
+                    <div className="bg-slate-900/60 backdrop-blur-xl p-8 rounded-3xl border border-white/10 shadow-2xl relative overflow-hidden group">
+                        {/* Decorative gradient blob */}
+                        <div className="absolute -top-20 -right-20 w-40 h-40 bg-indigo-500/20 rounded-full blur-3xl group-hover:bg-indigo-500/30 transition-all duration-1000"></div>
+
+                        <h2 className="text-2xl font-bold text-white mb-6 flex items-center gap-3 relative z-10">
+                            <div className="p-2.5 bg-indigo-500/20 rounded-xl text-indigo-400 border border-indigo-500/20">
+                                <Send size={22} />
+                            </div>
                             Nueva Comunicación
                         </h2>
 
-                        <div className="space-y-4">
-                            <div>
-                                <label className="block text-sm font-medium text-slate-400 mb-1">Título</label>
+                        <div className="space-y-6 relative z-10">
+                            <div className="space-y-2">
+                                <label className="text-sm font-medium text-slate-300 ml-1">Título del Mensaje</label>
                                 <input
                                     type="text"
                                     value={title}
                                     onChange={(e) => setTitle(e.target.value)}
-                                    className="w-full bg-slate-900 border border-slate-700 rounded-lg p-2.5 text-white focus:ring-2 focus:ring-blue-500 transition-all outline-none"
-                                    placeholder="Ej: Nueva Funcionalidad!"
+                                    className="w-full bg-slate-950/50 border border-white/10 rounded-xl p-3.5 text-white placeholder:text-slate-600 focus:ring-2 focus:ring-indigo-500/50 focus:border-indigo-500/50 transition-all outline-none"
+                                    placeholder="Ej: ¡Nueva Actualización Disponible!"
                                 />
                             </div>
 
-                            <div>
-                                <label className="block text-sm font-medium text-slate-400 mb-1">Mensaje</label>
+                            <div className="space-y-2">
+                                <label className="text-sm font-medium text-slate-300 ml-1">Contenido</label>
                                 <textarea
                                     value={message}
                                     onChange={(e) => setMessage(e.target.value)}
-                                    className="w-full bg-slate-900 border border-slate-700 rounded-lg p-2.5 text-white focus:ring-2 focus:ring-blue-500 h-32 resize-none transition-all outline-none"
-                                    placeholder="Escribe el contenido de la comunicación..."
+                                    className="w-full bg-slate-950/50 border border-white/10 rounded-xl p-3.5 text-white placeholder:text-slate-600 focus:ring-2 focus:ring-indigo-500/50 focus:border-indigo-500/50 h-32 resize-none transition-all outline-none"
+                                    placeholder="Escribe aquí tu mensaje..."
                                 />
                             </div>
 
-                            <div>
-                                <div className="flex justify-between items-center mb-1">
-                                    <label className="block text-sm font-medium text-slate-400">Tipo de Comunicación</label>
+                            <div className="space-y-2">
+                                <div className="flex justify-between items-center px-1">
+                                    <label className="text-sm font-medium text-slate-300">Categoría</label>
                                     <button
                                         onClick={() => setShowManageModal(true)}
-                                        className="text-xs text-blue-400 hover:text-blue-300 flex items-center gap-1"
+                                        className="text-xs text-indigo-400 hover:text-indigo-300 flex items-center gap-1 font-medium hover:underline transition-all"
                                     >
-                                        <Settings size={12} /> Gestionar Tipos
+                                        <Settings size={12} /> Gestionar
                                     </button>
                                 </div>
-                                <div className="relative">
-                                    <Tag className="absolute left-3 top-3 text-slate-500" size={16} />
+                                <div className="relative group/select">
+                                    <Tag className="absolute left-3.5 top-3.5 text-slate-500 group-focus-within/select:text-indigo-400 transition-colors" size={18} />
                                     <select
                                         value={selectedCategoryId}
                                         onChange={(e) => setSelectedCategoryId(e.target.value)}
-                                        className="w-full bg-slate-900 border border-slate-700 rounded-lg p-2.5 pl-10 text-white appearance-none focus:ring-2 focus:ring-blue-500 transition-all outline-none"
+                                        className="w-full bg-slate-950/50 border border-white/10 rounded-xl p-3.5 pl-11 text-white appearance-none focus:ring-2 focus:ring-indigo-500/50 focus:border-indigo-500/50 transition-all outline-none cursor-pointer"
                                     >
                                         <option value="">📰 General (Por defecto)</option>
                                         {categories.map(cat => (
@@ -150,108 +158,113 @@ export default function NotificationsPage() {
                                             </option>
                                         ))}
                                     </select>
+                                    <div className="absolute right-3.5 top-3.5 pointer-events-none text-slate-500">
+                                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
+                                    </div>
                                 </div>
                             </div>
 
-                            <div className="p-4 bg-slate-900/50 rounded-lg border border-slate-800">
-                                <div className="flex items-start gap-3">
-                                    <div className="pt-0.5">
-                                        <input
-                                            type="checkbox"
-                                            id="push"
-                                            checked={isPush}
-                                            onChange={(e) => setIsPush(e.target.checked)}
-                                            className="w-4 h-4 rounded bg-slate-700 border-slate-600 text-blue-600 focus:ring-blue-500 cursor-pointer"
-                                        />
+                            <div className="p-4 bg-indigo-900/10 rounded-xl border border-indigo-500/20 hover:bg-indigo-900/20 transition-colors cursor-pointer" onClick={() => setIsPush(!isPush)}>
+                                <div className="flex items-start gap-4">
+                                    <div className={`mt-0.5 w-5 h-5 rounded border flex items-center justify-center transition-colors ${isPush ? 'bg-indigo-500 border-indigo-500' : 'border-slate-500 bg-transparent'}`}>
+                                        {isPush && <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" className="text-white"><polyline points="20 6 9 17 4 12"></polyline></svg>}
                                     </div>
-                                    <label htmlFor="push" className="cursor-pointer">
-                                        <span className="block text-slate-200 font-medium text-sm">Enviar notificación Push</span>
-                                        <span className="block text-slate-500 text-xs mt-0.5">
-                                            Se enviará una alerta a todos los dispositivos móviles registrados.
+                                    <div className="flex-1">
+                                        <span className="block text-white font-medium text-sm">Notificación Push</span>
+                                        <span className="block text-indigo-200/60 text-xs mt-1 leading-relaxed">
+                                            Envía una alerta instantánea a los dispositivos móviles de todos los usuarios.
                                         </span>
-                                    </label>
+                                    </div>
                                 </div>
                             </div>
 
                             <button
                                 onClick={handleSend}
                                 disabled={sending || !title || !message}
-                                className="w-full bg-blue-600 hover:bg-blue-500 text-white font-medium py-3 rounded-lg flex items-center justify-center gap-2 transition-all disabled:opacity-50 disabled:cursor-not-allowed shadow-lg shadow-blue-900/20 active:scale-[0.98]"
+                                className="w-full bg-gradient-to-r from-blue-600 to-violet-600 hover:from-blue-500 hover:to-violet-500 text-white font-bold py-4 rounded-xl flex items-center justify-center gap-2.5 transition-all disabled:opacity-50 disabled:cursor-not-allowed shadow-lg shadow-indigo-500/20 hover:shadow-indigo-500/40 active:scale-[0.98] mt-4"
                             >
-                                {sending ? <Loader2 className="animate-spin" size={18} /> : <Megaphone size={18} />}
-                                {sending ? 'Enviando...' : 'Publicar Comunicación'}
+                                {sending ? <Loader2 className="animate-spin" size={20} /> : <Megaphone size={20} />}
+                                {sending ? 'Enviando...' : 'Publicar Ahora'}
                             </button>
                         </div>
                     </div>
                 </div>
 
-                {/* History List */}
-                <div className="lg:col-span-2 space-y-6">
-                    <div className="bg-slate-800 rounded-xl border border-slate-700 shadow-xl overflow-hidden flex flex-col h-full">
-                        <div className="p-6 border-b border-slate-700 flex justify-between items-center">
-                            <h2 className="text-xl font-bold text-white flex items-center gap-2">
-                                <Clock size={20} className="text-slate-400" />
-                                Historial de Comunicaciones
+                {/* History List - Takes up 8 columns */}
+                <div className="lg:col-span-8 space-y-6">
+                    <div className="bg-slate-900/60 backdrop-blur-xl rounded-3xl border border-white/10 shadow-2xl flex flex-col h-[700px] overflow-hidden relative">
+                        {/* Header */}
+                        <div className="p-6 border-b border-white/5 flex justify-between items-center bg-white/5 backdrop-blur-md sticky top-0 z-20">
+                            <h2 className="text-lg font-bold text-white flex items-center gap-2">
+                                <Clock size={18} className="text-indigo-400" />
+                                Historial Reciente
                             </h2>
-                            <span className="text-xs font-medium px-2.5 py-1 bg-slate-700 text-slate-300 rounded-full">
-                                {notifications.length} Total
+                            <span className="text-xs font-bold px-3 py-1 bg-slate-800 text-slate-300 rounded-full border border-white/5">
+                                {notifications.length} Mensajes
                             </span>
                         </div>
 
-                        <div className="flex-1 overflow-y-auto max-h-[600px]">
+                        {/* List Area */}
+                        <div className="flex-1 overflow-y-auto p-6 scrollbar-thin scrollbar-thumb-slate-700 scrollbar-track-transparent">
                             {loading ? (
-                                <div className="p-12 flex flex-col items-center gap-4">
-                                    <Loader2 className="animate-spin text-blue-500" size={32} />
-                                    <p className="text-slate-500 text-sm">Cargando historial...</p>
+                                <div className="h-full flex flex-col items-center justify-center gap-4 text-slate-500">
+                                    <Loader2 className="animate-spin text-indigo-500" size={40} />
+                                    <p className="text-sm font-medium">Sincronizando historial...</p>
                                 </div>
                             ) : (
-                                <ul className="divide-y divide-slate-700/50">
+                                <div className="space-y-4">
                                     {notifications.map((notif) => {
-                                        // Find category info safely
-                                        const cat = notif.category; // Now populated by API
+                                        const cat = notif.category;
                                         const catLabel = cat?.label || notif.type;
-                                        const catColor = cat?.color || '#3b82f6';
+                                        const catColor = cat?.color || '#6366f1'; // Default Indigo
 
                                         return (
-                                            <li key={notif.id} className="p-5 hover:bg-slate-700/30 transition-colors group">
-                                                <div className="flex items-start gap-4">
+                                            <div
+                                                key={notif.id}
+                                                className="group relative bg-slate-950/40 hover:bg-slate-900/60 border border-white/5 hover:border-indigo-500/30 rounded-2xl p-5 transition-all duration-300 hover:shadow-lg hover:shadow-indigo-500/5"
+                                            >
+                                                <div className="flex items-start gap-5">
+                                                    {/* Category Icon Box */}
                                                     <div
-                                                        className="p-3 rounded-xl shadow-lg"
+                                                        className="p-3.5 rounded-2xl flex-shrink-0 transition-transform group-hover:scale-105 duration-300 shadow-inner"
                                                         style={{
-                                                            backgroundColor: `${catColor}20`, // 20% opacity
-                                                            color: catColor,
-                                                            border: `1px solid ${catColor}40`
+                                                            backgroundColor: `${catColor}15`, // 15% opacity bg
+                                                            color: catColor
                                                         }}
                                                     >
-                                                        <Bell size={24} strokeWidth={1.5} />
+                                                        <Bell size={24} strokeWidth={2} />
                                                     </div>
 
-                                                    <div className="flex-1 min-w-0">
-                                                        <div className="flex justify-between items-start mb-1">
-                                                            <h4 className="text-white font-semibold text-lg truncate pr-4">{notif.title}</h4>
-                                                            <span className="text-xs text-slate-500 whitespace-nowrap flex-shrink-0 bg-slate-900 border border-slate-800 px-2 py-1 rounded">
+                                                    <div className="flex-1 min-w-0 pt-1">
+                                                        <div className="flex justify-between items-start mb-2">
+                                                            <h4 className="text-white font-bold text-lg truncate pr-8 group-hover:text-indigo-200 transition-colors">
+                                                                {notif.title}
+                                                            </h4>
+                                                            <span className="text-[11px] font-medium text-slate-500 whitespace-nowrap bg-slate-950 px-2.5 py-1 rounded-lg border border-white/5">
                                                                 {notif.createdAt && new Date(notif.createdAt).toLocaleDateString('es-ES', {
                                                                     day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit'
                                                                 })}
                                                             </span>
                                                         </div>
 
-                                                        <p className="text-slate-400 text-sm leading-relaxed mb-3">{notif.message}</p>
+                                                        <p className="text-slate-400 text-sm leading-relaxed mb-4 line-clamp-2 group-hover:text-slate-300 transition-colors">
+                                                            {notif.message}
+                                                        </p>
 
                                                         <div className="flex items-center gap-3">
                                                             <span
-                                                                className="px-2.5 py-0.5 rounded text-xs font-medium border"
+                                                                className="px-3 py-1 rounded-md text-[10px] font-bold uppercase tracking-wider border mb-0.5 inline-block"
                                                                 style={{
-                                                                    backgroundColor: `${catColor}20`,
-                                                                    borderColor: `${catColor}40`,
-                                                                    color: catColor
+                                                                    borderColor: `${catColor}30`,
+                                                                    color: catColor,
+                                                                    backgroundColor: `${catColor}10`
                                                                 }}
                                                             >
                                                                 {catLabel}
                                                             </span>
 
                                                             {notif.priority > 0 && (
-                                                                <span className="flex items-center gap-1 text-xs text-green-400 font-medium bg-green-900/20 px-2 py-0.5 rounded border border-green-900/30">
+                                                                <span className="flex items-center gap-1.5 text-[10px] text-emerald-400 font-bold uppercase tracking-wider bg-emerald-500/10 px-3 py-1 rounded-md border border-emerald-500/20">
                                                                     <Send size={10} /> Push Enviado
                                                                 </span>
                                                             )}
@@ -260,23 +273,27 @@ export default function NotificationsPage() {
 
                                                     <button
                                                         onClick={() => handleDelete(notif.id)}
-                                                        className="p-2 text-slate-600 hover:text-red-400 hover:bg-red-900/20 rounded-lg transition-all opacity-0 group-hover:opacity-100"
-                                                        title="Eliminar comunicación"
+                                                        className="absolute top-4 right-4 p-2 text-slate-600 hover:text-red-400 hover:bg-red-500/10 rounded-xl transition-all opacity-0 group-hover:opacity-100 translate-x-2 group-hover:translate-x-0"
+                                                        title="Eliminar"
                                                     >
                                                         <Trash2 size={18} />
                                                     </button>
                                                 </div>
-                                            </li>
+                                            </div>
                                         );
                                     })}
                                     {notifications.length === 0 && (
-                                        <li className="p-12 text-center text-slate-500 flex flex-col items-center gap-3">
-                                            <Info size={40} strokeWidth={1.5} className="text-slate-600 mb-2" />
-                                            <p className="font-medium text-slate-400">No hay comunicaciones registradas</p>
-                                            <p className="text-sm">Envía tu primera notificación usando el formulario.</p>
-                                        </li>
+                                        <div className="py-20 flex flex-col items-center justify-center text-center">
+                                            <div className="w-20 h-20 bg-slate-800/50 rounded-full flex items-center justify-center mb-4">
+                                                <Info size={32} className="text-slate-600" />
+                                            </div>
+                                            <h3 className="text-white font-medium text-lg">Sin comunicaciones</h3>
+                                            <p className="text-slate-500 text-sm max-w-xs mt-2">
+                                                No has enviado ninguna comunicación todavía. ¡Crea la primera ahora!
+                                            </p>
+                                        </div>
                                     )}
-                                </ul>
+                                </div>
                             )}
                         </div>
                     </div>

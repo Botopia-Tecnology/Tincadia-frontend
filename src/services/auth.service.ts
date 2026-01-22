@@ -200,6 +200,16 @@ export const authService = {
     isAuthenticated(): boolean {
         return tokenStorage.hasTokens();
     },
+
+    /**
+     * Check if a document number is already registered
+     * 
+     * @param documentNumber - The document number to check
+     * @returns Object with exists boolean
+     */
+    async checkDocumentExists(documentNumber: string): Promise<{ exists: boolean }> {
+        return api.get<{ exists: boolean }>(`${AUTH_ENDPOINTS.CHECK_DOCUMENT}/${documentNumber}`, { skipAuth: true });
+    },
 };
 
 export default authService;

@@ -420,16 +420,16 @@ export default function CourseDetailsPage() {
                     {accessScope === 'course' && (
                         <>
                             <div className="space-y-2">
-                                <label className="text-sm text-slate-400">Estado</label>
+                                <label className="text-sm text-slate-400">Modalidad</label>
                                 <button
                                     type="button"
                                     onClick={() => setCourseIsPaid(!courseIsPaid)}
                                     className={`w-full px-4 py-2 rounded-lg border text-sm font-semibold transition-colors ${courseIsPaid
-                                        ? 'bg-amber-500/10 border-amber-500/40 text-amber-200'
+                                        ? 'bg-indigo-500/10 border-indigo-500/40 text-indigo-300'
                                         : 'bg-emerald-500/10 border-emerald-500/40 text-emerald-200'
                                         }`}
                                 >
-                                    {courseIsPaid ? 'Curso de pago' : 'Curso libre'}
+                                    {courseIsPaid ? 'De Pago (Premium)' : 'Gratuito (Libre)'}
                                 </button>
                             </div>
                             <div className="space-y-2">
@@ -515,12 +515,12 @@ export default function CourseDetailsPage() {
                             <div className="divide-y divide-slate-700/50">
                                 {module.lessons?.map((lesson) => (
                                     <div key={lesson.id} className="p-4 pl-14 hover:bg-slate-700/20 transition-colors flex justify-between items-center group">
-                                        <div className="flex items-center gap-3">
-                                            <div className={`p-2 rounded-full ${lesson.videoUrl ? 'bg-emerald-500/10 text-emerald-500' : 'bg-slate-700 text-slate-500'}`}>
+                                        <div className="flex items-center gap-3 flex-1 min-w-0 mr-4">
+                                            <div className={`p-2 rounded-full flex-shrink-0 ${lesson.videoUrl ? 'bg-emerald-500/10 text-emerald-500' : 'bg-slate-700 text-slate-500'}`}>
                                                 <PlayCircle size={18} />
                                             </div>
-                                            <div>
-                                                <h4 className="text-sm font-medium text-slate-200">{lesson.title}</h4>
+                                            <div className="min-w-0">
+                                                <h4 className="text-sm font-medium text-slate-200 truncate">{lesson.title}</h4>
                                                 {lesson.videoUrl && (
                                                     <span className="text-xs text-emerald-500 flex items-center gap-1 mt-0.5">
                                                         Video Uploaded
@@ -528,7 +528,7 @@ export default function CourseDetailsPage() {
                                                 )}
                                                 {accessScope === 'lesson' && (
                                                     <div className="flex gap-2 mt-1">
-                                                        <span className={`text-[11px] px-2 py-0.5 rounded ${lesson.isPaid ? 'bg-amber-500/10 text-amber-200 border border-amber-500/40' : 'bg-emerald-500/10 text-emerald-200 border border-emerald-500/40'}`}>
+                                                        <span className={`text-[11px] px-2 py-0.5 rounded ${lesson.isPaid ? 'bg-indigo-500/10 text-indigo-300 border border-indigo-500/40' : 'bg-emerald-500/10 text-emerald-200 border border-emerald-500/40'}`}>
                                                             {lesson.isPaid ? 'De pago' : 'Libre'}
                                                         </span>
                                                         {lesson.isFreePreview && (
@@ -541,24 +541,24 @@ export default function CourseDetailsPage() {
                                             </div>
                                         </div>
 
-                                        <div className="flex items-center gap-3">
+                                        <div className="flex items-center gap-2 flex-shrink-0">
                                             {accessScope === 'lesson' && (
                                                 <>
                                                     <button
                                                         onClick={() => handleLessonAccess(lesson.id, !lesson.isPaid)}
-                                                        className="text-xs font-medium px-3 py-1.5 rounded-lg border border-slate-600 bg-slate-900 hover:bg-slate-800 transition-colors"
+                                                        className="text-xs font-medium w-28 py-1.5 rounded-lg border border-slate-600 bg-slate-900 hover:bg-slate-800 transition-colors text-center"
                                                     >
                                                         {lesson.isPaid ? 'Marcar libre' : 'Marcar de pago'}
                                                     </button>
                                                     <button
                                                         onClick={() => handleLessonPreview(lesson.id, !lesson.isFreePreview)}
-                                                        className="text-xs font-medium px-3 py-1.5 rounded-lg border border-slate-600 bg-slate-900 hover:bg-slate-800 transition-colors"
+                                                        className="text-xs font-medium w-28 py-1.5 rounded-lg border border-slate-600 bg-slate-900 hover:bg-slate-800 transition-colors text-center"
                                                     >
                                                         {lesson.isFreePreview ? 'Quitar preview' : 'Preview gratis'}
                                                     </button>
                                                 </>
                                             )}
-                                            <div className="relative">
+                                            <div className="relative w-32">
                                                 <input
                                                     type="file"
                                                     id={`upload-${lesson.id}`}
@@ -572,7 +572,7 @@ export default function CourseDetailsPage() {
                                                 />
                                                 <label
                                                     htmlFor={`upload-${lesson.id}`}
-                                                    className={`cursor-pointer flex items-center gap-2 px-3 py-1.5 rounded-lg border text-xs font-medium transition-all ${lesson.videoUrl
+                                                    className={`cursor-pointer flex items-center justify-center gap-2 w-full py-1.5 rounded-lg border text-xs font-medium transition-all ${lesson.videoUrl
                                                         ? 'border-slate-600 text-slate-400 hover:text-white hover:border-slate-500'
                                                         : 'border-indigo-500/30 bg-indigo-500/10 text-indigo-400 hover:bg-indigo-500/20'
                                                         }`}
@@ -585,28 +585,31 @@ export default function CourseDetailsPage() {
                                                     ) : (
                                                         <>
                                                             <UploadCloud size={14} />
-                                                            {lesson.videoUrl ? 'Replace Video' : 'Upload Video'}
+                                                            {lesson.videoUrl ? 'Replace' : 'Upload Video'}
                                                         </>
                                                     )}
                                                 </label>
                                             </div>
+
+                                            <div className="flex items-center w-16 justify-end gap-1">
+                                                {lesson.videoUrl && (
+                                                    <button
+                                                        onClick={() => handleRemoveVideo(lesson.id)}
+                                                        className="p-1.5 text-slate-500 hover:text-yellow-400 transition-colors"
+                                                        title="Remove Video"
+                                                    >
+                                                        <Video size={14} className="line-through" />
+                                                    </button>
+                                                )}
+                                                <button
+                                                    onClick={() => handleDeleteLesson(lesson.id)}
+                                                    className="p-1.5 text-slate-500 hover:text-red-400 transition-colors opacity-0 group-hover:opacity-100"
+                                                    title="Delete Lesson"
+                                                >
+                                                    <Trash2 size={14} />
+                                                </button>
+                                            </div>
                                         </div>
-                                        {lesson.videoUrl && (
-                                            <button
-                                                onClick={() => handleRemoveVideo(lesson.id)}
-                                                className="p-1.5 text-slate-500 hover:text-yellow-400 transition-colors"
-                                                title="Remove Video"
-                                            >
-                                                <Video size={14} className="line-through" />
-                                            </button>
-                                        )}
-                                        <button
-                                            onClick={() => handleDeleteLesson(lesson.id)}
-                                            className="p-1.5 text-slate-500 hover:text-red-400 transition-colors opacity-0 group-hover:opacity-100"
-                                            title="Delete Lesson"
-                                        >
-                                            <Trash2 size={14} />
-                                        </button>
                                     </div>
 
                                 ))}

@@ -27,9 +27,13 @@ export function LoginPanel({ isOpen, onClose, onSignUpClick, onForgotPasswordCli
 
     const handleGoogleSuccess = async (credentialResponse: CredentialResponse) => {
         if (!credentialResponse.credential) {
+            alert('Error: No se recibió token de Google');
             setLocalError('No se recibió el token de Google');
             return;
         }
+
+        /* Debugging for Mobile */
+        // alert('Token de Google recibido, enviando al backend...');
 
         setLocalError(null);
         clearError();
@@ -37,8 +41,10 @@ export function LoginPanel({ isOpen, onClose, onSignUpClick, onForgotPasswordCli
 
         try {
             await loginWithOAuth('google', credentialResponse.credential);
+            // alert('Login exitoso, cerrando panel...');
             onClose();
         } catch (err) {
+            alert('Error en loginWithOAuth: ' + (err instanceof Error ? err.message : String(err)));
             setLocalError(err instanceof Error ? err.message : 'Error al iniciar sesión con Google');
         } finally {
             setOauthLoading(false);
