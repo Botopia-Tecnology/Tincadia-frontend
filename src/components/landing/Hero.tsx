@@ -18,7 +18,7 @@ export function Hero({ disableAnimations = false }: HeroProps) {
   const videoRef = useRef<HTMLVideoElement>(null);
 
   // Default fallback video
-  const [videoUrl, setVideoUrl] = useState<string>('https://res.cloudinary.com/do1mvhvms/video/upload/v1767786925/1_qlrdln.mp4');
+  const [videoUrl, setVideoUrl] = useState<string>('https://res.cloudinary.com/dzi2p0pqa/video/upload/v1768965559/c7q4e37io3ahtjscooxx.mp4');
 
   // Fetch video URL from DB
   useEffect(() => {
