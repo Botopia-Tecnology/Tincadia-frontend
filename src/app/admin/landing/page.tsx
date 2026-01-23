@@ -21,6 +21,7 @@ const TABS = [
     { id: 'servicios', label: 'Servicios', icon: Wrench },
     { id: 'mapas', label: 'Mapas', icon: Map },
     { id: 'testimonios', label: 'Casos de Éxito', icon: MessageSquareQuote },
+    { id: 'inclusive_companies', label: 'Empresas Inclusivas', icon: Handshake },
     { id: 'faqs', label: 'FAQ', icon: HelpCircle },
     { id: 'otros', label: 'Otros', icon: MoreHorizontal },
 ];
@@ -32,12 +33,14 @@ function categorizeConfigs(configs: LandingConfigItem[]) {
         qrs: filtered.filter(c => QR_KEYS.includes(c.key)),
         servicios: filtered.filter(c => SERVICE_KEYS.includes(c.key)),
         mapas: filtered.filter(c => MAP_KEYS.includes(c.key)),
+        inclusive: filtered.filter(c => c.key === 'inclusive_companies_list'),
         otros: filtered.filter(c =>
             !c.key.startsWith('logo_') &&
             !c.key.startsWith('alliance_') &&
             !QR_KEYS.includes(c.key) &&
             !SERVICE_KEYS.includes(c.key) &&
-            !MAP_KEYS.includes(c.key)
+            !MAP_KEYS.includes(c.key) &&
+            c.key !== 'inclusive_companies_list'
         ),
     };
 }
@@ -602,6 +605,263 @@ function FAQSection({ faqs, onUpdate }: {
     );
 }
 
+
+// Inclusive Companies Section
+interface CompanyInfo {
+    id: string;
+    name: string;
+    description: string;
+    imageUrl: string;
+    link?: string;
+    industry?: string;
+    tags?: string[];
+}
+
+function CompanyListSection({ items, onSave, saving }: {
+    items: LandingConfigItem[];
+    onSave: (item: LandingConfigItem) => void;
+    saving: string | null;
+}) {
+    // We expect a SINGLE config item with key 'inclusive_companies_list'
+    // containing the JSON array of companies.
+    const configItem = items.find(i => i.key === 'inclusive_companies_list') || {
+        key: 'inclusive_companies_list',
+        value: '[]',
+        description: 'Lista de Empresas Inclusivas',
+        updatedAt: new Date().toISOString()
+    };
+
+    const [companies, setCompanies] = useState<CompanyInfo[]>([]);
+    const [showForm, setShowForm] = useState(false);
+    const [editingId, setEditingId] = useState<string | null>(null);
+    const [newItem, setNewItem] = useState<CompanyInfo>({
+        id: '',
+        name: '',
+        description: '',
+        imageUrl: '',
+        link: '',
+        industry: '',
+        tags: []
+    });
+
+    useEffect(() => {
+        try {
+            const parsed = JSON.parse(configItem.value || '[]');
+            setCompanies(Array.isArray(parsed) ? parsed : []);
+        } catch (e) {
+            setCompanies([]);
+        }
+    }, [configItem.value]);
+
+    const handleSaveList = (updatedList: CompanyInfo[]) => {
+        onSave({
+            ...configItem,
+            value: JSON.stringify(updatedList)
+        });
+    };
+
+    const handleSaveCompany = () => {
+        if (!newItem.name || !newItem.description) return;
+
+        let updated: CompanyInfo[];
+
+        if (editingId) {
+            // Update existing
+            updated = companies.map(c =>
+                c.id === editingId ? { ...newItem, id: editingId } : c
+            );
+        } else {
+            // Create new
+            const company: CompanyInfo = {
+                ...newItem,
+                id: crypto.randomUUID()
+            };
+            updated = [...companies, company];
+        }
+
+        setCompanies(updated);
+        handleSaveList(updated);
+
+        // Reset
+        setNewItem({ id: '', name: '', description: '', imageUrl: '', link: '', industry: '', tags: [] });
+        setEditingId(null);
+        setShowForm(false);
+    };
+
+    const handleEdit = (company: CompanyInfo) => {
+        setNewItem({
+            ...company,
+            id: company.id,
+            industry: company.industry || '',
+            tags: company.tags || []
+        });
+        setEditingId(company.id);
+        setShowForm(true);
+    };
+
+    const handleCancel = () => {
+        setNewItem({ id: '', name: '', description: '', imageUrl: '', link: '', industry: '', tags: [] });
+        setEditingId(null);
+        setShowForm(false);
+    };
+
+    const handleDelete = (id: string) => {
+        if (!confirm('¿Eliminar empresa?')) return;
+        const updated = companies.filter(c => c.id !== id);
+        setCompanies(updated);
+        handleSaveList(updated);
+    };
+
+    const handleImageUpload = (url: string) => {
+        setNewItem(prev => ({ ...prev, imageUrl: url }));
+    };
+
+    return (
+        <div className="space-y-6">
+            <div className="flex justify-between items-center bg-blue-900/20 p-4 rounded-xl border border-blue-500/20">
+                <div>
+                    <h3 className="text-blue-200 font-semibold flex items-center gap-2">
+                        <Handshake className="w-5 h-5" /> Empresas Aliadas
+                    </h3>
+                    <p className="text-sm text-blue-300/60 mt-1">Gestiona las empresas que aparecen en "Conoce tus posibilidades"</p>
+                </div>
+                <button
+                    onClick={() => {
+                        handleCancel();
+                        setShowForm(!showForm);
+                    }}
+                    className="px-4 py-2 rounded-lg text-sm font-medium text-white bg-blue-600 hover:bg-blue-500 shadow-lg shadow-blue-900/20 flex items-center gap-2 transition-all"
+                >
+                    <Plus className="w-4 h-4" /> Agregar Empresa
+                </button>
+            </div>
+
+            {showForm && (
+                <div className="bg-slate-800/50 p-6 rounded-xl border border-white/10 mb-6 backdrop-blur-sm animate-in fade-in slide-in-from-top-4">
+                    <h3 className="font-semibold mb-4 text-white text-lg">
+                        {editingId ? 'Editar Empresa' : 'Nueva Empresa'}
+                    </h3>
+                    <div className="grid md:grid-cols-2 gap-6">
+                        <div className="space-y-4">
+                            <input
+                                type="text"
+                                placeholder="Nombre de la Empresa"
+                                value={newItem.name}
+                                onChange={(e) => setNewItem({ ...newItem, name: e.target.value })}
+                                className="w-full rounded-lg bg-slate-900/50 border border-white/10 p-3 text-white placeholder:text-slate-500 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all outline-none"
+                            />
+                            <input
+                                type="text"
+                                placeholder="Enlace (opcional)"
+                                value={newItem.link}
+                                onChange={(e) => setNewItem({ ...newItem, link: e.target.value })}
+                                className="w-full rounded-lg bg-slate-900/50 border border-white/10 p-3 text-white placeholder:text-slate-500 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all outline-none"
+                            />
+                            <input
+                                type="text"
+                                placeholder="Industria (ej. Tecnología & Servicios)"
+                                value={newItem.industry || ''}
+                                onChange={(e) => setNewItem({ ...newItem, industry: e.target.value })}
+                                className="w-full rounded-lg bg-slate-900/50 border border-white/10 p-3 text-white placeholder:text-slate-500 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all outline-none"
+                            />
+                            <input
+                                type="text"
+                                placeholder="Etiquetas (separadas por coma)"
+                                value={newItem.tags?.join(', ') || ''}
+                                onChange={(e) => setNewItem({ ...newItem, tags: e.target.value.split(',').map(s => s.trim()).filter(Boolean) })}
+                                className="w-full rounded-lg bg-slate-900/50 border border-white/10 p-3 text-white placeholder:text-slate-500 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all outline-none"
+                            />
+                            <textarea
+                                placeholder="Descripción corta"
+                                value={newItem.description}
+                                onChange={(e) => setNewItem({ ...newItem, description: e.target.value })}
+                                className="w-full rounded-lg bg-slate-900/50 border border-white/10 p-3 text-white placeholder:text-slate-500 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all outline-none"
+                                rows={3}
+                            />
+                        </div>
+                        <div className="space-y-4">
+                            <label className="text-sm text-slate-400 block mb-2">Logo / Imagen</label>
+                            <CloudinaryUploadWidget
+                                onUpload={handleImageUpload}
+                                currentImage={newItem.imageUrl}
+                                folder="tincadia/companies"
+                                buttonText="Subir Logo"
+                            />
+                        </div>
+                    </div>
+                    <div className="flex justify-end pt-4 border-t border-white/5 mt-4 gap-3">
+                        <button
+                            onClick={handleCancel}
+                            className="px-6 py-2 rounded-lg text-sm font-medium text-white bg-slate-700 hover:bg-slate-600 transition-colors"
+                        >
+                            Cancelar
+                        </button>
+                        <button
+                            onClick={handleSaveCompany}
+                            className="px-6 py-2 rounded-lg text-sm font-medium text-white bg-emerald-600 hover:bg-emerald-500 transition-colors"
+                        >
+                            {editingId ? 'Guardar Cambios' : 'Crear Empresa'}
+                        </button>
+                    </div>
+                </div>
+            )}
+
+            <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+                {companies.length === 0 ? (
+                    <div className="col-span-full text-center py-12 text-slate-500 bg-slate-800/20 rounded-xl border border-white/5 border-dashed">
+                        No hay empresas registradas.
+                    </div>
+                ) : companies.map((company) => (
+                    <div key={company.id} className="bg-slate-800/40 p-5 rounded-xl border border-white/5 hover:border-white/10 transition-all flex flex-col gap-4 group hover:bg-slate-800/60 relative overflow-hidden">
+
+                        <div className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity z-10 flex gap-2">
+                            <button
+                                onClick={() => handleEdit(company)}
+                                className="p-2 rounded-full bg-blue-500/20 text-blue-400 hover:bg-blue-500 hover:text-white transition-colors"
+                            >
+                                <Wrench className="w-4 h-4" />
+                            </button>
+                            <button
+                                onClick={() => handleDelete(company.id)}
+                                className="p-2 rounded-full bg-red-500/20 text-red-400 hover:bg-red-500 hover:text-white transition-colors"
+                            >
+                                <Trash2 className="w-4 h-4" />
+                            </button>
+                        </div>
+
+                        <div className="h-32 w-full bg-slate-900/50 rounded-lg relative overflow-hidden flex items-center justify-center p-4">
+                            {company.imageUrl ? (
+                                <img src={company.imageUrl} alt={company.name} className="max-h-full max-w-full object-contain" />
+                            ) : (
+                                <Handshake className="w-12 h-12 text-slate-700" />
+                            )}
+                        </div>
+
+                        <div>
+                            <h4 className="font-bold text-white text-lg">{company.name}</h4>
+                            <p className="text-sm text-slate-400 line-clamp-2 mt-1">{company.description}</p>
+                            {company.link && (
+                                <a href={company.link} target="_blank" rel="noopener noreferrer" className="text-xs text-blue-400 hover:text-blue-300 mt-2 inline-block">
+                                    Visitar sitio web &rarr;
+                                </a>
+                            )}
+                        </div>
+                    </div>
+                ))}
+            </div>
+
+            {/* Status Indicator */}
+            <div className="flex justify-end">
+                {saving === 'inclusive_companies_list' && (
+                    <span className="text-blue-400 text-sm flex items-center gap-2">
+                        <Loader2 className="w-3 h-3 animate-spin" /> Guardando cambios...
+                    </span>
+                )}
+            </div>
+        </div>
+    );
+}
+
 export default function LandingConfigPage() {
     const { user } = useAuth();
     const [configs, setConfigs] = useState<LandingConfigItem[]>([]);
@@ -683,6 +943,7 @@ export default function LandingConfigPage() {
     const visibleTabs = TABS.filter(tab => {
         if (tab.id === 'alianzas') return true;
         if (tab.id === 'testimonios') return true;
+        if (tab.id === 'inclusive_companies') return true;
         if (tab.id === 'faqs') return true;
         if (tab.id === 'otros') return categorized.otros.length > 0;
         return categorized[tab.id as keyof typeof categorized]?.length > 0;
@@ -700,6 +961,8 @@ export default function LandingConfigPage() {
                 return <ConfigSection items={categorized.mapas} onSave={handleSave} saving={saving} />;
             case 'testimonios':
                 return <TestimonialsSection testimonials={testimonials} onUpdate={fetchData} />;
+            case 'inclusive_companies':
+                return <CompanyListSection items={categorized.inclusive} onSave={handleSave} saving={saving} />;
             case 'faqs':
                 return <FAQSection faqs={faqs} onUpdate={fetchData} />;
             case 'otros':

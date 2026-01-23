@@ -6,6 +6,19 @@ export async function GET(req: NextRequest) {
     const projectId = process.env.POSTHOG_PROJECT_ID;
     const personalApiKey = process.env.POSTHOG_PERSONAL_API_KEY;
 
+    // Get date range from query param, default to -7d
+    const { searchParams } = new URL(req.url);
+    const fromDate = searchParams.get('from') || '-7d';
+
+    // Sanitize input slightly to prevent injection (though HogQL param would be better)
+    // Allowed formats: -7d, -30d, -24h, etc.
+    const safeDate = /^-?\d+[dhwm]$/.test(fromDate) ? fromDate : '-7d';
+
+    // Determine interval based on range for charts
+    let interval = 'day';
+    if (safeDate === '-24h') interval = 'hour';
+    if (safeDate === '-90d') interval = 'week';
+
     if (!projectId || !personalApiKey) {
         return NextResponse.json(
             { error: 'PostHog credentials not configured' },
@@ -20,58 +33,82 @@ export async function GET(req: NextRequest) {
             'Content-Type': 'application/json',
         };
 
-        console.log(`[Analytics] Fetching BI Metrics for Project: ${projectId}`);
+        console.log(`[Analytics] Fetching BI Metrics for Project: ${projectId} (Range: ${safeDate})`);
 
         // 1. Pageviews Trend
         const pageviewsQuery = {
             kind: "TrendsQuery",
             series: [{ kind: "EventsNode", event: "$pageview", name: "Pageview", math: "total" }],
-            interval: "day",
-            dateRange: { date_from: "-7d" }
+            interval: interval,
+            dateRange: { date_from: safeDate }
         };
 
         // 2. Uniques Trend
         const uniquesQuery = {
             kind: "TrendsQuery",
             series: [{ kind: "EventsNode", event: "$pageview", name: "Unique Users", math: "dau" }],
-            interval: "day",
-            dateRange: { date_from: "-7d" }
+            interval: interval,
+            dateRange: { date_from: safeDate }
         };
 
-        // 3. Top Pages (HogQL) - Path, Visitors, Views
+        // 3. Top Pages (HogQL)
+        // Using `interval ${Math.abs(parseInt(safeDate))}` syntax might be tricky in pure SQL
+        // Easier to inject key "timestamp >= now() - interval ${number} ${unit}"
+
+        // Parse date for HogQL
+        const value = parseInt(safeDate.replace(/\D/g, ''));
+        const unit = safeDate.includes('h') ? 'hour' : 'day';
+        const dateFilter = `timestamp >= now() - interval ${value} ${unit}`;
+
         const topPagesQuery = {
             kind: "HogQLQuery",
-            query: "select properties.$pathname as path, count(distinct person_id) as visitors, count() as views from events where event = '$pageview' and timestamp >= now() - interval 7 day group by path order by views desc limit 10"
+            query: `select properties.$pathname as path, count(distinct person_id) as visitors, count() as views from events where event = '$pageview' and ${dateFilter} group by path order by views desc limit 10`
         };
 
-        // 4. Top Sources (HogQL) - Source, Visitors, Views
+        // 4. Top Sources (HogQL)
         const topSourcesQuery = {
             kind: "HogQLQuery",
-            query: "select properties.$referring_domain as source, count(distinct person_id) as visitors, count() as views from events where event = '$pageview' and timestamp >= now() - interval 7 day group by source order by views desc limit 10"
+            query: `select properties.$referring_domain as source, count(distinct person_id) as visitors, count() as views from events where event = '$pageview' and ${dateFilter} group by source order by views desc limit 10`
         };
 
-        // 5. Session Stats (HogQL on sessions table)
+        // 5. Session Stats (Robust)
         const sessionsQuery = {
             kind: "HogQLQuery",
-            query: "select avg(dateDiff('second', start_timestamp, end_timestamp)) as avg_duration, countIf(pageview_count = 1) / count() as bounce_rate, count() as session_count from sessions where start_timestamp >= now() - interval 7 day"
+            query: `
+                SELECT 
+                    avg(duration) as avg_duration,
+                    countIf(event_count = 1) / count() as bounce_rate,
+                    count() as session_count
+                FROM (
+                    SELECT 
+                        properties.$session_id as session_id,
+                        dateDiff('second', min(timestamp), max(timestamp)) as duration,
+                        count() as event_count
+                    FROM events 
+                    WHERE ${dateFilter} 
+                    AND properties.$session_id IS NOT NULL
+                    AND properties.$session_id != ''
+                    GROUP BY session_id
+                )
+            `
         };
 
-        // 5b. Robust Session Count (from events)
+        // 5b. Robust Session Count
         const sessionCountQuery = {
             kind: "HogQLQuery",
-            query: "select count(distinct properties.$session_id) as count from events where event = '$pageview' and timestamp >= now() - interval 7 day"
+            query: `select count(distinct properties.$session_id) as count from events where event = '$pageview' and ${dateFilter}`
         };
 
-        // 6. Device Breakdown (Type, Visitors, Views)
+        // 6. Device Breakdown
         const deviceQuery = {
             kind: "HogQLQuery",
-            query: "select properties.$device_type as device, count(distinct person_id) as visitors, count() as views from events where event = '$pageview' and timestamp >= now() - interval 7 day group by device order by views desc limit 5"
+            query: `select properties.$device_type as device, count(distinct person_id) as visitors, count() as views from events where event = '$pageview' and ${dateFilter} group by device order by views desc limit 5`
         };
 
         // 7. Geo Breakdown
         const geoQuery = {
             kind: "HogQLQuery",
-            query: "select properties.$geoip_country_name as country, count() as count from events where event = '$pageview' and timestamp >= now() - interval 7 day group by country order by count desc limit 5"
+            query: `select properties.$geoip_country_name as country, count() as count from events where event = '$pageview' and ${dateFilter} group by country order by count desc limit 5`
         };
 
         const [pvRes, uvRes, pagesRes, sourcesRes, sessionsRes, sessionCountRes, deviceRes, geoRes] = await Promise.all([
@@ -85,14 +122,13 @@ export async function GET(req: NextRequest) {
             fetch(queryUrl, { method: 'POST', headers, body: JSON.stringify({ query: geoQuery }) }),
         ]);
 
-        const debugInfo: any = { method: 'BI HogQL Suite', projectId };
+        const debugInfo: any = { method: 'BI HogQL Suite', projectId, range: safeDate };
         const results: any = {};
 
         // Helper to process response
         const process = async (res: Response, key: string) => {
             if (!res.ok) {
-                const txt = await res.text();
-                // console.error(`[Analytics] ${key} Failed: ${txt}`);
+                // const txt = await res.text();
                 debugInfo[key] = `Err ${res.status}`;
                 return null;
             }
@@ -121,7 +157,7 @@ export async function GET(req: NextRequest) {
         results.topPages = pagesData?.results?.map((r: any) => ({ path: r[0], visitors: r[1], views: r[2] })) || [];
         results.topSources = sourcesData?.results?.map((r: any) => ({ source: r[0] || 'Direct / Unknown', visitors: r[1], views: r[2] })) || [];
 
-        // Prioritize robust event-based count if sessions table is empty
+        // Prioritize robust event-based count
         const scFromEvents = sessionCountData?.results?.[0]?.[0] || 0;
         const scFromTable = sessionsData?.results?.[0]?.[2] || 0;
 

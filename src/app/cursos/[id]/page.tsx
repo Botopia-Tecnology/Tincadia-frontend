@@ -123,7 +123,6 @@ export default function CoursePage() {
                 userId: userId,
                 customerEmail: userEmail || undefined, // Send undefined if empty to avoid validation error
                 // Product Interface
-                // @ts-ignore - Adding custom props for Course purchase logic we added to backend
                 productType: 'COURSE',
                 productId: course.id,
                 // NOTE: amountInCents is NOT sent - the backend fetches the price from the database

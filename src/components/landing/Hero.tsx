@@ -4,7 +4,7 @@ import Image from 'next/image';
 import { useEffect, useRef, useState, useMemo } from 'react';
 import { useTranslation } from '@/hooks/useTranslation';
 import { useUI } from '@/contexts/UIContext';
-import { contentService } from '@/services/content.service';
+import { contentService, type LandingConfigItem } from '@/services/content.service';
 
 // Letras del título principal
 const TINCADIA_LETTERS = ['T', 'I', 'N', 'C', 'A', 'D', 'I', 'A'];
@@ -17,29 +17,34 @@ export function Hero({ disableAnimations = false }: HeroProps) {
   const t = useTranslation();
   const videoRef = useRef<HTMLVideoElement>(null);
 
-  // Default fallback video
   const [videoUrl, setVideoUrl] = useState<string>('https://res.cloudinary.com/dzi2p0pqa/video/upload/v1768965559/c7q4e37io3ahtjscooxx.mp4');
+  const [alliances, setAlliances] = useState<LandingConfigItem[]>([]);
 
-  // Fetch video URL from DB
+  // Fetch content from DB
   useEffect(() => {
-    const fetchVideoUrl = async () => {
+    const fetchContent = async () => {
       try {
-        const url = await contentService.getLandingConfig('hero_video_url');
-        console.log('Hero Video URL from DB:', url);
-        if (url) {
-          setVideoUrl(url);
-        } else {
-          // Fallback to default if DB is empty
-          setVideoUrl('https://res.cloudinary.com/do1mvhvms/video/upload/v1767786925/1_qlrdln.mp4');
+        const configs = await contentService.getLandingConfigs();
+
+        // Find video
+        const videoConfig = configs.find(c => c.key === 'hero_video_url');
+        if (videoConfig?.value) {
+          setVideoUrl(videoConfig.value);
         }
+
+        // Find alliances/logos
+        const allianceConfigs = configs.filter(c =>
+          c.key.startsWith('logo_') || c.key.startsWith('alliance_')
+        );
+        setAlliances(allianceConfigs);
+
       } catch (error) {
-        console.error('Error fetching hero video url:', error);
-        // Fallback on error
-        setVideoUrl('https://res.cloudinary.com/do1mvhvms/video/upload/v1767786925/1_qlrdln.mp4');
+        console.error('Error fetching landing content:', error);
       }
     };
-    fetchVideoUrl();
+    fetchContent();
   }, []);
+
 
   const [currentStep, setCurrentStep] = useState(0);
   const [showDescription, setShowDescription] = useState(false);
@@ -287,6 +292,7 @@ export function Hero({ disableAnimations = false }: HeroProps) {
 
                 <div className="relative w-full h-full rounded-full overflow-hidden bg-[#83A98A] shadow-2xl ring-8 ring-white">
                   <video
+                    key={videoUrl}
                     ref={videoRef}
                     className="w-full h-full object-cover scale-100"
                     style={{ objectPosition: 'center center' }}
@@ -368,50 +374,33 @@ export function Hero({ disableAnimations = false }: HeroProps) {
             aria-hidden="true"
           />
           <div className="relative overflow-hidden">
-            <div className="flex items-center animate-scroll-smooth py-4 gap-12 md:gap-16">
-              {[...Array(6)].map((_, setIndex) => (
-                <div
-                  key={setIndex}
-                  className="flex items-center gap-8 md:gap-10 flex-shrink-0"
-                >
-                  <div className="relative h-6 w-20 md:h-8 md:w-24 lg:h-10 lg:w-28 flex-shrink-0 grayscale hover:grayscale-0 transition-all duration-300 opacity-60 hover:opacity-100">
+            <div className="flex items-center animate-scroll py-4 gap-8 md:gap-10 w-max">
+              {alliances.length > 0 ? (
+                // Seamless Loop: Render the list multiple times (even number) to ensure the total width is large enough.
+                // We repeat 12 times. The animation 'animate-scroll' moves -50% (shifting 6 sets).
+                // As long as 6 sets are wider than the screen, the loop is invisible.
+                Array(12).fill(alliances).flat().map((alliance, index) => (
+                  <div
+                    // Use index in key because we have duplicates
+                    key={`${index}-${alliance.key}`}
+                    className="relative h-6 w-20 md:h-8 md:w-24 lg:h-10 lg:w-28 flex-shrink-0 grayscale hover:grayscale-0 transition-all duration-300 opacity-60 hover:opacity-100"
+                    title={alliance.description || ''}
+                  >
                     <Image
-                      src="https://res.cloudinary.com/do1mvhvms/image/upload/v1767786402/logo_almia_wbemsv.png"
-                      alt=""
+                      src={alliance.value}
+                      alt={alliance.description || "Alianza"}
                       fill
                       className="object-contain"
                       sizes="(max-width: 768px) 80px, (max-width: 1024px) 96px, 112px"
                     />
                   </div>
-                  <div className="relative h-10 w-28 md:h-12 md:w-32 lg:h-14 lg:w-36 flex-shrink-0 grayscale hover:grayscale-0 transition-all duration-300 opacity-60 hover:opacity-100">
-                    <Image
-                      src="https://res.cloudinary.com/do1mvhvms/image/upload/v1767786403/logo_daste_tla5iz.png"
-                      alt=""
-                      fill
-                      className="object-contain"
-                      sizes="(max-width: 768px) 112px, (max-width: 1024px) 128px, 144px"
-                    />
-                  </div>
-                  <div className="relative h-10 w-28 md:h-12 md:w-32 lg:h-14 lg:w-36 flex-shrink-0 grayscale hover:grayscale-0 transition-all duration-300 opacity-60 hover:opacity-100">
-                    <Image
-                      src="https://res.cloudinary.com/do1mvhvms/image/upload/v1767786402/logo_educatics_jqsbtn.png"
-                      alt=""
-                      fill
-                      className="object-contain"
-                      sizes="(max-width: 768px) 112px, (max-width: 1024px) 128px, 144px"
-                    />
-                  </div>
-                  <div className="relative h-10 w-28 md:h-12 md:w-32 lg:h-14 lg:w-36 flex-shrink-0 grayscale hover:grayscale-0 transition-all duration-300 opacity-60 hover:opacity-100">
-                    <Image
-                      src="https://res.cloudinary.com/do1mvhvms/image/upload/v1767786803/WhatsApp_Image_2026-01-06_at_22.54.25_efd4tc.jpg"
-                      alt="ParqueTe"
-                      fill
-                      className="object-contain"
-                      sizes="(max-width: 768px) 112px, (max-width: 1024px) 128px, 144px"
-                    />
-                  </div>
+                ))
+              ) : (
+                // Skeleton loading state or empty
+                <div className="flex items-center justify-center w-full h-10">
+                  <span className="text-gray-400 text-sm">Cargando alianzas...</span>
                 </div>
-              ))}
+              )}
             </div>
           </div>
         </div>

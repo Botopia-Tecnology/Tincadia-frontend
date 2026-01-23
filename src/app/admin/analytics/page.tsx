@@ -23,15 +23,19 @@ interface DashboardStats {
     debug?: any;
 }
 
+import { DateRangeSelector } from '@/components/admin/DateRangeSelector';
+
 export default function AnalyticsPage() {
     const [analyticsData, setAnalyticsData] = useState<any[]>([]);
     const [stats, setStats] = useState<DashboardStats | null>(null);
     const [loading, setLoading] = useState(true);
+    const [dateRange, setDateRange] = useState('-7d');
 
     useEffect(() => {
         const fetchAnalytics = async () => {
+            setLoading(true);
             try {
-                const res = await fetch('/api/admin/analytics');
+                const res = await fetch(`/api/admin/analytics?from=${dateRange}`);
                 if (res.ok) {
                     const data = await res.json();
                     setStats(data);
@@ -49,7 +53,7 @@ export default function AnalyticsPage() {
             }
         };
         fetchAnalytics();
-    }, []);
+    }, [dateRange]);
 
     const formatDuration = (seconds?: number) => {
         if (seconds === undefined || seconds === null) return '0m 0s';
@@ -60,25 +64,31 @@ export default function AnalyticsPage() {
 
     return (
         <div className="p-6 max-w-7xl mx-auto space-y-8">
-            <div className="flex justify-between items-center">
+            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
                 <div className="flex items-center gap-3">
                     <div className="p-2 bg-indigo-500/10 rounded-lg">
                         <BarChart3 className="w-6 h-6 text-indigo-500" />
                     </div>
                     <div>
                         <h1 className="text-2xl font-bold text-white">Business Intelligence</h1>
-                        <p className="text-slate-400 text-sm">Visión completa del rendimiento del negocio (7 días)</p>
+                        <p className="text-slate-400 text-sm">Visión completa del rendimiento del negocio</p>
                     </div>
                 </div>
-                <a
-                    href={`${POSTHOG_HOST}/project/${POSTHOG_PROJECT_ID}`}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="flex items-center gap-2 px-4 py-2 bg-indigo-600 text-white rounded-xl hover:bg-indigo-700 transition-colors text-sm font-medium shadow-lg shadow-indigo-500/20"
-                >
-                    <ExternalLink className="w-4 h-4" />
-                    PostHog Avanzado
-                </a>
+
+                <div className="flex items-center gap-3">
+                    <DateRangeSelector value={dateRange} onChange={setDateRange} />
+
+                    <a
+                        href={`${POSTHOG_HOST}/project/${POSTHOG_PROJECT_ID}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="flex items-center gap-2 px-4 py-2 bg-indigo-600 text-white rounded-xl hover:bg-indigo-700 transition-colors text-sm font-medium shadow-lg shadow-indigo-500/20"
+                    >
+                        <ExternalLink className="w-4 h-4" />
+                        <span className="hidden sm:inline">PostHog Avanzado</span>
+                        <span className="sm:hidden">PostHog</span>
+                    </a>
+                </div>
             </div>
 
             {/* KPI Grid */}
