@@ -286,7 +286,27 @@ export const contentService = {
             return null;
         }
     },
+
+    /**
+     * Get all landing configurations
+     */
+    getLandingConfigs: async (): Promise<LandingConfigItem[]> => {
+        try {
+            const response = await fetch(buildUrl(CONTENT_ENDPOINTS.LANDING_CONFIG));
+            if (!response.ok) throw new Error('Failed to fetch landing configs');
+            return await response.json();
+        } catch (error) {
+            console.error('Error fetching landing configs:', error);
+            return [];
+        }
+    },
 };
+
+export interface LandingConfigItem {
+    key: string;
+    value: string;
+    description?: string;
+}
 
 // ===========================================
 // Pricing Plans Interface & Service

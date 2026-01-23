@@ -4,12 +4,35 @@ import { useState, useEffect, useRef } from 'react';
 import Image from 'next/image';
 import { CardBody, CardContainer, CardItem } from '@/components/ui/3d-card';
 import { useAccessibilityContext } from '@/contexts/AccessibilityContext';
+import { contentService } from '@/services/content.service';
 
 export function RegionalMap() {
     const { state } = useAccessibilityContext();
     const { darkMode } = state;
     const sectionRef = useRef<HTMLElement>(null);
     const [scrollProgress, setScrollProgress] = useState(0);
+    const [mapImages, setMapImages] = useState({
+        light: 'https://res.cloudinary.com/do1mvhvms/image/upload/v1767786404/world_map_aucnfk.png',
+        dark: 'https://res.cloudinary.com/do1mvhvms/image/upload/v1767786404/world_map_dark_tgfm59.png'
+    });
+
+    useEffect(() => {
+        const fetchMaps = async () => {
+            try {
+                const configs = await contentService.getLandingConfigs();
+                const lightMap = configs.find(c => c.key === 'world_map_light')?.value;
+                const darkMap = configs.find(c => c.key === 'world_map_dark')?.value;
+
+                setMapImages(prev => ({
+                    light: lightMap || prev.light,
+                    dark: darkMap || prev.dark
+                }));
+            } catch (error) {
+                console.error('Error fetching map images:', error);
+            }
+        };
+        fetchMaps();
+    }, []);
 
     useEffect(() => {
         const handleScroll = () => {
@@ -74,7 +97,7 @@ export function RegionalMap() {
                             }}
                         >
                             <Image
-                                src={darkMode ? "https://res.cloudinary.com/do1mvhvms/image/upload/v1767786404/world_map_dark_tgfm59.png" : "https://res.cloudinary.com/do1mvhvms/image/upload/v1767786404/world_map_aucnfk.png"}
+                                src={darkMode ? mapImages.dark : mapImages.light}
                                 alt="World map"
                                 fill
                                 className="object-contain drop-shadow-2xl"

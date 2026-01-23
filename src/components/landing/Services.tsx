@@ -32,8 +32,8 @@ export function Services() {
       title: t('services.signLanguage.title'),
       subtitle: t('services.signLanguage.subtitle'),
       description: t('services.signLanguage.description'),
-      primaryAction: { text: t('services.signLanguage.primaryAction'), href: '#agendar' },
-      secondaryAction: { text: t('services.signLanguage.secondaryAction'), href: '#info-clases' },
+      primaryAction: { text: t('services.signLanguage.primaryAction'), href: '/cursos' },
+      secondaryAction: { text: t('services.signLanguage.secondaryAction'), href: '/cursos' },
       backgroundImage: config['service_1_bg'] || '',
     },
     {
@@ -43,8 +43,8 @@ export function Services() {
       title: t('services.translator.title'),
       subtitle: t('services.translator.subtitle'),
       description: t('services.translator.description'),
-      primaryAction: { text: t('services.translator.primaryAction'), href: '#probar-traductor' },
-      secondaryAction: { text: t('services.translator.secondaryAction'), href: '#demo' },
+      primaryAction: { text: t('services.translator.primaryAction'), href: '/descargar' },
+      secondaryAction: { text: t('services.translator.secondaryAction'), href: '/descargar' },
       backgroundImage: config['service_2_bg'] || '',
     },
     {
@@ -54,8 +54,8 @@ export function Services() {
       title: t('services.writingAssistant.title'),
       subtitle: t('services.writingAssistant.subtitle'),
       description: t('services.writingAssistant.description'),
-      primaryAction: { text: t('services.writingAssistant.primaryAction'), href: '#usar-asistente' },
-      secondaryAction: { text: t('services.writingAssistant.secondaryAction'), href: '#como-funciona' },
+      primaryAction: { text: t('services.writingAssistant.primaryAction'), href: '/descargar' },
+      secondaryAction: { text: t('services.writingAssistant.secondaryAction'), href: '/descargar' },
       backgroundImage: config['service_3_bg'] || '',
     },
   ], [t, config]);

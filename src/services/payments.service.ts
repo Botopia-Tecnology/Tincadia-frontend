@@ -40,9 +40,12 @@ export interface InitiatePaymentRequest {
     customerName?: string;
     customerPhone?: string;
     customerPhonePrefix?: string;
+    customerId?: string;
     customerLegalId?: string;
     customerLegalIdType?: string;
     userId?: string;
+    productType?: string;
+    productId?: string;
 }
 
 export interface InitiatePaymentResponse {

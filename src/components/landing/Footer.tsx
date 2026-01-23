@@ -138,7 +138,16 @@ export function Footer() {
           {/* Copyright */}
           <div className="mt-8 pt-8 border-t border-gray-200 w-full">
             <p className="text-xs sm:text-sm text-gray-600 text-center">
-              {t('footer.copyright')}
+              {t('footer.copyright').replace('Powered By Botopia Technology S.A.S', '')}{' '}
+              <a
+                href="https://www.botopia.tech/es"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="hover:text-[#83A98A] transition-colors"
+                aria-label="Botopia Technology"
+              >
+                {t('footer.poweredBy').includes('footer.') ? 'Powered By Botopia Technology S.A.S' : t('footer.poweredBy')}
+              </a>
             </p>
           </div>
         </div>

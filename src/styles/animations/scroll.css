@@ -20,11 +20,11 @@
 }
 
 .animate-scroll {
-  animation: scroll 20s linear infinite;
+  animation: scroll 60s linear infinite;
 }
 
 .animate-scroll-smooth {
-  animation: scroll-smooth 20s linear infinite;
+  animation: scroll-smooth 60s linear infinite;
   will-change: transform;
 }
 

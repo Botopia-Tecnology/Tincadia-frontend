@@ -131,6 +131,9 @@ export const CONTENT_ENDPOINTS = {
     UPDATE_PRICING_PLAN: '/content/pricing/plans/:id',
     /** DELETE - Delete pricing plan (Admin) */
     DELETE_PRICING_PLAN: '/content/pricing/plans/:id',
+
+    /** GET - Get all landing page configurations */
+    LANDING_CONFIG: '/content/landing-config',
 } as const;
 
 /**

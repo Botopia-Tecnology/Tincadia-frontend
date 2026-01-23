@@ -3,6 +3,7 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
 import Image from 'next/image';
 import { useTranslation } from '@/hooks/useTranslation';
+import { contentService } from '@/services/content.service';
 
 export function DownloadAppSection() {
     const t = useTranslation();
@@ -10,6 +11,28 @@ export function DownloadAppSection() {
     const [animationProgress, setAnimationProgress] = useState(0);
     const [isLocked, setIsLocked] = useState(false);
     const [isMobile, setIsMobile] = useState(false); // Default to false for SSR
+    const [qrCodes, setQrCodes] = useState({
+        generic: 'https://res.cloudinary.com/do1mvhvms/image/upload/v1767786403/qr-code_bzuhho.png',
+        appstore: 'https://res.cloudinary.com/do1mvhvms/image/upload/v1767786403/qr-code-appstore_tmz5qk.png'
+    });
+
+    useEffect(() => {
+        const fetchQrCodes = async () => {
+            try {
+                const configs = await contentService.getLandingConfigs();
+                const generic = configs.find(c => c.key === 'qr_code_generic')?.value;
+                const appstore = configs.find(c => c.key === 'qr_code_appstore')?.value;
+
+                setQrCodes(prev => ({
+                    generic: generic || prev.generic,
+                    appstore: appstore || prev.appstore
+                }));
+            } catch (error) {
+                console.error('Error fetching QR codes:', error);
+            }
+        };
+        fetchQrCodes();
+    }, []);
 
     useEffect(() => {
         const checkMobile = () => {
@@ -177,7 +200,7 @@ export function DownloadAppSection() {
                                     style={{ background: 'linear-gradient(to bottom, rgba(59, 130, 246, 0.8), rgba(59, 130, 246, 0))', boxShadow: '0 0 60px 25px rgba(59, 130, 246, 0.5)' }} />}
 
                                 <div className="relative w-28 h-28 sm:w-32 sm:h-32 lg:w-44 lg:h-44 rounded-xl overflow-hidden shadow-xl bg-white p-2 z-10">
-                                    <Image src="https://res.cloudinary.com/do1mvhvms/image/upload/v1767786403/qr-code_bzuhho.png" alt={t('download.scanToDownload')} fill className="object-contain" unoptimized />
+                                    <Image src={qrCodes.generic} alt={t('download.scanToDownload')} fill className="object-contain" unoptimized />
                                 </div>
                             </div>
                             <div className="relative">
@@ -185,7 +208,7 @@ export function DownloadAppSection() {
                                     style={{ background: 'linear-gradient(to bottom, rgba(59, 130, 246, 0.8), rgba(59, 130, 246, 0))', boxShadow: '0 0 60px 25px rgba(59, 130, 246, 0.5)' }} />}
 
                                 <div className="relative w-28 h-28 sm:w-32 sm:h-32 lg:w-44 lg:h-44 rounded-xl overflow-hidden shadow-xl bg-white p-2 z-10">
-                                    <Image src="https://res.cloudinary.com/do1mvhvms/image/upload/v1767786403/qr-code-appstore_tmz5qk.png" alt={t('download.scanToDownload')} fill className="object-contain" unoptimized />
+                                    <Image src={qrCodes.appstore} alt={t('download.scanToDownload')} fill className="object-contain" unoptimized />
                                 </div>
                             </div>
                         </div>
