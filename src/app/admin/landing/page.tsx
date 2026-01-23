@@ -613,6 +613,8 @@ interface CompanyInfo {
     description: string;
     imageUrl: string;
     link?: string;
+    industry?: string;
+    tags?: string[];
 }
 
 function CompanyListSection({ items, onSave, saving }: {
@@ -631,12 +633,15 @@ function CompanyListSection({ items, onSave, saving }: {
 
     const [companies, setCompanies] = useState<CompanyInfo[]>([]);
     const [showForm, setShowForm] = useState(false);
+    const [editingId, setEditingId] = useState<string | null>(null);
     const [newItem, setNewItem] = useState<CompanyInfo>({
         id: '',
         name: '',
         description: '',
         imageUrl: '',
-        link: ''
+        link: '',
+        industry: '',
+        tags: []
     });
 
     useEffect(() => {
@@ -655,16 +660,48 @@ function CompanyListSection({ items, onSave, saving }: {
         });
     };
 
-    const handleCreate = () => {
+    const handleSaveCompany = () => {
         if (!newItem.name || !newItem.description) return;
-        const company: CompanyInfo = {
-            ...newItem,
-            id: crypto.randomUUID()
-        };
-        const updated = [...companies, company];
+
+        let updated: CompanyInfo[];
+
+        if (editingId) {
+            // Update existing
+            updated = companies.map(c =>
+                c.id === editingId ? { ...newItem, id: editingId } : c
+            );
+        } else {
+            // Create new
+            const company: CompanyInfo = {
+                ...newItem,
+                id: crypto.randomUUID()
+            };
+            updated = [...companies, company];
+        }
+
         setCompanies(updated);
         handleSaveList(updated);
-        setNewItem({ id: '', name: '', description: '', imageUrl: '', link: '' });
+
+        // Reset
+        setNewItem({ id: '', name: '', description: '', imageUrl: '', link: '', industry: '', tags: [] });
+        setEditingId(null);
+        setShowForm(false);
+    };
+
+    const handleEdit = (company: CompanyInfo) => {
+        setNewItem({
+            ...company,
+            id: company.id,
+            industry: company.industry || '',
+            tags: company.tags || []
+        });
+        setEditingId(company.id);
+        setShowForm(true);
+    };
+
+    const handleCancel = () => {
+        setNewItem({ id: '', name: '', description: '', imageUrl: '', link: '', industry: '', tags: [] });
+        setEditingId(null);
         setShowForm(false);
     };
 
@@ -689,7 +726,10 @@ function CompanyListSection({ items, onSave, saving }: {
                     <p className="text-sm text-blue-300/60 mt-1">Gestiona las empresas que aparecen en "Conoce tus posibilidades"</p>
                 </div>
                 <button
-                    onClick={() => setShowForm(!showForm)}
+                    onClick={() => {
+                        handleCancel();
+                        setShowForm(!showForm);
+                    }}
                     className="px-4 py-2 rounded-lg text-sm font-medium text-white bg-blue-600 hover:bg-blue-500 shadow-lg shadow-blue-900/20 flex items-center gap-2 transition-all"
                 >
                     <Plus className="w-4 h-4" /> Agregar Empresa
@@ -698,7 +738,9 @@ function CompanyListSection({ items, onSave, saving }: {
 
             {showForm && (
                 <div className="bg-slate-800/50 p-6 rounded-xl border border-white/10 mb-6 backdrop-blur-sm animate-in fade-in slide-in-from-top-4">
-                    <h3 className="font-semibold mb-4 text-white text-lg">Nueva Empresa</h3>
+                    <h3 className="font-semibold mb-4 text-white text-lg">
+                        {editingId ? 'Editar Empresa' : 'Nueva Empresa'}
+                    </h3>
                     <div className="grid md:grid-cols-2 gap-6">
                         <div className="space-y-4">
                             <input
@@ -713,6 +755,20 @@ function CompanyListSection({ items, onSave, saving }: {
                                 placeholder="Enlace (opcional)"
                                 value={newItem.link}
                                 onChange={(e) => setNewItem({ ...newItem, link: e.target.value })}
+                                className="w-full rounded-lg bg-slate-900/50 border border-white/10 p-3 text-white placeholder:text-slate-500 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all outline-none"
+                            />
+                            <input
+                                type="text"
+                                placeholder="Industria (ej. Tecnología & Servicios)"
+                                value={newItem.industry || ''}
+                                onChange={(e) => setNewItem({ ...newItem, industry: e.target.value })}
+                                className="w-full rounded-lg bg-slate-900/50 border border-white/10 p-3 text-white placeholder:text-slate-500 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all outline-none"
+                            />
+                            <input
+                                type="text"
+                                placeholder="Etiquetas (separadas por coma)"
+                                value={newItem.tags?.join(', ') || ''}
+                                onChange={(e) => setNewItem({ ...newItem, tags: e.target.value.split(',').map(s => s.trim()).filter(Boolean) })}
                                 className="w-full rounded-lg bg-slate-900/50 border border-white/10 p-3 text-white placeholder:text-slate-500 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all outline-none"
                             />
                             <textarea
@@ -733,12 +789,18 @@ function CompanyListSection({ items, onSave, saving }: {
                             />
                         </div>
                     </div>
-                    <div className="flex justify-end pt-4 border-t border-white/5 mt-4">
+                    <div className="flex justify-end pt-4 border-t border-white/5 mt-4 gap-3">
                         <button
-                            onClick={handleCreate}
+                            onClick={handleCancel}
+                            className="px-6 py-2 rounded-lg text-sm font-medium text-white bg-slate-700 hover:bg-slate-600 transition-colors"
+                        >
+                            Cancelar
+                        </button>
+                        <button
+                            onClick={handleSaveCompany}
                             className="px-6 py-2 rounded-lg text-sm font-medium text-white bg-emerald-600 hover:bg-emerald-500 transition-colors"
                         >
-                            Guardar Empresa
+                            {editingId ? 'Guardar Cambios' : 'Crear Empresa'}
                         </button>
                     </div>
                 </div>
@@ -752,7 +814,13 @@ function CompanyListSection({ items, onSave, saving }: {
                 ) : companies.map((company) => (
                     <div key={company.id} className="bg-slate-800/40 p-5 rounded-xl border border-white/5 hover:border-white/10 transition-all flex flex-col gap-4 group hover:bg-slate-800/60 relative overflow-hidden">
 
-                        <div className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity z-10">
+                        <div className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity z-10 flex gap-2">
+                            <button
+                                onClick={() => handleEdit(company)}
+                                className="p-2 rounded-full bg-blue-500/20 text-blue-400 hover:bg-blue-500 hover:text-white transition-colors"
+                            >
+                                <Wrench className="w-4 h-4" />
+                            </button>
                             <button
                                 onClick={() => handleDelete(company.id)}
                                 className="p-2 rounded-full bg-red-500/20 text-red-400 hover:bg-red-500 hover:text-white transition-colors"
