@@ -279,7 +279,9 @@ export const contentService = {
             // Let's assume standard path /content/landing-config/:key based on my gateway change.
             const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/content/landing-config/${key}`);
             if (!response.ok) return null;
-            const data = await response.json();
+            const text = await response.text();
+            if (!text) return null;
+            const data = JSON.parse(text);
             return data ? data.value : null;
         } catch (error) {
             console.error(`Error fetching landing config ${key}:`, error);
