@@ -322,7 +322,7 @@ export default function FinancePage() {
                                             {/* Plan Column */}
                                             <td className="px-6 py-5">
                                                 <span className="text-slate-300 text-sm font-medium px-2.5 py-1 rounded bg-white/5 border border-white/5">
-                                                    {(item.plan || item.plan?.name || 'Standard').replace(/_/g, ' ')}
+                                                    {((typeof item.plan === 'string' ? item.plan : item.plan?.name) || 'Standard').replace(/_/g, ' ')}
                                                 </span>
                                             </td>
 
