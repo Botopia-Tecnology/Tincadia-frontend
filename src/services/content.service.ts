@@ -331,6 +331,8 @@ export interface PricingPlan {
     is_free: boolean;
     // Billing interval in months: 1=monthly, 2=bimonthly, 3=quarterly, 6=semiannual, 12=annual
     billing_interval_months?: number;
+    // Trial period in days
+    trial_period_days?: number;
     order: number;
 }
 
