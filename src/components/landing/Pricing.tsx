@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
-import { Users, CreditCard, Crown, Check, X, Loader2, Shield, ChevronRight, Lock, Info, PiggyBank } from 'lucide-react';
+import { Users, CreditCard, Crown, Check, X, Loader2, Shield, ChevronRight, Lock, Info, PiggyBank, Gift, Clock } from 'lucide-react';
 import { useTranslation } from '@/hooks/useTranslation';
 import { DOCUMENT_TYPES } from '@/types/auth.types';
 import { useAuth } from '@/contexts/AuthContext';
@@ -27,6 +27,7 @@ interface Plan {
     excludes: string[];
     planType?: PaymentPlan;
     isFree?: boolean;
+    trialDays?: number;
 }
 
 // Iconos por tipo de plan (memoizado)
@@ -234,6 +235,7 @@ export function Pricing() {
                         excludes: Array.isArray(p.excludes) ? p.excludes : [],
                         planType: p.plan_type as PaymentPlan,
                         isFree: p.is_free || p.price_monthly === 'Gratis',
+                        trialDays: p.trial_period_days || 0,
                     };
 
                     if (p.type === 'personal') apiPlans.personal.push(mapped);
@@ -312,13 +314,37 @@ export function Pricing() {
                             </button>
 
                             <div className="text-center mb-8">
-                                <div className="inline-flex p-3 rounded-full bg-red-50 text-red-500 mb-4 ring-1 ring-red-100">
-                                    <Lock className="w-6 h-6" />
-                                </div>
-                                <h3 className="text-xl font-bold text-gray-900">Añade un método de pago</h3>
-                                <p className="text-sm text-gray-500 mt-3 max-w-xs mx-auto leading-relaxed">
-                                    Configura tu tarjeta para asegurar la activación inmediata y la renovación automática de tu plan Premium.
-                                </p>
+                                {(() => {
+                                    const selectedPlan = [...plans.personal, ...plans.empresa].find(p => p.id === processingPlan);
+                                    const hasTrial = selectedPlan?.trialDays && selectedPlan.trialDays > 0;
+                                    return (
+                                        <>
+                                            <div className={`inline-flex p-3 rounded-full mb-4 ring-1 ${hasTrial
+                                                    ? 'bg-emerald-50 text-emerald-600 ring-emerald-100'
+                                                    : 'bg-red-50 text-red-500 ring-red-100'
+                                                }`}>
+                                                {hasTrial ? <Gift className="w-6 h-6" /> : <Lock className="w-6 h-6" />}
+                                            </div>
+                                            <h3 className="text-xl font-bold text-gray-900">
+                                                {hasTrial ? '¡Prueba gratis!' : 'Añade un método de pago'}
+                                            </h3>
+                                            {hasTrial && (
+                                                <div className="mt-3 inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-emerald-50 border border-emerald-200">
+                                                    <Clock className="w-3.5 h-3.5 text-emerald-600" />
+                                                    <span className="text-sm font-semibold text-emerald-700">
+                                                        {selectedPlan.trialDays} días de prueba gratuita
+                                                    </span>
+                                                </div>
+                                            )}
+                                            <p className="text-sm text-gray-500 mt-3 max-w-xs mx-auto leading-relaxed">
+                                                {hasTrial
+                                                    ? `No se realizará ningún cobro hoy. Tu prueba gratuita de ${selectedPlan!.trialDays} días comenzará de inmediato. Solo se cobrará al finalizar el periodo de prueba.`
+                                                    : 'Configura tu tarjeta para asegurar la activación inmediata y la renovación automática de tu plan Premium.'
+                                                }
+                                            </p>
+                                        </>
+                                    );
+                                })()}
                             </div>
 
                             <div className="space-y-4">
@@ -495,10 +521,23 @@ export function Pricing() {
                             return (
                                 <article
                                     key={plan.id}
-                                    className="w-full max-w-sm bg-gray-800 rounded-2xl p-8 border border-gray-700 hover:border-[#83A98A] transition-all hover:shadow-2xl hover:shadow-[#83A98A]/20"
+                                    className={`w-full max-w-sm bg-gray-800 rounded-2xl p-8 border transition-all hover:shadow-2xl hover:shadow-[#83A98A]/20 relative ${plan.trialDays && plan.trialDays > 0
+                                            ? 'border-emerald-500/50 hover:border-emerald-400'
+                                            : 'border-gray-700 hover:border-[#83A98A]'
+                                        }`}
                                 >
+                                    {/* Trial Badge */}
+                                    {plan.trialDays && plan.trialDays > 0 && (
+                                        <div className="absolute -top-3 left-1/2 -translate-x-1/2 z-10">
+                                            <div className="flex items-center gap-1.5 px-4 py-1.5 rounded-full bg-gradient-to-r from-emerald-500 to-teal-500 text-white text-xs font-bold shadow-lg shadow-emerald-500/30 whitespace-nowrap">
+                                                <Gift className="w-3.5 h-3.5" />
+                                                🎁 {plan.trialDays} días gratis
+                                            </div>
+                                        </div>
+                                    )}
+
                                     {/* Header del plan */}
-                                    <div className="mb-6">
+                                    <div className={`mb-6 ${plan.trialDays && plan.trialDays > 0 ? 'mt-2' : ''}`}>
                                         <h3 className="text-2xl font-bold text-white mb-2">{plan.name}</h3>
                                         <div className="mb-4">
                                             {plan.isFree ? (
@@ -511,6 +550,11 @@ export function Pricing() {
                                                     <span className="text-gray-400 ml-2">
                                                         {billingCycle === 'anual' ? t('pricing.perYear') : t('pricing.perMonth')}
                                                     </span>
+                                                    {plan.trialDays && plan.trialDays > 0 && (
+                                                        <p className="text-emerald-400 text-sm mt-1 font-medium">
+                                                            Después de {plan.trialDays} días de prueba gratuita
+                                                        </p>
+                                                    )}
                                                 </div>
                                             )}
                                         </div>
@@ -542,7 +586,10 @@ export function Pricing() {
                                         </button>
                                         {!plan.isFree && (
                                             <p className="text-center text-[10px] text-gray-400 mt-2">
-                                                Cancela cuando quieras. Pago seguro SSL.
+                                                {plan.trialDays && plan.trialDays > 0
+                                                    ? `Sin cobro hasta que terminen tus ${plan.trialDays} días de prueba. Cancela cuando quieras.`
+                                                    : 'Cancela cuando quieras. Pago seguro SSL.'
+                                                }
                                             </p>
                                         )}
                                     </div>
