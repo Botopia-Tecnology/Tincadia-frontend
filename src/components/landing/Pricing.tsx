@@ -320,8 +320,8 @@ export function Pricing() {
                                     return (
                                         <>
                                             <div className={`inline-flex p-3 rounded-full mb-4 ring-1 ${hasTrial
-                                                    ? 'bg-emerald-50 text-emerald-600 ring-emerald-100'
-                                                    : 'bg-red-50 text-red-500 ring-red-100'
+                                                ? 'bg-emerald-50 text-emerald-600 ring-emerald-100'
+                                                : 'bg-red-50 text-red-500 ring-red-100'
                                                 }`}>
                                                 {hasTrial ? <Gift className="w-6 h-6" /> : <Lock className="w-6 h-6" />}
                                             </div>
@@ -522,8 +522,8 @@ export function Pricing() {
                                 <article
                                     key={plan.id}
                                     className={`w-full max-w-sm bg-gray-800 rounded-2xl p-8 border transition-all hover:shadow-2xl hover:shadow-[#83A98A]/20 relative ${plan.trialDays && plan.trialDays > 0
-                                            ? 'border-emerald-500/50 hover:border-emerald-400'
-                                            : 'border-gray-700 hover:border-[#83A98A]'
+                                        ? 'border-emerald-500/50 hover:border-emerald-400'
+                                        : 'border-gray-700 hover:border-[#83A98A]'
                                         }`}
                                 >
                                     {/* Trial Badge */}
@@ -531,7 +531,7 @@ export function Pricing() {
                                         <div className="absolute -top-3 left-1/2 -translate-x-1/2 z-10">
                                             <div className="flex items-center gap-1.5 px-4 py-1.5 rounded-full bg-gradient-to-r from-emerald-500 to-teal-500 text-white text-xs font-bold shadow-lg shadow-emerald-500/30 whitespace-nowrap">
                                                 <Gift className="w-3.5 h-3.5" />
-                                                🎁 {plan.trialDays} días gratis
+                                                {plan.trialDays} días gratis
                                             </div>
                                         </div>
                                     )}
