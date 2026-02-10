@@ -45,6 +45,13 @@ export default function PricingAdminPage() {
         billing_interval_months: 1,
         trial_period_days: 0,
         order: plans.filter(p => p.type === activeTab).length + 1,
+        features: {
+            transcription_limit: 0, // 0 = blocked by default, -1 = unlimited
+            correction_limit: 0,
+            lsc_enabled: false,
+            interpreter_enabled: false,
+            courses_enabled: false,
+        },
     });
 
     const fetchPlans = async () => {
@@ -142,6 +149,12 @@ export default function PricingAdminPage() {
         }
     };
 
+    const updateFeature = (key: string, value: any) => {
+        if (!editingPlan) return;
+        const features = { ...(editingPlan.features || {}), [key]: value };
+        setEditingPlan({ ...editingPlan, features });
+    };
+
     const removeArrayItem = (field: 'includes' | 'excludes', index: number) => {
         if (editingPlan) {
             const newArray = [...editingPlan[field]];
@@ -217,6 +230,7 @@ export default function PricingAdminPage() {
                                 updateArrayField={updateArrayField}
                                 addArrayItem={addArrayItem}
                                 removeArrayItem={removeArrayItem}
+                                updateFeature={updateFeature}
                                 onSave={handleSave}
                                 onCancel={handleCancelEdit}
                             />
@@ -240,6 +254,7 @@ export default function PricingAdminPage() {
                                         updateArrayField={updateArrayField}
                                         addArrayItem={addArrayItem}
                                         removeArrayItem={removeArrayItem}
+                                        updateFeature={updateFeature}
                                         onSave={handleSave}
                                         onCancel={handleCancelEdit}
                                     />
@@ -345,7 +360,7 @@ export default function PricingAdminPage() {
 }
 
 // Subcomponent for the toggle/edit form to keep the main component cleaner
-function EditingForm({ plan, updateField, updateArrayField, addArrayItem, removeArrayItem, onSave, onCancel }: any) {
+function EditingForm({ plan, updateField, updateArrayField, addArrayItem, removeArrayItem, updateFeature, onSave, onCancel }: any) {
     return (
         <div className="flex flex-col h-full space-y-5">
             <div className="grid grid-cols-2 gap-3">
@@ -463,6 +478,74 @@ function EditingForm({ plan, updateField, updateArrayField, addArrayItem, remove
                     className="w-full bg-slate-950/50 text-slate-300 p-2.5 rounded-xl border border-white/10 text-sm min-h-[60px] resize-none focus:border-blue-500/50 outline-none"
                     rows={2}
                 />
+            </div>
+
+            {/* Feature Limits & Flags */}
+            <div className="bg-slate-950/30 p-4 rounded-xl border border-white/5 space-y-4">
+                <div className="flex items-center gap-2">
+                    <Sparkles size={14} className="text-amber-400" />
+                    <label className="text-[10px] uppercase text-amber-400 font-bold tracking-wider">Límites y Funciones</label>
+                </div>
+
+                <div className="grid grid-cols-2 gap-4">
+                    <div>
+                        <label className="text-[10px] uppercase text-slate-500 font-bold tracking-wider mb-1 block">
+                            Límite Transcripción (Diario)
+                        </label>
+                        <input
+                            type="number"
+                            value={plan.features?.transcription_limit ?? 0}
+                            onChange={(e) => updateFeature('transcription_limit', parseInt(e.target.value))}
+                            className="w-full bg-slate-950/50 text-white p-2 rounded-lg border border-white/10 font-mono text-sm"
+                            placeholder="-1 = Ilimitado"
+                        />
+                        <span className="text-[10px] text-slate-500">-1 para ilimitado</span>
+                    </div>
+                    <div>
+                        <label className="text-[10px] uppercase text-slate-500 font-bold tracking-wider mb-1 block">
+                            Límite Corrección IA (Diario)
+                        </label>
+                        <input
+                            type="number"
+                            value={plan.features?.correction_limit ?? 0}
+                            onChange={(e) => updateFeature('correction_limit', parseInt(e.target.value))}
+                            className="w-full bg-slate-950/50 text-white p-2 rounded-lg border border-white/10 font-mono text-sm"
+                            placeholder="-1 = Ilimitado"
+                        />
+                        <span className="text-[10px] text-slate-500">-1 para ilimitado</span>
+                    </div>
+                </div>
+
+                <div className="space-y-2 pt-2 border-t border-white/5">
+                    <label className="flex items-center gap-2 text-sm text-slate-300 cursor-pointer select-none">
+                        <input
+                            type="checkbox"
+                            checked={plan.features?.lsc_enabled || false}
+                            onChange={(e) => updateFeature('lsc_enabled', e.target.checked)}
+                            className="w-4 h-4 rounded border-white/20 bg-slate-900 text-blue-500 focus:ring-blue-500 focus:ring-offset-slate-900"
+                        />
+                        <span>Habilitar Traducción LSC (Señas)</span>
+                    </label>
+
+                    <label className="flex items-center gap-2 text-sm text-slate-300 cursor-pointer select-none">
+                        <input
+                            type="checkbox"
+                            checked={plan.features?.interpreter_enabled || false}
+                            onChange={(e) => updateFeature('interpreter_enabled', e.target.checked)}
+                            className="w-4 h-4 rounded border-white/20 bg-slate-900 text-blue-500 focus:ring-blue-500 focus:ring-offset-slate-900"
+                        />
+                        <span>Habilitar Solicitud de Intérprete</span>
+                    </label>
+                    <label className="flex items-center gap-2 text-sm text-slate-300 cursor-pointer select-none">
+                        <input
+                            type="checkbox"
+                            checked={plan.features?.courses_enabled || false}
+                            onChange={(e) => updateFeature('courses_enabled', e.target.checked)}
+                            className="w-4 h-4 rounded border-white/20 bg-slate-900 text-blue-500 focus:ring-blue-500 focus:ring-offset-slate-900"
+                        />
+                        <span>Acceso a Cursos de Pago</span>
+                    </label>
+                </div>
             </div>
 
             {/* Features Editor */}

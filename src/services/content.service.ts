@@ -334,6 +334,14 @@ export interface PricingPlan {
     // Trial period in days
     trial_period_days?: number;
     order: number;
+    features?: {
+        transcription_limit?: number; // -1 for unlimited
+        correction_limit?: number;    // -1 for unlimited
+        lsc_enabled?: boolean;
+        interpreter_enabled?: boolean;
+        courses_enabled?: boolean;
+        [key: string]: any;
+    };
 }
 
 export const pricingService = {
