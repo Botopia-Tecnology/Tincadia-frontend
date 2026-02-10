@@ -43,6 +43,7 @@ export default function PricingAdminPage() {
         is_active: true,
         is_free: false,
         billing_interval_months: 1,
+        trial_period_days: 0,
         order: plans.filter(p => p.type === activeTab).length + 1,
     });
 
@@ -402,18 +403,33 @@ function EditingForm({ plan, updateField, updateArrayField, addArrayItem, remove
 
             {!plan.is_free && (
                 <div className="space-y-3 animate-in fade-in slide-in-from-top-2 duration-200">
-                    <div>
-                        <label className="text-[10px] uppercase text-slate-500 font-bold tracking-wider mb-1 block">Ciclo de Cobro</label>
-                        <select
-                            value={plan.billing_interval_months || 1}
-                            onChange={(e) => updateField('billing_interval_months', parseInt(e.target.value))}
-                            className="w-full bg-slate-950/50 text-slate-300 p-2 rounded-lg border border-white/10 text-sm"
-                        >
-                            <option value={1}>Mensual (1 mes)</option>
-                            <option value={12}>Anual (12 meses)</option>
-                            <option value={3}>Trimestral</option>
-                            <option value={6}>Semestral</option>
-                        </select>
+                    <div className="grid grid-cols-2 gap-3">
+                        <div>
+                            <label className="text-[10px] uppercase text-slate-500 font-bold tracking-wider mb-1 block">Ciclo de Cobro</label>
+                            <select
+                                value={plan.billing_interval_months || 1}
+                                onChange={(e) => updateField('billing_interval_months', parseInt(e.target.value))}
+                                className="w-full bg-slate-950/50 text-slate-300 p-2 rounded-lg border border-white/10 text-sm"
+                            >
+                                <option value={1}>Mensual (1 mes)</option>
+                                <option value={12}>Anual (12 meses)</option>
+                                <option value={3}>Trimestral</option>
+                                <option value={6}>Semestral</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label className="text-[10px] uppercase text-slate-500 font-bold tracking-wider mb-1 block">Periodo de Prueba</label>
+                            <select
+                                value={plan.trial_period_days || 0}
+                                onChange={(e) => updateField('trial_period_days', parseInt(e.target.value))}
+                                className="w-full bg-slate-950/50 text-slate-300 p-2 rounded-lg border border-white/10 text-sm"
+                            >
+                                <option value={0}>Sin prueba</option>
+                                <option value={3}>3 días</option>
+                                <option value={7}>7 días (1 semana)</option>
+                                <option value={30}>30 días (1 mes)</option>
+                            </select>
+                        </div>
                     </div>
 
                     <div className="grid grid-cols-2 gap-3">
