@@ -527,7 +527,7 @@ export function Pricing() {
                                         }`}
                                 >
                                     {/* Trial Badge */}
-                                    {plan.trialDays && plan.trialDays > 0 && (
+                                    {!!plan.trialDays && plan.trialDays > 0 && (
                                         <div className="absolute -top-3 left-1/2 -translate-x-1/2 z-10">
                                             <div className="flex items-center gap-1.5 px-4 py-1.5 rounded-full bg-gradient-to-r from-emerald-500 to-teal-500 text-white text-xs font-bold shadow-lg shadow-emerald-500/30 whitespace-nowrap">
                                                 <Gift className="w-3.5 h-3.5" />
@@ -550,7 +550,7 @@ export function Pricing() {
                                                     <span className="text-gray-400 ml-2">
                                                         {billingCycle === 'anual' ? t('pricing.perYear') : t('pricing.perMonth')}
                                                     </span>
-                                                    {plan.trialDays && plan.trialDays > 0 && (
+                                                    {!!plan.trialDays && plan.trialDays > 0 && (
                                                         <p className="text-emerald-400 text-sm mt-1 font-medium">
                                                             Después de {plan.trialDays} días de prueba gratuita
                                                         </p>
