@@ -55,6 +55,7 @@ export function Pricing() {
     const [isLoading, setIsLoading] = useState(true);
     const [processingPlan, setProcessingPlan] = useState<string | null>(null);
     const [error, setError] = useState<string | null>(null);
+    const [activeSubscriptionPlanId, setActiveSubscriptionPlanId] = useState<string | null>(null);
 
     const [showCardForm, setShowCardForm] = useState(false);
     const [currentPaymentData, setCurrentPaymentData] = useState<any>(null);
@@ -273,6 +274,28 @@ export function Pricing() {
         return () => { isMounted = false; };
     }, []);
 
+    // Fetch active subscription to gray out current plan
+    useEffect(() => {
+        if (!isAuthenticated || !user?.id) {
+            setActiveSubscriptionPlanId(null);
+            return;
+        }
+
+        const fetchSub = async () => {
+            try {
+                const sub = await paymentsService.getActiveSubscription(user.id);
+                if (sub?.planId) {
+                    setActiveSubscriptionPlanId(sub.planId);
+                }
+            } catch {
+                // No active subscription
+                setActiveSubscriptionPlanId(null);
+            }
+        };
+
+        fetchSub();
+    }, [isAuthenticated, user?.id]);
+
     // Planes actuales según tipo de usuario seleccionado
     const currentPlans = plans[userType];
 
@@ -297,11 +320,11 @@ export function Pricing() {
         <div className="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 py-12 px-4 sm:px-6 lg:px-8 relative">
             {/* Custom Credit Card Form Modal */}
             {showCardForm && currentPaymentData && (
-                <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm p-4 animate-in fade-in duration-200">
+                <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm p-4 animate-in fade-in duration-200 overflow-y-auto">
 
                     {/* Step 1: Method Selector (Netflix Style) */}
                     {paymentStep === 'selector' && (
-                        <div className="bg-white rounded-2xl max-w-lg w-full p-8 relative shadow-2xl animate-in zoom-in-95 duration-200 font-sans">
+                        <div className="bg-white rounded-2xl max-w-lg w-full p-8 relative shadow-2xl animate-in zoom-in-95 duration-200 font-sans my-auto max-h-[95vh] overflow-y-auto">
                             <button
                                 onClick={() => {
                                     setShowCardForm(false);
@@ -416,7 +439,7 @@ export function Pricing() {
 
                     {/* Step 2: Payment Form */}
                     {paymentStep === 'form' && (
-                        <div className="w-full max-w-4xl">
+                        <div className="w-full max-w-4xl my-auto max-h-[95vh] overflow-y-auto">
                             <CreditCardForm
                                 publicKey={currentPaymentData.publicKey}
                                 reference={currentPaymentData.reference}
@@ -517,6 +540,7 @@ export function Pricing() {
                         {currentPlans.map((plan) => {
                             const displayPrice = billingCycle === 'anual' && plan.priceAnnual ? plan.priceAnnual : plan.price;
                             const isProcessing = processingPlan === plan.id;
+                            const isCurrentPlan = isAuthenticated && activeSubscriptionPlanId === plan.id;
 
                             return (
                                 <article
@@ -527,7 +551,7 @@ export function Pricing() {
                                         }`}
                                 >
                                     {/* Trial Badge */}
-                                    {plan.trialDays && plan.trialDays > 0 && (
+                                    {!!plan.trialDays && plan.trialDays > 0 && (
                                         <div className="absolute -top-3 left-1/2 -translate-x-1/2 z-10">
                                             <div className="flex items-center gap-1.5 px-4 py-1.5 rounded-full bg-gradient-to-r from-emerald-500 to-teal-500 text-white text-xs font-bold shadow-lg shadow-emerald-500/30 whitespace-nowrap">
                                                 <Gift className="w-3.5 h-3.5" />
@@ -550,7 +574,7 @@ export function Pricing() {
                                                     <span className="text-gray-400 ml-2">
                                                         {billingCycle === 'anual' ? t('pricing.perYear') : t('pricing.perMonth')}
                                                     </span>
-                                                    {plan.trialDays && plan.trialDays > 0 && (
+                                                    {!!plan.trialDays && plan.trialDays > 0 && (
                                                         <p className="text-emerald-400 text-sm mt-1 font-medium">
                                                             Después de {plan.trialDays} días de prueba gratuita
                                                         </p>
@@ -565,15 +589,21 @@ export function Pricing() {
                                     <div className="mt-8 mb-4">
                                         <button
                                             onClick={() => handlePlanClick(plan)}
-                                            disabled={isProcessing}
-                                            className={`w-full py-3.5 rounded-xl font-bold text-base shadow-lg transition-all ${isProcessing
-                                                ? 'bg-gray-600 cursor-not-allowed opacity-70'
-                                                : plan.isFree
-                                                    ? 'bg-white text-gray-900 hover:bg-gray-100'
-                                                    : 'bg-[#83A98A] text-white hover:bg-[#6e9175] hover:scale-[1.01]'
+                                            disabled={isProcessing || isCurrentPlan}
+                                            className={`w-full py-3.5 rounded-xl font-bold text-base shadow-lg transition-all ${isCurrentPlan
+                                                ? 'bg-gray-600 cursor-not-allowed opacity-50 text-gray-400'
+                                                : isProcessing
+                                                    ? 'bg-gray-600 cursor-not-allowed opacity-70'
+                                                    : plan.isFree
+                                                        ? 'bg-white text-gray-900 hover:bg-gray-100'
+                                                        : 'bg-[#83A98A] text-white hover:bg-[#6e9175] hover:scale-[1.01]'
                                                 }`}
                                         >
-                                            {isProcessing ? (
+                                            {isCurrentPlan ? (
+                                                <div className="flex items-center justify-center gap-2">
+                                                    <Check className="w-5 h-5" /> Plan actual
+                                                </div>
+                                            ) : isProcessing ? (
                                                 <div className="flex items-center justify-center gap-2">
                                                     <Loader2 className="w-5 h-5 animate-spin" /> Procesando...
                                                 </div>
