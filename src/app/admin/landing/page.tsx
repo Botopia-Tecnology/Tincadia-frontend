@@ -248,12 +248,19 @@ function HowToStartSection({ items, onSave, saving }: {
                                 </div>
                             </div>
 
-                            <div className="flex justify-end pt-2">
+                            <div className="flex justify-end pt-2 gap-2">
+                                <button
+                                    onClick={() => handleChange(item.key, '')}
+                                    className="px-4 py-2.5 rounded-lg text-xs font-bold uppercase tracking-wider text-slate-400 hover:text-white hover:bg-slate-700/50 transition-all"
+                                    title="Quitar contenido"
+                                >
+                                    Quitar
+                                </button>
                                 <button
                                     onClick={() => onSave({ ...item, value: localItems.find(i => i.key === item.key)?.value || item.value })}
                                     disabled={saving === item.key}
-                                    className={`w-full py-2.5 rounded-lg text-xs font-bold uppercase tracking-wider text-white transition-all flex items-center justify-center gap-2
-                                        ${saving === item.key ? 'bg-slate-700 cursor-not-allowed' : 'bg-blue-600/80 hover:bg-blue-600 shadow-lg shadow-blue-900/20'}`}
+                                    className={`flex-1 py-2.5 rounded-lg text-xs font-bold uppercase tracking-wider text-white transition-all flex items-center justify-center gap-2
+                                            ${saving === item.key ? 'bg-slate-700 cursor-not-allowed' : 'bg-blue-600/80 hover:bg-blue-600 shadow-lg shadow-blue-900/20'}`}
                                 >
                                     {saving === item.key ? <Loader2 className="w-3 h-3 animate-spin" /> : <Save className="w-3 h-3" />}
                                     {saving === item.key ? 'Guardando...' : 'Guardar'}
@@ -1093,7 +1100,7 @@ export default function LandingConfigPage() {
             </div>
 
             {/* Navigation Tabs */}
-            <div className="flex overflow-x-auto pb-2 gap-2 scrollbar-thin scrollbar-thumb-slate-700 scrollbar-track-transparent">
+            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2">
                 {TABS.map((tab) => {
                     const Icon = tab.icon;
                     const isActive = activeTab === tab.id;
