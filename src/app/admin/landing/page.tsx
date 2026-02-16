@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
 import { api } from '@/lib/api-client';
 import { LandingConfigItem, Testimonial, FAQ } from './types';
-import { Plus, Trash2, Star, Save, Handshake, QrCode, Wrench, Map, MessageSquareQuote, HelpCircle, MoreHorizontal, Loader2, Mail, Link as LinkIcon, Facebook, Instagram, Linkedin, Twitter, Youtube } from 'lucide-react';
+import { Plus, Trash2, Star, Save, Handshake, QrCode, Wrench, Map, MessageSquareQuote, HelpCircle, MoreHorizontal, Loader2, Mail, Link as LinkIcon, Facebook, Instagram, Linkedin, Twitter, Youtube, PlayCircle } from 'lucide-react';
 import { CloudinaryUploadWidget } from '@/components/common/CloudinaryUploadWidget';
 
 // Define which keys belong to which section
@@ -13,10 +13,12 @@ const ALLIANCE_KEYS = ['logo_almia', 'logo_daste', 'logo_educatics', 'logo_parqu
 const QR_KEYS = ['qr_code_appstore', 'qr_code_generic'];
 const SERVICE_KEYS = ['service_1_bg', 'service_2_bg', 'service_3_bg'];
 const MAP_KEYS = ['world_map_dark', 'world_map_light'];
+const HOW_TO_START_KEYS = ['how_to_start_step_1', 'how_to_start_step_2', 'how_to_start_step_3', 'how_to_start_step_4'];
 
 // Tab definitions
 const TABS = [
     { id: 'alianzas', label: 'Alianzas', icon: Handshake },
+    { id: 'how_to_start', label: 'Cómo Empezar', icon: PlayCircle },
     { id: 'qrs', label: "QR's", icon: QrCode },
     { id: 'servicios', label: 'Servicios', icon: Wrench },
     { id: 'mapas', label: 'Mapas', icon: Map },
@@ -31,6 +33,7 @@ function categorizeConfigs(configs: LandingConfigItem[]) {
     const filtered = configs.filter(c => !EXCLUDED_KEYS.includes(c.key) && !c.key.includes('_hover'));
     return {
         alianzas: filtered.filter(c => c.key.startsWith('logo_') || c.key.startsWith('alliance_')),
+        how_to_start: filtered.filter(c => HOW_TO_START_KEYS.includes(c.key)),
         qrs: filtered.filter(c => QR_KEYS.includes(c.key)),
         servicios: filtered.filter(c => SERVICE_KEYS.includes(c.key)),
         mapas: filtered.filter(c => MAP_KEYS.includes(c.key)),
@@ -39,6 +42,7 @@ function categorizeConfigs(configs: LandingConfigItem[]) {
         otros: filtered.filter(c =>
             !c.key.startsWith('logo_') &&
             !c.key.startsWith('alliance_') &&
+            !HOW_TO_START_KEYS.includes(c.key) &&
             !QR_KEYS.includes(c.key) &&
             !SERVICE_KEYS.includes(c.key) &&
             !MAP_KEYS.includes(c.key) &&
@@ -123,6 +127,142 @@ function ConfigSection({ items, onSave, saving }: {
                     </div>
                 )
             })}
+        </div>
+    );
+}
+
+// How To Start Section
+function HowToStartSection({ items, onSave, saving }: {
+    items: LandingConfigItem[];
+    onSave: (item: LandingConfigItem) => void;
+    saving: string | null;
+}) {
+    // Ensure we have all 4 steps, if not create placeholders
+    const steps = [1, 2, 3, 4];
+    const ensureItems = steps.map(step => {
+        const key = `how_to_start_step_${step}`;
+        const existing = items.find(i => i.key === key);
+        return existing || {
+            key,
+            value: '',
+            description: `Paso ${step}`,
+            updatedAt: new Date().toISOString()
+        } as LandingConfigItem;
+    });
+
+    const [localItems, setLocalItems] = useState(ensureItems);
+
+    useEffect(() => {
+        // Only update from props if we have new data matching our keys
+        // or if we need to reset. This logic merges props into our ensured list.
+        const merged = steps.map(step => {
+            const key = `how_to_start_step_${step}`;
+            const existingInProps = items.find(i => i.key === key);
+            return existingInProps || {
+                key,
+                value: '',
+                description: `Paso ${step}`,
+                updatedAt: new Date().toISOString()
+            } as LandingConfigItem;
+        });
+        setLocalItems(merged);
+    }, [items]);
+
+    const handleChange = (key: string, newValue: string) => {
+        setLocalItems(prev => prev.map(item =>
+            item.key === key ? { ...item, value: newValue } : item
+        ));
+    };
+
+    return (
+        <div className="space-y-6">
+            <div className="bg-blue-900/20 p-4 rounded-xl border border-blue-500/20 mb-6">
+                <div>
+                    <h3 className="text-blue-200 font-semibold flex items-center gap-2">
+                        <PlayCircle className="w-5 h-5" /> Configuración "Cómo Empezar"
+                    </h3>
+                    <p className="text-sm text-blue-300/60 mt-1">
+                        Sube una imagen o video para cada uno de los 4 pasos. El sistema detectará automáticamente si es video o imagen por la extensión.
+                    </p>
+                </div>
+            </div>
+
+            <div className="grid gap-6 md:grid-cols-2">
+                {localItems.map((item, index) => {
+                    const isVideo = item.value.match(/\.(mp4|webm|mov|avi)$/i);
+
+                    return (
+                        <div key={item.key} className="bg-slate-800/40 p-5 rounded-xl border border-white/5 hover:border-white/10 transition-all flex flex-col gap-4 group relative overflow-hidden">
+                            <div className="absolute top-0 right-0 bg-blue-600/20 px-3 py-1 rounded-bl-xl text-blue-300 text-xs font-bold border-l border-b border-blue-500/20">
+                                Paso {index + 1}
+                            </div>
+
+                            <div className="flex justify-between items-start">
+                                <div>
+                                    <h3 className="font-medium text-white">Visual para {item.description}</h3>
+                                    <p className="text-xs text-slate-500 font-mono mt-1">{item.key}</p>
+                                </div>
+                            </div>
+
+                            <div className="flex-1 space-y-4">
+                                {/* Preview Area */}
+                                <div className="aspect-video bg-slate-900/50 rounded-lg overflow-hidden border border-white/5 flex items-center justify-center relative group/preview">
+                                    {item.value ? (
+                                        isVideo ? (
+                                            <video src={item.value} className="w-full h-full object-cover" controls />
+                                        ) : (
+                                            <img src={item.value} alt={item.description} className="w-full h-full object-cover" />
+                                        )
+                                    ) : (
+                                        <div className="text-slate-600 flex flex-col items-center">
+                                            <PlayCircle className="w-8 h-8 opacity-50 mb-2" />
+                                            <span className="text-xs">Sin contenido</span>
+                                        </div>
+                                    )}
+                                </div>
+
+                                <div className="grid grid-cols-2 gap-2">
+                                    <CloudinaryUploadWidget
+                                        onUpload={(url) => handleChange(item.key, url)}
+                                        folder="tincadia/landing/how_to_start"
+                                        buttonText="Subir Imagen"
+                                        resourceType="image"
+                                    />
+                                    <CloudinaryUploadWidget
+                                        onUpload={(url) => handleChange(item.key, url)}
+                                        folder="tincadia/landing/how_to_start"
+                                        buttonText="Subir Video"
+                                        resourceType="video"
+                                    />
+                                </div>
+
+                                <div className="space-y-1">
+                                    <label className="text-xs text-slate-500 font-medium ml-1">URL del Recurso</label>
+                                    <input
+                                        type="text"
+                                        value={localItems.find(i => i.key === item.key)?.value || ''}
+                                        onChange={(e) => handleChange(item.key, e.target.value)}
+                                        placeholder="https://..."
+                                        className="w-full rounded-lg bg-slate-900/50 border border-white/10 p-3 text-white text-sm placeholder:text-slate-500 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all outline-none font-mono"
+                                    />
+                                </div>
+                            </div>
+
+                            <div className="flex justify-end pt-2">
+                                <button
+                                    onClick={() => onSave({ ...item, value: localItems.find(i => i.key === item.key)?.value || item.value })}
+                                    disabled={saving === item.key}
+                                    className={`w-full py-2.5 rounded-lg text-xs font-bold uppercase tracking-wider text-white transition-all flex items-center justify-center gap-2
+                                        ${saving === item.key ? 'bg-slate-700 cursor-not-allowed' : 'bg-blue-600/80 hover:bg-blue-600 shadow-lg shadow-blue-900/20'}`}
+                                >
+                                    {saving === item.key ? <Loader2 className="w-3 h-3 animate-spin" /> : <Save className="w-3 h-3" />}
+                                    {saving === item.key ? 'Guardando...' : 'Guardar'}
+                                </button>
+                            </div>
+                        </div>
+                    )
+                })}
+            </div>
         </div>
     );
 }
@@ -805,349 +945,65 @@ function CompanyListSection({ items, onSave, saving }: {
                             onClick={handleSaveCompany}
                             className="px-6 py-2 rounded-lg text-sm font-medium text-white bg-emerald-600 hover:bg-emerald-500 transition-colors"
                         >
-                            {editingId ? 'Guardar Cambios' : 'Crear Empresa'}
+                            {editingId ? 'Actualizar' : 'Guardar Empresa'}
                         </button>
                     </div>
                 </div>
             )}
 
-            <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+            <div className="grid gap-6 md:grid-cols-2">
                 {companies.length === 0 ? (
                     <div className="col-span-full text-center py-12 text-slate-500 bg-slate-800/20 rounded-xl border border-white/5 border-dashed">
-                        No hay empresas registradas.
+                        No hay empresas inclusivas añadidas.
                     </div>
                 ) : companies.map((company) => (
-                    <div key={company.id} className="bg-slate-800/40 p-5 rounded-xl border border-white/5 hover:border-white/10 transition-all flex flex-col gap-4 group hover:bg-slate-800/60 relative overflow-hidden">
+                    <div key={company.id} className="bg-slate-800/40 p-5 rounded-xl border border-white/5 hover:border-white/10 transition-all flex flex-col gap-4 group hover:bg-slate-800/60">
+                        <div className="flex items-start gap-4">
+                            <div className="w-16 h-16 rounded-lg bg-white/10 flex-shrink-0 overflow-hidden">
+                                {company.imageUrl ? (
+                                    <img src={company.imageUrl} alt={company.name} className="w-full h-full object-cover" />
+                                ) : (
+                                    <div className="w-full h-full flex items-center justify-center text-slate-500">
+                                        <Handshake className="w-6 h-6" />
+                                    </div>
+                                )}
+                            </div>
+                            <div className="flex-1">
+                                <h4 className="font-bold text-white text-lg">{company.name}</h4>
+                                <p className="text-sm text-slate-400 mt-1 line-clamp-2">{company.description}</p>
+                            </div>
+                        </div>
 
-                        <div className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity z-10 flex gap-2">
+                        {company.industry && (
+                            <div className="flex items-center gap-2">
+                                <span className="text-xs px-2 py-1 rounded-full bg-blue-500/10 text-blue-400 border border-blue-500/20">
+                                    {company.industry}
+                                </span>
+                            </div>
+                        )}
+
+                        <div className="flex justify-end gap-2 pt-2 border-t border-white/5 mt-auto">
                             <button
                                 onClick={() => handleEdit(company)}
-                                className="p-2 rounded-full bg-blue-500/20 text-blue-400 hover:bg-blue-500 hover:text-white transition-colors"
+                                className="px-3 py-1.5 rounded-lg text-xs font-medium text-slate-300 hover:bg-blue-500/10 hover:text-blue-400 transition-colors"
                             >
-                                <Wrench className="w-4 h-4" />
+                                Editar
                             </button>
                             <button
                                 onClick={() => handleDelete(company.id)}
-                                className="p-2 rounded-full bg-red-500/20 text-red-400 hover:bg-red-500 hover:text-white transition-colors"
+                                className="px-3 py-1.5 rounded-lg text-xs font-medium text-slate-300 hover:bg-red-500/10 hover:text-red-400 transition-colors"
                             >
-                                <Trash2 className="w-4 h-4" />
+                                Eliminar
                             </button>
-                        </div>
-
-                        <div className="h-32 w-full bg-slate-900/50 rounded-lg relative overflow-hidden flex items-center justify-center p-4">
-                            {company.imageUrl ? (
-                                <img src={company.imageUrl} alt={company.name} className="max-h-full max-w-full object-contain" />
-                            ) : (
-                                <Handshake className="w-12 h-12 text-slate-700" />
-                            )}
-                        </div>
-
-                        <div>
-                            <h4 className="font-bold text-white text-lg">{company.name}</h4>
-                            <p className="text-sm text-slate-400 line-clamp-2 mt-1">{company.description}</p>
-                            {company.link && (
-                                <a href={company.link} target="_blank" rel="noopener noreferrer" className="text-xs text-blue-400 hover:text-blue-300 mt-2 inline-block">
-                                    Visitar sitio web &rarr;
-                                </a>
-                            )}
                         </div>
                     </div>
                 ))}
             </div>
-
-            {/* Status Indicator */}
-            <div className="flex justify-end">
-                {saving === 'inclusive_companies_list' && (
-                    <span className="text-blue-400 text-sm flex items-center gap-2">
-                        <Loader2 className="w-3 h-3 animate-spin" /> Guardando cambios...
-                    </span>
-                )}
-            </div>
         </div>
     );
 }
 
-// Contact & Social Section
-interface SocialLink {
-    id: string;
-    network: string;
-    url: string;
-}
-
-function ContactSocialSection({ items, onSave, saving }: {
-    items: LandingConfigItem[];
-    onSave: (item: LandingConfigItem) => void;
-    saving: string | null;
-}) {
-    // Separate config items
-    // Separate config items
-    const emailConfig = items.find(i => i.key === 'contact_email') || { key: 'contact_email', value: 'Contacto@tincadia.com', description: 'Correo de Contacto', updatedAt: new Date().toISOString() };
-    const phoneConfig = items.find(i => i.key === 'contact_phone') || { key: 'contact_phone', value: '123456789', description: 'Teléfono de Contacto', updatedAt: new Date().toISOString() };
-    const socialConfig = items.find(i => i.key === 'social_links') || { key: 'social_links', value: '[]', description: 'Redes Sociales', updatedAt: new Date().toISOString() };
-
-    // State for simple inputs
-    const [email, setEmail] = useState(emailConfig.value);
-    const [phone, setPhone] = useState(phoneConfig.value);
-
-    // State for social links
-    const [socialLinks, setSocialLinks] = useState<SocialLink[]>([]);
-    const [newLink, setNewLink] = useState<SocialLink>({ id: '', network: 'Facebook', url: '' });
-
-    useEffect(() => {
-        try {
-            const parsed = JSON.parse(socialConfig.value || '[]');
-            if (Array.isArray(parsed) && parsed.length > 0) {
-                setSocialLinks(parsed);
-            } else {
-                // Fallback defaults if empty
-                setSocialLinks([
-                    { id: crypto.randomUUID(), network: 'LinkedIn', url: 'https://www.linkedin.com/company/tincadia/' },
-                    { id: crypto.randomUUID(), network: 'Instagram', url: 'https://www.instagram.com/tincadia?igsh=cnM1Y3hjYnZjbzZj' },
-                    { id: crypto.randomUUID(), network: 'Facebook', url: 'https://www.facebook.com/isramirez10?mibextid=ZbWKwL' },
-                    { id: crypto.randomUUID(), network: 'Twitter', url: 'https://x.com/tincadiaapp' },
-                    { id: crypto.randomUUID(), network: 'WhatsApp', url: 'https://www.whatsapp.com/channel/0029VbAmXrWHVvTVFnnCh82Q' },
-                    { id: crypto.randomUUID(), network: 'Youtube', url: 'https://www.youtube.com/@tincadiaapp' },
-                    { id: crypto.randomUUID(), network: 'TikTok', url: 'https://www.tiktok.com/@tincadiaapp' }
-                ]);
-            }
-        } catch (e) {
-            setSocialLinks([]);
-        }
-    }, [socialConfig.value]);
-
-    useEffect(() => {
-        setEmail(emailConfig.value || 'Contacto@tincadia.com');
-    }, [emailConfig.value]);
-
-    useEffect(() => {
-        setPhone(phoneConfig.value || '123456789');
-    }, [phoneConfig.value]);
-
-    const handleSaveContact = (key: string, value: string, config: any) => {
-        onSave({ ...config, value });
-    };
-
-    const handleSaveSocial = (updatedList: SocialLink[]) => {
-        onSave({
-            ...socialConfig,
-            value: JSON.stringify(updatedList)
-        });
-    };
-
-    const addSocialLink = () => {
-        if (!newLink.url) return;
-        const linkWithId = { ...newLink, id: crypto.randomUUID() };
-        const updated = [...socialLinks, linkWithId];
-        setSocialLinks(updated);
-        handleSaveSocial(updated);
-        setNewLink({ id: '', network: 'Facebook', url: '' });
-    };
-
-    const removeSocialLink = (id: string) => {
-        const updated = socialLinks.filter(l => l.id !== id);
-        setSocialLinks(updated);
-        handleSaveSocial(updated);
-    };
-
-    const networks = ['Facebook', 'Instagram', 'LinkedIn', 'Twitter', 'Youtube', 'TikTok', 'WhatsApp', 'Discord', 'Telegram', 'Twitch', 'Pinterest', 'Github'];
-
-    const handleUpdateLink = (id: string, newUrl: string) => {
-        setSocialLinks(prev => prev.map(link => link.id === id ? { ...link, url: newUrl } : link));
-    };
-
-    const getIcon = (network: string) => {
-        switch (network) {
-            case 'Facebook': return <Facebook className="w-4 h-4" />;
-            case 'Instagram': return <Instagram className="w-4 h-4" />;
-            case 'LinkedIn': return <Linkedin className="w-4 h-4" />;
-            case 'Twitter': return <Twitter className="w-4 h-4" />;
-            case 'Youtube': return <Youtube className="w-4 h-4" />;
-            case 'TikTok': return (
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="w-4 h-4" viewBox="0 0 16 16">
-                    <path d="M9 0h1.98c.144.715.54 1.617 1.235 2.512C12.895 3.389 13.797 4 15 4v2c-1.753 0-3.07-.814-4-1.829V11a5 5 0 1 1-5-5v2a3 3 0 1 0 3 3z" />
-                </svg>
-            );
-            case 'WhatsApp': return (
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="w-4 h-4" viewBox="0 0 16 16">
-                    <path d="M13.601 2.326A7.85 7.85 0 0 0 7.994 0C3.627 0 .068 3.558.064 7.926c0 1.399.366 2.76 1.057 3.965L0 16l4.204-1.102a7.9 7.9 0 0 0 3.79.965h.004c4.368 0 7.926-3.558 7.93-7.93A7.9 7.9 0 0 0 13.6 2.326zM7.994 14.521a6.6 6.6 0 0 1-3.356-.92l-.24-.144-2.494.654.666-2.433-.156-.251a6.56 6.56 0 0 1-1.007-3.505c0-3.626 2.957-6.584 6.591-6.584a6.56 6.56 0 0 1 4.66 1.931 6.56 6.56 0 0 1 1.928 4.66c-.004 3.639-2.961 6.592-6.592 6.592m3.615-4.934c-.197-.099-1.17-.578-1.353-.646-.182-.065-.315-.099-.445.099-.133.197-.513.646-.627.775-.114.133-.232.148-.43.05-.197-.1-.836-.308-1.592-.985-.59-.525-.985-1.175-1.103-1.372-.114-.198-.011-.304.088-.403.087-.088.197-.232.296-.346.1-.114.133-.198.198-.33.065-.134.034-.248-.015-.347-.05-.099-.445-1.076-.612-1.47-.16-.389-.323-.335-.445-.34-.114-.007-.247-.007-.38-.007a.73.73 0 0 0-.529.247c-.182.198-.691.677-.691 1.654s.71 1.916.81 2.049c.098.133 1.394 2.132 3.383 2.992.47.205.84.326 1.129.418.475.152.904.129 1.246.08.38-.058 1.171-.48 1.338-.943.164-.464.164-.86.114-.943-.049-.084-.182-.133-.38-.232" />
-                </svg>
-            );
-            case 'Discord': return (
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="w-4 h-4" viewBox="0 0 16 16">
-                    <path d="M13.545 2.907a13.227 13.227 0 0 0-3.257-1.011.05.05 0 0 0-.052.025c-.141.25-.297.577-.406.833a12.19 12.19 0 0 0-3.658 0 8.258 8.258 0 0 0-.412-.833.051.051 0 0 0-.052-.025c-1.125.194-2.209.534-3.257 1.011a.041.041 0 0 0-.021.018C.356 6.024-.213 9.047.066 12.032c.001.014.01.028.021.037a13.276 13.276 0 0 0 3.995 2.02.05.05 0 0 0 .056-.019c.308-.42.582-.863.818-1.329a.05.05 0 0 0-.01-.059.051.051 0 0 0-.018-.011 8.875 8.875 0 0 1-1.248-.595.05.05 0 0 1-.02-.066.051.051 0 0 1 .015-.019c.084-.063.168-.129.248-.195a.05.05 0 0 1 .051-.007c2.619 1.196 5.454 1.196 8.041 0a.052.052 0 0 1 .053.007c.08.066.164.132.248.195a.051.051 0 0 1-.004.085 8.254 8.254 0 0 1-1.249.594.05.05 0 0 0-.03.03.05.05 0 0 0 .003.029c.243.466.518.909.818 1.329a.05.05 0 0 0 .056.019 13.263 13.263 0 0 0 4.001-2.02.049.049 0 0 0 .021-.037c.334-3.451-.559-6.449-2.366-9.106a.034.034 0 0 0-.02-.019Zm-8.198 7.307c-.789 0-1.438-.724-1.438-1.612 0-.889.637-1.613 1.438-1.613.807 0 1.45.73 1.438 1.613 0 .888-.637 1.612-1.438 1.612Zm5.316 0c-.788 0-1.438-.724-1.438-1.612 0-.889.637-1.613 1.438-1.613.807 0 1.451.73 1.438 1.613 0 .888-.631 1.612-1.438 1.612Z" />
-                </svg>
-            );
-            case 'Telegram': return (
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="w-4 h-4" viewBox="0 0 16 16">
-                    <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0ZM8.287 5.906c-.778.324-2.334.994-4.666 2.01-.378.15-.537.298-.51.528.024.195.297.291.606.376.136.037.29.074.453.111.97.221 1.334.256 1.602.13.093-.044.47-.593.899-1.303.461-.758.913-1.464.93-1.452.016.012-.007.037-.024.062-.239.356-1.107 1.636-1.127 1.666-.024.035-.11.23.116.425.263.228 1.154.91 1.633 1.25.39.278.673.472.936.428.163-.028.325-.262.518-1.353.14-1.109.288-2.316.357-2.914.072-.622.062-.835-.152-.942-.235-.117-.676-.037-1.63.364Z" />
-                </svg>
-            );
-            case 'Twitch': return (
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="w-4 h-4" viewBox="0 0 16 16">
-                    <path d="M3.857 0 1 2.857v10.286h3.429V16l2.857-2.857H9.57L14.714 8V0H3.857zm9.714 7.429-2.285 2.285H9l-2 2v-2H4.429V1.143h9.142v6.286z" />
-                    <path d="M11.857 3.143h-1.143V6.57h1.143V3.143zm-3.143 0H7.571V6.57h1.143V3.143z" />
-                </svg>
-            );
-            case 'Pinterest': return (
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="w-4 h-4" viewBox="0 0 16 16">
-                    <path d="M8 0a8 8 0 0 0-2.915 15.452c-.07-.633-.134-1.606.027-2.297.146-.625.938-3.977.938-3.977s-.239-.479-.239-1.187c0-1.113.645-1.943 1.448-1.943.682 0 1.012.512 1.012 1.127 0 .686-.437 1.712-.663 2.663-.188.796.4 1.446 1.185 1.446 1.422 0 2.515-1.5 2.515-3.664 0-1.915-1.377-3.254-3.342-3.254-2.436 0-3.868 1.824-3.868 3.714 0 .733.282 1.517.632 1.943.072.087.082.164.06.297-.06.257-.194.79-.22.9-.034.145-.115.176-.265.106-1.97-.919-2.189-3.39-2.189-5.118 0-4.167 3.033-8 8.766-8 4.604 0 8.182 3.282 8.182 7.669 0 4.542-2.864 8.026-6.84 8.026-1.336 0-2.592-.693-3.024-1.51l-.824 3.136c-.296 1.137-.872 2.56-1.296 3.411A8.004 8.004 0 0 0 8 16a8 8 0 0 0 8-8 8 8 0 0 0-8-8z" />
-                </svg>
-            );
-            case 'Github': return (
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="w-4 h-4" viewBox="0 0 16 16">
-                    <path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.012 8.012 0 0 0 16 8c0-4.42-3.58-8-8-8z" />
-                </svg>
-            );
-            default: return <LinkIcon className="w-4 h-4" />;
-        }
-    };
-
-    return (
-        <div className="space-y-8">
-            {/* Contact Info */}
-            <div className="bg-slate-800/40 p-6 rounded-xl border border-white/5">
-                <h3 className="text-xl font-semibold text-white mb-6 flex items-center gap-2">
-                    <Mail className="w-5 h-5 text-blue-400" /> Información de Contacto
-                </h3>
-                <div className="grid md:grid-cols-2 gap-6">
-                    <div className="space-y-2">
-                        <label className="text-sm text-slate-400">Correo Electrónico</label>
-                        <div className="flex gap-2">
-                            <input
-                                type="email"
-                                value={email}
-                                onChange={(e) => setEmail(e.target.value)}
-                                className="flex-1 rounded-lg bg-slate-900/50 border border-white/10 p-3 text-white placeholder:text-slate-500 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all outline-none"
-                            />
-                            <button
-                                onClick={() => handleSaveContact('contact_email', email, emailConfig)}
-                                disabled={saving === 'contact_email'}
-                                className="px-4 rounded-lg bg-blue-600 hover:bg-blue-500 text-white transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-                            >
-                                <Save className="w-4 h-4" />
-                            </button>
-                        </div>
-                    </div>
-                    <div className="space-y-2">
-                        <label className="text-sm text-slate-400">Teléfono</label>
-                        <div className="flex gap-2">
-                            <input
-                                type="text"
-                                value={phone}
-                                onChange={(e) => setPhone(e.target.value)}
-                                className="flex-1 rounded-lg bg-slate-900/50 border border-white/10 p-3 text-white placeholder:text-slate-500 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all outline-none"
-                            />
-                            <button
-                                onClick={() => handleSaveContact('contact_phone', phone, phoneConfig)}
-                                disabled={saving === 'contact_phone'}
-                                className="px-4 rounded-lg bg-blue-600 hover:bg-blue-500 text-white transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-                            >
-                                <Save className="w-4 h-4" />
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            {/* Social Links */}
-            <div className="bg-slate-800/40 p-6 rounded-xl border border-white/5">
-                <h3 className="text-xl font-semibold text-white mb-6 flex items-center gap-2">
-                    <LinkIcon className="w-5 h-5 text-blue-400" /> Redes Sociales
-                </h3>
-
-                {/* Add New */}
-                <div className="bg-slate-900/40 p-4 rounded-lg border border-white/5 mb-6">
-                    <div className="grid md:grid-cols-12 gap-4 items-end">
-                        <div className="md:col-span-3 space-y-2">
-                            <label className="text-xs text-slate-500 block">Red Social</label>
-                            <div className="flex items-center gap-2">
-                                <div className="p-2 bg-slate-800 rounded-lg border border-white/10 text-slate-400">
-                                    {getIcon(newLink.network)}
-                                </div>
-                                <select
-                                    value={newLink.network}
-                                    onChange={(e) => setNewLink({ ...newLink, network: e.target.value })}
-                                    className="w-full rounded-lg bg-slate-800 border border-white/10 p-2.5 text-white focus:ring-2 focus:ring-blue-500 outline-none"
-                                >
-                                    {networks.map(n => <option key={n} value={n}>{n}</option>)}
-                                </select>
-                            </div>
-                        </div>
-                        <div className="md:col-span-7 space-y-2">
-                            <label className="text-xs text-slate-500 block">URL Perfil</label>
-                            <input
-                                type="url"
-                                placeholder="https://..."
-                                value={newLink.url}
-                                onChange={(e) => setNewLink({ ...newLink, url: e.target.value })}
-                                className="w-full rounded-lg bg-slate-800 border border-white/10 p-2.5 text-white placeholder:text-slate-600 focus:ring-2 focus:ring-blue-500 outline-none"
-                            />
-                        </div>
-                        <div className="md:col-span-2">
-                            <button
-                                onClick={addSocialLink}
-                                className="w-full py-2.5 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white font-medium transition-colors flex justify-center items-center gap-2"
-                            >
-                                <Plus className="w-4 h-4" /> Agregar
-                            </button>
-                        </div>
-                    </div>
-                </div>
-
-                {/* List */}
-                <div className="space-y-3">
-                    {socialLinks.length === 0 ? (
-                        <p className="text-center text-slate-500 py-4">No hay redes sociales configuradas.</p>
-                    ) : (
-                        socialLinks.map((link) => (
-                            <div key={link.id} className="flex items-center gap-4 bg-slate-900/30 p-3 rounded-lg border border-white/5 group">
-                                <div className="w-8 h-8 rounded-full bg-slate-800 flex items-center justify-center text-slate-400 shrink-0">
-                                    {getIcon(link.network)}
-                                </div>
-                                <div className="flex-1 min-w-0 grid md:grid-cols-12 gap-4 items-center">
-                                    <p className="md:col-span-3 text-sm font-medium text-white">{link.network}</p>
-                                    <div className="md:col-span-9 flex gap-2">
-                                        <input
-                                            type="url"
-                                            value={link.url}
-                                            onChange={(e) => handleUpdateLink(link.id, e.target.value)}
-                                            className="flex-1 rounded-lg bg-slate-900/50 border border-white/10 p-2 text-sm text-white placeholder:text-slate-600 focus:ring-2 focus:ring-blue-500 outline-none"
-                                        />
-                                        <button
-                                            onClick={() => handleSaveSocial(socialLinks)}
-                                            className="p-2 bg-blue-600 hover:bg-blue-500 text-white rounded-lg transition-colors"
-                                            title="Guardar cambios"
-                                        >
-                                            <Save className="w-4 h-4" />
-                                        </button>
-                                        <a href={link.url} target="_blank" rel="noopener noreferrer" className="p-2 text-slate-500 hover:text-blue-400 transition-colors bg-slate-800/50 rounded-lg">
-                                            <LinkIcon className="w-4 h-4" />
-                                        </a>
-                                        <button
-                                            onClick={() => removeSocialLink(link.id)}
-                                            className="p-2 text-slate-500 hover:text-red-400 hover:bg-red-500/10 rounded-lg transition-colors"
-                                            title="Eliminar"
-                                        >
-                                            <Trash2 className="w-4 h-4" />
-                                        </button>
-                                    </div>
-                                </div>
-                            </div>
-                        ))
-                    )}
-                </div>
-                {saving === 'social_links' && (
-                    <div className="flex justify-end mt-2">
-                        <span className="text-xs text-blue-400 flex items-center gap-1">
-                            <Loader2 className="w-3 h-3 animate-spin" /> Guardando...
-                        </span>
-                    </div>
-                )}
-            </div>
-        </div>
-    );
-}
-
+// Main Page Component
 export default function LandingConfigPage() {
     const { user } = useAuth();
     const [configs, setConfigs] = useState<LandingConfigItem[]>([]);
@@ -1159,14 +1015,15 @@ export default function LandingConfigPage() {
 
     const fetchData = async () => {
         try {
-            const [configData, testimonialData, faqData] = await Promise.all([
-                api.get<LandingConfigItem[]>('/content/landing-config'),
-                api.get<Testimonial[]>('/content/testimonials'),
-                api.get<FAQ[]>('/content/faqs'),
+            setLoading(true);
+            const [configsData, testimonialsData, faqsData] = await Promise.all([
+                api.get('/content/landing-config') as Promise<LandingConfigItem[]>,
+                api.get('/content/testimonials') as Promise<Testimonial[]>,
+                api.get('/content/faqs') as Promise<FAQ[]>,
             ]);
-            setConfigs(configData);
-            setTestimonials(testimonialData);
-            setFaqs(faqData);
+            setConfigs(configsData);
+            setTestimonials(testimonialsData);
+            setFaqs(faqsData);
         } catch (error) {
             console.error('Error fetching data:', error);
         } finally {
@@ -1175,12 +1032,10 @@ export default function LandingConfigPage() {
     };
 
     useEffect(() => {
-        if (user) {
-            fetchData();
-        }
-    }, [user]);
+        fetchData();
+    }, []);
 
-    const handleSave = async (item: LandingConfigItem) => {
+    const handleSaveConfig = async (item: LandingConfigItem) => {
         setSaving(item.key);
         try {
             await api.put('/content/landing-config', {
@@ -1188,24 +1043,22 @@ export default function LandingConfigPage() {
                 value: item.value,
                 description: item.description
             });
-            await fetchData();
+            await fetchData(); // Refresh to ensure sync
         } catch (error) {
-            console.error('Error saving:', error);
+            console.error('Error saving config:', error);
         } finally {
             setSaving(null);
         }
     };
 
     const handleCreateConfig = async (key: string, value: string, description: string) => {
+        // We reuse the update endpoint since our backend logic creates if not exists for config keys
+        // or we might need a create endpoint. Let's assume update works as upsert or we call update.
         try {
-            await api.put('/content/landing-config', {
-                key,
-                value,
-                description
-            });
+            await api.put('/content/landing-config', { key, value, description });
             await fetchData();
         } catch (error) {
-            console.error('Error creating:', error);
+            console.error('Error creating config:', error);
         }
     };
 
@@ -1214,99 +1067,97 @@ export default function LandingConfigPage() {
             await api.delete(`/content/landing-config/${key}`);
             await fetchData();
         } catch (error) {
-            console.error('Error deleting:', error);
+            console.error('Error deleting config:', error);
         }
     };
 
-    if (loading) return (
-        <div className="flex items-center justify-center min-h-screen text-blue-500">
-            <Loader2 size={40} className="animate-spin" />
-        </div>
-    );
+    if (loading) {
+        return (
+            <div className="flex h-[calc(100vh-4rem)] items-center justify-center">
+                <Loader2 className="w-8 h-8 animate-spin text-blue-500" />
+            </div>
+        );
+    }
 
     const categorized = categorizeConfigs(configs);
 
-    const visibleTabs = TABS.filter(tab => {
-        if (tab.id === 'alianzas') return true;
-        if (tab.id === 'testimonios') return true;
-        if (tab.id === 'inclusive_companies') return true;
-        if (tab.id === 'contact_social') return true;
-        if (tab.id === 'faqs') return true;
-        if (tab.id === 'otros') return categorized.otros.length > 0;
-        return categorized[tab.id as keyof typeof categorized]?.length > 0;
-    });
-
-    const renderTabContent = () => {
-        switch (activeTab) {
-            case 'alianzas':
-                return <AllianceSection items={categorized.alianzas} onSave={handleSave} onDelete={handleDeleteConfig} onCreate={handleCreateConfig} saving={saving} />;
-            case 'qrs':
-                return <ConfigSection items={categorized.qrs} onSave={handleSave} saving={saving} />;
-            case 'servicios':
-                return <ConfigSection items={categorized.servicios} onSave={handleSave} saving={saving} />;
-            case 'mapas':
-                return <ConfigSection items={categorized.mapas} onSave={handleSave} saving={saving} />;
-            case 'testimonios':
-                return <TestimonialsSection testimonials={testimonials} onUpdate={fetchData} />;
-            case 'inclusive_companies':
-                return <CompanyListSection items={categorized.inclusive} onSave={handleSave} saving={saving} />;
-            case 'contact_social':
-                return <ContactSocialSection items={categorized.contact_social} onSave={handleSave} saving={saving} />;
-            case 'faqs':
-                return <FAQSection faqs={faqs} onUpdate={fetchData} />;
-            case 'otros':
-                return <ConfigSection items={categorized.otros} onSave={handleSave} saving={saving} />;
-            default:
-                return null;
-        }
-    };
-
     return (
-        <div className="p-8 max-w-7xl mx-auto min-h-screen">
-            <header className="mb-10">
-                <h1 className="text-4xl font-bold bg-gradient-to-r from-blue-400 via-indigo-400 to-violet-400 bg-clip-text text-transparent mb-2">
-                    Configuración Landing Page
+        <div className="max-w-7xl mx-auto space-y-8">
+            <div>
+                <h1 className="text-3xl font-bold bg-gradient-to-r from-white to-slate-400 bg-clip-text text-transparent">
+                    Configuración de Landing Page
                 </h1>
-                <p className="text-slate-400 text-lg">
-                    Personaliza el contenido visible en la página de inicio
+                <p className="text-slate-400 mt-2">
+                    Gestiona el contenido visible en la página principal.
                 </p>
-            </header>
+            </div>
 
-            <div className="bg-slate-900/60 backdrop-blur-xl border border-white/10 rounded-2xl shadow-2xl">
-                {/* Tabs */}
-                <div className="border-b border-white/10">
-                    <nav className="flex flex-wrap p-2">
-                        {visibleTabs.map((tab) => {
-                            const Icon = tab.icon;
-                            const isActive = activeTab === tab.id;
-                            return (
-                                <button
-                                    key={tab.id}
-                                    onClick={() => setActiveTab(tab.id)}
-                                    className={`
-                                        flex items-center gap-2 px-6 py-4 text-sm font-medium transition-all relative
-                                        ${isActive
-                                            ? 'text-white'
-                                            : 'text-slate-400 hover:text-white hover:bg-white/5'
-                                        }
-                                    `}
-                                >
-                                    <Icon className={`w-4 h-4 ${isActive ? 'text-blue-400' : ''}`} />
-                                    {tab.label}
-                                    {isActive && (
-                                        <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-blue-500 shadow-[0_0_10px_rgba(59,130,246,0.5)]" />
-                                    )}
-                                </button>
-                            );
-                        })}
-                    </nav>
-                </div>
+            {/* Navigation Tabs */}
+            <div className="flex overflow-x-auto pb-2 gap-2 scrollbar-thin scrollbar-thumb-slate-700 scrollbar-track-transparent">
+                {TABS.map((tab) => {
+                    const Icon = tab.icon;
+                    const isActive = activeTab === tab.id;
+                    return (
+                        <button
+                            key={tab.id}
+                            onClick={() => setActiveTab(tab.id)}
+                            className={`
+                                flex items-center gap-2 px-4 py-2.5 rounded-lg text-sm font-medium whitespace-nowrap transition-all
+                                ${isActive
+                                    ? 'bg-blue-600 text-white shadow-lg shadow-blue-900/20'
+                                    : 'bg-slate-800/40 text-slate-400 hover:bg-slate-800 hover:text-white'}
+                            `}
+                        >
+                            <Icon className="w-4 h-4" />
+                            {tab.label}
+                        </button>
+                    );
+                })}
+            </div>
 
-                {/* Content */}
-                <div className="p-6 md:p-8 min-h-[400px]">
-                    {renderTabContent()}
-                </div>
+            <div className="bg-slate-900/40 rounded-2xl border border-white/5 p-6 md:p-8 min-h-[500px]">
+                {activeTab === 'alianzas' && (
+                    <AllianceSection
+                        items={categorized.alianzas}
+                        onSave={handleSaveConfig}
+                        onDelete={handleDeleteConfig}
+                        onCreate={handleCreateConfig}
+                        saving={saving}
+                    />
+                )}
+                {activeTab === 'how_to_start' && (
+                    <HowToStartSection
+                        items={categorized.how_to_start}
+                        onSave={handleSaveConfig}
+                        saving={saving}
+                    />
+                )}
+                {activeTab === 'qrs' && (
+                    <ConfigSection items={categorized.qrs} onSave={handleSaveConfig} saving={saving} />
+                )}
+                {activeTab === 'servicios' && (
+                    <ConfigSection items={categorized.servicios} onSave={handleSaveConfig} saving={saving} />
+                )}
+                {activeTab === 'mapas' && (
+                    <ConfigSection items={categorized.mapas} onSave={handleSaveConfig} saving={saving} />
+                )}
+                {activeTab === 'testimonios' && (
+                    <TestimonialsSection testimonials={testimonials} onUpdate={fetchData} />
+                )}
+                {activeTab === 'faqs' && (
+                    <FAQSection faqs={faqs} onUpdate={fetchData} />
+                )}
+                {activeTab === 'inclusive_companies' && (
+                    <CompanyListSection items={[...categorized.inclusive, ...categorized.otros].filter(i => i.key === 'inclusive_companies_list')} onSave={handleSaveConfig} saving={saving} />
+                )}
+                {activeTab === 'contact_social' && (
+                    <ConfigSection items={categorized.contact_social} onSave={handleSaveConfig} saving={saving} />
+                )}
+                {activeTab === 'otros' && (
+                    <ConfigSection items={categorized.otros} onSave={handleSaveConfig} saving={saving} />
+                )}
             </div>
         </div>
     );
 }
+

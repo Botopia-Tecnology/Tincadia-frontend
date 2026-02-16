@@ -3,9 +3,38 @@
 import { useState, useEffect, useRef, useMemo } from 'react';
 import { Mic, FileText, Video, PenTool } from 'lucide-react';
 import { useTranslation } from '@/hooks/useTranslation';
+import { contentService } from '@/services/content.service';
+
+interface LandingConfigItem {
+  key: string;
+  value: string;
+  description?: string;
+}
 
 export function HowToStart() {
   const t = useTranslation();
+  const [mediaConfigs, setMediaConfigs] = useState<Record<string, string>>({});
+
+  useEffect(() => {
+    const fetchConfigs = async () => {
+      try {
+        const configs = await contentService.getLandingConfigs();
+        const mediaMap: Record<string, string> = {};
+        // Iterate over the array since getLandingConfigs returns LandingConfigItem[]
+        if (Array.isArray(configs)) {
+          configs.forEach((item: any) => {
+            if (item.key && item.key.startsWith('how_to_start_step_')) {
+              mediaMap[item.key] = item.value;
+            }
+          });
+        }
+        setMediaConfigs(mediaMap);
+      } catch (error) {
+        console.error('Error fetching landing configs:', error);
+      }
+    };
+    fetchConfigs();
+  }, []);
 
   const features = useMemo(() => {
     const getSteps = (key: string): string[] => {
@@ -291,27 +320,51 @@ export function HowToStart() {
         >
           {/* Video placeholder - Sticky (solo desktop) */}
           <div
-            className="hidden lg:block lg:sticky lg:top-[220px] relative rounded-2xl overflow-hidden shadow-2xl h-[550px] flex items-center justify-center transition-all duration-500"
+            className="hidden lg:block lg:sticky lg:top-[220px] relative rounded-2xl overflow-hidden shadow-2xl h-[550px] flex items-center justify-center transition-all duration-500 bg-gray-100"
           >
             {features.map((feature) => {
               const FeatureIcon = feature.icon;
               const isActive = displayTab === feature.id;
+              const mediaUrl = mediaConfigs[`how_to_start_step_${feature.id}`];
+              const isVideo = mediaUrl && mediaUrl.match(/\.(mp4|webm|mov|avi)$/i);
+
               return (
                 <div
                   key={feature.id}
                   className={`absolute inset-0 rounded-2xl ${feature.bgColor} flex items-center justify-center transition-opacity duration-500 ${isActive ? 'opacity-100 z-10' : 'opacity-0 z-0'
                     }`}
                 >
-                  <div className="absolute inset-0 flex items-center justify-center">
-                    <FeatureIcon size={80} className="text-gray-300" strokeWidth={1.5} />
-                  </div>
-                  <div className="relative z-10 text-center p-8">
-                    <div className="inline-block px-6 py-3 bg-white rounded-full shadow-lg">
-                      <span className="text-2xl font-bold bg-gradient-to-r from-[#83A98A] to-[#6D8F75] bg-clip-text text-transparent">
-                        {feature.videoLabel}
-                      </span>
-                    </div>
-                  </div>
+                  {mediaUrl ? (
+                    isVideo ? (
+                      <video
+                        src={mediaUrl}
+                        className="w-full h-full object-cover"
+                        autoPlay
+                        muted
+                        loop
+                        playsInline
+                      />
+                    ) : (
+                      <img
+                        src={mediaUrl}
+                        alt={feature.title}
+                        className="w-full h-full object-cover"
+                      />
+                    )
+                  ) : (
+                    <>
+                      <div className="absolute inset-0 flex items-center justify-center">
+                        <FeatureIcon size={80} className="text-gray-300" strokeWidth={1.5} />
+                      </div>
+                      <div className="relative z-10 text-center p-8">
+                        <div className="inline-block px-6 py-3 bg-white rounded-full shadow-lg">
+                          <span className="text-2xl font-bold bg-gradient-to-r from-[#83A98A] to-[#6D8F75] bg-clip-text text-transparent">
+                            {feature.videoLabel}
+                          </span>
+                        </div>
+                      </div>
+                    </>
+                  )}
                 </div>
               );
             })}
