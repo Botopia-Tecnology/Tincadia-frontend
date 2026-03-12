@@ -3,6 +3,7 @@
 import { useState, useEffect, useMemo } from 'react';
 import { FileText } from 'lucide-react';
 import { useTranslation } from '@/hooks/useTranslation';
+import { useUI } from '@/contexts/UIContext';
 import { formsService } from '@/services/forms.service';
 import { authService } from '@/services/auth.service';
 import { useFormik } from 'formik';
@@ -46,6 +47,7 @@ export function JobSeekerRegistrationForm({
   onCancel
 }: JobSeekerRegistrationFormProps = {}) {
   const t = useTranslation();
+  const { openLoginPanel } = useUI();
   const isEditing = !!submissionId;
 
   const getArray = (key: string): string[] => {
@@ -241,8 +243,8 @@ export function JobSeekerRegistrationForm({
           console.log('✅ Formulario enviado exitosamente:', response);
 
           if (response.userStatus === 'registered') {
-            alert(t('forms.jobSeeker.messages.alreadyRegistered') || 'Usuario ya registrado. Por favor inicia sesión.');
-            window.location.href = '/login';
+            alert(t('forms.jobSeeker.messages.alreadyRegistered'));
+            openLoginPanel();
             return;
           }
 
