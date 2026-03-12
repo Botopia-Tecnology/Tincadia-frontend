@@ -489,7 +489,8 @@
       "selectOption": "Select an option",
       "yes": "Yes",
       "no": "No",
-      "required": "*"
+      "required": "*",
+      "sending": "Sending..."
     },
     "jobSeeker": {
       "fields": {
@@ -515,6 +516,9 @@
         "describeTechnical": "Describe your technical skills...",
         "describeSoft": "Describe your soft skills...",
         "listCertifications": "List your certifications, courses or workshops..."
+      },
+      "messages": {
+        "alreadyRegistered": "This user is already registered. Please log in."
       },
       "disabilityTypes": [
         "Deaf",
@@ -551,6 +555,9 @@
       ]
     },
     "interpreter": {
+      "messages": {
+        "alreadyRegistered": "This document is already registered. Please log in."
+      },
       "fields": {
         "fullName": "Full name",
         "documentId": "ID Document",

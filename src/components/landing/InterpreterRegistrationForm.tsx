@@ -3,11 +3,11 @@
 import { useState, useEffect, useMemo } from 'react';
 import { Upload, FileText, X } from 'lucide-react';
 import { useTranslation } from '@/hooks/useTranslation';
+import { useUI } from '@/contexts/UIContext';
 import { formsService } from '@/services/forms.service';
 import { authService } from '@/services/auth.service';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
-import Link from 'next/link';
 
 interface FileData {
   name: string;
@@ -51,6 +51,7 @@ export function InterpreterRegistrationForm({
   onCancel
 }: InterpreterRegistrationFormProps = {}) {
   const t = useTranslation();
+  const { openLoginPanel } = useUI();
   const isEditing = !!submissionId;
 
   const getArray = (key: string): string[] => {
@@ -252,8 +253,8 @@ export function InterpreterRegistrationForm({
           console.log('✅ Formulario enviado exitosamente:', response);
 
           if (response.userStatus === 'registered') {
-            alert('Este documento ya se encuentra registrado. Por favor inicie sesión.');
-            window.location.href = '/login';
+            alert(t('forms.interpreter.messages.alreadyRegistered'));
+            openLoginPanel();
             return;
           }
         }
