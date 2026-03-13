@@ -3,7 +3,8 @@
         "selectOption": "Seleccione una opción",
         "yes": "Sí",
         "no": "No",
-        "required": "*"
+        "required": "*",
+        "sending": "Enviando..."
     },
     "jobSeeker": {
         "fields": {
@@ -29,6 +30,9 @@
             "describeTechnical": "Describe tus habilidades técnicas...",
             "describeSoft": "Describe tus habilidades blandas...",
             "listCertifications": "Lista tus certificaciones, cursos o talleres..."
+        },
+        "messages": {
+            "alreadyRegistered": "Este usuario ya se encuentra registrado. Por favor inicia sesión."
         },
         "disabilityTypes": [
             "Sorda",
@@ -65,6 +69,9 @@
         ]
     },
     "interpreter": {
+        "messages": {
+            "alreadyRegistered": "Este documento ya se encuentra registrado. Por favor inicia sesión."
+        },
         "fields": {
             "fullName": "Nombre completo",
             "documentId": "Documento de identidad",
