@@ -18,8 +18,6 @@ export interface Course {
     accessScope?: 'course' | 'module' | 'lesson';
     isPaid?: boolean;
     previewLimit?: number | null;
-    priceInCents?: number;
-    learningPoints?: string[];
     modules?: any[];
 }
 
@@ -269,46 +267,23 @@ export const contentService = {
     /**
      * Get landing configuration by key
      */
-    getLandingConfig: async (key: string): Promise<string | null> => {
+    getLandingConfig: async (key: string): Promise<any> => {
         try {
-            // Endpoint needs to be added to api.config.ts first, but assuming pattern
-            // Using direct fetch for now or update config file first? 
-            // Better to use buildUrl if possible, but let's check api.config.ts first to be clean.
-            // Actually, I'll just use the base URL pattern for now to avoid multiple file edits if not strictly necessary, 
-            // but for best practice I should use the config. 
-            // Let's assume standard path /content/landing-config/:key based on my gateway change.
-            const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/content/landing-config/${key}`);
-            if (!response.ok) return null;
-            const text = await response.text();
-            if (!text) return null;
-            const data = JSON.parse(text);
-            return data ? data.value : null;
-        } catch (error) {
-            console.error(`Error fetching landing config ${key}:`, error);
-            return null;
-        }
-    },
-
-    /**
-     * Get all landing configurations
-     */
-    getLandingConfigs: async (): Promise<LandingConfigItem[]> => {
-        try {
-            const response = await fetch(buildUrl(CONTENT_ENDPOINTS.LANDING_CONFIG));
-            if (!response.ok) throw new Error('Failed to fetch landing configs');
+            const url = buildUrl(CONTENT_ENDPOINTS.LANDING_CONFIG).replace(':key', key);
+            const response = await fetch(url);
+            
+            if (!response.ok) {
+                if (response.status === 404) return { key, value: '' };
+                throw new Error(`Failed to fetch landing config for ${key}`);
+            }
+            
             return await response.json();
         } catch (error) {
-            console.error('Error fetching landing configs:', error);
-            return [];
+            console.error(`Error fetching landing config for ${key}:`, error);
+            return { key, value: '' }; // Graceful degradation
         }
     },
 };
-
-export interface LandingConfigItem {
-    key: string;
-    value: string;
-    description?: string;
-}
 
 // ===========================================
 // Pricing Plans Interface & Service
@@ -331,17 +306,7 @@ export interface PricingPlan {
     is_free: boolean;
     // Billing interval in months: 1=monthly, 2=bimonthly, 3=quarterly, 6=semiannual, 12=annual
     billing_interval_months?: number;
-    // Trial period in days
-    trial_period_days?: number;
     order: number;
-    features?: {
-        transcription_limit?: number; // -1 for unlimited
-        correction_limit?: number;    // -1 for unlimited
-        lsc_enabled?: boolean;
-        interpreter_enabled?: boolean;
-        courses_enabled?: boolean;
-        [key: string]: any;
-    };
 }
 
 export const pricingService = {

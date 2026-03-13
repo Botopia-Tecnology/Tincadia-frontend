@@ -24,3 +24,19 @@ export interface FAQ {
     createdAt: string;
     updatedAt: string;
 }
+
+export interface SocialLink {
+    id: string;
+    network: string;
+    url: string;
+}
+
+export interface CompanyInfo {
+    id: string;
+    name: string;
+    description: string;
+    imageUrl: string;
+    link?: string;
+    industry?: string;
+    tags?: string[];
+}
