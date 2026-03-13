@@ -58,6 +58,8 @@ export const AUTH_ENDPOINTS = {
     RESET_PASSWORD: '/auth/reset-password',
     /** POST - Promote user to interpreter (Admin) */
     PROMOTE_INTERPRETER: '/auth/promote-interpreter',
+    /** GET - Check if document number exists */
+    CHECK_DOCUMENT: '/auth/check-document',
 } as const;
 
 /**
@@ -133,6 +135,8 @@ export const CONTENT_ENDPOINTS = {
     // --- Landing Config ---
     /** GET - Get landing page configuration by key */
     LANDING_CONFIG: '/content/landing-config/:key',
+    /** GET - Get all landing configurations */
+    LANDING: '/content/landing',
 } as const;
 
 /**

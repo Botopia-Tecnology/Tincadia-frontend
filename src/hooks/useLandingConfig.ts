@@ -26,9 +26,9 @@ export function useLandingConfig() {
                 api.get('/content/testimonials'),
                 api.get('/content/faqs'),
             ]);
-            setConfigs(configRes || []);
-            setTestimonials(testimonialRes || []);
-            setFaqs(faqRes || []);
+            setConfigs(Array.isArray(configRes) ? configRes : []);
+            setTestimonials(Array.isArray(testimonialRes) ? testimonialRes : []);
+            setFaqs(Array.isArray(faqRes) ? faqRes : []);
         } catch (error) {
             console.error('Error fetching landing data:', error);
         } finally {

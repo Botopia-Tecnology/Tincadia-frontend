@@ -17,8 +17,17 @@ export interface Course {
     isPublished: boolean;
     accessScope?: 'course' | 'module' | 'lesson';
     isPaid?: boolean;
+    priceInCents?: number;
+    learningPoints?: string[];
     previewLimit?: number | null;
     modules?: any[];
+}
+
+export interface LandingConfigItem {
+    key: string;
+    value: string;
+    description: string;
+    updatedAt: string;
 }
 
 export const contentService = {
@@ -281,6 +290,20 @@ export const contentService = {
         } catch (error) {
             console.error(`Error fetching landing config for ${key}:`, error);
             return { key, value: '' }; // Graceful degradation
+        }
+    },
+
+    /**
+     * Get all landing configurations
+     */
+    getLandingConfigs: async (): Promise<LandingConfigItem[]> => {
+        try {
+            const response = await fetch(buildUrl(CONTENT_ENDPOINTS.LANDING));
+            if (!response.ok) throw new Error('Failed to fetch landing configs');
+            return await response.json();
+        } catch (error) {
+            console.error('Error fetching landing configs:', error);
+            throw error;
         }
     },
 };
