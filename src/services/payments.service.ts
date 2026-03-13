@@ -40,12 +40,9 @@ export interface InitiatePaymentRequest {
     customerName?: string;
     customerPhone?: string;
     customerPhonePrefix?: string;
-    customerId?: string;
     customerLegalId?: string;
     customerLegalIdType?: string;
     userId?: string;
-    productType?: string;
-    productId?: string;
 }
 
 export interface InitiatePaymentResponse {
@@ -117,13 +114,6 @@ class PaymentsService {
      */
     async getPayment(id: string): Promise<Payment> {
         return api.get<Payment>(`${this.baseUrl}/${id}`);
-    }
-
-    /**
-     * Verifica si el usuario ha comprado un producto
-     */
-    async checkPurchaseStatus(userId: string, productId: string, productType: string = 'COURSE'): Promise<boolean> {
-        return api.get<boolean>(`${this.baseUrl}/purchases/check?userId=${userId}&productId=${productId}&productType=${productType}`);
     }
 
     /**

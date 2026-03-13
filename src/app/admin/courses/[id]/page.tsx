@@ -3,7 +3,7 @@
 import { useEffect, useState, useCallback } from 'react';
 import { useParams } from 'next/navigation';
 import { contentService, Course } from '@/services/content.service';
-import { ArrowLeft, Plus, Video, Trash2, UploadCloud, ChevronDown, PlayCircle, Loader2, Edit2, Save, X } from 'lucide-react';
+import { ArrowLeft, Plus, Video, Trash2, UploadCloud, ChevronDown, PlayCircle, Loader2 } from 'lucide-react';
 import Link from 'next/link';
 import Image from 'next/image';
 
@@ -28,93 +28,59 @@ interface Module {
 }
 
 export default function CourseDetailsPage() {
-    const params = useParams();
+const params = useParams();
     const courseId = params.id as string;
 
     const [course, setCourse] = useState<Course | null>(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
 
-    // Access control state
-    const [accessScope, setAccessScope] = useState<'course' | 'module' | 'lesson'>('course');
-    const [courseIsPaid, setCourseIsPaid] = useState(false);
-    const [previewLimit, setPreviewLimit] = useState<number>(3);
-    const [savingAccess, setSavingAccess] = useState(false);
+// Access control state
+const [accessScope, setAccessScope] = useState<'course' | 'module' | 'lesson'>('course');
+const [courseIsPaid, setCourseIsPaid] = useState(false);
+const [previewLimit, setPreviewLimit] = useState<number>(3);
+const [savingAccess, setSavingAccess] = useState(false);
 
-    // --- Edit Course Info State ---
-    const [isEditingInfo, setIsEditingInfo] = useState(false);
-    const [editDescription, setEditDescription] = useState('');
-    const [editPrice, setEditPrice] = useState<number>(0);
-    const [savingInfo, setSavingInfo] = useState(false);
+// Module Creation State
+const [showModuleModal, setShowModuleModal] = useState(false);
+const [newModuleTitle, setNewModuleTitle] = useState('');
+const [creatingModule, setCreatingModule] = useState(false);
+const [newModulePaid, setNewModulePaid] = useState(false);
 
-    // Module Creation State
-    const [showModuleModal, setShowModuleModal] = useState(false);
-    const [newModuleTitle, setNewModuleTitle] = useState('');
-    const [creatingModule, setCreatingModule] = useState(false);
-    const [newModulePaid, setNewModulePaid] = useState(false);
+// Lesson Creation State
+const [showLessonModal, setShowLessonModal] = useState<string | null>(null); // moduleId if open
+const [newLessonTitle, setNewLessonTitle] = useState('');
+const [creatingLesson, setCreatingLesson] = useState(false);
+const [newLessonPaid, setNewLessonPaid] = useState(false);
+const [newLessonPreview, setNewLessonPreview] = useState(false);
 
-    // Lesson Creation State
-    const [showLessonModal, setShowLessonModal] = useState<string | null>(null); // moduleId if open
-    const [newLessonTitle, setNewLessonTitle] = useState('');
-    const [creatingLesson, setCreatingLesson] = useState(false);
-    const [newLessonPaid, setNewLessonPaid] = useState(false);
-    const [newLessonPreview, setNewLessonPreview] = useState(false);
+// Video Upload State
+const [uploadingLessonId, setUploadingLessonId] = useState<string | null>(null);
 
-    // Video Upload State
-    const [uploadingLessonId, setUploadingLessonId] = useState<string | null>(null);
+const fetchCourse = useCallback(async () => {
+    try {
+        setLoading(true);
+        const data = await contentService.getCourseById(courseId);
+        setCourse(data);
+        syncAccessState(data);
+    } catch {
+        setError('Failed to load course details');
+    } finally {
+        setLoading(false);
+    }
+}, [courseId]);
 
-    const fetchCourse = useCallback(async () => {
-        try {
-            setLoading(true);
-            const data = await contentService.getCourseById(courseId);
-            setCourse(data);
-            syncAccessState(data);
-        } catch {
-            setError('Failed to load course details');
-        } finally {
-            setLoading(false);
-        }
-    }, [courseId]);
+useEffect(() => {
+    if (courseId) {
+        fetchCourse();
+    }
+}, [courseId, fetchCourse]);
 
-    useEffect(() => {
-        if (courseId) {
-            fetchCourse();
-        }
-    }, [courseId, fetchCourse]);
-
-    const syncAccessState = (data: Course) => {
-        setAccessScope((data.accessScope as 'course' | 'module' | 'lesson' | undefined) || 'course');
-        setCourseIsPaid(!!data.isPaid);
-        setPreviewLimit(typeof data.previewLimit === 'number' ? data.previewLimit : 3);
-        // Sync edit fields
-        setEditDescription(data.description || '');
-        setEditPrice(data.priceInCents ? data.priceInCents / 100 : 0);
-    };
-
-    const handleStartEditing = () => {
-        if (course) {
-            setEditDescription(course.description || '');
-            setEditPrice(course.priceInCents ? course.priceInCents / 100 : 0);
-            setIsEditingInfo(true);
-        }
-    };
-
-    const handleSaveInfo = async () => {
-        if (!course) return;
-        try {
-            setSavingInfo(true);
-            const updated = await contentService.updateCourse(courseId, {
-                description: editDescription,
-                priceInCents: Math.round(editPrice * 100),
-            });
-            setCourse(updated);
-            setIsEditingInfo(false);
-        } catch {
-            alert('No se pudo actualizar la información del curso');
-        } finally {
-            setSavingInfo(false);
-        }
-    };
+const syncAccessState = (data: Course) => {
+    setAccessScope((data.accessScope as 'course' | 'module' | 'lesson' | undefined) || 'course');
+    setCourseIsPaid(!!data.isPaid);
+    setPreviewLimit(typeof data.previewLimit === 'number' ? data.previewLimit : 3);
+};
 
     const handleCreateModule = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -122,9 +88,9 @@ export default function CourseDetailsPage() {
 
         try {
             setCreatingModule(true);
-            await contentService.createModule(courseId, { title: newModuleTitle, isPaid: newModulePaid });
+        await contentService.createModule(courseId, { title: newModuleTitle, isPaid: newModulePaid });
             setNewModuleTitle('');
-            setNewModulePaid(false);
+        setNewModulePaid(false);
             setShowModuleModal(false);
             fetchCourse(); // Refresh to show new module
         } catch {
@@ -140,10 +106,10 @@ export default function CourseDetailsPage() {
 
         try {
             setCreatingLesson(true);
-            await contentService.createLesson(showLessonModal, { title: newLessonTitle, isPaid: newLessonPaid, isFreePreview: newLessonPreview });
+        await contentService.createLesson(showLessonModal, { title: newLessonTitle, isPaid: newLessonPaid, isFreePreview: newLessonPreview });
             setNewLessonTitle('');
-            setNewLessonPaid(false);
-            setNewLessonPreview(false);
+        setNewLessonPaid(false);
+        setNewLessonPreview(false);
             setShowLessonModal(null);
             fetchCourse(); // Refresh
         } catch {
@@ -210,51 +176,51 @@ export default function CourseDetailsPage() {
         }
     };
 
-    const handleSaveAccessSettings = async () => {
-        try {
-            setSavingAccess(true);
-            const updated = await contentService.updateCourse(courseId, {
-                accessScope,
-                isPaid: accessScope === 'course' ? courseIsPaid : false,
-                previewLimit: previewLimit ?? null,
-            });
-            setCourse(updated);
-            syncAccessState(updated);
-        } catch {
-            alert('No se pudo actualizar el acceso del curso');
-        } finally {
-            setSavingAccess(false);
-        }
-    };
+const handleSaveAccessSettings = async () => {
+    try {
+        setSavingAccess(true);
+        const updated = await contentService.updateCourse(courseId, {
+            accessScope,
+            isPaid: accessScope === 'course' ? courseIsPaid : false,
+            previewLimit: previewLimit ?? null,
+        });
+        setCourse(updated);
+        syncAccessState(updated);
+    } catch {
+        alert('No se pudo actualizar el acceso del curso');
+    } finally {
+        setSavingAccess(false);
+    }
+};
 
-    const handleModuleAccess = async (moduleId: string, isPaid: boolean) => {
-        if (accessScope !== 'module') return;
-        try {
-            await contentService.updateModule(moduleId, { isPaid });
-            fetchCourse();
-        } catch {
-            alert('No se pudo actualizar el acceso del módulo');
-        }
-    };
+const handleModuleAccess = async (moduleId: string, isPaid: boolean) => {
+    if (accessScope !== 'module') return;
+    try {
+        await contentService.updateModule(moduleId, { isPaid });
+        fetchCourse();
+    } catch {
+        alert('No se pudo actualizar el acceso del módulo');
+    }
+};
 
-    const handleLessonAccess = async (lessonId: string, isPaid: boolean) => {
-        if (accessScope !== 'lesson') return;
-        try {
-            await contentService.updateLesson(lessonId, { isPaid });
-            fetchCourse();
-        } catch {
-            alert('No se pudo actualizar el acceso de la lección');
-        }
-    };
+const handleLessonAccess = async (lessonId: string, isPaid: boolean) => {
+    if (accessScope !== 'lesson') return;
+    try {
+        await contentService.updateLesson(lessonId, { isPaid });
+        fetchCourse();
+    } catch {
+        alert('No se pudo actualizar el acceso de la lección');
+    }
+};
 
-    const handleLessonPreview = async (lessonId: string, isFreePreview: boolean) => {
-        try {
-            await contentService.updateLesson(lessonId, { isFreePreview });
-            fetchCourse();
-        } catch {
-            alert('No se pudo marcar la lección como previa gratuita');
-        }
-    };
+const handleLessonPreview = async (lessonId: string, isFreePreview: boolean) => {
+    try {
+        await contentService.updateLesson(lessonId, { isFreePreview });
+        fetchCourse();
+    } catch {
+        alert('No se pudo marcar la lección como previa gratuita');
+    }
+};
 
     if (loading) return <div className="flex justify-center p-12"><Loader2 className="animate-spin text-indigo-500" size={32} /></div>;
     if (error || !course) return <div className="text-center p-12 text-red-400">{error || 'Course not found'}</div>;
@@ -286,102 +252,21 @@ export default function CourseDetailsPage() {
                 </div>
             </div>
 
-            {/* Course Overview Card - Editable */}
-            <div className="bg-slate-800 rounded-xl border border-slate-700 p-6">
-                <div className="flex justify-between items-start mb-4">
-                    <h3 className="text-lg font-semibold text-white">Información del curso</h3>
-                    {!isEditingInfo ? (
-                        <button
-                            onClick={handleStartEditing}
-                            className="flex items-center gap-2 text-sm text-indigo-400 hover:text-indigo-300 transition-colors"
-                        >
-                            <Edit2 size={16} /> Editar
-                        </button>
+            {/* Course Overview Card */}
+            <div className="bg-slate-800 rounded-xl border border-slate-700 p-6 flex gap-6">
+                <div className="w-48 h-28 bg-slate-900 rounded-lg overflow-hidden flex-shrink-0 relative">
+                    {course.thumbnailUrl ? (
+                        <Image src={course.thumbnailUrl} alt="Thumbnail" fill className="object-cover" sizes="192px" />
                     ) : (
-                        <div className="flex gap-2">
-                            <button
-                                onClick={() => setIsEditingInfo(false)}
-                                className="flex items-center gap-1 text-sm text-slate-400 hover:text-white transition-colors"
-                            >
-                                <X size={16} /> Cancelar
-                            </button>
-                            <button
-                                onClick={handleSaveInfo}
-                                disabled={savingInfo}
-                                className="flex items-center gap-1 text-sm bg-indigo-600 hover:bg-indigo-700 text-white px-3 py-1 rounded-lg transition-colors disabled:opacity-60"
-                            >
-                                {savingInfo ? <Loader2 size={16} className="animate-spin" /> : <Save size={16} />}
-                                Guardar
-                            </button>
-                        </div>
+                        <div className="flex items-center justify-center h-full text-slate-600"><Video size={32} /></div>
                     )}
                 </div>
-
-                <div className="flex gap-6">
-                    <div className="w-48 h-28 bg-slate-900 rounded-lg overflow-hidden flex-shrink-0 relative">
-                        {course.thumbnailUrl ? (
-                            <Image src={course.thumbnailUrl} alt="Thumbnail" fill className="object-cover" sizes="192px" />
-                        ) : (
-                            <div className="flex items-center justify-center h-full text-slate-600"><Video size={32} /></div>
-                        )}
-                    </div>
-                    <div className="flex-1 space-y-4">
-                        {isEditingInfo ? (
-                            <>
-                                <div>
-                                    <label className="block text-sm font-medium text-slate-400 mb-1">Descripción</label>
-                                    <textarea
-                                        value={editDescription}
-                                        onChange={(e) => setEditDescription(e.target.value)}
-                                        className="w-full bg-slate-900 border border-slate-700 rounded-lg p-2.5 text-white focus:ring-2 focus:ring-indigo-500 h-20 text-sm"
-                                        placeholder="Describe el contenido del curso..."
-                                    />
-                                </div>
-                                <div>
-                                    <label className="block text-sm font-medium text-slate-400 mb-1">Precio (COP)</label>
-                                    <div className="relative w-48">
-                                        <span className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400">$</span>
-                                        <input
-                                            type="number"
-                                            min={0}
-                                            step={1000}
-                                            value={editPrice}
-                                            onChange={(e) => setEditPrice(Number(e.target.value))}
-                                            className="w-full bg-slate-900 border border-slate-700 rounded-lg pl-8 p-2.5 text-white focus:ring-2 focus:ring-indigo-500"
-                                            placeholder="50000"
-                                        />
-                                    </div>
-                                    <p className="text-xs text-slate-500 mt-1">Deja en 0 si es un curso gratuito.</p>
-                                </div>
-                            </>
-                        ) : (
-                            <>
-                                <div>
-                                    <span className="text-xs text-slate-500 uppercase tracking-wider font-semibold">Descripción</span>
-                                    <p className="text-slate-300 text-sm mt-1">{course.description || 'Sin descripción.'}</p>
-                                </div>
-                                <div className="flex gap-6">
-                                    <div>
-                                        <span className="text-xs text-slate-500 uppercase tracking-wider font-semibold">Precio</span>
-                                        <p className="text-white font-semibold mt-1">
-                                            {course.priceInCents && course.priceInCents > 0
-                                                ? `$${(course.priceInCents / 100).toLocaleString('es-CO')} COP`
-                                                : 'Gratis'}
-                                        </p>
-                                    </div>
-                                    <div>
-                                        <span className="text-xs text-slate-500 uppercase tracking-wider font-semibold">Módulos</span>
-                                        <p className="text-white font-semibold mt-1">{course.modules?.length || 0}</p>
-                                    </div>
-                                    <div>
-                                        <span className="text-xs text-slate-500 uppercase tracking-wider font-semibold">Estado</span>
-                                        <p className={`font-semibold mt-1 ${course.isPublished ? 'text-emerald-400' : 'text-yellow-400'}`}>
-                                            {course.isPublished ? 'Publicado' : 'Borrador'}
-                                        </p>
-                                    </div>
-                                </div>
-                            </>
-                        )}
+                <div className="flex-1">
+                    <h3 className="text-lg font-semibold text-white mb-2">About this course</h3>
+                    <p className="text-slate-400 text-sm mb-4">{course.description || 'No description provided.'}</p>
+                    <div className="flex gap-4 text-xs text-slate-500 uppercase tracking-wider font-semibold">
+                        <span>{course.modules?.length || 0} Modules</span>
+                        <span>{course.isPublished ? 'Published' : 'Draft'}</span>
                     </div>
                 </div>
             </div>
@@ -420,16 +305,16 @@ export default function CourseDetailsPage() {
                     {accessScope === 'course' && (
                         <>
                             <div className="space-y-2">
-                                <label className="text-sm text-slate-400">Modalidad</label>
+                                <label className="text-sm text-slate-400">Estado</label>
                                 <button
                                     type="button"
                                     onClick={() => setCourseIsPaid(!courseIsPaid)}
                                     className={`w-full px-4 py-2 rounded-lg border text-sm font-semibold transition-colors ${courseIsPaid
-                                        ? 'bg-indigo-500/10 border-indigo-500/40 text-indigo-300'
+                                        ? 'bg-amber-500/10 border-amber-500/40 text-amber-200'
                                         : 'bg-emerald-500/10 border-emerald-500/40 text-emerald-200'
                                         }`}
                                 >
-                                    {courseIsPaid ? 'De Pago (Premium)' : 'Gratuito (Libre)'}
+                                    {courseIsPaid ? 'Curso de pago' : 'Curso libre'}
                                 </button>
                             </div>
                             <div className="space-y-2">
@@ -515,12 +400,12 @@ export default function CourseDetailsPage() {
                             <div className="divide-y divide-slate-700/50">
                                 {module.lessons?.map((lesson) => (
                                     <div key={lesson.id} className="p-4 pl-14 hover:bg-slate-700/20 transition-colors flex justify-between items-center group">
-                                        <div className="flex items-center gap-3 flex-1 min-w-0 mr-4">
-                                            <div className={`p-2 rounded-full flex-shrink-0 ${lesson.videoUrl ? 'bg-emerald-500/10 text-emerald-500' : 'bg-slate-700 text-slate-500'}`}>
+                                        <div className="flex items-center gap-3">
+                                            <div className={`p-2 rounded-full ${lesson.videoUrl ? 'bg-emerald-500/10 text-emerald-500' : 'bg-slate-700 text-slate-500'}`}>
                                                 <PlayCircle size={18} />
                                             </div>
-                                            <div className="min-w-0">
-                                                <h4 className="text-sm font-medium text-slate-200 truncate">{lesson.title}</h4>
+                                            <div>
+                                                <h4 className="text-sm font-medium text-slate-200">{lesson.title}</h4>
                                                 {lesson.videoUrl && (
                                                     <span className="text-xs text-emerald-500 flex items-center gap-1 mt-0.5">
                                                         Video Uploaded
@@ -528,7 +413,7 @@ export default function CourseDetailsPage() {
                                                 )}
                                                 {accessScope === 'lesson' && (
                                                     <div className="flex gap-2 mt-1">
-                                                        <span className={`text-[11px] px-2 py-0.5 rounded ${lesson.isPaid ? 'bg-indigo-500/10 text-indigo-300 border border-indigo-500/40' : 'bg-emerald-500/10 text-emerald-200 border border-emerald-500/40'}`}>
+                                                        <span className={`text-[11px] px-2 py-0.5 rounded ${lesson.isPaid ? 'bg-amber-500/10 text-amber-200 border border-amber-500/40' : 'bg-emerald-500/10 text-emerald-200 border border-emerald-500/40'}`}>
                                                             {lesson.isPaid ? 'De pago' : 'Libre'}
                                                         </span>
                                                         {lesson.isFreePreview && (
@@ -541,24 +426,24 @@ export default function CourseDetailsPage() {
                                             </div>
                                         </div>
 
-                                        <div className="flex items-center gap-2 flex-shrink-0">
+                                        <div className="flex items-center gap-3">
                                             {accessScope === 'lesson' && (
                                                 <>
                                                     <button
                                                         onClick={() => handleLessonAccess(lesson.id, !lesson.isPaid)}
-                                                        className="text-xs font-medium w-28 py-1.5 rounded-lg border border-slate-600 bg-slate-900 hover:bg-slate-800 transition-colors text-center"
+                                                        className="text-xs font-medium px-3 py-1.5 rounded-lg border border-slate-600 bg-slate-900 hover:bg-slate-800 transition-colors"
                                                     >
                                                         {lesson.isPaid ? 'Marcar libre' : 'Marcar de pago'}
                                                     </button>
                                                     <button
                                                         onClick={() => handleLessonPreview(lesson.id, !lesson.isFreePreview)}
-                                                        className="text-xs font-medium w-28 py-1.5 rounded-lg border border-slate-600 bg-slate-900 hover:bg-slate-800 transition-colors text-center"
+                                                        className="text-xs font-medium px-3 py-1.5 rounded-lg border border-slate-600 bg-slate-900 hover:bg-slate-800 transition-colors"
                                                     >
                                                         {lesson.isFreePreview ? 'Quitar preview' : 'Preview gratis'}
                                                     </button>
                                                 </>
                                             )}
-                                            <div className="relative w-32">
+                                            <div className="relative">
                                                 <input
                                                     type="file"
                                                     id={`upload-${lesson.id}`}
@@ -572,7 +457,7 @@ export default function CourseDetailsPage() {
                                                 />
                                                 <label
                                                     htmlFor={`upload-${lesson.id}`}
-                                                    className={`cursor-pointer flex items-center justify-center gap-2 w-full py-1.5 rounded-lg border text-xs font-medium transition-all ${lesson.videoUrl
+                                                    className={`cursor-pointer flex items-center gap-2 px-3 py-1.5 rounded-lg border text-xs font-medium transition-all ${lesson.videoUrl
                                                         ? 'border-slate-600 text-slate-400 hover:text-white hover:border-slate-500'
                                                         : 'border-indigo-500/30 bg-indigo-500/10 text-indigo-400 hover:bg-indigo-500/20'
                                                         }`}
@@ -585,31 +470,28 @@ export default function CourseDetailsPage() {
                                                     ) : (
                                                         <>
                                                             <UploadCloud size={14} />
-                                                            {lesson.videoUrl ? 'Replace' : 'Upload Video'}
+                                                            {lesson.videoUrl ? 'Replace Video' : 'Upload Video'}
                                                         </>
                                                     )}
                                                 </label>
                                             </div>
-
-                                            <div className="flex items-center w-16 justify-end gap-1">
-                                                {lesson.videoUrl && (
-                                                    <button
-                                                        onClick={() => handleRemoveVideo(lesson.id)}
-                                                        className="p-1.5 text-slate-500 hover:text-yellow-400 transition-colors"
-                                                        title="Remove Video"
-                                                    >
-                                                        <Video size={14} className="line-through" />
-                                                    </button>
-                                                )}
-                                                <button
-                                                    onClick={() => handleDeleteLesson(lesson.id)}
-                                                    className="p-1.5 text-slate-500 hover:text-red-400 transition-colors opacity-0 group-hover:opacity-100"
-                                                    title="Delete Lesson"
-                                                >
-                                                    <Trash2 size={14} />
-                                                </button>
-                                            </div>
                                         </div>
+                                        {lesson.videoUrl && (
+                                            <button
+                                                onClick={() => handleRemoveVideo(lesson.id)}
+                                                className="p-1.5 text-slate-500 hover:text-yellow-400 transition-colors"
+                                                title="Remove Video"
+                                            >
+                                                <Video size={14} className="line-through" />
+                                            </button>
+                                        )}
+                                        <button
+                                            onClick={() => handleDeleteLesson(lesson.id)}
+                                            className="p-1.5 text-slate-500 hover:text-red-400 transition-colors opacity-0 group-hover:opacity-100"
+                                            title="Delete Lesson"
+                                        >
+                                            <Trash2 size={14} />
+                                        </button>
                                     </div>
 
                                 ))}
