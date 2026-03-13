@@ -181,8 +181,8 @@ const [previewLimit, setPreviewLimit] = useState<number>(3);
                         )}
                     </div>
 
-                    <div className="grid sm:grid-cols-2 gap-3">
-                        <div>
+                    <div className="grid sm:grid-cols-2 gap-4">
+                        <div className="flex flex-col">
                             <label className="block text-sm font-medium text-slate-400 mb-1">Modo de acceso</label>
                             <select
                                 value={accessScope}
@@ -196,32 +196,44 @@ const [previewLimit, setPreviewLimit] = useState<number>(3);
                         </div>
 
                         {accessScope === 'course' && (
-                            <div>
+                            <div className="flex flex-col">
                                 <label className="block text-sm font-medium text-slate-400 mb-1">Curso de pago</label>
-                                <div className="flex items-center gap-3">
+                                <div className="flex gap-3 h-[42px]">
                                     <button
                                         type="button"
                                         onClick={() => setIsPaid(!isPaid)}
-                                        className={`flex-1 px-3 py-2 rounded-lg border text-white ${isPaid
-                                            ? 'bg-amber-500/10 border-amber-500/40 text-amber-200'
-                                            : 'bg-emerald-500/10 border-emerald-500/40 text-emerald-200'
+                                        className={`flex-1 px-4 py-2 rounded-lg border font-medium transition-all duration-200 ${isPaid
+                                            ? 'bg-amber-500/10 border-amber-500/50 text-amber-200 hover:bg-amber-500/20'
+                                            : 'bg-emerald-500/10 border-emerald-500/50 text-emerald-200 hover:bg-emerald-500/20'
                                             }`}
                                     >
-                                        {isPaid ? 'De pago' : 'Libre'}
+                                        {isPaid ? '🔒 De pago' : '🔓 Libre'}
                                     </button>
-                                    <div className="flex flex-col">
-                                        <label className="text-xs text-slate-400">Videos gratis</label>
-                                        <input
-                                            type="number"
-                                            min={0}
-                                            max={10}
-                                            value={previewLimit}
-                                            onChange={(e) => setPreviewLimit(Number(e.target.value))}
-                                            className="w-24 bg-slate-800 border border-slate-700 rounded-lg p-2 text-white focus:ring-2 focus:ring-blue-500"
-                                        />
-                                    </div>
+                                    
+                                    {isPaid && (
+                                        <div className="w-24 animate-in fade-in slide-in-from-right-2 duration-300">
+                                            <input
+                                                type="number"
+                                                min={0}
+                                                max={10}
+                                                value={previewLimit}
+                                                onChange={(e) => setPreviewLimit(Number(e.target.value))}
+                                                className="w-full h-full bg-slate-800 border border-slate-700 rounded-lg px-3 text-white focus:ring-2 focus:ring-blue-500"
+                                                title="Número de videos gratuitos"
+                                                placeholder="0"
+                                            />
+                                        </div>
+                                    )}
                                 </div>
-                                <p className="text-xs text-slate-500 mt-1">Recomendado: 3-4 videos libres.</p>
+                                {isPaid ? (
+                                    <p className="text-[10px] text-slate-500 mt-1 animate-in fade-in duration-300">
+                                        Videos gratis recomendados: 3-4.
+                                    </p>
+                                ) : (
+                                    <p className="text-[10px] text-slate-400 mt-1 animate-in fade-in duration-300 italic">
+                                        Todo el contenido será gratuito.
+                                    </p>
+                                )}
                             </div>
                         )}
                     </div>
