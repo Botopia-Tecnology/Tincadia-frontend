@@ -44,6 +44,12 @@ export default function PricingAdminPage() {
         is_free: false,
         billing_interval_months: 1, // Default to monthly
         order: plans.filter(p => p.type === activeTab).length + 1,
+        features: {
+            transcription_limit: 1, // -1 is unlimited, 0 is blocked
+            correction_limit: 1,
+            lsc_enabled: false,
+            interpreter_enabled: false,
+        }
     });
 
     const fetchPlans = async () => {
@@ -133,6 +139,17 @@ export default function PricingAdminPage() {
         }
 
         setEditingPlan({ ...editingPlan, ...updates });
+    };
+
+    const updateFeatureField = (field: string, value: number | boolean) => {
+        if (!editingPlan) return;
+        setEditingPlan({
+            ...editingPlan,
+            features: {
+                ...(editingPlan.features || {}),
+                [field]: value
+            }
+        });
     };
 
     const updateArrayField = (field: 'includes' | 'excludes', index: number, value: string) => {
@@ -305,6 +322,61 @@ export default function PricingAdminPage() {
                                     className="w-full bg-slate-800 text-white p-2 rounded border border-slate-700"
                                     placeholder="Suscribirme"
                                 />
+                            </div>
+
+                            {/* Features / Límites */}
+                            <div className="pt-4 border-t border-slate-800">
+                                <label className="text-sm font-bold text-gray-300 mb-2 block">
+                                    ⚙️ Límites y Funcionalidades Técnicas
+                                </label>
+                                
+                                <div className="space-y-3">
+                                    <div className="grid grid-cols-2 gap-2">
+                                        <div>
+                                            <label className="text-xs text-gray-400">Límite Transcripciones/día</label>
+                                            <input
+                                                type="number"
+                                                value={editingPlan.features?.transcription_limit ?? ''}
+                                                onChange={(e) => updateFeatureField('transcription_limit', parseInt(e.target.value) || 0)}
+                                                className="w-full bg-slate-800 text-white p-2 text-sm rounded border border-slate-700"
+                                                placeholder="-1 = ilimitado"
+                                            />
+                                            <p className="text-[10px] text-gray-500 mt-0.5">-1 ilimitado, 0 bloqueado</p>
+                                        </div>
+                                        <div>
+                                            <label className="text-xs text-gray-400">Límite Corrección IA/día</label>
+                                            <input
+                                                type="number"
+                                                value={editingPlan.features?.correction_limit ?? ''}
+                                                onChange={(e) => updateFeatureField('correction_limit', parseInt(e.target.value) || 0)}
+                                                className="w-full bg-slate-800 text-white p-2 text-sm rounded border border-slate-700"
+                                                placeholder="-1 = ilimitado"
+                                            />
+                                            <p className="text-[10px] text-gray-500 mt-0.5">-1 ilimitado, 0 bloqueado</p>
+                                        </div>
+                                    </div>
+
+                                    <div className="flex gap-4 items-center">
+                                        <label className="flex items-center gap-2 text-xs text-gray-300">
+                                            <input
+                                                type="checkbox"
+                                                checked={!!editingPlan.features?.lsc_enabled}
+                                                onChange={(e) => updateFeatureField('lsc_enabled', e.target.checked)}
+                                                className="rounded"
+                                            />
+                                            Traductor LSC
+                                        </label>
+                                        <label className="flex items-center gap-2 text-xs text-gray-300">
+                                            <input
+                                                type="checkbox"
+                                                checked={!!editingPlan.features?.interpreter_enabled}
+                                                onChange={(e) => updateFeatureField('interpreter_enabled', e.target.checked)}
+                                                className="rounded"
+                                            />
+                                            Llamada a Intérprete
+                                        </label>
+                                    </div>
+                                </div>
                             </div>
 
                             {/* Includes */}
@@ -493,6 +565,61 @@ export default function PricingAdminPage() {
                                         className="w-full bg-slate-800 text-white p-2 rounded border border-slate-700"
                                         placeholder="Suscribirme"
                                     />
+                                </div>
+
+                                {/* Features / Límites */}
+                                <div className="pt-4 border-t border-slate-800">
+                                    <label className="text-sm font-bold text-gray-300 mb-2 block">
+                                        ⚙️ Límites y Funcionalidades Técnicas
+                                    </label>
+                                    
+                                    <div className="space-y-3">
+                                        <div className="grid grid-cols-2 gap-2">
+                                            <div>
+                                                <label className="text-xs text-gray-400">Límite Transcripciones/día</label>
+                                                <input
+                                                    type="number"
+                                                    value={editingPlan.features?.transcription_limit ?? ''}
+                                                    onChange={(e) => updateFeatureField('transcription_limit', parseInt(e.target.value) || 0)}
+                                                    className="w-full bg-slate-800 text-white p-2 text-sm rounded border border-slate-700"
+                                                    placeholder="-1 = ilimitado"
+                                                />
+                                                <p className="text-[10px] text-gray-500 mt-0.5">-1 ilimitado, 0 bloqueado</p>
+                                            </div>
+                                            <div>
+                                                <label className="text-xs text-gray-400">Límite Corrección IA/día</label>
+                                                <input
+                                                    type="number"
+                                                    value={editingPlan.features?.correction_limit ?? ''}
+                                                    onChange={(e) => updateFeatureField('correction_limit', parseInt(e.target.value) || 0)}
+                                                    className="w-full bg-slate-800 text-white p-2 text-sm rounded border border-slate-700"
+                                                    placeholder="-1 = ilimitado"
+                                                />
+                                                <p className="text-[10px] text-gray-500 mt-0.5">-1 ilimitado, 0 bloqueado</p>
+                                            </div>
+                                        </div>
+
+                                        <div className="flex gap-4 items-center">
+                                            <label className="flex items-center gap-2 text-xs text-gray-300">
+                                                <input
+                                                    type="checkbox"
+                                                    checked={!!editingPlan.features?.lsc_enabled}
+                                                    onChange={(e) => updateFeatureField('lsc_enabled', e.target.checked)}
+                                                    className="rounded"
+                                                />
+                                                Traductor LSC
+                                            </label>
+                                            <label className="flex items-center gap-2 text-xs text-gray-300">
+                                                <input
+                                                    type="checkbox"
+                                                    checked={!!editingPlan.features?.interpreter_enabled}
+                                                    onChange={(e) => updateFeatureField('interpreter_enabled', e.target.checked)}
+                                                    className="rounded"
+                                                />
+                                                Llamada a Intérprete
+                                            </label>
+                                        </div>
+                                    </div>
                                 </div>
 
                                 {/* Includes */}
