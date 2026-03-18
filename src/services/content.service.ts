@@ -330,6 +330,13 @@ export interface PricingPlan {
     // Billing interval in months: 1=monthly, 2=bimonthly, 3=quarterly, 6=semiannual, 12=annual
     billing_interval_months?: number;
     order: number;
+    features?: {
+        transcription_limit?: number;
+        correction_limit?: number;
+        lsc_enabled?: boolean;
+        interpreter_enabled?: boolean;
+        [key: string]: any;
+    };
 }
 
 export const pricingService = {
