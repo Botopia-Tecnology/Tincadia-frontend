@@ -759,7 +759,11 @@
       },
       "legislation": {
         "title": "7. Legislação Aplicável e Jurisdição",
-        "content": "Estes Termos e Condições são regidos pelas leis da República da Colômbia. Para qualquer controvérsia decorrente de sua interpretação ou execução, as partes submetem-se aos juízes e tribunais competentes da cidade de Medellín, Colômbia, renunciando expressamente a qualquer outro foro que possa corresponder-lhes."
+        "content": "Estes Termos e Condições são regidos pelas leis da República da Colômbia. Para qualquer controvérsia decorrente de sua interpretação ou execução, las partes submetem-se aos juízes e tribunais competentes da cidade de Medellín, Colômbia, renunciando expressamente a qualquer outro foro que possa corresponder-lhes."
+      },
+      "childSafety": {
+        "title": "8. Padrões de Segurança para Proteção Infantil (CSAE)",
+        "content": "A TINCADIA tem uma política de TOLERÂNCIA ZERO contra a exploração e o abuso sexual infantil (CSAE). Proibimos estritamente o uso de nossa plataforma para compartilhar, promover ou facilitar qualquer tipo de material de abuso infantil. Implementamos medidas de monitoramento, mecanismos de denúncia imediata e colaboramos ativamente com as autoridades legais para denunciar qualquer atividade suspeita e garantir um ambiente seguro."
       }
     },
     "note": "A TINCADIA reserva-se o direito de modificar unilateralmente estes termos a qualquer momento. As modificações entrarão em vigor a partir de sua publicação na plataforma. É responsabilidade do usuário revisá-los periodicamente.",

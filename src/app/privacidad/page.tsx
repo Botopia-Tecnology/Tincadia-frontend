@@ -61,6 +61,11 @@ export default function PrivacyPage() {
                 </section>
 
                 <section className="space-y-4">
+                    <h2 className="text-2xl font-semibold text-gray-900">{t('privacy.sections.childSafety.title')}</h2>
+                    <p>{t('privacy.sections.childSafety.content')}</p>
+                </section>
+
+                <section className="space-y-4">
                     <h2 className="text-2xl font-semibold text-gray-900">{t('privacy.contact.title')}</h2>
                     <p>{t('privacy.contact.text')} <a href="mailto:Contacto@tincadia.com" className="text-blue-600 hover:underline">Contacto@tincadia.com</a></p>
                 </section>

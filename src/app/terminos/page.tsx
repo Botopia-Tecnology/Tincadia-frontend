@@ -76,6 +76,22 @@ export default function TermsPage() {
                     <p>{t('terms.sections.legislation.content')}</p>
                 </section>
 
+                <section className="space-y-4">
+                    <h2 className="text-2xl font-semibold text-gray-900">{t('terms.sections.childSafety.title')}</h2>
+                    <p>{t('terms.sections.childSafety.content')}</p>
+                </section>
+
+                <section className="space-y-4">
+                    <h2 className="text-2xl font-semibold text-gray-900">{t('terms.sections.emergencyDisclaimer.title')}</h2>
+                    <p>{t('terms.sections.emergencyDisclaimer.intro')}</p>
+                    <ul className="list-disc pl-5 space-y-2">
+                        {Array.isArray(t('terms.sections.emergencyDisclaimer.items') as unknown as string[]) && (t('terms.sections.emergencyDisclaimer.items') as unknown as string[]).map((item, index) => (
+                            <li key={index}>{item}</li>
+                        ))}
+                    </ul>
+                    <p className="font-semibold mt-4">{t('terms.sections.emergencyDisclaimer.footer')}</p>
+                </section>
+
                 <section className="space-y-4 pt-8 border-t border-gray-200">
                     <p>{t('terms.note')}</p>
                 </section>
