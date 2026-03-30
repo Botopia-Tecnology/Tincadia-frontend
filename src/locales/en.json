@@ -760,6 +760,10 @@
       "legislation": {
         "title": "7. Applicable Legislation and Jurisdiction",
         "content": "These Terms and Conditions are governed by the laws of the Republic of Colombia. For any controversy arising from their interpretation or execution, the parties submit to the competent judges and courts of the city of Medellín, Colombia, expressly waiving any other jurisdiction that might correspond to them."
+      },
+      "childSafety": {
+        "title": "8. Child Safety Protection Standards (CSAE)",
+        "content": "TINCADIA has a ZERO TOLERANCE policy towards child sexual abuse and exploitation (CSAE). We strictly prohibit the use of our platform to share, promote, or facilitate any type of child abuse material. We implement monitoring measures, immediate reporting mechanisms, and actively collaborate with legal authorities to report any suspicious activity and ensure a safe environment."
       }
     },
     "note": "TINCADIA reserves the right to unilaterally modify these terms at any time. Modifications will be effective from their publication on the platform. It is the user's responsibility to review them periodically.",
@@ -813,6 +817,10 @@
       "modifications": {
         "title": "5. Modifications",
         "content": "We reserve the right to modify this Policy. Changes will be published on the Platform with the date of the last update."
+      },
+      "childSafety": {
+        "title": "6. Child Safety Protection Standards (CSAE)",
+        "content": "TINCADIA has a ZERO TOLERANCE policy towards child sexual abuse and exploitation (CSAE). We strictly prohibit the use of our platform to share, promote, or facilitate any type of child abuse material. We implement monitoring measures, immediate reporting mechanisms, and actively collaborate with legal authorities to report any suspicious activity and ensure a safe environment."
       }
     },
     "contact": {

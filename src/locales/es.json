@@ -795,6 +795,23 @@
       "legislation": {
         "title": "7. Legislación Aplicable y Competencia",
         "content": "Estos Términos y Condiciones se rigen por las leyes de la República de Colombia. Para cualquier controversia derivada de su interpretación o ejecución, las partes se someten a los jueces y tribunales competentes de la ciudad de Medellín, Colombia, con renuncia expresa a cualquier otro fuero que pudiera corresponderles."
+      },
+      "childSafety": {
+        "title": "8. Estándares de Seguridad para la Protección Infantil (CSAE)",
+        "content": "TINCADIA tiene una política de TOLERANCIA CERO frente a la explotación y el abuso sexual infantil (CSAE). Prohibimos estrictamente el uso de nuestra plataforma para compartir, promover o facilitar cualquier tipo de material de abuso infantil. Implementamos medidas de monitoreo, mecanismos de reporte inmediatos y colaboramos activamente con las autoridades legales para reportar cualquier actividad sospechosa y garantizar un entorno seguro."
+      },
+      "emergencyDisclaimer": {
+        "title": "9. Acuerdo de Licencia de Usuario Final (EULA) – Funcionalidad SOS y Servicios de Emergencia",
+        "intro": "La aplicación TINCADIA incluye una funcionalidad denominada \"Centro de Ayuda\" o \"SOS\", diseñada para asistir a personas con discapacidad auditiva en la comunicación con líneas de emergencia (como el 123 en Colombia). Al utilizar esta funcionalidad, el Usuario reconoce y acepta lo siguiente:",
+        "items": [
+          "TINCADIA NO es un servicio de emergencia, ni un sustituto de los servicios oficiales de emergencia (policía, bomberos, ambulancia u otros organismos de socorro). La funcionalidad SOS es una herramienta de asistencia comunicativa.",
+          "La funcionalidad SOS facilita el envío de información de ubicación (coordenadas GPS, dirección aproximada) mediante SMS, audio generado por inteligencia artificial y mensajería. Sin embargo, TINCADIA no garantiza que los servicios de emergencia reciban, identifiquen o actúen sobre la ubicación del Usuario.",
+          "La precisión de la ubicación depende de factores externos como la señal GPS del dispositivo, la cobertura de red móvil y las condiciones del entorno. TINCADIA no se hace responsable de imprecisiones en la geolocalización.",
+          "La generación y reproducción de audio de emergencia depende de la conectividad a Internet y de que el operador de la línea de emergencia pueda escuchar y comprender el mensaje. TINCADIA no garantiza la disponibilidad ni la eficacia de esta función en todas las circunstancias.",
+          "El Usuario acepta que el uso de la funcionalidad SOS es bajo su exclusiva responsabilidad y riesgo. TINCADIA, sus directivos, empleados y colaboradores no serán responsables por daños directos, indirectos, incidentales o consecuenciales derivados del uso o imposibilidad de uso de esta funcionalidad.",
+          "En caso de emergencia real, el Usuario debe intentar contactar directamente a los servicios de emergencia por todos los medios disponibles, sin depender exclusivamente de la funcionalidad SOS de TINCADIA."
+        ],
+        "footer": "Al utilizar la funcionalidad SOS, el Usuario declara haber leído, comprendido y aceptado íntegramente este acuerdo."
       }
     },
     "note": "TINCADIA se reserva el derecho de modificar unilateralmente estos términos en cualquier momento. Las modificaciones entrarán en vigencia desde su publicación en la plataforma. Es responsabilidad del usuario revisarlos periódicamente.",
@@ -848,6 +865,10 @@
       "modifications": {
         "title": "5. Modificaciones",
         "content": "Nos reservamos el derecho de modificar esta Política. Los cambios se publicarán en la Plataforma con la fecha de la última actualización."
+      },
+      "childSafety": {
+        "title": "6. Estándares de Seguridad para la Protección Infantil (CSAE)",
+        "content": "TINCADIA tiene una política de TOLERANCIA CERO frente a la explotación y el abuso sexual infantil (CSAE). Prohibimos estrictamente el uso de nuestra plataforma para compartir, promover o facilitar cualquier tipo de material de abuso infantil. Implementamos medidas de monitoreo, mecanismos de reporte inmediatos y colaboramos activamente con las autoridades legales para reportar cualquier actividad sospechosa y garantizar un entorno seguro."
       }
     },
     "contact": {
