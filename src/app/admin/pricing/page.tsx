@@ -49,6 +49,7 @@ export default function PricingAdminPage() {
             correction_limit: 1,
             lsc_enabled: false,
             interpreter_enabled: false,
+            tts_enabled: false,
         }
     });
 
@@ -356,7 +357,7 @@ export default function PricingAdminPage() {
                                         </div>
                                     </div>
 
-                                    <div className="flex gap-4 items-center">
+                                    <div className="flex gap-4 items-center flex-wrap">
                                         <label className="flex items-center gap-2 text-xs text-gray-300">
                                             <input
                                                 type="checkbox"
@@ -374,6 +375,15 @@ export default function PricingAdminPage() {
                                                 className="rounded"
                                             />
                                             Llamada a Intérprete
+                                        </label>
+                                        <label className="flex items-center gap-2 text-xs text-gray-300">
+                                            <input
+                                                type="checkbox"
+                                                checked={!!editingPlan.features?.tts_enabled}
+                                                onChange={(e) => updateFeatureField('tts_enabled', e.target.checked)}
+                                                className="rounded"
+                                            />
+                                            🔊 Google TTS
                                         </label>
                                     </div>
                                 </div>
@@ -599,7 +609,7 @@ export default function PricingAdminPage() {
                                             </div>
                                         </div>
 
-                                        <div className="flex gap-4 items-center">
+                                        <div className="flex gap-4 items-center flex-wrap">
                                             <label className="flex items-center gap-2 text-xs text-gray-300">
                                                 <input
                                                     type="checkbox"
@@ -617,6 +627,15 @@ export default function PricingAdminPage() {
                                                     className="rounded"
                                                 />
                                                 Llamada a Intérprete
+                                            </label>
+                                            <label className="flex items-center gap-2 text-xs text-gray-300">
+                                                <input
+                                                    type="checkbox"
+                                                    checked={!!editingPlan.features?.tts_enabled}
+                                                    onChange={(e) => updateFeatureField('tts_enabled', e.target.checked)}
+                                                    className="rounded"
+                                                />
+                                                🔊 Google TTS
                                             </label>
                                         </div>
                                     </div>
