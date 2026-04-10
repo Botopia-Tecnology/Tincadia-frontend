@@ -75,7 +75,7 @@ export default function UsersPage() {
             user.lastName?.toLowerCase().includes(searchTerm.toLowerCase()) ||
             user.email.toLowerCase().includes(searchTerm.toLowerCase());
 
-        const matchesRole = roleFilter === 'all' || user.role === roleFilter;
+        const matchesRole = roleFilter === 'all' || user.role?.toLowerCase() === roleFilter.toLowerCase();
 
         const matchesStatus = statusFilter === 'all' ||
             user.status === statusFilter ||
@@ -255,7 +255,7 @@ export default function UsersPage() {
                                                                 >
                                                                     <option value="User">User</option>
                                                                     <option value="Admin">Admin</option>
-                                                                    <option value="Interpreter">Interpreter</option>
+                                                                    <option value="interpreter">Interpreter</option>
                                                                 </select>
                                                                 <button onClick={() => handleUpdateRole(user.id)} className="p-1 hover:bg-emerald-500/20 text-emerald-400 rounded transition">
                                                                     <Check size={14} />
@@ -266,7 +266,7 @@ export default function UsersPage() {
                                                             </div>
                                                         ) : (
                                                             <span className={`inline-flex px-2.5 py-1 rounded-md text-xs font-semibold border ${user.role === 'Admin' ? 'bg-purple-500/10 text-purple-400 border-purple-500/20' :
-                                                                    user.role === 'Interpreter' ? 'bg-orange-500/10 text-orange-400 border-orange-500/20' :
+                                                                    (user.role === 'Interpreter' || user.role === 'interpreter') ? 'bg-orange-500/10 text-orange-400 border-orange-500/20' :
                                                                         'bg-blue-500/10 text-blue-400 border-blue-500/20'
                                                                 }`}>
                                                                 {user.role}
@@ -431,7 +431,7 @@ export default function UsersPage() {
                                     <p className="text-slate-400 mt-1">{selectedUser.email}</p>
                                     <div className="mt-4 flex gap-2">
                                         <span className={`px-3 py-1 rounded-full text-xs font-semibold border ${selectedUser.role === 'Admin' ? 'bg-purple-500/10 text-purple-400 border-purple-500/20' :
-                                                selectedUser.role === 'Interpreter' ? 'bg-orange-500/10 text-orange-400 border-orange-500/20' :
+                                                (selectedUser.role === 'Interpreter' || selectedUser.role === 'interpreter') ? 'bg-orange-500/10 text-orange-400 border-orange-500/20' :
                                                     'bg-blue-500/10 text-blue-400 border-blue-500/20'
                                             }`}>
                                             {selectedUser.role}
