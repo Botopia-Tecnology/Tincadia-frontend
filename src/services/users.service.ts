@@ -59,6 +59,25 @@ export const usersService = {
             throw error;
         }
     },
+    deleteUser: async (userId: string): Promise<void> => {
+        try {
+            const response = await fetch(`${buildUrl(USER_ENDPOINTS.LIST)}/${userId}`, {
+                method: 'DELETE',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${localStorage.getItem('tincadia_token')}`
+                },
+            });
+
+            if (!response.ok) {
+                const data = await response.json();
+                throw new Error(data.message || 'Failed to delete user');
+            }
+        } catch (error) {
+            console.error('Error deleting user:', error);
+            throw error;
+        }
+    },
     updateUserRole: async (userId: string, role: string): Promise<void> => {
         try {
             // Note: Endpoint is /auth/users/:userId/role defined in api-gateway AuthController

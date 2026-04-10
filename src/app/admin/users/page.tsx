@@ -106,10 +106,33 @@ export default function UsersPage() {
         }
     };
 
+    const [deletingUserId, setDeletingUserId] = useState<string | null>(null);
+
+    const handleDeleteUser = async (user: User) => {
+        const confirmed = window.confirm(
+            `¿Estás seguro de que deseas eliminar a ${user.firstName} ${user.lastName}?\n\nEsta acción es irreversible y eliminará todos sus datos.`
+        );
+
+        if (!confirmed) return;
+
+        try {
+            setDeletingUserId(user.id);
+            await usersService.deleteUser(user.id);
+            setUsers(prev => prev.filter(u => u.id !== user.id));
+            if (selectedUser?.id === user.id) setSelectedUser(null);
+            setActiveMenuUserId(null);
+        } catch (error) {
+            console.error('Failed to delete user', error);
+            alert('Error al eliminar el usuario');
+        } finally {
+            setDeletingUserId(null);
+        }
+    };
+
     const startEditing = (user: User) => {
         setEditingUserId(user.id);
         setSelectedRole(user.role);
-        setActiveMenuUserId(null); // Close menu
+        setActiveMenuUserId(null);
     };
 
     const formatDate = (dateString: string) => {
@@ -290,6 +313,19 @@ export default function UsersPage() {
                                                                     <Mail size={14} />
                                                                     Enviar Email
                                                                 </button>
+                                                                <div className="border-t border-slate-700 my-1" />
+                                                                <button
+                                                                    onClick={() => handleDeleteUser(user)}
+                                                                    disabled={deletingUserId === user.id}
+                                                                    className="w-full text-left px-3 py-2 text-sm text-rose-400 hover:bg-rose-500/10 hover:text-rose-300 rounded-lg flex items-center gap-2 transition-colors disabled:opacity-50"
+                                                                >
+                                                                    {deletingUserId === user.id ? (
+                                                                        <Loader2 size={14} className="animate-spin" />
+                                                                    ) : (
+                                                                        <Trash2 size={14} />
+                                                                    )}
+                                                                    Eliminar Usuario
+                                                                </button>
                                                             </div>
                                                         )}
                                                     </td>
@@ -463,6 +499,19 @@ export default function UsersPage() {
                                         <Mail size={20} className="text-red-500" />
                                     </div>
                                     Redactar en Gmail
+                                </button>
+
+                                <button
+                                    onClick={() => handleDeleteUser(selectedUser)}
+                                    disabled={deletingUserId === selectedUser.id}
+                                    className="w-full py-3 bg-rose-500/10 hover:bg-rose-500/20 text-rose-400 rounded-xl font-medium transition-colors border border-rose-500/20 flex items-center justify-center gap-2 mb-3 disabled:opacity-50"
+                                >
+                                    {deletingUserId === selectedUser.id ? (
+                                        <Loader2 size={18} className="animate-spin" />
+                                    ) : (
+                                        <Trash2 size={18} />
+                                    )}
+                                    Eliminar Usuario
                                 </button>
 
                                 <button
