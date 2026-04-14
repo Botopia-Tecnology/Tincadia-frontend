@@ -4,7 +4,7 @@ import { useState } from 'react';
 import { FileText, RefreshCw, Download, Search, Filter, Trash2, Eye, ChevronLeft, ChevronRight, AlertCircle, Calendar, Mail, Phone, User } from 'lucide-react';
 import { FormSubmission } from './types';
 import { useFormSubmissions } from './hooks/useFormSubmissions';
-import { exportToCSV, formatDate } from './utils';
+import { exportToCSV, downloadCompletePackage, formatDate } from './utils';
 import { FormSubmissionModal } from './components/FormSubmissionModal';
 import { formTypeIcons, formTypeLabels } from './constants';
 
@@ -12,12 +12,25 @@ export default function FormsPage() {
     const { submissions, loading, error, refetch, deleteSubmission } = useFormSubmissions();
     const [selectedSubmission, setSelectedSubmission] = useState<FormSubmission | null>(null);
     const [filterType, setFilterType] = useState<string>('all');
+    const [searchTerm, setSearchTerm] = useState<string>('');
+    const [downloadStatus, setDownloadStatus] = useState<{ step: string; message: string; isError: boolean } | null>(null);
+    const [isDownloading, setIsDownloading] = useState(false);
     const [currentPage, setCurrentPage] = useState(1);
     const itemsPerPage = 10;
 
-    const filteredSubmissions = filterType === 'all'
-        ? submissions
-        : submissions.filter(s => s.form?.type === filterType);
+    const filteredSubmissions = submissions.filter(s => {
+        const matchesType = filterType === 'all' || s.form?.type === filterType;
+        if (!matchesType) return false;
+
+        if (!searchTerm) return true;
+
+        const term = searchTerm.toLowerCase();
+        const fullName = (s.fullName || s.data?.nombreCompleto || '').toLowerCase();
+        const email = (s.email || s.data?.correoElectronico || '').toLowerCase();
+        const doc = (s.documentNumber || s.data?.documentoIdentidad || '').toLowerCase();
+
+        return fullName.includes(term) || email.includes(term) || doc.includes(term);
+    });
 
     // Pagination Logic
     const totalPages = Math.ceil(filteredSubmissions.length / itemsPerPage);
@@ -34,6 +47,37 @@ export default function FormsPage() {
 
     const handleExport = () => {
         exportToCSV(filteredSubmissions);
+    };
+
+    const handleDownloadAll = async () => {
+        if (paginatedSubmissions.length === 0) return;
+
+        if (!confirm(`¿Descargar Excel + ZIP de los ${paginatedSubmissions.length} usuarios visibles?\n\nSe generarán dos archivos:\n• Excel con todos los datos del formulario\n• ZIP con los PDFs de Cloudinary`)) return;
+
+        setIsDownloading(true);
+        setDownloadStatus({ step: 'Iniciando...', message: '', isError: false });
+
+        const token = localStorage.getItem('tincadia_token');
+        await downloadCompletePackage(
+            paginatedSubmissions,
+            token,
+            (step, message) => {
+                const labels: Record<string, string> = {
+                    excel: '📊 Generando Excel...',
+                    zip: '📦 Generando ZIP de documentos...',
+                    done: '✅ Descarga completada',
+                    error: `❌ ${message || 'Error en el ZIP'}`,
+                };
+                setDownloadStatus({
+                    step: labels[step] || step,
+                    message: message || '',
+                    isError: step === 'error',
+                });
+                if (step === 'done' || step === 'error') {
+                    setTimeout(() => { setDownloadStatus(null); setIsDownloading(false); }, 3000);
+                }
+            }
+        );
     };
 
     const handleDelete = async (id: string) => {
@@ -59,55 +103,89 @@ export default function FormsPage() {
                     <p className="text-slate-400 text-lg">Respuestas de Empresas Inclusivas y Solicitudes de Intérpretes</p>
                 </div>
 
-                <div className="flex gap-3">
-                    <button
-                        onClick={handleExport}
-                        disabled={filteredSubmissions.length === 0}
-                        className="flex items-center gap-2 px-4 py-2 bg-emerald-600/20 hover:bg-emerald-600/40 text-emerald-400 border border-emerald-500/20 hover:border-emerald-500/50 rounded-lg transition-all font-medium disabled:opacity-50 disabled:cursor-not-allowed"
-                    >
-                        <Download size={18} />
-                        Exportar CSV
-                    </button>
-                    <button
-                        onClick={refetch}
-                        disabled={loading}
-                        className="flex items-center gap-2 px-4 py-2 bg-blue-600 hover:bg-blue-500 text-white shadow-lg shadow-blue-900/20 rounded-lg transition-all font-medium"
-                    >
-                        <RefreshCw size={18} className={loading ? 'animate-spin' : ''} />
-                        Actualizar
-                    </button>
+                <div className="flex flex-col items-end gap-2">
+                    <div className="flex gap-3">
+                        <button
+                            onClick={handleDownloadAll}
+                            disabled={paginatedSubmissions.length === 0 || isDownloading}
+                            className="flex items-center gap-2 px-4 py-2 bg-violet-600/20 hover:bg-violet-600/40 text-violet-300 border border-violet-500/20 hover:border-violet-500/50 rounded-lg transition-all font-medium disabled:opacity-50"
+                        >
+                            {isDownloading ? (
+                                <RefreshCw size={18} className="animate-spin" />
+                            ) : (
+                                <Download size={18} />
+                            )}
+                            Descargar Todo (Excel + ZIP)
+                        </button>
+                        <button
+                            onClick={handleExport}
+                            disabled={filteredSubmissions.length === 0}
+                            className="flex items-center gap-2 px-4 py-2 bg-emerald-600/20 hover:bg-emerald-600/40 text-emerald-400 border border-emerald-500/20 hover:border-emerald-500/50 rounded-lg transition-all font-medium disabled:opacity-50 disabled:cursor-not-allowed"
+                        >
+                            <Download size={18} />
+                            CSV
+                        </button>
+                        <button
+                            onClick={refetch}
+                            disabled={loading}
+                            className="flex items-center gap-2 px-4 py-2 bg-blue-600 hover:bg-blue-500 text-white shadow-lg shadow-blue-900/20 rounded-lg transition-all font-medium"
+                        >
+                            <RefreshCw size={18} className={loading ? 'animate-spin' : ''} />
+                            Actualizar
+                        </button>
+                    </div>
+                    {downloadStatus && (
+                        <p className={`text-xs font-medium animate-pulse ${downloadStatus.isError ? 'text-red-400' : 'text-violet-300'}`}>
+                            {downloadStatus.step}
+                        </p>
+                    )}
                 </div>
             </header>
 
-            {/* Filters Bar */}
-            <div className="mb-8 flex flex-wrap items-center gap-4 bg-slate-900/60 backdrop-blur-md p-4 rounded-2xl border border-white/5 shadow-xl">
-                <div className="flex items-center gap-2 px-3 py-2 bg-white/5 rounded-lg border border-white/5 text-slate-400">
-                    <Filter size={16} />
-                    <span className="text-sm font-medium">Filtrar por tipo:</span>
-                </div>
+            {/* Filters & Search Bar */}
+            <div className="mb-8 flex flex-wrap items-center justify-between gap-4 bg-slate-900/60 backdrop-blur-md p-4 rounded-2xl border border-white/5 shadow-xl">
+                <div className="flex flex-wrap items-center gap-4">
+                    <div className="flex items-center gap-2 px-3 py-2 bg-white/5 rounded-lg border border-white/5 text-slate-400">
+                        <Filter size={16} />
+                        <span className="text-sm font-medium">Filtrar:</span>
+                    </div>
 
-                <div className="flex flex-wrap gap-2">
-                    <button
-                        onClick={() => { setFilterType('all'); setCurrentPage(1); }}
-                        className={`px-4 py-1.5 rounded-full text-sm font-medium transition-all ${filterType === 'all'
-                                ? 'bg-blue-600 text-white shadow-md shadow-blue-900/40'
-                                : 'bg-slate-800 text-slate-400 hover:text-white hover:bg-slate-700'
-                            }`}
-                    >
-                        Todos ({submissions.length})
-                    </button>
-                    {uniqueTypes.map(type => (
+                    <div className="flex flex-wrap gap-2">
                         <button
-                            key={type}
-                            onClick={() => { setFilterType(type); setCurrentPage(1); }}
-                            className={`px-4 py-1.5 rounded-full text-sm font-medium transition-all border ${filterType === type
-                                    ? 'bg-indigo-600 border-indigo-500 text-white shadow-md shadow-indigo-900/40'
-                                    : 'bg-transparent border-slate-700 text-slate-400 hover:border-slate-500 hover:text-white'
+                            onClick={() => { setFilterType('all'); setCurrentPage(1); }}
+                            className={`px-4 py-1.5 rounded-full text-sm font-medium transition-all ${filterType === 'all'
+                                    ? 'bg-blue-600 text-white shadow-md shadow-blue-900/40'
+                                    : 'bg-slate-800 text-slate-400 hover:text-white hover:bg-slate-700'
                                 }`}
                         >
-                            {formTypeLabels[type] || type}
+                            Todos ({submissions.length})
                         </button>
-                    ))}
+                        {uniqueTypes.map(type => (
+                            <button
+                                key={type}
+                                onClick={() => { setFilterType(type); setCurrentPage(1); }}
+                                className={`px-4 py-1.5 rounded-full text-sm font-medium transition-all border ${filterType === type
+                                        ? 'bg-indigo-600 border-indigo-500 text-white shadow-md shadow-indigo-900/40'
+                                        : 'bg-transparent border-slate-700 text-slate-400 hover:border-slate-500 hover:text-white'
+                                    }`}
+                            >
+                                {formTypeLabels[type] || type}
+                            </button>
+                        ))}
+                    </div>
+                </div>
+
+                <div className="relative flex-1 max-w-md w-full">
+                    <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-slate-500">
+                        <Search size={18} />
+                    </div>
+                    <input
+                        type="text"
+                        placeholder="Buscar por nombre, correo o documento..."
+                        value={searchTerm}
+                        onChange={(e) => { setSearchTerm(e.target.value); setCurrentPage(1); }}
+                        className="block w-full pl-10 pr-3 py-2.5 bg-slate-800/50 border border-white/10 rounded-xl text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500 transition-all text-sm"
+                    />
                 </div>
             </div>
 
