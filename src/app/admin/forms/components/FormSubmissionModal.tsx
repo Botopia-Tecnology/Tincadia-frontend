@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { FormSubmission } from '../types';
 import { formTypeLabels } from '../constants';
-import { formatDate, exportToExcel } from '../utils';
+import { formatDate, exportToExcel, openCloudinaryArchiveResponse } from '../utils';
 import { OrganizedDataRenderer } from './OrganizedDataRenderer';
 import { CheckCircle, AlertTriangle, UserCheck, XCircle } from 'lucide-react';
 import { usersService } from '@/services/users.service';
@@ -97,9 +97,7 @@ export function FormSubmissionModal({ submission, onClose, onDeleted }: FormSubm
             }
 
             const data = await response.json();
-            if (data.url) {
-                window.open(data.url, '_blank');
-            }
+            await openCloudinaryArchiveResponse(data);
         } catch (err: any) {
             alert(err.message || 'Error al generar ZIP');
         } finally {
