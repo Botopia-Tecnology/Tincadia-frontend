@@ -1,7 +1,6 @@
 import * as XLSX from 'xlsx';
 import { FormSubmission } from './types';
 import { formTypeLabels, fieldLabels } from './constants';
-import { buildUrl, FORMS_ENDPOINTS } from '@/config/api.config';
 
 export const formatDate = (dateString: string): string => {
     return new Date(dateString).toLocaleDateString('es-CO', {
@@ -163,101 +162,4 @@ export const exportToExcel = (submissions: FormSubmission[], filename?: string):
     const wb = XLSX.utils.book_new();
     XLSX.utils.book_append_sheet(wb, ws, 'Formularios');
     XLSX.writeFile(wb, filename || `tincadia_formularios_${new Date().toISOString().split('T')[0]}.xlsx`);
-};
-
-/** Respuesta del backend para ZIP(s) de Cloudinary (uno o varios lotes). */
-export type CloudinaryArchiveApiResponse = {
-    batches?: { imageUrl?: string; rawUrl?: string }[];
-    imageUrl?: string;
-    rawUrl?: string;
-    url?: string;
-    totalAssets?: number;
-    batchCount?: number;
-};
-
-/**
- * Abre ventanas de descarga para uno o varios ZIP (evita límite de longitud de URL con muchos public_ids).
- */
-export async function openCloudinaryArchiveResponse(
-    data: CloudinaryArchiveApiResponse,
-    onBatch?: (index: number, total: number) => void
-): Promise<void> {
-    const batches =
-        data.batches && data.batches.length > 0
-            ? data.batches
-            : data.imageUrl || data.rawUrl
-              ? [{ imageUrl: data.imageUrl, rawUrl: data.rawUrl }]
-              : data.url
-                ? [{ imageUrl: data.url, rawUrl: undefined }]
-                : [];
-
-    for (let i = 0; i < batches.length; i++) {
-        onBatch?.(i + 1, batches.length);
-        const b = batches[i];
-        if (b.imageUrl) window.open(b.imageUrl, '_blank');
-        await new Promise((r) => setTimeout(r, 500));
-        if (b.rawUrl) window.open(b.rawUrl, '_blank');
-        if (i < batches.length - 1) {
-            await new Promise((r) => setTimeout(r, 800));
-        }
-    }
-}
-
-/**
- * Descarga completa: Excel con todos los datos + ZIP(s) de Cloudinary con los PDFs
- * El backend ahora devuelve imageUrl y rawUrl para cubrir ambos resource_type.
- */
-export const downloadCompletePackage = async (
-    submissions: FormSubmission[],
-    token: string | null,
-    onProgress?: (step: 'excel' | 'zip' | 'done' | 'error', message?: string) => void
-): Promise<void> => {
-    if (submissions.length === 0) return;
-
-    // 1. Generar Excel inmediatamente (sincrónico, browser-side)
-    onProgress?.('excel', 'Generando Excel...');
-    const filename = `tincadia_${submissions.length}_solicitudes_${new Date().toISOString().split('T')[0]}.xlsx`;
-    exportToExcel(submissions, filename);
-
-    // 2. Pedir ZIP(s) al backend
-    const emails = [...new Set(
-        submissions
-            .map(s => s.email || s.data?.correoElectronico)
-            .filter((e): e is string => !!e)
-    )];
-
-    if (emails.length === 0) {
-        onProgress?.('done', 'Excel descargado. No había emails para el ZIP.');
-        return;
-    }
-
-    try {
-        onProgress?.('zip', 'Generando ZIP de documentos...');
-        const response = await fetch(buildUrl(FORMS_ENDPOINTS.DOWNLOAD_BATCH), {
-            method: 'POST',
-            headers: {
-                'Authorization': `Bearer ${token}`,
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({ emails }),
-        });
-
-        if (!response.ok) {
-            const errData = await response.json().catch(() => ({}));
-            throw new Error(errData.message || 'Error al generar el ZIP');
-        }
-
-        const data = (await response.json()) as CloudinaryArchiveApiResponse;
-        const totalAssets = data.totalAssets;
-
-        await openCloudinaryArchiveResponse(data, (i, total) => {
-            if (total > 1) {
-                onProgress?.('zip', `Abriendo lote ${i}/${total}${totalAssets != null ? ` (~${totalAssets} archivos)` : ''}…`);
-            }
-        });
-
-        onProgress?.('done');
-    } catch (err: any) {
-        onProgress?.('error', err.message || 'Error al generar el ZIP de documentos');
-    }
 };

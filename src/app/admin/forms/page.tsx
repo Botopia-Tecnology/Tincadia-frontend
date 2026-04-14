@@ -4,7 +4,7 @@ import { useState, useCallback } from 'react';
 import { FileText, RefreshCw, Download, Search, Filter, Trash2, Eye, ChevronLeft, ChevronRight, AlertCircle, Calendar, Mail, Phone, User, X } from 'lucide-react';
 import { FormSubmission } from './types';
 import { useFormSubmissions } from './hooks/useFormSubmissions';
-import { exportToCSV, downloadCompletePackage, formatDate } from './utils';
+import { exportToCSV, exportToExcel, formatDate } from './utils';
 import { FormSubmissionModal } from './components/FormSubmissionModal';
 import { DownloadModal, DownloadScope } from './components/DownloadModal';
 import { formTypeIcons, formTypeLabels } from './constants';
@@ -92,7 +92,7 @@ export default function FormsPage() {
         setShowDownloadModal(true);
     };
 
-    const handleDownloadConfirm = async (scope: DownloadScope) => {
+    const handleDownloadConfirm = (scope: DownloadScope) => {
         setShowDownloadModal(false);
 
         let targets: FormSubmission[] = [];
@@ -103,29 +103,20 @@ export default function FormsPage() {
         if (targets.length === 0) return;
 
         setIsDownloading(true);
-        setDownloadStatus({ step: 'Iniciando...', message: '', isError: false });
+        setDownloadStatus({ step: '📊 Generando Excel...', message: '', isError: false });
 
-        const token = localStorage.getItem('tincadia_token');
-        await downloadCompletePackage(
-            targets,
-            token,
-            (step, message) => {
-                const labels: Record<string, string> = {
-                    excel: '📊 Generando Excel...',
-                    zip: '📦 Generando ZIP de documentos...',
-                    done: '✅ Descarga completada',
-                    error: `❌ ${message || 'Error en el ZIP'}`,
-                };
-                setDownloadStatus({
-                    step: labels[step] || step,
-                    message: message || '',
-                    isError: step === 'error',
-                });
-                if (step === 'done' || step === 'error') {
-                    setTimeout(() => { setDownloadStatus(null); setIsDownloading(false); }, 3000);
-                }
-            }
-        );
+        try {
+            const filename = `tincadia_${targets.length}_solicitudes_${new Date().toISOString().split('T')[0]}.xlsx`;
+            exportToExcel(targets, filename);
+            setDownloadStatus({ step: '✅ Excel descargado', message: '', isError: false });
+        } catch {
+            setDownloadStatus({ step: '❌ Error al generar Excel', message: '', isError: true });
+        }
+
+        setTimeout(() => {
+            setDownloadStatus(null);
+            setIsDownloading(false);
+        }, 3000);
     };
 
     const handleDelete = async (id: string) => {
