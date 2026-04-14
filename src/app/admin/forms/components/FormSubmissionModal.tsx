@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { FormSubmission } from '../types';
 import { formTypeLabels } from '../constants';
-import { formatDate } from '../utils';
+import { formatDate, exportToExcel } from '../utils';
 import { OrganizedDataRenderer } from './OrganizedDataRenderer';
 import { CheckCircle, AlertTriangle, UserCheck, XCircle } from 'lucide-react';
 import { usersService } from '@/services/users.service';
@@ -16,6 +16,8 @@ interface FormSubmissionModalProps {
 export function FormSubmissionModal({ submission, onClose, onDeleted }: FormSubmissionModalProps) {
     const [isPromoting, setIsPromoting] = useState(false);
     const [isRejecting, setIsRejecting] = useState(false);
+    const [isDownloadingZip, setIsDownloadingZip] = useState(false);
+    const [isDownloadingExcel, setIsDownloadingExcel] = useState(false);
     const [promoteError, setPromoteError] = useState<string | null>(null);
     const [rejectError, setRejectError] = useState<string | null>(null);
     const [promoteSuccess, setPromoteSuccess] = useState(false);
@@ -73,6 +75,46 @@ export function FormSubmissionModal({ submission, onClose, onDeleted }: FormSubm
             setRejectError(err.message || 'Error al rechazar solicitud');
         } finally {
             setIsRejecting(false);
+        }
+    };
+
+    const handleDownloadUserZip = async () => {
+        const email = submission.email || submission.data?.correoElectronico;
+        if (!email) return;
+
+        setIsDownloadingZip(true);
+        try {
+            const token = localStorage.getItem('tincadia_token');
+            const response = await fetch(`${buildUrl(FORMS_ENDPOINTS.DOWNLOAD_USER)}/${email}`, {
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                }
+            });
+
+            if (!response.ok) {
+                const data = await response.json();
+                throw new Error(data.message || 'No se pudieron encontrar documentos');
+            }
+
+            const data = await response.json();
+            if (data.url) {
+                window.open(data.url, '_blank');
+            }
+        } catch (err: any) {
+            alert(err.message || 'Error al generar ZIP');
+        } finally {
+            setIsDownloadingZip(false);
+        }
+    };
+
+    const handleDownloadExcel = () => {
+        setIsDownloadingExcel(true);
+        try {
+            const name = submission.fullName || submission.data?.nombreCompleto || 'submission';
+            const safeDate = new Date().toISOString().split('T')[0];
+            exportToExcel([submission], `tincadia_${name.replace(/\s+/g, '_')}_${safeDate}.xlsx`);
+        } finally {
+            setIsDownloadingExcel(false);
         }
     };
 
@@ -169,14 +211,14 @@ export function FormSubmissionModal({ submission, onClose, onDeleted }: FormSubm
                                             </div>
                                         )}
 
-                                        <div className="flex gap-3">
+                                        <div className="flex flex-wrap gap-3">
                                             <button
                                                 onClick={handleReject}
-                                                disabled={isRejecting || isPromoting}
-                                                className="px-4 py-2 bg-red-600 hover:bg-red-700 disabled:bg-slate-700 disabled:text-slate-500 text-white rounded-lg transition-colors flex items-center gap-2"
+                                                disabled={isRejecting || isPromoting || isDownloadingZip || isDownloadingExcel}
+                                                className="px-4 py-2 bg-red-600/20 hover:bg-red-600/40 text-red-500 border border-red-500/20 rounded-lg transition-colors flex items-center gap-2 text-sm"
                                             >
                                                 {isRejecting ? (
-                                                    <span className="animate-spin">⌛</span>
+                                                    <span className="animate-spin text-xs">⌛</span>
                                                 ) : (
                                                     <XCircle size={16} />
                                                 )}
@@ -184,16 +226,42 @@ export function FormSubmissionModal({ submission, onClose, onDeleted }: FormSubm
                                             </button>
 
                                             <button
-                                                onClick={handlePromote}
-                                                disabled={isPromoting || isRejecting}
-                                                className="px-4 py-2 bg-green-600 hover:bg-green-700 disabled:bg-slate-700 disabled:text-slate-500 text-white rounded-lg transition-colors flex items-center gap-2"
+                                                onClick={handleDownloadExcel}
+                                                disabled={isDownloadingExcel || isRejecting || isPromoting || isDownloadingZip}
+                                                className="px-4 py-2 bg-emerald-600/20 hover:bg-emerald-600/40 text-emerald-400 border border-emerald-500/20 rounded-lg transition-colors flex items-center gap-2 text-sm"
                                             >
-                                                {isPromoting ? (
-                                                    <span className="animate-spin">⌛</span>
+                                                {isDownloadingExcel ? (
+                                                    <span className="animate-spin text-xs">⌛</span>
                                                 ) : (
                                                     <CheckCircle size={16} />
                                                 )}
-                                                {isPromoting ? 'Procesando...' : 'Aprobar'}
+                                                {isDownloadingExcel ? 'Generando...' : 'Descargar Excel'}
+                                            </button>
+
+                                            <button
+                                                onClick={handleDownloadUserZip}
+                                                disabled={isDownloadingZip || isRejecting || isPromoting || isDownloadingExcel}
+                                                className="px-4 py-2 bg-blue-600/20 hover:bg-blue-600/40 text-blue-400 border border-blue-500/20 rounded-lg transition-colors flex items-center gap-2 text-sm"
+                                            >
+                                                {isDownloadingZip ? (
+                                                    <span className="animate-spin text-xs">⌛</span>
+                                                ) : (
+                                                    <CheckCircle size={16} className="rotate-180" />
+                                                )}
+                                                {isDownloadingZip ? 'Generando ZIP...' : 'Bajar PDFs (ZIP)'}
+                                            </button>
+
+                                            <button
+                                                onClick={handlePromote}
+                                                disabled={isPromoting || isRejecting || isDownloadingZip || isDownloadingExcel}
+                                                className="px-4 py-2 bg-green-600 hover:bg-green-700 disabled:bg-slate-700 disabled:text-slate-500 text-white rounded-lg transition-colors flex items-center gap-2 text-sm font-medium"
+                                            >
+                                                {isPromoting ? (
+                                                    <span className="animate-spin text-xs">⌛</span>
+                                                ) : (
+                                                    <CheckCircle size={16} />
+                                                )}
+                                                {isPromoting ? 'Procesando...' : 'Aprobar Solicitud'}
                                             </button>
                                         </div>
                                     </div>

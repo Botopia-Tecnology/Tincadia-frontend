@@ -74,6 +74,12 @@ export const FORMS_ENDPOINTS = {
     SUBMISSIONS: '/forms/submissions',
     /** DELETE - Delete a submission (Admin) */
     DELETE_SUBMISSION: '/forms/submissions', // Append /:id when using
+    /** GET - Download all documents as ZIP (Admin) */
+    DOWNLOAD_ALL: '/forms/download/all',
+    /** GET - Download user documents as ZIP (Admin) */
+    DOWNLOAD_USER: '/forms/download/user', // Append /:email when using
+    /** POST - Download batch documents as ZIP (Admin) */
+    DOWNLOAD_BATCH: '/forms/download/batch',
 } as const;
 
 /**
