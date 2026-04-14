@@ -117,7 +117,8 @@ export const exportToExcel = (submissions: FormSubmission[], filename?: string):
 
         XLSX.utils.sheet_add_aoa(ws, [row], { origin: `A${excelRow}` });
 
-        // Columnas de documentos con hipervínculos
+        // Columnas de documentos con hipervínculos usando fórmula HYPERLINK
+        // (más compatible que el campo 'l' de xlsx — funciona sin "habilitar contenido")
         docKeysPresent.forEach((docKey, docColIdx) => {
             const colIdx = baseKeys.length + dataKeysOrdered.length + docColIdx;
             const url = extractUrl(s.data?.[docKey]);
@@ -128,7 +129,8 @@ export const exportToExcel = (submissions: FormSubmission[], filename?: string):
                 ws[cellRef] = {
                     t: 's',
                     v: 'Ver Documento',
-                    l: { Target: url, Tooltip: 'Abrir documento en Cloudinary' },
+                    f: `HYPERLINK("${url}","Ver Documento")`,
+                    l: { Target: url, Tooltip: 'Abrir documento' },
                 };
             } else {
                 ws[cellRef] = { t: 's', v: 'Sin documento' };
@@ -164,8 +166,8 @@ export const exportToExcel = (submissions: FormSubmission[], filename?: string):
 };
 
 /**
- * Descarga completa: Excel con todos los datos + ZIP de Cloudinary con los PDFs
- * Ambas descargas se disparan en paralelo con un solo click
+ * Descarga completa: Excel con todos los datos + ZIP(s) de Cloudinary con los PDFs
+ * El backend ahora devuelve imageUrl y rawUrl para cubrir ambos resource_type.
  */
 export const downloadCompletePackage = async (
     submissions: FormSubmission[],
@@ -179,7 +181,7 @@ export const downloadCompletePackage = async (
     const filename = `tincadia_${submissions.length}_solicitudes_${new Date().toISOString().split('T')[0]}.xlsx`;
     exportToExcel(submissions, filename);
 
-    // 2. Pedir ZIP al backend y abrir la URL de Cloudinary
+    // 2. Pedir ZIP(s) al backend
     const emails = submissions
         .map(s => s.email || s.data?.correoElectronico)
         .filter((e): e is string => !!e);
@@ -206,9 +208,24 @@ export const downloadCompletePackage = async (
         }
 
         const data = await response.json();
-        if (data.url) {
+
+        // Abrir imageUrl (imágenes y algunos PDFs)
+        if (data.imageUrl) {
+            window.open(data.imageUrl, '_blank');
+        }
+
+        // Abrir rawUrl (PDFs subidos como resource_type=raw) con pequeño delay
+        // para no bloquear el popup blocker del navegador
+        if (data.rawUrl) {
+            await new Promise(r => setTimeout(r, 800));
+            window.open(data.rawUrl, '_blank');
+        }
+
+        // Retrocompatibilidad: si el backend devuelve el campo url antiguo
+        if (!data.imageUrl && !data.rawUrl && data.url) {
             window.open(data.url, '_blank');
         }
+
         onProgress?.('done');
     } catch (err: any) {
         onProgress?.('error', err.message || 'Error al generar el ZIP de documentos');
