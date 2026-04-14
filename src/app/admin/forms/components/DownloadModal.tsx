@@ -1,6 +1,6 @@
 'use client';
 
-import { X, CheckSquare, Filter, Database, Download, FileSpreadsheet, FileArchive } from 'lucide-react';
+import { X, CheckSquare, Filter, Database, Download, FileSpreadsheet } from 'lucide-react';
 
 export type DownloadScope = 'selected' | 'filtered' | 'all';
 
@@ -37,7 +37,7 @@ export function DownloadModal({
                         </div>
                         <div>
                             <h3 className="text-lg font-semibold text-white">Descargar Datos</h3>
-                            <p className="text-xs text-slate-400">Excel con datos + ZIP de documentos</p>
+                            <p className="text-xs text-slate-400">Archivo Excel con todos los datos</p>
                         </div>
                     </div>
                     <button
@@ -112,15 +112,9 @@ export function DownloadModal({
 
                 {/* Footer */}
                 <div className="px-6 py-3 border-t border-white/5 bg-white/[0.02]">
-                    <div className="flex items-center gap-4 text-xs text-slate-500">
-                        <span className="flex items-center gap-1.5">
-                            <FileSpreadsheet size={12} />
-                            Excel con todos los datos
-                        </span>
-                        <span className="flex items-center gap-1.5">
-                            <FileArchive size={12} />
-                            ZIP con CVs y certificados
-                        </span>
+                    <div className="flex items-center gap-1.5 text-xs text-slate-500">
+                        <FileSpreadsheet size={12} />
+                        Incluye enlaces a documentos adjuntos cuando existan
                     </div>
                 </div>
             </div>
