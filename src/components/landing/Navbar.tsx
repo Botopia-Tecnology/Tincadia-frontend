@@ -12,7 +12,7 @@ import { LanguageSelector } from '@/components/ui/LanguageSelector';
 import { useUI } from '@/contexts/UIContext';
 import { useAuth } from '@/contexts/AuthContext';
 
-export function Navbar() {
+export function Navbar({ isBannerVisible = false }: { isBannerVisible?: boolean }) {
   const router = useRouter();
   const t = useTranslation();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -107,7 +107,7 @@ export function Navbar() {
 
   return (
     <>
-      <header className="bg-white/95 backdrop-blur-sm fixed top-0 left-0 right-0 z-50 border-b border-gray-200 min-h-[64px] flex items-center">
+      <header className={`bg-white/95 backdrop-blur-sm fixed ${isBannerVisible ? 'top-12' : 'top-0'} left-0 right-0 z-50 border-b border-gray-200 min-h-[64px] flex items-center transition-[top] duration-300`}>
         <nav
           className="mx-auto flex max-w-7xl items-center justify-between w-full p-2 lg:px-8"
           aria-label="Navegación principal"
