@@ -104,34 +104,34 @@ export function CompleteProfileModal({ isOpen, onClose }: CompleteProfileModalPr
 
             {/* Modal */}
             <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
-                <div className="bg-white rounded-2xl shadow-2xl w-full max-w-md overflow-hidden relative">
+                <div className="bg-white dark:bg-slate-900 rounded-2xl shadow-2xl w-full max-w-md overflow-hidden relative border border-gray-100 dark:border-slate-800">
                     <GridBackground className="absolute inset-0 -z-10" />
 
                     {/* Header */}
-                    <div className="flex items-center justify-between p-6 border-b border-gray-100">
+                    <div className="flex items-center justify-between p-6 border-b border-gray-100 dark:border-slate-800">
                         <div>
-                            <h2 className="text-xl font-bold text-gray-900">
+                            <h2 className="text-xl font-bold text-gray-900 dark:text-white">
                                 Completa tu perfil
                             </h2>
-                            <p className="text-sm text-gray-500 mt-1">
+                            <p className="text-sm text-gray-500 dark:text-slate-400 mt-1">
                                 Necesitamos algunos datos adicionales
                             </p>
                         </div>
                         {/* Optional close button - can be hidden if modal is required */}
                         <button
                             onClick={onClose}
-                            className="p-2 hover:bg-gray-100 rounded-full transition-colors"
+                            className="p-2 hover:bg-gray-100 dark:hover:bg-slate-800 rounded-full transition-colors"
                             aria-label="Cerrar"
                         >
-                            <X className="w-5 h-5 text-gray-400" />
+                            <X className="w-5 h-5 text-gray-400 dark:text-slate-500" />
                         </button>
                     </div>
 
                     {/* Form */}
                     <form onSubmit={handleSubmit} className="p-6 space-y-5">
                         {/* Welcome message with user name */}
-                        <div className="bg-[#83A98A]/10 rounded-lg p-4">
-                            <p className="text-sm text-gray-700">
+                        <div className="bg-[#83A98A]/10 dark:bg-[#83A98A]/20 rounded-lg p-4">
+                            <p className="text-sm text-gray-700 dark:text-slate-200">
                                 ¡Hola <strong>{user.firstName}</strong>! Has iniciado sesión correctamente.
                                 Para continuar, por favor completa la siguiente información.
                             </p>
@@ -139,7 +139,7 @@ export function CompleteProfileModal({ isOpen, onClose }: CompleteProfileModalPr
 
                         {/* Document Type */}
                         <div>
-                            <label htmlFor="documentTypeId" className="block text-sm font-medium text-gray-700 mb-1">
+                            <label htmlFor="documentTypeId" className="block text-sm font-medium text-gray-700 dark:text-slate-300 mb-1">
                                 Tipo de documento *
                             </label>
                             <select
@@ -148,7 +148,7 @@ export function CompleteProfileModal({ isOpen, onClose }: CompleteProfileModalPr
                                 value={formData.documentTypeId}
                                 onChange={handleInputChange}
                                 required
-                                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#83A98A] focus:border-transparent transition-all text-gray-900 bg-white"
+                                className="w-full px-4 py-3 border border-gray-300 dark:border-slate-700 rounded-lg focus:ring-2 focus:ring-[#83A98A] focus:border-transparent transition-all text-gray-900 dark:text-white bg-white dark:bg-slate-800"
                             >
                                 <option value="">Seleccionar tipo...</option>
                                 {DOCUMENT_TYPES.map((docType) => (
@@ -161,7 +161,7 @@ export function CompleteProfileModal({ isOpen, onClose }: CompleteProfileModalPr
 
                         {/* Document Number */}
                         <div>
-                            <label htmlFor="documentNumber" className="block text-sm font-medium text-gray-700 mb-1">
+                            <label htmlFor="documentNumber" className="block text-sm font-medium text-gray-700 dark:text-slate-300 mb-1">
                                 Número de documento *
                             </label>
                             <input
@@ -172,18 +172,18 @@ export function CompleteProfileModal({ isOpen, onClose }: CompleteProfileModalPr
                                 onChange={handleInputChange}
                                 required
                                 placeholder="Ej: 1234567890"
-                                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#83A98A] focus:border-transparent transition-all text-gray-900 bg-white"
+                                className="w-full px-4 py-3 border border-gray-300 dark:border-slate-700 rounded-lg focus:ring-2 focus:ring-[#83A98A] focus:border-transparent transition-all text-gray-900 dark:text-white bg-white dark:bg-slate-800"
                             />
                         </div>
 
                         {/* Phone */}
                         <div>
-                            <label htmlFor="phone" className="block text-sm font-medium text-gray-700 mb-1">
+                            <label htmlFor="phone" className="block text-sm font-medium text-gray-700 dark:text-slate-300 mb-1">
                                 Teléfono *
                             </label>
                             <div className="flex gap-2">
                                 <select
-                                    className="w-[120px] px-2 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#83A98A] focus:border-transparent transition-all bg-white text-gray-900"
+                                    className="w-[120px] px-2 py-3 border border-gray-300 dark:border-slate-700 rounded-lg focus:ring-2 focus:ring-[#83A98A] focus:border-transparent transition-all bg-white dark:bg-slate-800 text-gray-900 dark:text-white"
                                     value={selectedCountry.code}
                                     onChange={(e) => {
                                         const country = COUNTRIES.find(c => c.code === e.target.value);
@@ -191,7 +191,7 @@ export function CompleteProfileModal({ isOpen, onClose }: CompleteProfileModalPr
                                     }}
                                 >
                                     {COUNTRIES.map((country) => (
-                                        <option key={country.code} value={country.code}>
+                                        <option key={country.code} value={country.code} className="bg-white dark:bg-slate-800 font-sans">
                                             {country.flag} {country.dialCode}
                                         </option>
                                     ))}
@@ -204,7 +204,7 @@ export function CompleteProfileModal({ isOpen, onClose }: CompleteProfileModalPr
                                     onChange={handleInputChange}
                                     required
                                     placeholder="300 123 4567"
-                                    className="flex-1 px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#83A98A] focus:border-transparent transition-all text-gray-900 bg-white"
+                                    className="flex-1 px-4 py-3 border border-gray-300 dark:border-slate-700 rounded-lg focus:ring-2 focus:ring-[#83A98A] focus:border-transparent transition-all text-gray-900 dark:text-white bg-white dark:bg-slate-800"
                                 />
                             </div>
                         </div>

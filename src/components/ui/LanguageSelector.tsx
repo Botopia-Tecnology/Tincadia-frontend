@@ -3,11 +3,12 @@
 import { useI18n, Locale } from '@/contexts/I18nContext';
 import { Globe } from 'lucide-react';
 import { useState, useRef, useEffect } from 'react';
+import { ColombiaFlag, USAFlag, BrazilFlag } from '../icons/Flags';
 
-const languages: { code: Locale; name: string; flag: string }[] = [
-  { code: 'es', name: 'Español', flag: '🇨🇴' },
-  { code: 'en', name: 'English', flag: '🇺🇸' },
-  { code: 'pt', name: 'Português', flag: '🇧🇷' },
+const languages: { code: Locale; name: string; Flag: React.ComponentType<{ className?: string }> }[] = [
+  { code: 'es', name: 'Español', Flag: ColombiaFlag },
+  { code: 'en', name: 'English', Flag: USAFlag },
+  { code: 'pt', name: 'Português', Flag: BrazilFlag },
 ];
 
 export function LanguageSelector() {
@@ -44,12 +45,12 @@ export function LanguageSelector() {
         aria-haspopup="true"
       >
         <Globe className="w-5 h-5 text-gray-700" />
-        <span className="text-sm font-medium text-gray-700 hidden sm:inline">
-          {currentLanguage.flag} {currentLanguage.name}
-        </span>
-        <span className="text-sm font-medium text-gray-700 sm:hidden">
-          {currentLanguage.flag}
-        </span>
+        <div className="flex items-center gap-2">
+          <currentLanguage.Flag className="w-4 h-3 rounded-sm shadow-sm" />
+          <span className="text-sm font-medium text-gray-700 hidden sm:inline">
+            {currentLanguage.name}
+          </span>
+        </div>
       </button>
 
       {isOpen && (
@@ -64,7 +65,7 @@ export function LanguageSelector() {
               className={`w-full text-left px-4 py-2 text-sm hover:bg-gray-50 transition-colors flex items-center gap-2 ${locale === lang.code ? 'bg-[#83A98A]/10 text-[#83A98A] font-semibold' : 'text-gray-700'
                 }`}
             >
-              <span className="text-lg">{lang.flag}</span>
+              <lang.Flag className="w-5 h-4 rounded-sm shadow-sm" />
               <span>{lang.name}</span>
               {locale === lang.code && (
                 <span className="ml-auto text-[#83A98A]">✓</span>
