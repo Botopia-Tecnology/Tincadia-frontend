@@ -12,7 +12,7 @@ export function JobSeekerFiles({ formik, handleFileChange, fileError, t }: any) 
             <div className="relative">
                 <label className="block text-sm font-semibold text-gray-700 mb-2">
                     {t(labelKey)} {isRequired && <span className="text-red-500">{t('forms.common.required')}</span>}
-                    <span className="block text-xs font-normal text-gray-500 mt-1">(PDF, Máximo 50MB)</span>
+                    <span className="block text-xs font-normal text-gray-500 mt-1">{t('forms.common.fileHints.pdfMaxSize')}</span>
                 </label>
                 <div className="relative group">
                     <input

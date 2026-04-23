@@ -4,7 +4,10 @@
         "yes": "Sí",
         "no": "No",
         "required": "*",
-        "sending": "Enviando..."
+        "sending": "Enviando...",
+        "fileHints": {
+            "pdfMaxSize": "(PDF, Máximo 50MB)"
+        }
     },
     "jobSeeker": {
         "fields": {
@@ -21,8 +24,8 @@
             "technicalSkills": "Habilidades técnicas",
             "softSkills": "Habilidades blandas",
             "certifications": "Certificaciones, cursos o talleres",
-            "disabilityCert": "Certificación de discapacidad (Opcional, PDF)",
-            "uploadCV": "Adjuntar hoja de vida (PDF)",
+            "disabilityCert": "Certificación de discapacidad",
+            "uploadCV": "Hoja de vida",
             "selectFile": "Seleccionar archivo PDF",
             "training": "¿Te gustaría recibir capacitación gratuita de TINCADIA?",
             "dataAuthorization": "Autorizo tratamiento de datos personales según la Ley 1581",
@@ -126,7 +129,7 @@
         "availability": [
             "Mañana",
             "Tarde",
-            "Noche",
+            "Noite",
             "Fines de semana",
             "24/7"
         ],
