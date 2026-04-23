@@ -145,8 +145,20 @@ class PaymentsService {
         return api.get(`${this.baseUrl}/subscriptions/user/${userId}`);
     }
 
-    async cancelSubscription(subscriptionId: string): Promise<any> {
-        return api.post<any>(`${this.baseUrl}/subscriptions/${subscriptionId}/cancel`, {});
+    /**
+     * Obtiene el estado resumido de la suscripción del usuario (permisos, features, etc)
+     */
+    async getSubscriptionStatus(userId: string): Promise<{
+        hasSubscription: boolean;
+        status?: string;
+        planId?: string;
+        planType?: string;
+        currentPeriodEnd?: Date;
+        cancelAtPeriodEnd?: boolean;
+        permissions?: string[];
+        features?: any;
+    }> {
+        return api.get(`${this.baseUrl}/subscriptions/status/${userId}`);
     }
 }
 

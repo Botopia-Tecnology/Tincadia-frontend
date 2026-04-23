@@ -188,7 +188,7 @@ export function Hero({ disableAnimations = false }: HeroProps) {
 
   return (
     <section
-      className="relative bg-transparent pt-0 pb-4 lg:pt-20 lg:pb-6 overflow-hidden"
+      className="relative bg-transparent pt-0 pb-4 lg:pt-20 lg:pb-6 overflow-visible"
       aria-labelledby="hero-heading"
     >
       {/* Contenedor principal */}

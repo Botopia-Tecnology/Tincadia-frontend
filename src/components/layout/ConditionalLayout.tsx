@@ -18,10 +18,22 @@ export function ConditionalLayout({ children }: ConditionalLayoutProps) {
     const pathname = usePathname();
     const [showBanner, setShowBanner] = useState(pathname === '/' || pathname === '/login'); // Mostramos solo en home o login por defecto, o en todos? El usuario dijo "sobre el navbar", asumo todos.
     const isAdminRoute = pathname?.startsWith('/admin');
+    const isCourseView = pathname?.includes('/cursos/') && pathname?.split('/').length >= 3;
 
-    // Admin routes get minimal layout (admin has its own layout)
+    // Admin routes get minimal layout
     if (isAdminRoute) {
         return <>{children}</>;
+    }
+
+    // Course landing/player get clean layout (they have their own headers)
+    if (isCourseView) {
+        return (
+            <>
+                <GlobalBackgrounds />
+                <main>{children}</main>
+                <GlobalPanels />
+            </>
+        );
     }
 
     // Regular routes get full landing layout

@@ -21,7 +21,7 @@ export function AuthorizationFooter({ formik, submitStatus, formIdError, isEditi
                                 onChange={formik.handleChange}
                                 className="w-5 h-5 text-[#83A98A] focus:ring-[#83A98A]"
                             />
-                            <span className="text-gray-700 font-medium">{t(`forms.common.${val}`)}</span>
+                            <span className="text-gray-700 font-medium">{t(`forms.common.${val === 'si' ? 'yes' : 'no'}`)}</span>
                         </label>
                     ))}
                 </div>

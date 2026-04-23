@@ -21,6 +21,7 @@ export interface JobSeekerFormData {
     habilidadesTecnicas: string;
     habilidadesBlandas: string;
     certificacionesCursos: any | null;
+    certificacionDiscapacidad: any | null;
     hojaVida: any | null;
     recibirCapacitacion: 'si' | 'no' | '';
     autorizaTratamientoDatos: 'si' | 'no' | '';
@@ -112,6 +113,7 @@ export function useJobSeekerForm({ initialData, submissionId, onSuccess }: UseJo
             habilidadesTecnicas: initialData?.habilidadesTecnicas || '',
             habilidadesBlandas: initialData?.habilidadesBlandas || '',
             certificacionesCursos: initialData?.certificacionesCursos || null,
+            certificacionDiscapacidad: initialData?.certificacionDiscapacidad || null,
             hojaVida: initialData?.hojaVida || null,
             recibirCapacitacion: initialData?.recibirCapacitacion || '',
             autorizaTratamientoDatos: initialData?.autorizaTratamientoDatos || '',
@@ -136,6 +138,7 @@ export function useJobSeekerForm({ initialData, submissionId, onSuccess }: UseJo
             try {
                 let hojaVidaData = values.hojaVida;
                 let certificacionesData = values.certificacionesCursos;
+                let certificacionDiscapacidadData = values.certificacionDiscapacidad;
 
                 if (values.hojaVida instanceof File) {
                     const res = await formsService.uploadFile(values.hojaVida);
@@ -147,10 +150,16 @@ export function useJobSeekerForm({ initialData, submissionId, onSuccess }: UseJo
                     certificacionesData = { url: res.url, name: values.certificacionesCursos.name, size: values.certificacionesCursos.size, type: values.certificacionesCursos.type };
                 }
 
+                if (values.certificacionDiscapacidad instanceof File) {
+                    const res = await formsService.uploadFile(values.certificacionDiscapacidad);
+                    certificacionDiscapacidadData = { url: res.url, name: values.certificacionDiscapacidad.name, size: values.certificacionDiscapacidad.size, type: values.certificacionDiscapacidad.type };
+                }
+
                 const submissionData = {
                     ...values,
                     hojaVida: hojaVidaData,
                     certificacionesCursos: certificacionesData,
+                    certificacionDiscapacidad: certificacionDiscapacidadData,
                     areaLaboralInteres: values.areaLaboralInteres.map(a => a === options.workAreas[options.workAreas.length - 1] && otraAreaLaboral ? `${a} - ${otraAreaLaboral}` : a),
                 };
 
@@ -194,7 +203,7 @@ export function useJobSeekerForm({ initialData, submissionId, onSuccess }: UseJo
         formik.setFieldValue('areaLaboralInteres', currentArray.includes(value) ? currentArray.filter(i => i !== value) : [...currentArray, value]);
     };
 
-    const handleFileChange = (field: 'hojaVida' | 'certificacionesCursos', file: File | null) => {
+    const handleFileChange = (field: 'hojaVida' | 'certificacionesCursos' | 'certificacionDiscapacidad', file: File | null) => {
         setFileError(null);
         if (file && file.size > MAX_FILE_SIZE) {
             setFileError(`El archivo pesa ${(file.size / (1024 * 1024)).toFixed(2)}MB. Máximo 50MB.`);
