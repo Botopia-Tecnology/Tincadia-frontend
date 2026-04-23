@@ -160,6 +160,13 @@ class PaymentsService {
     }> {
         return api.get(`${this.baseUrl}/subscriptions/status/${userId}`);
     }
+
+    /**
+     * Cancela una suscripción activa
+     */
+    async cancelSubscription(subscriptionId: string): Promise<any> {
+        return api.post(`${this.baseUrl}/subscriptions/${subscriptionId}/cancel`, {});
+    }
 }
 
 export const paymentsService = new PaymentsService();
