@@ -2,6 +2,7 @@
 
 import { useEffect, useState, useCallback } from 'react';
 import { useParams } from 'next/navigation';
+import Link from 'next/link';
 import { contentService, Course } from '@/services/content.service';
 import { paymentsService } from '@/services/payments.service';
 import { useAuth } from '@/contexts/AuthContext';
