@@ -490,7 +490,10 @@
       "yes": "Yes",
       "no": "No",
       "required": "*",
-      "sending": "Sending..."
+      "sending": "Sending...",
+      "fileHints": {
+        "pdfMaxSize": "(PDF, Maximum 50MB)"
+      }
     },
     "jobSeeker": {
       "fields": {
@@ -507,7 +510,7 @@
         "technicalSkills": "Technical skills",
         "softSkills": "Soft skills",
         "certifications": "Certifications, courses or workshops",
-        "uploadCV": "Attach CV (PDF)",
+        "uploadCV": "CV",
         "selectFile": "Select PDF file",
         "training": "Would you like to receive free training from TINCADIA?",
         "dataAuthorization": "I authorize personal data processing according to Law 1581",
@@ -515,7 +518,8 @@
         "describeExperience": "Describe your work experience...",
         "describeTechnical": "Describe your technical skills...",
         "describeSoft": "Describe your soft skills...",
-        "listCertifications": "List your certifications, courses or workshops..."
+        "listCertifications": "List your certifications, courses or workshops...",
+        "disabilityCert": "Disability certification"
       },
       "messages": {
         "alreadyRegistered": "This user is already registered. Please log in."

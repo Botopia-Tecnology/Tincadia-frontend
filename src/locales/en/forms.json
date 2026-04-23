@@ -4,7 +4,10 @@
         "yes": "Yes",
         "no": "No",
         "required": "*",
-        "sending": "Sending..."
+        "sending": "Sending...",
+        "fileHints": {
+            "pdfMaxSize": "(PDF, Maximum 50MB)"
+        }
     },
     "jobSeeker": {
         "fields": {
@@ -21,8 +24,8 @@
             "technicalSkills": "Technical skills",
             "softSkills": "Soft skills",
             "certifications": "Certifications, courses or workshops",
-            "disabilityCert": "Disability certification (Optional, PDF)",
-            "uploadCV": "Attach CV (PDF)",
+            "disabilityCert": "Disability certification",
+            "uploadCV": "CV",
             "selectFile": "Select PDF file",
             "training": "Would you like to receive free training from TINCADIA?",
             "dataAuthorization": "I authorize personal data processing according to Law 1581",
