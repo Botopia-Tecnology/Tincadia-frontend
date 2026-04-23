@@ -1,3 +1,4 @@
+import { api } from '@/lib/api-client';
 import { CONTENT_ENDPOINTS, buildUrl } from '@/config/api.config';
 
 // ===========================================
@@ -18,7 +19,9 @@ export interface Course {
     accessScope?: 'course' | 'module' | 'lesson';
     isPaid?: boolean;
     priceInCents?: number;
+    priceLabel?: string;
     learningPoints?: string[];
+    features?: string[];
     previewLimit?: number | null;
     modules?: any[];
 }
@@ -35,40 +38,16 @@ export const contentService = {
      * Get all courses
      */
     getAllCourses: async (): Promise<Course[]> => {
-        try {
-            const response = await fetch(buildUrl(CONTENT_ENDPOINTS.COURSES), {
-                method: 'GET',
-                headers: {
-                    'Content-Type': 'application/json',
-                    // Add Authorization header if needed in the future
-                },
-            });
-
-            if (!response.ok) {
-                throw new Error('Failed to fetch courses');
-            }
-
-            return await response.json();
-        } catch (error) {
-            console.error('Error fetching courses:', error);
-            throw error;
-        }
+        return api.get<Course[]>(CONTENT_ENDPOINTS.COURSES);
     },
 
     /**
      * Get course by ID
      */
     getCourseById: async (id: string, opts?: { hasAccess?: boolean }): Promise<Course> => {
-        try {
-            const query = opts?.hasAccess ? `?hasAccess=${opts.hasAccess}` : '';
-            const url = buildUrl(CONTENT_ENDPOINTS.DETAILS).replace(':id', id) + query;
-            const response = await fetch(url);
-            if (!response.ok) throw new Error('Failed to fetch course details');
-            return await response.json();
-        } catch (error) {
-            console.error('Error fetching course details:', error);
-            throw error;
-        }
+        const query = opts?.hasAccess ? `?hasAccess=${opts.hasAccess}` : '';
+        const endpoint = CONTENT_ENDPOINTS.DETAILS.replace(':id', id) + query;
+        return api.get<Course>(endpoint);
     },
 
     /**

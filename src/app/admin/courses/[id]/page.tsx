@@ -6,6 +6,7 @@ import { contentService, Course } from '@/services/content.service';
 import { ArrowLeft, Plus, Video, Trash2, UploadCloud, ChevronDown, PlayCircle, Loader2 } from 'lucide-react';
 import Link from 'next/link';
 import Image from 'next/image';
+import EditCourseModal from './EditCourseModal';
 
 // Types for local state (extending Course type if needed)
 interface Lesson {
@@ -34,6 +35,7 @@ const params = useParams();
     const [course, setCourse] = useState<Course | null>(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
+    const [showEditModal, setShowEditModal] = useState(false);
 
 // Access control state
 const [accessScope, setAccessScope] = useState<'course' | 'module' | 'lesson'>('course');
@@ -248,7 +250,12 @@ const handleLessonPreview = async (lessonId: string, isFreePreview: boolean) => 
                     >
                         {course.isPublished ? 'Published' : 'Draft'}
                     </button>
-                    {/* Potential Edit button here */}
+                    <button
+                        onClick={() => setShowEditModal(true)}
+                        className="px-4 py-2 bg-slate-800 hover:bg-slate-700 text-slate-200 rounded-lg text-sm font-medium transition-colors border border-slate-700"
+                    >
+                        Editar Información
+                    </button>
                 </div>
             </div>
 
@@ -620,6 +627,14 @@ const handleLessonPreview = async (lessonId: string, isFreePreview: boolean) => 
                     </div>
                 )
             }
+            {course && (
+                <EditCourseModal 
+                    isOpen={showEditModal} 
+                    onClose={() => setShowEditModal(false)} 
+                    onSuccess={(updated) => setCourse(updated)}
+                    course={course}
+                />
+            )}
         </div >
     );
 }

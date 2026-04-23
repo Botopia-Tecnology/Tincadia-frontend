@@ -21,6 +21,7 @@
             "technicalSkills": "Technical skills",
             "softSkills": "Soft skills",
             "certifications": "Certifications, courses or workshops",
+            "disabilityCert": "Disability certification (Optional, PDF)",
             "uploadCV": "Attach CV (PDF)",
             "selectFile": "Select PDF file",
             "training": "Would you like to receive free training from TINCADIA?",

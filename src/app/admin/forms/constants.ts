@@ -36,6 +36,7 @@ export const fieldLabels: Record<string, string> = {
     habilidadesBlandas: 'Habilidades Blandas',
     certificacionesCursos: 'Certificaciones y Cursos',
     certificaciones: 'Certificaciones',
+    certificacionDiscapacidad: 'Certificación de Discapacidad',
     tipoServicio: 'Tipo de Servicio',
     disponibilidadHoraria: 'Disponibilidad Horaria',
     esInterpreteCertificado: 'Es Intérprete Certificado',
@@ -79,6 +80,7 @@ export const fieldCategories: Record<string, string[]> = {
     'Documentos': [
         'hojaVida',
         'certificaciones',
+        'certificacionDiscapacidad',
     ],
     'Preferencias y Autorizaciones': [
         'recibirCapacitacion',

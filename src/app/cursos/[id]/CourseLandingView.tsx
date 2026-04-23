@@ -146,7 +146,9 @@ export function CourseLandingView({ course, onBuy, isAuthenticated }: CourseLand
                                             {formatPrice((course.priceInCents || 0) * 1.5)}
                                         </span>
                                     </div>
-                                    <div className="text-sm text-slate-500 mb-8 font-medium">Pago único, acceso de por vida</div>
+                                    <div className="text-sm text-slate-500 mb-8 font-medium">
+                                        {course.priceLabel || 'Pago único, acceso de por vida'}
+                                    </div>
 
                                     <button
                                         onClick={onBuy}
@@ -156,18 +158,16 @@ export function CourseLandingView({ course, onBuy, isAuthenticated }: CourseLand
                                     </button>
 
                                     <div className="mt-6 space-y-3 text-sm text-slate-600">
-                                        <div className="flex items-center gap-2">
-                                            <CheckCircle size={16} className="text-[#83A98A]" />
-                                            <span>Acceso inmediato</span>
-                                        </div>
-                                        <div className="flex items-center gap-2">
-                                            <CheckCircle size={16} className="text-[#83A98A]" />
-                                            <span>Garantía de satisfacción</span>
-                                        </div>
-                                        <div className="flex items-center gap-2">
-                                            <CheckCircle size={16} className="text-[#83A98A]" />
-                                            <span>Certificado incluido</span>
-                                        </div>
+                                        {(course.features && course.features.length > 0 ? course.features : [
+                                            "Acceso inmediato",
+                                            "Garantía de satisfacción",
+                                            "Certificado incluido"
+                                        ]).map((feature, i) => (
+                                            <div key={i} className="flex items-center gap-2">
+                                                <CheckCircle size={16} className="text-[#83A98A]" />
+                                                <span>{feature}</span>
+                                            </div>
+                                        ))}
                                     </div>
                                 </div>
                             </div>

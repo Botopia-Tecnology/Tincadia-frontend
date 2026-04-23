@@ -31,7 +31,7 @@ export function AcademicExperienceFields({
                                 />
                                 <div className="absolute w-2.5 h-2.5 bg-[#83A98A] rounded-full scale-0 peer-checked:scale-100 transition-transform" />
                             </div>
-                            <span className="text-gray-700 font-medium">{t(`forms.common.${val}`)}</span>
+                            <span className="text-gray-700 font-medium">{t(`forms.common.${val === 'si' ? 'yes' : 'no'}`)}</span>
                         </label>
                     ))}
                 </div>
