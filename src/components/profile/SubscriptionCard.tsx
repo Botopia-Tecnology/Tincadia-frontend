@@ -76,12 +76,23 @@ export function SubscriptionCard({ subscription, user, onUpdate }: SubscriptionC
                                         {formatCurrency(subscription.amountCents)}
                                     </p>
                                     {!subscription.cancelAtPeriodEnd && (
-                                        <button
-                                            onClick={handleCancel}
-                                            className="text-xs text-red-400 hover:text-red-300 underline mt-1 block w-full text-right"
-                                        >
-                                            Cancelar renovación
-                                        </button>
+                                        subscription.managedExternally ? (
+                                            <div className="text-right mt-2">
+                                                <p className="text-[10px] text-yellow-500 leading-tight">
+                                                    Suscripción gestionada desde <br/>App Store / Play Store
+                                                </p>
+                                                <p className="text-[9px] text-gray-500 mt-1">
+                                                    Cancela desde los ajustes de tu celular
+                                                </p>
+                                            </div>
+                                        ) : (
+                                            <button
+                                                onClick={handleCancel}
+                                                className="text-xs text-red-400 hover:text-red-300 underline mt-1 block w-full text-right"
+                                            >
+                                                Cancelar renovación
+                                            </button>
+                                        )
                                     )}
                                 </div>
                             </div>
