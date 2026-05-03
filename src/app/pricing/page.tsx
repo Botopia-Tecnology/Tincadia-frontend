@@ -1,3 +1,4 @@
+import { redirect } from 'next/navigation';
 import type { Metadata } from 'next';
 import { Pricing } from '@/components/landing/Pricing';
 
@@ -7,6 +8,7 @@ export const metadata: Metadata = {
 };
 
 export default function PricingPage() {
+  redirect('/');
   return <Pricing />;
 }
 

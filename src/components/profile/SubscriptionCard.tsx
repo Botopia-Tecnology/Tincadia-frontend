@@ -129,12 +129,14 @@ export function SubscriptionCard({ subscription, user, onUpdate }: SubscriptionC
                     </div>
                     <h3 className="text-lg font-medium text-gray-300 mb-2">No tienes una suscripción activa</h3>
                     <p className="text-gray-500 max-w-sm mx-auto mb-6">Accede a funcionalidades exclusivas suscribiéndote a uno de nuestros planes.</p>
+                    {/* 
                     <button
                         onClick={() => router.push('/pricing')}
                         className="px-6 py-2.5 bg-[#83A98A] text-white font-medium rounded-lg hover:bg-[#6e9175] transition-colors shadow-lg shadow-[#83A98A]/20"
                     >
                         Ver Planes Disponibles
                     </button>
+                    */}
                 </div>
             )}
         </div>
