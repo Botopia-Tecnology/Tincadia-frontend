@@ -47,12 +47,14 @@ export function TransactionsList({ transactions }: { transactions: Payment[] }) 
                     </div>
                     <h3 className="text-lg font-medium text-gray-300 mb-1">Sin transacciones</h3>
                     <p className="text-gray-500">Aún no has realizado ningún pago.</p>
+                    {/* 
                     <button
                         onClick={() => router.push('/pricing')}
                         className="mt-6 px-6 py-2 bg-[#83A98A] text-white rounded-lg hover:bg-[#6e9175] transition-colors"
                     >
                         Ver Planes
                     </button>
+                    */}
                 </div>
             ) : (
                 <div className="overflow-hidden rounded-xl border border-gray-700">
