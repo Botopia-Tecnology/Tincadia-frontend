@@ -96,7 +96,7 @@ export default function ProfilePage() {
                 <header className="mb-10 flex flex-col md:flex-row md:items-center justify-between gap-6">
                     <div>
                         <h1 className="text-3xl font-bold text-white">Mi Cuenta</h1>
-                        <p className="text-gray-400 mt-1">Administra tu perfil, suscripción y aplicaciones</p>
+                        <p className="text-gray-400 mt-1">Administra tu perfil y aplicaciones</p>
                     </div>
                 </header>
 
@@ -107,8 +107,6 @@ export default function ProfilePage() {
                             {[
                                 { id: 'profile', label: 'Perfil Personal', icon: UserIcon },
                                 { id: 'applications', label: 'Mis Solicitudes', icon: FileText },
-                                { id: 'subscription', label: 'Mi Suscripción', icon: Crown },
-                                { id: 'transactions', label: 'Historial de Pagos', icon: CreditCard },
                             ].map((tab) => {
                                 const Icon = tab.icon;
                                 return (
@@ -142,8 +140,6 @@ export default function ProfilePage() {
                     <div className="flex-1">
                         {activeTab === 'profile' && <ProfileInfo user={user} />}
                         {activeTab === 'applications' && <ApplicationsList applications={applications} onEdit={setEditingApplication} />}
-                        {activeTab === 'subscription' && <SubscriptionCard subscription={subscription} user={user} onUpdate={refresh} />}
-                        {activeTab === 'transactions' && <TransactionsList transactions={transactions} />}
                     </div>
                 </div>
             </div>
