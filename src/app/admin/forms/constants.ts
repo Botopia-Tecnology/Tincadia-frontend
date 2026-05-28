@@ -1,6 +1,7 @@
 import { FileText, MessageSquare } from 'lucide-react';
+import type { LucideIcon } from 'lucide-react';
 
-export const formTypeIcons: Record<string, any> = {
+export const formTypeIcons: Record<string, LucideIcon> = {
     ser_interprete: MessageSquare,
     job_seeker_registration: FileText,
     interpreter_registration: MessageSquare,

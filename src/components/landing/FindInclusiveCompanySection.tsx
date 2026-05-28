@@ -1,11 +1,18 @@
 'use client';
 
+import Image from 'next/image';
 import { JobSeekerRegistrationForm } from './JobSeekerRegistrationForm';
 import { useTranslation } from '@/hooks/useTranslation';
 import { useEffect, useState } from 'react';
 
-// ... imports ...
-import { MapPin, CheckCircle2, Factory, ArrowRight } from 'lucide-react'; // Add icons if needed, or use svg
+
+interface CompanyInfo {
+    name: string;
+    imageUrl?: string;
+    link?: string;
+    industry?: string;
+    tags?: string[];
+}
 
 export function FindInclusiveCompanySection() {
   const t = useTranslation();
@@ -63,7 +70,7 @@ export function FindInclusiveCompanySection() {
 }
 
 function CompaniesList() {
-  const [companies, setCompanies] = useState<any[]>([]);
+  const [companies, setCompanies] = useState<CompanyInfo[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -94,7 +101,7 @@ function CompaniesList() {
 
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-      {companies.map((company: any, idx) => (
+      {companies.map((company, idx) => (
         <div key={idx} className="group flex flex-col bg-white rounded-3xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 border border-gray-100/50">
 
           {/* Header Badge */}
@@ -107,9 +114,9 @@ function CompaniesList() {
 
           <div className="p-6 flex flex-col h-full">
             {/* Logo */}
-            <div className="h-20 w-full flex items-center justify-center mb-4">
+            <div className="relative h-20 w-full flex items-center justify-center mb-4">
               {company.imageUrl ? (
-                <img src={company.imageUrl} alt={company.name} className="max-h-full max-w-full object-contain" />
+                <Image src={company.imageUrl} alt={company.name} fill className="object-contain" unoptimized />
               ) : (
                 <div className="h-16 w-16 bg-blue-50 rounded-full flex items-center justify-center">
                   <span className="text-2xl font-bold text-blue-300">{company.name.charAt(0)}</span>

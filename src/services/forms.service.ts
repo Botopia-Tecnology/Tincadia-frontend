@@ -1,18 +1,37 @@
 import { api } from '@/lib/api-client';
 import { FORMS_ENDPOINTS, API_BASE_URL } from '@/config/api.config';
 
+export interface FormField {
+    id: string;
+    type: string;
+    label: string;
+    required?: boolean;
+    options?: string[];
+    [key: string]: unknown;
+}
+
+export interface FormSubmission {
+    id: string;
+    formId: string;
+    data: Record<string, unknown>;
+    submittedBy?: string;
+    createdAt?: string;
+    status?: string;
+    [key: string]: unknown;
+}
+
 export interface FormDefinition {
     id: string;
     title: string;
     description: string;
     type: string;
-    fields: any[];
-    [key: string]: any;
+    fields: FormField[];
+    [key: string]: unknown;
 }
 
 export interface FormSubmissionResponse {
     message: string;
-    submission: any;
+    submission: FormSubmission;
     userStatus: 'registered' | 'not_registered' | 'unknown';
     action: 'redirect_to_register' | 'none';
 }
@@ -39,7 +58,7 @@ export const formsService = {
      * @param data - The form data object
      * @param submittedBy - Optional user ID if authenticated
      */
-    async submitForm(formId: string, data: any, submittedBy?: string): Promise<FormSubmissionResponse> {
+    async submitForm(formId: string, data: Record<string, unknown>, submittedBy?: string): Promise<FormSubmissionResponse> {
         console.log('📤 [Forms Service] Calling submitForm API:', {
             endpoint: FORMS_ENDPOINTS.SUBMIT,
             formId,
@@ -90,19 +109,19 @@ export const formsService = {
      * 
      * @param userId - The user ID
      */
-    async getMyApplications(userId: string, email?: string, documentNumber?: string): Promise<any[]> {
+    async getMyApplications(userId: string, email?: string, documentNumber?: string): Promise<FormSubmission[]> {
         const params: Record<string, string> = { userId };
         if (email) params.email = email;
         if (documentNumber) params.documentNumber = documentNumber;
 
         const queryString = new URLSearchParams(params).toString();
-        return api.get<any[]>(`/forms/my-applications?${queryString}`);
+        return api.get<FormSubmission[]>(`/forms/my-applications?${queryString}`);
     },
 
     /**
      * Update an existing submission
      */
-    async updateSubmission(id: string, data: any): Promise<any> {
+    async updateSubmission(id: string, data: Record<string, unknown>): Promise<FormSubmission> {
         return api.put(`/forms/submissions/${id}`, { data });
     },
 
@@ -116,8 +135,8 @@ export const formsService = {
     /**
      * Get all submissions (Admin)
      */
-    async getAllSubmissions(): Promise<any[]> {
-        return api.get<any[]>('/forms/submissions');
+    async getAllSubmissions(): Promise<FormSubmission[]> {
+        return api.get<FormSubmission[]>('/forms/submissions');
     }
 };
 

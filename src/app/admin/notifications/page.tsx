@@ -1,7 +1,7 @@
 'use client';
 
-import { Bell, Send, Clock, Trash2, Loader2, Megaphone, Info, Tag, Settings, Plus } from 'lucide-react';
-import { useEffect, useState } from 'react';
+import { Bell, Send, Clock, Trash2, Loader2, Megaphone, Info, Tag, Settings } from 'lucide-react';
+import { useEffect, useState, useCallback } from 'react';
 import { notificationsService, AppNotification, NotificationCategory } from '@/services/notifications.service';
 import ManageCategoriesModal from './ManageCategoriesModal';
 
@@ -14,18 +14,13 @@ export default function NotificationsPage() {
     const [title, setTitle] = useState('');
     const [message, setMessage] = useState('');
     const [selectedCategoryId, setSelectedCategoryId] = useState('');
-    const [type, setType] = useState('news'); // Fallback type
     const [isPush, setIsPush] = useState(false);
     const [sending, setSending] = useState(false);
 
     // Modal State
     const [showManageModal, setShowManageModal] = useState(false);
 
-    useEffect(() => {
-        fetchData();
-    }, []);
-
-    const fetchData = async () => {
+    const fetchData = useCallback(async () => {
         try {
             setLoading(true);
             const [notifsData, catsData] = await Promise.all([
@@ -44,7 +39,11 @@ export default function NotificationsPage() {
         } finally {
             setLoading(false);
         }
-    };
+    }, [selectedCategoryId]);
+
+    useEffect(() => {
+        fetchData();
+    }, [fetchData]);
 
     const refreshCategories = async () => {
         const cats = await notificationsService.getCategories();
@@ -55,9 +54,7 @@ export default function NotificationsPage() {
         if (!title || !message) return;
         try {
             setSending(true);
-            // Find selected category to get fallback type name
-            const selectedCat = categories.find(c => c.id === selectedCategoryId);
-
+            
             await notificationsService.createNotification({
                 title,
                 message,
@@ -65,15 +62,14 @@ export default function NotificationsPage() {
                 type: 'news', // Strict Type for DB Constraint
                 priority: isPush ? 10 : 0,
                 sendPush: isPush,
-            });
+            } as unknown as Partial<AppNotification>);
 
             // Reset form
             setTitle('');
             setMessage('');
             setIsPush(false);
             fetchData(); // Refresh list
-        } catch (error) {
-            alert('Error al enviar la notificación');
+        } catch {
         } finally {
             setSending(false);
         }
@@ -84,8 +80,7 @@ export default function NotificationsPage() {
         try {
             await notificationsService.deleteNotification(id);
             setNotifications(prev => prev.filter(n => n.id !== id));
-        } catch (error) {
-            alert('Error al eliminar');
+        } catch {
         }
     };
 

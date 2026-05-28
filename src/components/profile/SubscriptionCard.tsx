@@ -2,15 +2,24 @@
 
 import { Crown, CheckCircle2, Calendar, Clock } from 'lucide-react';
 import { useRouter } from 'next/navigation';
-import { paymentsService } from '@/services/payments.service';
+import { paymentsService, Subscription } from '@/services/payments.service';
+
+export interface ClientSubscription extends Subscription {
+    plan?: {
+        name: string;
+    };
+    amountCents: number;
+    managedExternally?: boolean;
+    currentPeriodStart: string;
+}
 
 interface SubscriptionCardProps {
-    subscription: any;
-    user: any;
+    subscription: ClientSubscription | null;
+    user?: unknown;
     onUpdate: () => void;
 }
 
-export function SubscriptionCard({ subscription, user, onUpdate }: SubscriptionCardProps) {
+export function SubscriptionCard({ subscription, onUpdate }: SubscriptionCardProps) {
     const router = useRouter();
 
     const formatCurrency = (cents: number, currency: string = 'COP'): string => {
@@ -30,6 +39,7 @@ export function SubscriptionCard({ subscription, user, onUpdate }: SubscriptionC
     };
 
     const handleCancel = async () => {
+        if (!subscription) return;
         if (confirm('¿Estás seguro de que deseas cancelar tu suscripción? Seguirás teniendo acceso hasta el final del periodo actual.')) {
             try {
                 await paymentsService.cancelSubscription(subscription.id);

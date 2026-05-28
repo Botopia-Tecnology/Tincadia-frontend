@@ -28,9 +28,10 @@ export function SocialLinksSection({ item, onSave, saving }: {
     useEffect(() => {
         try {
             const parsed = JSON.parse(item.value || '[]');
-            setLinks(Array.isArray(parsed) ? parsed : []);
-        } catch (e) {
-            setLinks([]);
+            const next = Array.isArray(parsed) ? parsed : [];
+            setTimeout(() => setLinks(next), 0);
+        } catch {
+            setTimeout(() => setLinks([]), 0);
         }
     }, [item.value]);
 

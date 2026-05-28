@@ -6,7 +6,6 @@ import { useTranslation } from '@/hooks/useTranslation';
 import { contentService } from '@/services/content.service';
 import { ScrollAnimation } from './ScrollAnimation';
 
-const PHONE_IMAGE = 'https://res.cloudinary.com/do1mvhvms/image/upload/v1767786403/mobile_rwiwnz.png';
 
 export function DownloadAppSection() {
     const t = useTranslation();
@@ -94,7 +93,7 @@ export function DownloadAppSection() {
                                 <span className="text-base font-bold text-gray-900">{t('download.appStore')}</span>
                             </div>
                         </a>
-                        <a href="#" className="inline-flex items-center gap-4 rounded-xl border border-gray-200 px-5 py-4 hover:border-[#83A98A] hover:bg-gray-50 transition-all justify-center shadow-sm">
+                        <a href="https://play.google.com/store/apps/details?id=com.tincadia.app&hl=es" target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-4 rounded-xl border border-gray-200 px-5 py-4 hover:border-[#83A98A] hover:bg-gray-50 transition-all justify-center shadow-sm">
                             <div className="relative w-7 h-7 flex-shrink-0">
                                 <Image src="https://res.cloudinary.com/do1mvhvms/image/upload/v1767786855/playstore_x0twtw.jpg" alt="Google Play" fill className="object-contain" unoptimized />
                             </div>
@@ -180,7 +179,7 @@ export function DownloadAppSection() {
                                                     <span className="text-base font-semibold text-gray-900">{t('download.appStore')}</span>
                                                 </div>
                                             </a>
-                                            <a href="#" className="inline-flex items-center gap-3 rounded-lg border border-gray-300 px-5 py-3 hover:border-[#83A98A] hover:bg-gray-50 transition-all">
+                                            <a href="https://play.google.com/store/apps/details?id=com.tincadia.app&hl=es" target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-3 rounded-lg border border-gray-300 px-5 py-3 hover:border-[#83A98A] hover:bg-gray-50 transition-all">
                                                 <div className="relative w-6 h-6 flex-shrink-0">
                                                     <Image src="https://res.cloudinary.com/do1mvhvms/image/upload/v1767786855/playstore_x0twtw.jpg" alt="Google Play" fill className="object-contain" unoptimized />
                                                 </div>

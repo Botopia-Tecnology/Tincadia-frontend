@@ -12,7 +12,7 @@ export function useFormSubmissions() {
         setError(null);
         try {
             const data = await formsService.getAllSubmissions();
-            setSubmissions(Array.isArray(data) ? data : []);
+            setSubmissions(Array.isArray(data) ? (data as unknown as FormSubmission[]) : []);
         } catch (err) {
             setError(err instanceof Error ? err.message : 'Error loading submissions');
             setSubmissions([]);

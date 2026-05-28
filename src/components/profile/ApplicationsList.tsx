@@ -1,10 +1,23 @@
 'use client';
 
 import { FileText, Calendar } from 'lucide-react';
+import { FormSubmission } from '@/services/forms.service';
+
+interface ApplicationData extends FormSubmission {
+    form?: {
+        title: string;
+    };
+    data: {
+        hojaVida?: {
+            name?: string;
+        };
+        [key: string]: unknown;
+    };
+}
 
 interface ApplicationsListProps {
-    applications: any[];
-    onEdit: (app: any) => void;
+    applications: ApplicationData[];
+    onEdit: (app: ApplicationData) => void;
 }
 
 export function ApplicationsList({ applications, onEdit }: ApplicationsListProps) {
@@ -41,7 +54,7 @@ export function ApplicationsList({ applications, onEdit }: ApplicationsListProps
                                     </div>
                                     <p className="text-sm text-gray-400 flex items-center gap-2 mb-4">
                                         <Calendar className="w-4 h-4" />
-                                        Fecha de solicitud: {formatDate(app.createdAt)}
+                                        Fecha de solicitud: {formatDate(app.createdAt || '')}
                                     </p>
 
                                     {app.data.hojaVida && (

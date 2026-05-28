@@ -1,31 +1,18 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { Course } from '@/services/content.service';
+import { Course, Lesson } from '@/services/content.service';
 import { ChevronDown, ChevronRight, PlayCircle, Lock, Menu, ArrowLeft } from 'lucide-react';
 import Link from 'next/link';
-import { useRouter } from 'next/navigation';
 
 interface CoursePlayerViewProps {
     course: Course;
 }
 
 export function CoursePlayerView({ course }: CoursePlayerViewProps) {
-    const router = useRouter();
-    const [activeLesson, setActiveLesson] = useState<any | null>(null);
+    const [activeLesson, setActiveLesson] = useState<Lesson | null>(null);
     const [expandedModules, setExpandedModules] = useState<string[]>([]);
     const [showSidebar, setShowSidebar] = useState(true);
-
-    useEffect(() => {
-        // Auto-select first accessible lesson
-        const firstAccessible = findFirstAccessibleLesson(course);
-        if (firstAccessible) {
-            setExpandedModules([firstAccessible.moduleId]);
-            setActiveLesson(firstAccessible.lesson);
-        } else if (course.modules && course.modules.length > 0) {
-            setExpandedModules([course.modules[0].id]);
-        }
-    }, [course]);
 
     const findFirstAccessibleLesson = (c: Course) => {
         for (const mod of c.modules || []) {
@@ -37,6 +24,19 @@ export function CoursePlayerView({ course }: CoursePlayerViewProps) {
         }
         return null;
     };
+
+    useEffect(() => {
+        // Auto-select first accessible lesson
+        const firstAccessible = findFirstAccessibleLesson(course);
+        if (firstAccessible) {
+            setTimeout(() => {
+                setExpandedModules([firstAccessible.moduleId]);
+                setActiveLesson(firstAccessible.lesson);
+            }, 0);
+        } else if (course?.modules && course.modules.length > 0) {
+            setTimeout(() => setExpandedModules([course.modules![0].id]), 0);
+        }
+    }, [course]);
 
     const toggleModule = (moduleId: string) => {
         setExpandedModules(prev =>
@@ -94,7 +94,7 @@ export function CoursePlayerView({ course }: CoursePlayerViewProps) {
                             <div className="p-6 md:p-8 bg-white flex-1">
                                 <h2 className="text-2xl font-bold text-gray-900 mb-2">{activeLesson.title}</h2>
                                 <p className="text-gray-600 leading-relaxed">
-                                    {activeLesson.description || 'Sin descripción adicional para esta lección.'}
+                                    {((activeLesson as unknown) as { description?: string }).description || 'Sin descripción adicional para esta lección.'}
                                 </p>
                             </div>
                         </div>
@@ -121,7 +121,7 @@ export function CoursePlayerView({ course }: CoursePlayerViewProps) {
                     </div>
 
                     <div className="space-y-1 p-2">
-                        {course.modules?.map((module: any) => (
+                        {course.modules?.map((module) => (
                             <div key={module.id} className="bg-white rounded-lg border border-gray-200 overflow-hidden">
                                 <button
                                     onClick={() => toggleModule(module.id)}
@@ -133,7 +133,7 @@ export function CoursePlayerView({ course }: CoursePlayerViewProps) {
 
                                 {expandedModules.includes(module.id) && (
                                     <div className="border-t border-gray-100 bg-gray-50">
-                                        {module.lessons?.map((lesson: any) => (
+                                        {module.lessons?.map((lesson) => (
                                             <button
                                                 key={lesson.id}
                                                 onClick={() => {
@@ -154,7 +154,7 @@ export function CoursePlayerView({ course }: CoursePlayerViewProps) {
                                                         }`}>
                                                         {lesson.title}
                                                     </p>
-                                                    <span className="text-xs text-gray-400">{lesson.durationSeconds ? `${Math.round(lesson.durationSeconds / 60)} min` : 'Video'}</span>
+                                                    <span className="text-xs text-gray-400">{((lesson as unknown) as { durationSeconds?: number }).durationSeconds ? `${Math.round(((lesson as unknown) as { durationSeconds?: number }).durationSeconds! / 60)} min` : 'Video'}</span>
                                                 </div>
                                             </button>
                                         ))}

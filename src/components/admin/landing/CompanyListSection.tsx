@@ -1,11 +1,10 @@
-'use client';
-
+import Image from 'next/image';
 import { useState, useEffect } from 'react';
-import { Plus, Handshake, Loader2, Save } from 'lucide-react';
+import { Plus, Handshake } from 'lucide-react';
 import { LandingConfigItem, CompanyInfo } from '@/app/admin/landing/types';
 import { CloudinaryUploadWidget } from '@/components/common/CloudinaryUploadWidget';
 
-export function CompanyListSection({ items, onSave, saving }: {
+export function CompanyListSection({ items, onSave }: {
     items: LandingConfigItem[];
     onSave: (item: LandingConfigItem) => void;
     saving: string | null;
@@ -33,9 +32,10 @@ export function CompanyListSection({ items, onSave, saving }: {
     useEffect(() => {
         try {
             const parsed = JSON.parse(configItem.value || '[]');
-            setCompanies(Array.isArray(parsed) ? parsed : []);
-        } catch (e) {
-            setCompanies([]);
+            const val = Array.isArray(parsed) ? parsed : [];
+            setTimeout(() => setCompanies(val), 0);
+        } catch {
+            setTimeout(() => setCompanies([]), 0);
         }
     }, [configItem.value]);
 
@@ -104,9 +104,9 @@ export function CompanyListSection({ items, onSave, saving }: {
             <div className="flex justify-between items-center bg-blue-900/20 p-4 rounded-xl border border-blue-500/20">
                 <div>
                     <h3 className="text-blue-200 font-semibold flex items-center gap-2">
-                        <Handshake className="w-5 h-5" /> Empresas Aliadas
+                        <Handshake className="w-5 h-5" /> Empresas Inclusivas
                     </h3>
-                    <p className="text-sm text-blue-300/60 mt-1">Gestiona las empresas que aparecen en "Conoce tus posibilidades"</p>
+                    <p className="text-sm text-blue-300/60 mt-1">Gestiona las empresas inclusivas que aparecen en &quot;Conoce tus posibilidades&quot;</p>
                 </div>
                 <button
                     onClick={() => {
@@ -197,9 +197,9 @@ export function CompanyListSection({ items, onSave, saving }: {
                 ) : companies.map((company) => (
                     <div key={company.id} className="bg-slate-800/40 p-5 rounded-xl border border-white/5 hover:border-white/10 transition-all flex flex-col gap-4 group hover:bg-slate-800/60">
                         <div className="flex items-start gap-4">
-                            <div className="w-16 h-16 rounded-lg bg-white/10 flex-shrink-0 overflow-hidden">
+                            <div className="relative w-16 h-16 rounded-lg bg-white/10 flex-shrink-0 overflow-hidden">
                                 {company.imageUrl ? (
-                                    <img src={company.imageUrl} alt={company.name} className="w-full h-full object-cover" />
+                                    <Image src={company.imageUrl} alt={company.name} fill className="object-cover" unoptimized />
                                 ) : (
                                     <div className="w-full h-full flex items-center justify-center text-slate-500">
                                         <Handshake className="w-6 h-6" />

@@ -1,6 +1,4 @@
 import { ContactSection } from '@/components/landing/ContactSection';
-import { Navbar } from '@/components/landing/Navbar';
-import { Footer } from '@/components/landing/Footer';
 import { GridBackground } from '@/components/ui/GridBackground';
 
 export default function ContactPage() {

@@ -1,14 +1,7 @@
 'use client';
 
 import Link from 'next/link';
-import {
-  Linkedin,
-  Instagram,
-  Facebook,
-  Twitter,
-  Youtube,
-  Link as LinkIcon,
-} from 'lucide-react';
+
 import { useTranslation } from '@/hooks/useTranslation';
 import { contentService } from '@/services/content.service';
 import { useState, useEffect } from 'react';

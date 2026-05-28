@@ -1,5 +1,8 @@
+"use client";
+
 import React, { useState } from 'react';
-import { CreditCard, Lock, AlertCircle, Loader2, Check } from 'lucide-react';
+import Image from 'next/image';
+import { CreditCard, Lock, AlertCircle, Loader2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
 interface CreditCardFormProps {
@@ -10,23 +13,19 @@ interface CreditCardFormProps {
     currency: string;
     planName?: string;
     period?: 'mensual' | 'anual';
-    onSuccess: (data: any) => void;
+    onSuccess: (data: Record<string, unknown>) => void;
     onError: (error: string) => void;
     onCancel: () => void;
-    processPaymentResult: (token: string, acceptanceToken: string, installments: number) => Promise<any>;
+    processPaymentResult: (token: string, acceptanceToken: string, installments: number) => Promise<Record<string, unknown>>;
     cardType?: 'credit' | 'debit';
 }
 
 export const CreditCardForm: React.FC<CreditCardFormProps> = ({
     publicKey,
-    reference,
-    email,
     amountInCents,
-    currency,
     planName = 'Plan Premium',
     period = 'mensual',
     onSuccess,
-    onError,
     onCancel,
     processPaymentResult,
     cardType = 'credit'
@@ -125,9 +124,9 @@ export const CreditCardForm: React.FC<CreditCardFormProps> = ({
             // 3. Process Charge
             const result = await processPaymentResult(tokenData.data.id, acceptanceToken, Number(formData.installments || 1));
             onSuccess(result);
-        } catch (err: any) {
+        } catch (err: unknown) {
             console.error('Payment Error:', err);
-            setError(err.message || 'Error procesando el pago');
+            setError(err instanceof Error ? err.message : 'Error procesando el pago');
         } finally {
             setLoading(false);
         }
@@ -168,7 +167,7 @@ export const CreditCardForm: React.FC<CreditCardFormProps> = ({
                             />
                             <div className="absolute right-3 top-2.5 flex items-center pointer-events-none transition-all duration-300">
                                 {cardBrand ? (
-                                    <img src={cardBrand.logo} alt={cardBrand.name} className="h-6 w-auto object-contain" />
+                                    <Image src={cardBrand.logo} alt={cardBrand.name} width={40} height={24} className="h-6 w-auto object-contain" unoptimized />
                                 ) : (
                                     <CreditCard className="h-5 w-5 text-gray-400" />
                                 )}

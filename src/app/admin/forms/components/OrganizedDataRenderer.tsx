@@ -2,12 +2,12 @@ import { FormFieldRenderer } from './FormFieldRenderer';
 import { fieldLabels, fieldCategories } from '../constants';
 
 interface OrganizedDataRendererProps {
-    data: Record<string, any>;
+    data: Record<string, unknown>;
 }
 
 export function OrganizedDataRenderer({ data }: OrganizedDataRendererProps) {
-    const categorizedFields: Record<string, Array<[string, any]>> = {};
-    const uncategorizedFields: Array<[string, any]> = [];
+    const categorizedFields: Record<string, Array<[string, unknown]>> = {};
+    const uncategorizedFields: Array<[string, unknown]> = [];
 
     // Categorize fields
     Object.entries(data).forEach(([key, value]) => {

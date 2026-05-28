@@ -117,7 +117,7 @@ function PaymentResponseContent() {
                 // Verificar el estado con Wompi a través de nuestro backend
                 const data = await paymentsService.verifyPayment(transactionId);
 
-                setTransaction(data);
+                setTransaction(data as unknown as TransactionDetails);
                 setStatus(data.status as PaymentStatus);
             } catch (err) {
                 // Si falla la verificación, usar el status del parámetro si existe
@@ -136,7 +136,7 @@ function PaymentResponseContent() {
         };
 
         verifyPayment();
-    }, [transactionId, statusParam]);
+    }, [transactionId, statusParam, reasonParam]);
 
     const config = STATUS_CONFIG[status] || STATUS_CONFIG.ERROR;
 

@@ -7,6 +7,7 @@ import { LoginPanel } from '@/components/landing/LoginPanel';
 import { RegistrationPanel } from '@/components/landing/RegistrationPanel';
 import { ForgotPasswordPanel } from '@/components/landing/ForgotPasswordPanel';
 import { CompleteProfileModal } from '@/components/landing/CompleteProfileModal';
+import { FloatingWhatsAppButton } from '@/components/ui/FloatingWhatsAppButton';
 
 export function GlobalPanels() {
     const {
@@ -32,7 +33,7 @@ export function GlobalPanels() {
             }, 300);
             return () => clearTimeout(timer);
         } else {
-            setShowCompleteProfile(false);
+            setTimeout(() => setShowCompleteProfile(false), 0);
         }
     }, [isAuthenticated, profileComplete]);
 
@@ -67,6 +68,9 @@ export function GlobalPanels() {
                 isOpen={showCompleteProfile}
                 onClose={() => setShowCompleteProfile(false)}
             />
+
+            {/* Botón flotante global de WhatsApp */}
+            <FloatingWhatsAppButton />
         </>
     );
 }

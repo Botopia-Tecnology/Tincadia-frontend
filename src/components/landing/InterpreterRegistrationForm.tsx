@@ -1,7 +1,7 @@
 'use client';
 
 import { X, CheckCircle2 } from 'lucide-react';
-import { useInterpreterForm } from '@/hooks/useInterpreterForm';
+import { useInterpreterForm, InterpreterFormData } from '@/hooks/useInterpreterForm';
 
 // Sub-components
 import { PersonalInfoFields } from '../forms/interpreter/PersonalInfoFields';
@@ -10,7 +10,7 @@ import { FileUploadFields } from '../forms/interpreter/FileUploadFields';
 import { AuthorizationFooter } from '../forms/interpreter/AuthorizationFooter';
 
 interface InterpreterRegistrationFormProps {
-    initialData?: any;
+    initialData?: Partial<InterpreterFormData>;
     submissionId?: string;
     onSuccess?: () => void;
     onCancel?: () => void;

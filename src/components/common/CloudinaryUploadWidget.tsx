@@ -1,5 +1,4 @@
-'use client';
-
+import Image from 'next/image';
 import { useState, useRef, useEffect } from 'react';
 import Script from 'next/script';
 import { api } from '@/lib/api-client';
@@ -14,9 +13,39 @@ interface CloudinaryUploadWidgetProps {
     allowedFormats?: string[];
 }
 
+interface CloudinaryWidgetResult {
+    event: string;
+    info: { secure_url: string };
+}
+
+interface CloudinarySignatureParams {
+    [key: string]: string;
+}
+
+interface CloudinarySignatureCallback {
+    (signature: string, timestamp: string | number | null, apiKey: string | null): void;
+}
+
+interface CloudinaryApiResponse {
+    signature: string;
+    timestamp: string | number;
+    apiKey: string;
+}
+
+interface CloudinaryWidgetInstance {
+    open: () => void;
+}
+
+interface CloudinaryStatic {
+    createUploadWidget: (
+        options: Record<string, unknown>,
+        callback: (error: Error | null, result: CloudinaryWidgetResult | null) => void
+    ) => CloudinaryWidgetInstance;
+}
+
 declare global {
     interface Window {
-        cloudinary: any;
+        cloudinary: CloudinaryStatic;
     }
 }
 
@@ -29,12 +58,12 @@ export function CloudinaryUploadWidget({
     allowedFormats
 }: CloudinaryUploadWidgetProps) {
     const [loaded, setLoaded] = useState(false);
-    const widgetRef = useRef<any>(null);
+    const widgetRef = useRef<CloudinaryWidgetInstance | null>(null);
 
     useEffect(() => {
         // Check immediately
         if (window.cloudinary) {
-            setLoaded(true);
+            setTimeout(() => setLoaded(true), 0);
         }
 
         // Poll check to handle race conditions where onLoad doesn't fire for all instances
@@ -48,7 +77,7 @@ export function CloudinaryUploadWidget({
         return () => clearInterval(interval);
     }, []);
 
-    const createWidgetInstance = async () => {
+    const createWidgetInstance = async (): Promise<CloudinaryWidgetInstance | undefined> => {
         if (!window.cloudinary) return;
 
         const defaultFormats = resourceType === 'video'
@@ -59,10 +88,10 @@ export function CloudinaryUploadWidget({
             {
                 cloudName: process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME || 'do1mvhvms',
                 apiKey: process.env.NEXT_PUBLIC_CLOUDINARY_API_KEY || '382513334875637',
-                uploadSignature: async (callback: (signature: string, timestamp: string | number | null, apiKey: string | null) => void, params: any) => {
+                uploadSignature: async (callback: CloudinarySignatureCallback, params: CloudinarySignatureParams) => {
                     try {
                         const paramsToSign = { ...params, source: 'uw' };
-                        const data = await api.get<any>(`/content/cloudinary/signature?${new URLSearchParams(paramsToSign).toString()}`);
+                        const data = await api.get<CloudinaryApiResponse>(`/content/cloudinary/signature?${new URLSearchParams(paramsToSign).toString()}`);
                         callback(data.signature, data.timestamp, data.apiKey);
                     } catch (error) {
                         console.error('Error fetching signature:', error);
@@ -92,7 +121,7 @@ export function CloudinaryUploadWidget({
                     },
                 }
             },
-            (error: any, result: any) => {
+            (error: Error | null, result: CloudinaryWidgetResult | null) => {
                 if (!error && result && result.event === "success") {
                     onUpload(result.info.secure_url);
                 }
@@ -102,7 +131,7 @@ export function CloudinaryUploadWidget({
 
     const openWidget = async () => {
         if (!widgetRef.current) {
-            widgetRef.current = await createWidgetInstance();
+            widgetRef.current = await createWidgetInstance() ?? null;
         }
 
         if (widgetRef.current) {
@@ -143,13 +172,12 @@ export function CloudinaryUploadWidget({
                             controls
                         />
                     ) : (
-                        <img
+                        <Image
                             src={currentImage}
                             alt="Preview"
-                            className="h-full object-contain"
-                            onError={(e) => {
-                                (e.target as HTMLImageElement).src = '';
-                            }}
+                            fill
+                            className="object-contain"
+                            unoptimized
                         />
                     )}
                 </div>

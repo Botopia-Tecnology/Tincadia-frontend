@@ -1,12 +1,21 @@
 'use client';
 
 import { FileText, Upload, X } from 'lucide-react';
+import { FormikProps } from 'formik';
+import { JobSeekerFormData } from '@/hooks/useJobSeekerForm';
 
-export function JobSeekerFiles({ formik, handleFileChange, fileError, t }: any) {
-    const renderFileUpload = (field: string, labelKey: string, isRequired: boolean = false) => {
+interface JobSeekerFilesProps {
+    formik: FormikProps<JobSeekerFormData>;
+    handleFileChange: (field: keyof JobSeekerFormData, file: File | null) => void;
+    fileError: string | null;
+    t: (key: string) => string;
+}
+
+export function JobSeekerFiles({ formik, handleFileChange, fileError, t }: JobSeekerFilesProps) {
+    const renderFileUpload = (field: keyof JobSeekerFormData, labelKey: string, isRequired: boolean = false) => {
         const file = formik.values[field];
         const hasFile = !!file;
-        const fileName = file?.name || (typeof file === 'string' ? file.split('/').pop() : '');
+        const fileName = (typeof file === 'object' && file !== null && 'name' in file) ? file.name : (typeof file === 'string' ? file.split('/').pop() : '');
 
         return (
             <div className="relative">
@@ -24,11 +33,10 @@ export function JobSeekerFiles({ formik, handleFileChange, fileError, t }: any) 
                     />
                     <label
                         htmlFor={field}
-                        className={`flex flex-col items-center justify-center gap-2 w-full p-6 border-2 border-dashed rounded-xl transition-all cursor-pointer bg-white ${
-                            hasFile 
-                                ? 'border-[#83A98A] bg-[#83A98A]/5' 
+                        className={`flex flex-col items-center justify-center gap-2 w-full p-6 border-2 border-dashed rounded-xl transition-all cursor-pointer bg-white ${hasFile
+                                ? 'border-[#83A98A] bg-[#83A98A]/5'
                                 : (formik.touched[field] && formik.errors[field] ? 'border-red-400 bg-red-50/30' : 'border-gray-200 hover:border-[#83A98A] hover:bg-gray-50')
-                        }`}
+                            }`}
                     >
                         {hasFile ? (
                             <div className="flex flex-col items-center gap-2">

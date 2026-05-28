@@ -2,31 +2,11 @@
 
 import { useEffect, useState, useCallback } from 'react';
 import { useParams } from 'next/navigation';
-import { contentService, Course } from '@/services/content.service';
+import { contentService, Course, Module, Lesson } from '@/services/content.service';
 import { ArrowLeft, Plus, Video, Trash2, UploadCloud, ChevronDown, PlayCircle, Loader2 } from 'lucide-react';
 import Link from 'next/link';
 import Image from 'next/image';
 import EditCourseModal from './EditCourseModal';
-
-// Types for local state (extending Course type if needed)
-interface Lesson {
-    id: string;
-    title: string;
-    videoUrl?: string;
-    durationSeconds?: number;
-    order: number;
-    isPaid?: boolean;
-    isFreePreview?: boolean;
-}
-
-interface Module {
-    id: string;
-    title: string;
-    description?: string;
-    lessons: Lesson[];
-    order: number;
-    isPaid?: boolean;
-}
 
 export default function CourseDetailsPage() {
 const params = useParams();
@@ -405,7 +385,7 @@ const handleLessonPreview = async (lessonId: string, isFreePreview: boolean) => 
 
                             {/* Lessons List */}
                             <div className="divide-y divide-slate-700/50">
-                                {module.lessons?.map((lesson) => (
+                                {module.lessons?.map((lesson: Lesson) => (
                                     <div key={lesson.id} className="p-4 pl-14 hover:bg-slate-700/20 transition-colors flex justify-between items-center group">
                                         <div className="flex items-center gap-3">
                                             <div className={`p-2 rounded-full ${lesson.videoUrl ? 'bg-emerald-500/10 text-emerald-500' : 'bg-slate-700 text-slate-500'}`}>

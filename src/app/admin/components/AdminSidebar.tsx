@@ -1,6 +1,8 @@
 'use client';
 
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
+import { useAuth } from '@/contexts/AuthContext';
 import {
     LayoutDashboard,
     Users,
@@ -13,11 +15,9 @@ import {
     Home,
     BarChart3
 } from 'lucide-react';
-import React from 'react';
-import { useAuth } from '@/contexts/AuthContext';
-import { useRouter } from 'next/navigation';
+import { LucideIcon } from 'lucide-react';
 
-const SidebarItem = ({ href, icon: Icon, label }: { href: string; icon: any; label: string }) => (
+const SidebarItem = ({ href, icon: Icon, label }: { href: string; icon: LucideIcon; label: string }) => (
     <Link
         href={href}
         className="flex items-center gap-3 px-4 py-3 text-slate-300 hover:text-white hover:bg-slate-800 rounded-lg transition-colors"

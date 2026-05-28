@@ -15,7 +15,7 @@ export function PostHogProvider({ children }: { children: React.ReactNode }) {
                 person_profiles: 'identified_only',
                 capture_pageview: false, // We'll capture manually for SPA
                 capture_pageleave: true,
-                loaded: (posthog) => {
+                loaded: () => {
                     if (process.env.NODE_ENV === 'development') {
                         console.log('✅ PostHog initialized');
                     }

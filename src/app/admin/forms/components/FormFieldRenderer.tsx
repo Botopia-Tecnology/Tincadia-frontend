@@ -2,10 +2,10 @@ import { FileText } from 'lucide-react';
 
 interface FormFieldRendererProps {
     fieldKey: string;
-    value: any;
+    value: unknown;
 }
 
-export function FormFieldRenderer({ fieldKey, value }: FormFieldRendererProps) {
+export function FormFieldRenderer({ value }: FormFieldRendererProps) {
     if (value === null || value === undefined) {
         return <span className="text-slate-500 italic">No especificado</span>;
     }
@@ -27,18 +27,21 @@ export function FormFieldRenderer({ fieldKey, value }: FormFieldRendererProps) {
     }
 
     // Handle objects (like hojaVida, certificaciones)
-    if (typeof value === 'object') {
+    if (typeof value === 'object' && value !== null && !Array.isArray(value)) {
+        const fileObj = value as Record<string, unknown>;
         // Check if it's a file object (has name, size, type properties)
-        if (value.name || value.size || value.type) {
-            const fileName = value.name || 'Archivo sin nombre';
-            const fileSize = value.size ? `${(value.size / 1024).toFixed(2)} KB` : '';
-            const fileType = value.type || 'Tipo desconocido';
+        if ('name' in fileObj || 'size' in fileObj || 'type' in fileObj) {
+            const fileName = typeof fileObj.name === 'string' ? fileObj.name : 'Archivo sin nombre';
+            const sizeNum = typeof fileObj.size === 'number' ? fileObj.size : 0;
+            const fileSize = sizeNum > 0 ? `${(sizeNum / 1024).toFixed(2)} KB` : '';
+            const fileType = typeof fileObj.type === 'string' ? fileObj.type : 'Tipo desconocido';
+            const fileUrl = typeof fileObj.url === 'string' ? fileObj.url : '';
             
             return (
                 <div className="space-y-2">
-                    {value.url ? (
+                    {fileUrl ? (
                         <a
-                            href={value.url}
+                            href={fileUrl}
                             target="_blank"
                             rel="noopener noreferrer"
                             className="inline-flex items-center gap-2 text-blue-400 hover:text-blue-300 underline transition-colors"
@@ -54,7 +57,7 @@ export function FormFieldRenderer({ fieldKey, value }: FormFieldRendererProps) {
                             {fileSize && <span className="text-xs text-slate-500">({fileSize})</span>}
                         </div>
                     )}
-                    {!value.url && fileType && (
+                    {!fileUrl && fileType !== 'Tipo desconocido' && (
                         <div className="text-xs text-slate-500">
                             Tipo: {fileType}
                         </div>

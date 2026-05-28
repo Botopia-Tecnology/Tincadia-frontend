@@ -43,7 +43,7 @@ export default function EditCourseModal({ isOpen, onClose, onSuccess, course }: 
         try {
             const data = await contentService.getCategories();
             setCategories(data);
-        } catch (error) {
+        } catch {
             console.error('Failed to load categories');
         }
     };

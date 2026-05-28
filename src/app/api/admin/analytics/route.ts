@@ -122,8 +122,8 @@ export async function GET(req: NextRequest) {
             fetch(queryUrl, { method: 'POST', headers, body: JSON.stringify({ query: geoQuery }) }),
         ]);
 
-        const debugInfo: any = { method: 'BI HogQL Suite', projectId, range: safeDate };
-        const results: any = {};
+        const debugInfo: Record<string, string> = { method: 'BI HogQL Suite', projectId, range: safeDate };
+        const results: Record<string, unknown> = {};
 
         // Helper to process response
         const process = async (res: Response, key: string) => {
@@ -154,8 +154,8 @@ export async function GET(req: NextRequest) {
             total: uvData?.results?.[0]?.count || uvData?.results?.[0]?.data?.reduce((a: number, b: number) => a + b, 0) || 0
         };
 
-        results.topPages = pagesData?.results?.map((r: any) => ({ path: r[0], visitors: r[1], views: r[2] })) || [];
-        results.topSources = sourcesData?.results?.map((r: any) => ({ source: r[0] || 'Direct / Unknown', visitors: r[1], views: r[2] })) || [];
+        results.topPages = pagesData?.results?.map((r: unknown[]) => ({ path: r[0], visitors: r[1], views: r[2] })) || [];
+        results.topSources = sourcesData?.results?.map((r: unknown[]) => ({ source: r[0] || 'Direct / Unknown', visitors: r[1], views: r[2] })) || [];
 
         // Prioritize robust event-based count
         const scFromEvents = sessionCountData?.results?.[0]?.[0] || 0;
@@ -167,15 +167,15 @@ export async function GET(req: NextRequest) {
             count: scFromTable > 0 ? scFromTable : scFromEvents
         };
 
-        results.devices = deviceData?.results?.map((r: any) => ({ name: r[0] || 'Unknown', visitors: r[1], views: r[2] })) || [];
-        results.geo = geoData?.results?.map((r: any) => ({ country: r[0] || 'Unknown', count: r[1] })) || [];
+        results.devices = deviceData?.results?.map((r: unknown[]) => ({ name: r[0] || 'Unknown', visitors: r[1], views: r[2] })) || [];
+        results.geo = geoData?.results?.map((r: unknown[]) => ({ country: r[0] || 'Unknown', count: r[1] })) || [];
 
         return NextResponse.json({ ...results, debug: debugInfo });
 
-    } catch (error: any) {
+    } catch (error: unknown) {
         console.error('Analytics BI Error:', error);
         return NextResponse.json(
-            { error: 'Failed to fetch BI analytics', details: error.message },
+            { error: 'Failed to fetch BI analytics', details: error instanceof Error ? error.message : String(error) },
             { status: 500 }
         );
     }

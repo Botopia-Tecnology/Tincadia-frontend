@@ -21,7 +21,7 @@ export default function CoursePlayerPage() {
     const [course, setCourse] = useState<Course | null>(null);
     const [loading, setLoading] = useState(true);
     const [hasAccess, setHasAccess] = useState(false);
-    const [subscriptionStatus, setSubscriptionStatus] = useState<any>(null);
+
 
     const checkAccess = useCallback(async (courseData: Course) => {
         // If course is not paid, anyone has access
@@ -36,7 +36,6 @@ export default function CoursePlayerPage() {
         try {
             // Check real subscription status from backend
             const status = await paymentsService.getSubscriptionStatus(user.id);
-            setSubscriptionStatus(status);
             
             // Check if user has an active personal or corporate plan
             if (status.hasSubscription && (status.planType?.includes('premium') || status.planType?.includes('corporate') || status.planType?.includes('business'))) {

@@ -1,6 +1,15 @@
 'use client';
 
-export function JobSeekerPersonalInfo({ formik, handleDocumentBlur, t }: any) {
+import { FormikProps } from 'formik';
+import { JobSeekerFormData } from '@/hooks/useJobSeekerForm';
+
+interface JobSeekerPersonalInfoProps {
+    formik: FormikProps<JobSeekerFormData>;
+    handleDocumentBlur: (e: React.FocusEvent<HTMLInputElement>) => void;
+    t: (key: string) => string;
+}
+
+export function JobSeekerPersonalInfo({ formik, handleDocumentBlur, t }: JobSeekerPersonalInfoProps) {
     return (
         <div className="space-y-6">
             <div>

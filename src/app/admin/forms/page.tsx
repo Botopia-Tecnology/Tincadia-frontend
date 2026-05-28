@@ -32,9 +32,9 @@ export default function FormsPage() {
         if (!matchesType) return false;
         if (!searchTerm) return true;
         const term = searchTerm.toLowerCase();
-        const fullName = (s.fullName || s.data?.nombreCompleto || '').toLowerCase();
-        const email = (s.email || s.data?.correoElectronico || '').toLowerCase();
-        const doc = (s.documentNumber || s.data?.documentoIdentidad || '').toLowerCase();
+        const fullName = ((s.fullName as string) || (s.data?.nombreCompleto as string) || '').toLowerCase();
+        const email = ((s.email as string) || (s.data?.correoElectronico as string) || '').toLowerCase();
+        const doc = ((s.documentNumber as string) || (s.data?.documentoIdentidad as string) || '').toLowerCase();
         return fullName.includes(term) || email.includes(term) || doc.includes(term);
     });
 
@@ -368,7 +368,7 @@ export default function FormsPage() {
                                                 <td className="px-4 py-4">
                                                     <div className="flex items-center gap-2 mb-1">
                                                         <User size={14} className="text-slate-500" />
-                                                        <span className="font-medium text-white">{submission.fullName || submission.data?.nombreCompleto || 'Sin nombre'}</span>
+                                                        <span className="font-medium text-white">{(submission.fullName as string) || (submission.data?.nombreCompleto as string) || 'Sin nombre'}</span>
                                                     </div>
                                                 </td>
 
@@ -376,11 +376,11 @@ export default function FormsPage() {
                                                     <div className="space-y-1">
                                                         <div className="flex items-center gap-2 text-sm text-slate-400">
                                                             <Mail size={12} />
-                                                            {submission.email || submission.data?.correoElectronico || 'N/A'}
+                                                            {(submission.email as string) || (submission.data?.correoElectronico as string) || 'N/A'}
                                                         </div>
                                                         <div className="flex items-center gap-2 text-sm text-slate-400">
                                                             <Phone size={12} />
-                                                            {submission.phone || submission.data?.telefono || submission.data?.telefonoWhatsapp || 'N/A'}
+                                                            {(submission.phone as string) || (submission.data?.telefono as string) || (submission.data?.telefonoWhatsapp as string) || 'N/A'}
                                                         </div>
                                                     </div>
                                                 </td>

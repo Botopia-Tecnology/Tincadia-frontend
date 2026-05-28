@@ -68,9 +68,10 @@ export function LoginPanel({ isOpen, onClose, onSignUpClick, onForgotPasswordCli
                     redirectURI: process.env.NEXT_PUBLIC_APP_URL || '',
                     usePopup: true,
                 },
-                onError: (error: any) => {
+                onError: (error: unknown) => {
                     console.error('Apple Sign In Error:', error);
-                    throw new Error(error.error || 'Error en inicio de sesión con Apple');
+                    const errorMessage = error && typeof error === 'object' && 'error' in error ? String((error as { error: unknown }).error) : 'Error en inicio de sesión con Apple';
+                    throw new Error(errorMessage);
                 },
             });
 
@@ -86,10 +87,6 @@ export function LoginPanel({ isOpen, onClose, onSignUpClick, onForgotPasswordCli
         } finally {
             setOauthLoading(false);
         }
-    };
-
-    const handleOtherSocialLogin = () => {
-        setLocalError('OAuth con este proveedor aún no está disponible.');
     };
 
     const handleEmailLogin = async (e: React.FormEvent) => {

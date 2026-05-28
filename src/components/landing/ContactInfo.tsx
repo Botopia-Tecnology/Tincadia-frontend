@@ -4,7 +4,19 @@ import { Mail, Phone } from 'lucide-react';
 import { useTranslation } from '@/hooks/useTranslation';
 import { SocialIcon } from '@/components/common/SocialIcon';
 
-export function ContactInfo({ email, phone, socialLinks }: any) {
+interface SocialLink {
+    id?: string;
+    network: string;
+    url: string;
+}
+
+interface ContactInfoProps {
+    email: string;
+    phone: string;
+    socialLinks?: SocialLink[];
+}
+
+export function ContactInfo({ email, phone, socialLinks }: ContactInfoProps) {
     const t = useTranslation();
     
     return (
@@ -40,7 +52,7 @@ export function ContactInfo({ email, phone, socialLinks }: any) {
                 {socialLinks && socialLinks.length > 0 && (
                     <div className="col-span-1 sm:col-span-2 pt-6">
                         <div className="flex gap-4 flex-wrap">
-                            {socialLinks.map((link: any) => (
+                            {socialLinks.map((link) => (
                                 <a
                                     key={link.id || link.network}
                                     href={link.url}

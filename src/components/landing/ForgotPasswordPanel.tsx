@@ -2,7 +2,6 @@
 
 import { useState } from 'react';
 import { X, Loader2, ArrowLeft, Mail } from 'lucide-react';
-import { useTranslation } from '@/hooks/useTranslation';
 import { GridBackground } from '@/components/ui/GridBackground';
 import { authService } from '@/services/auth.service';
 import { useUI } from '@/contexts/UIContext';
@@ -13,7 +12,6 @@ interface ForgotPasswordPanelProps {
 }
 
 export function ForgotPasswordPanel({ isOpen, onClose }: ForgotPasswordPanelProps) {
-    const t = useTranslation();
     const { openLoginPanel } = useUI();
 
     // States

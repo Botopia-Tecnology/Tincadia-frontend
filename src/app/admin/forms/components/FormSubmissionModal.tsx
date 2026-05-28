@@ -25,21 +25,21 @@ export function FormSubmissionModal({ submission, onClose, onDeleted }: FormSubm
     const isInterpreterForm = submission.form?.type === 'interpreter_registration';
 
     const handlePromote = async () => {
-        const email = submission.email || submission.data?.correoElectronico;
+        const email = (submission.email || submission.data?.correoElectronico) as string;
         if (!email) {
             setPromoteError('No se encontró un email válido en el formulario para realizar la aprobación.');
             return;
         }
 
-        if (!confirm(`¿Estás seguro de aprobar a ${submission.data?.nombreCompleto || email} como Intérprete? Esto actualizará su rol de usuario.`)) return;
+        if (!confirm(`¿Estás seguro de aprobar a ${(submission.data?.nombreCompleto as string) || email} como Intérprete? Esto actualizará su rol de usuario.`)) return;
 
         setIsPromoting(true);
         setPromoteError(null);
         try {
             await usersService.promoteToInterpreter(email);
             setPromoteSuccess(true);
-        } catch (err: any) {
-            setPromoteError(err.message || 'Error al promover usuario');
+        } catch (err: unknown) {
+            setPromoteError(err instanceof Error ? err.message : 'Error al promover usuario');
         } finally {
             setIsPromoting(false);
         }
@@ -70,8 +70,8 @@ export function FormSubmissionModal({ submission, onClose, onDeleted }: FormSubm
                     onClose();
                 }, 1500);
             }
-        } catch (err: any) {
-            setRejectError(err.message || 'Error al rechazar solicitud');
+        } catch (err: unknown) {
+            setRejectError(err instanceof Error ? err.message : 'Error al rechazar solicitud');
         } finally {
             setIsRejecting(false);
         }
@@ -80,7 +80,7 @@ export function FormSubmissionModal({ submission, onClose, onDeleted }: FormSubm
     const handleDownloadExcel = () => {
         setIsDownloadingExcel(true);
         try {
-            const name = submission.fullName || submission.data?.nombreCompleto || 'submission';
+            const name = (submission.fullName || submission.data?.nombreCompleto || 'submission') as string;
             const safeDate = new Date().toISOString().split('T')[0];
             exportToExcel([submission], `tincadia_${name.replace(/\s+/g, '_')}_${safeDate}.xlsx`);
         } finally {
@@ -125,19 +125,19 @@ export function FormSubmissionModal({ submission, onClose, onDeleted }: FormSubm
                         <div className="grid grid-cols-2 gap-4 p-4 bg-slate-900/50 rounded-lg">
                             <div>
                                 <span className="text-xs text-slate-500 uppercase">Nombre</span>
-                                <p className="text-white font-medium">{submission.fullName || submission.data?.nombreCompleto || 'N/A'}</p>
+                                <p className="text-white font-medium">{(submission.fullName as string) || (submission.data?.nombreCompleto as string) || 'N/A'}</p>
                             </div>
                             <div>
                                 <span className="text-xs text-slate-500 uppercase">Email</span>
-                                <p className="text-white font-medium">{submission.email || submission.data?.correoElectronico || 'N/A'}</p>
+                                <p className="text-white font-medium">{(submission.email as string) || (submission.data?.correoElectronico as string) || 'N/A'}</p>
                             </div>
                             <div>
                                 <span className="text-xs text-slate-500 uppercase">Teléfono</span>
-                                <p className="text-white font-medium">{submission.phone || submission.data?.telefono || submission.data?.telefonoWhatsapp || 'N/A'}</p>
+                                <p className="text-white font-medium">{(submission.phone as string) || (submission.data?.telefono as string) || (submission.data?.telefonoWhatsapp as string) || 'N/A'}</p>
                             </div>
                             <div>
                                 <span className="text-xs text-slate-500 uppercase">Documento</span>
-                                <p className="text-white font-medium">{submission.documentNumber || submission.data?.documentoIdentidad || 'N/A'}</p>
+                                <p className="text-white font-medium">{(submission.documentNumber as string) || (submission.data?.documentoIdentidad as string) || 'N/A'}</p>
                             </div>
                         </div>
 
@@ -163,7 +163,7 @@ export function FormSubmissionModal({ submission, onClose, onDeleted }: FormSubm
                                     <div className="flex flex-col gap-3">
                                         <p className="text-sm text-slate-400">
                                             Revisa la hoja de vida adjunta antes de aprobar. Al aprobar, el usuario con el email
-                                            <span className="text-white font-mono mx-1">{submission.data?.correoElectronico || 'N/A'}</span>
+                                            <span className="text-white font-mono mx-1">{(submission.data?.correoElectronico as string) || 'N/A'}</span>
                                             obtendrá el rol de <strong>Intérprete</strong>.
                                         </p>
 

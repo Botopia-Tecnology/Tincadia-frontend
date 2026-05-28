@@ -1,6 +1,15 @@
 'use client';
 
-export function PersonalInfoFields({ formik, handleDocumentBlur, t }: any) {
+import { FormikProps } from 'formik';
+import { InterpreterFormData } from '@/hooks/useInterpreterForm';
+
+interface PersonalInfoFieldsProps {
+    formik: FormikProps<InterpreterFormData>;
+    handleDocumentBlur: (e: React.FocusEvent<HTMLInputElement>) => void;
+    t: (key: string) => string;
+}
+
+export function PersonalInfoFields({ formik, handleDocumentBlur, t }: PersonalInfoFieldsProps) {
     return (
         <div className="space-y-6">
             <div>

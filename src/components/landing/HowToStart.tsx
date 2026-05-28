@@ -1,7 +1,6 @@
-'use client';
-
+import Image from 'next/image';
 import { useState, useEffect, useRef, useMemo } from 'react';
-import { Mic, FileText, Video, PenTool } from 'lucide-react';
+import { PenTool, Video, ShieldAlert, Sparkles } from 'lucide-react';
 import { useTranslation } from '@/hooks/useTranslation';
 import { contentService } from '@/services/content.service';
 
@@ -22,7 +21,7 @@ export function HowToStart() {
         const mediaMap: Record<string, string> = {};
         // Iterate over the array since getLandingConfigs returns LandingConfigItem[]
         if (Array.isArray(configs)) {
-          configs.forEach((item: any) => {
+          configs.forEach((item: LandingConfigItem) => {
             if (item.key && item.key.startsWith('how_to_start_step_')) {
               mediaMap[item.key] = item.value;
             }
@@ -48,7 +47,7 @@ export function HowToStart() {
         title: t('howToStart.features.voiceToText.title'),
         subtitle: t('howToStart.features.voiceToText.subtitle'),
         description: t('howToStart.features.voiceToText.description'),
-        icon: Mic,
+        icon: PenTool,
         videoLabel: t('howToStart.features.voiceToText.title'),
         steps: getSteps('howToStart.features.voiceToText.steps'),
         color: 'from-blue-500 to-blue-600',
@@ -59,7 +58,7 @@ export function HowToStart() {
         title: t('howToStart.features.translation.title'),
         subtitle: t('howToStart.features.translation.subtitle'),
         description: t('howToStart.features.translation.description'),
-        icon: FileText,
+        icon: Video,
         videoLabel: t('howToStart.features.translation.title'),
         steps: getSteps('howToStart.features.translation.steps'),
         color: 'from-green-500 to-green-600',
@@ -70,7 +69,7 @@ export function HowToStart() {
         title: t('howToStart.features.interpretation.title'),
         subtitle: t('howToStart.features.interpretation.subtitle'),
         description: t('howToStart.features.interpretation.description'),
-        icon: Video,
+        icon: ShieldAlert,
         videoLabel: t('howToStart.features.interpretation.title'),
         steps: getSteps('howToStart.features.interpretation.steps'),
         color: 'from-purple-500 to-purple-600',
@@ -81,7 +80,7 @@ export function HowToStart() {
         title: t('howToStart.features.writingAssistant.title'),
         subtitle: t('howToStart.features.writingAssistant.subtitle'),
         description: t('howToStart.features.writingAssistant.description'),
-        icon: PenTool,
+        icon: Sparkles,
         videoLabel: t('howToStart.features.writingAssistant.title'),
         steps: getSteps('howToStart.features.writingAssistant.steps'),
         color: 'from-orange-500 to-orange-600',
@@ -90,7 +89,7 @@ export function HowToStart() {
     ];
   }, [t]);
   const [activeTab, setActiveTab] = useState(1);
-  const [isTransitioning, setIsTransitioning] = useState(false);
+  const [, setIsTransitioning] = useState(false);
   const [displayTab, setDisplayTab] = useState(1);
   const [progress, setProgress] = useState(0);
   const [isManualChange, setIsManualChange] = useState(false);
@@ -345,10 +344,12 @@ export function HowToStart() {
                         playsInline
                       />
                     ) : (
-                      <img
+                      <Image
                         src={mediaUrl}
                         alt={feature.title}
-                        className="w-full h-full object-cover"
+                        fill
+                        className="object-cover"
+                        unoptimized
                       />
                     )
                   ) : (
@@ -400,8 +401,6 @@ export function HowToStart() {
           <div className="space-y-0">
             {features.map((feature) => {
               const isActive = displayTab === feature.id;
-              const FeatureIcon = feature.icon;
-
               return (
                 <div
                   key={feature.id}

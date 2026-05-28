@@ -82,7 +82,6 @@ export const usersService = {
         try {
             // Note: Endpoint is /auth/users/:userId/role defined in api-gateway AuthController
             // We can construct it relative to the LIST endpoint or just hardcode the path structure if config is limiting
-            const baseUrl = buildUrl(USER_ENDPOINTS.LIST).replace(/\/users$/, ''); // Remove /users suffix if present, or just use auth base
             // actually LIST is likely /auth/users
             // our new endpoint is /auth/users/:userId/role
             // so if LIST is /auth/users, we can append /:userId/role

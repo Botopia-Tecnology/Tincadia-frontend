@@ -78,6 +78,29 @@ export interface Payment {
     updatedAt: string;
 }
 
+export interface PaymentVerification {
+    status: string;
+    transactionId: string;
+    payment?: Payment;
+    [key: string]: unknown;
+}
+
+export interface Subscription {
+    id: string;
+    userId: string;
+    planId: string;
+    status: string;
+    currentPeriodEnd: string;
+    cancelAtPeriodEnd: boolean;
+    [key: string]: unknown;
+}
+
+export interface SubscriptionCancellation {
+    success: boolean;
+    subscriptionId: string;
+    status: string;
+}
+
 class PaymentsService {
     private baseUrl = '/payments';
 
@@ -98,8 +121,8 @@ class PaymentsService {
     /**
      * Verifica el estado de una transacción con Wompi
      */
-    async verifyPayment(transactionId: string): Promise<any> {
-        return api.get(`${this.baseUrl}/verify/${transactionId}`);
+    async verifyPayment(transactionId: string): Promise<PaymentVerification> {
+        return api.get<PaymentVerification>(`${this.baseUrl}/verify/${transactionId}`);
     }
 
     /**
@@ -128,8 +151,8 @@ class PaymentsService {
         acceptanceToken: string;
         email: string;
         installments?: number;
-    }): Promise<any> {
-        return api.post(`${this.baseUrl}/charge-card`, data);
+    }): Promise<Payment> {
+        return api.post<Payment>(`${this.baseUrl}/charge-card`, data);
     }
     /**
      * Obtiene el historial de transacciones de un usuario
@@ -141,8 +164,8 @@ class PaymentsService {
     /**
      * Obtiene la suscripción activa de un usuario
      */
-    async getActiveSubscription(userId: string): Promise<any> {
-        return api.get(`${this.baseUrl}/subscriptions/user/${userId}`);
+    async getActiveSubscription(userId: string): Promise<Subscription> {
+        return api.get<Subscription>(`${this.baseUrl}/subscriptions/user/${userId}`);
     }
 
     /**
@@ -156,7 +179,7 @@ class PaymentsService {
         currentPeriodEnd?: Date;
         cancelAtPeriodEnd?: boolean;
         permissions?: string[];
-        features?: any;
+        features?: Record<string, unknown>;
     }> {
         return api.get(`${this.baseUrl}/subscriptions/status/${userId}`);
     }
@@ -164,8 +187,8 @@ class PaymentsService {
     /**
      * Cancela una suscripción activa
      */
-    async cancelSubscription(subscriptionId: string): Promise<any> {
-        return api.post(`${this.baseUrl}/subscriptions/${subscriptionId}/cancel`, {});
+    async cancelSubscription(subscriptionId: string): Promise<SubscriptionCancellation> {
+        return api.post<SubscriptionCancellation>(`${this.baseUrl}/subscriptions/${subscriptionId}/cancel`, {});
     }
 }
 

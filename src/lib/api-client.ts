@@ -5,8 +5,8 @@
  * and automatic token refresh.
  */
 
-import { apiConfig, API_BASE_URL, API_TIMEOUT, AUTH_STORAGE_PREFIX } from '@/config/api.config';
-import type { ApiResponse, ApiError } from '@/types/api.types';
+import { API_BASE_URL, API_TIMEOUT, AUTH_STORAGE_PREFIX } from '@/config/api.config';
+import type { ApiError } from '@/types/api.types';
 import type { AuthTokens } from '@/types/auth.types';
 
 // ===========================================

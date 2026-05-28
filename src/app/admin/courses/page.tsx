@@ -5,6 +5,7 @@ import { useEffect, useState } from 'react';
 import { contentService, Course } from '@/services/content.service';
 import Link from 'next/link';
 import CreateCourseModal from './CreateCourseModal';
+import Image from 'next/image';
 
 interface Category {
     id: string;
@@ -149,10 +150,12 @@ export default function CoursesPage() {
                                                 {/* Image Container */}
                                                 <div className="h-44 bg-slate-900 relative flex items-center justify-center overflow-hidden">
                                                     {course.thumbnailUrl ? (
-                                                        <img
+                                                        <Image
                                                             src={course.thumbnailUrl}
                                                             alt={course.title}
-                                                            className="w-full h-full object-cover opacity-80 group-hover:opacity-100 group-hover:scale-105 transition-all duration-500"
+                                                            fill
+                                                            className="object-cover opacity-80 group-hover:opacity-100 group-hover:scale-105 transition-all duration-500"
+                                                            unoptimized
                                                         />
                                                     ) : (
                                                         <div className="absolute inset-0 bg-gradient-to-br from-slate-800 to-slate-900 flex items-center justify-center">

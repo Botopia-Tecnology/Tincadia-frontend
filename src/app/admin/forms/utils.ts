@@ -36,26 +36,27 @@ export const exportToCSV = (submissions: FormSubmission[]): void => {
 /**
  * Extraer la URL pública de un campo que puede ser string u objeto con .url
  */
-function extractUrl(value: any): string {
+function extractUrl(value: unknown): string {
     if (!value) return '';
     if (typeof value === 'string') return value;
-    if (typeof value === 'object' && value.url) return value.url;
+    if (typeof value === 'object' && value !== null && 'url' in value) return (value as { url: string }).url;
     return '';
 }
 
 /**
  * Convertir un valor de campo a texto legible para la celda
  */
-function fieldToText(value: any): string {
+function fieldToText(value: unknown): string {
     if (value === null || value === undefined) return '';
     if (typeof value === 'boolean') return value ? 'Sí' : 'No';
     if (typeof value === 'string') return value;
     if (Array.isArray(value)) return value.join(', ');
-    if (typeof value === 'object') {
+    if (typeof value === 'object' && value !== null) {
+        const obj = value as Record<string, unknown>;
         // Objetos con "url" son documentos — devolver la URL
-        if (value.url) return value.url;
+        if (obj.url) return String(obj.url);
         // Objetos con "name" y "value" (opciones de selección)
-        if (value.name) return value.name;
+        if (obj.name) return String(obj.name);
         return JSON.stringify(value);
     }
     return String(value);
@@ -99,19 +100,19 @@ export const exportToExcel = (submissions: FormSubmission[], filename?: string):
 
     // Filas de datos
     submissions.forEach((s, rowIdx) => {
-        const baseValues = [
+        const baseValues: string[] = [
             formatDate(s.createdAt),
-            formTypeLabels[s.form?.type] || s.form?.type || 'N/A',
-            s.fullName || s.data?.nombreCompleto || 'N/A',
-            s.email || s.data?.correoElectronico || 'N/A',
-            s.phone || s.data?.telefono || s.data?.telefonoWhatsapp || 'N/A',
-            s.documentNumber || s.data?.documentoIdentidad || 'N/A',
+            (formTypeLabels[s.form?.type as string] as string) || (s.form?.type as string) || 'N/A',
+            (s.fullName as string) || (s.data?.nombreCompleto as string) || 'N/A',
+            (s.email as string) || (s.data?.correoElectronico as string) || 'N/A',
+            (s.phone as string) || (s.data?.telefono as string) || (s.data?.telefonoWhatsapp as string) || 'N/A',
+            (s.documentNumber as string) || (s.data?.documentoIdentidad as string) || 'N/A',
         ];
 
         const dataValues = dataKeysOrdered.map(key => fieldToText(s.data?.[key]));
 
         // Para documentos: agregar hipervínculo si hay URL
-        const row: any[] = [...baseValues, ...dataValues];
+        const row: string[] = [...baseValues, ...dataValues];
         const excelRow = rowIdx + 2; // +2 porque fila 1 es el header
 
         XLSX.utils.sheet_add_aoa(ws, [row], { origin: `A${excelRow}` });

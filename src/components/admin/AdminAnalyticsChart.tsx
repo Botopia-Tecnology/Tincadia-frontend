@@ -4,7 +4,7 @@ import React from 'react';
 import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 
 interface AdminAnalyticsChartProps {
-    data: any[];
+    data: Array<{ labels: string; data: number }>;
     loading?: boolean;
 }
 

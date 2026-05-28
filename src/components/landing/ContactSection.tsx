@@ -25,7 +25,7 @@ export function ContactSection() {
                         <ContactForm 
                             formik={formik} 
                             submitStatus={submitStatus} 
-                            formIdError={formIdError} 
+                            formIdError={formIdError || undefined} 
                         />
                     </div>
 

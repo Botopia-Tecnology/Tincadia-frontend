@@ -1,8 +1,18 @@
 'use client';
 
 import { X, Loader2 } from 'lucide-react';
+import { FormikProps } from 'formik';
+import { JobSeekerFormData } from '@/hooks/useJobSeekerForm';
 
-export function JobSeekerFooter({ formik, submitStatus, formIdError, isEditing, t }: any) {
+interface JobSeekerFooterProps {
+    formik: FormikProps<JobSeekerFormData>;
+    submitStatus: string;
+    formIdError: string | null;
+    isEditing: boolean;
+    t: (key: string) => string;
+}
+
+export function JobSeekerFooter({ formik, submitStatus, formIdError, isEditing, t }: JobSeekerFooterProps) {
     return (
         <div className="space-y-8 pt-6 border-t border-gray-100">
             <div className="grid md:grid-cols-2 gap-8">

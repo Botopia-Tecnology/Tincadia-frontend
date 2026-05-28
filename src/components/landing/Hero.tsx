@@ -5,8 +5,9 @@ import { useEffect, useRef, useState, useMemo } from 'react';
 import { useTranslation } from '@/hooks/useTranslation';
 import { useUI } from '@/contexts/UIContext';
 import { contentService, type LandingConfigItem } from '@/services/content.service';
+import { Ear, EarOff, Brain, Subtitles } from 'lucide-react';
 
-// Letras del título principal
+// Letras del título principal (Ya no se usan en órbita, pero se mantienen si se necesitan en otro lado)
 const TINCADIA_LETTERS = ['T', 'I', 'N', 'C', 'A', 'D', 'I', 'A'];
 
 interface HeroProps {
@@ -52,8 +53,6 @@ export function Hero({ disableAnimations = false }: HeroProps) {
   const [showWord, setShowWord] = useState(false);
   const [showVideo, setShowVideo] = useState(false);
   const [email, setEmail] = useState('');
-  const [isEmailValid, setIsEmailValid] = useState(false);
-  const [isSubmitted, setIsSubmitted] = useState(false);
 
   const { setIsRegistrationPanelOpen, setRegistrationEmail: setGlobalEmail } = useUI();
 
@@ -124,7 +123,7 @@ export function Hero({ disableAnimations = false }: HeroProps) {
     let lastTime = 0;
     const targetFPS = 60;
     const frameInterval = 1000 / targetFPS;
-    const degreesPerSecond = 360 / 30; // 30 segundos por vuelta completa
+    const degreesPerSecond = 360 / 15; // 15 segundos por vuelta completa (el doble de rápido)
 
     const animate = (currentTime: number) => {
       if (currentTime - lastTime >= frameInterval) {
@@ -182,15 +181,22 @@ export function Hero({ disableAnimations = false }: HeroProps) {
       clearTimeout(showDescTimer);
       if (intervalId) clearInterval(intervalId);
     };
-  }, [disableAnimations]);
+  }, [disableAnimations, CONCEPT_STEPS.length]);
 
   const currentConcept = CONCEPT_STEPS[currentStep];
 
   return (
     <section
-      className="relative bg-transparent pt-0 pb-4 lg:pt-20 lg:pb-6 overflow-visible"
+      className="relative bg-transparent pt-0 pb-4 lg:pt-20 lg:pb-6 overflow-hidden"
       aria-labelledby="hero-heading"
     >
+      {/* Background Grid */}
+      <div className="absolute inset-0 -z-10" style={{
+        backgroundImage: `linear-gradient(to right, #e2e8f0 1px, transparent 1px), linear-gradient(to bottom, #e2e8f0 1px, transparent 1px)`,
+        backgroundSize: `4rem 4rem`,
+        opacity: 0.6
+      }} />
+
       {/* Contenedor principal */}
       <div className="mx-auto max-w-7xl px-6 lg:px-8 relative z-10">
 
@@ -267,9 +273,8 @@ export function Hero({ disableAnimations = false }: HeroProps) {
                 onClick={() => {
                   setGlobalEmail(email);
                   setIsRegistrationPanelOpen(true);
-                  setIsSubmitted(true);
                 }}
-                className="rounded-r-lg sm:rounded-l-none rounded-l-lg sm:rounded-r-lg bg-white px-8 py-3.5 text-base font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#83A98A] transition-colors whitespace-nowrap"
+                className="rounded-r-lg sm:rounded-l-none rounded-l-lg sm:rounded-r-lg bg-[#83A98A] px-8 py-3.5 text-base font-semibold text-white shadow-[0_4px_14px_0_rgba(131,169,138,0.39)] hover:shadow-[0_6px_20px_rgba(131,169,138,0.23)] hover:bg-[#5A7A62] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#83A98A] transition-all whitespace-nowrap"
                 aria-label={t('hero.startButtonLabel')}
               >
                 {t('hero.startButton')}
@@ -278,71 +283,93 @@ export function Hero({ disableAnimations = false }: HeroProps) {
           </div>
 
           {/* Columna de video / círculo */}
+          {/* Columna de video / personaje con órbita */}
           <div
-            className={`relative lg:h-[500px] flex items-center justify-center transition-all duration-1000 overflow-visible order-1 lg:order-2 ${showVideo ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
+            className={`relative lg:h-[600px] flex items-center justify-center transition-all duration-1000 overflow-visible order-1 lg:order-2 ${showVideo ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
               }`}
           >
-            <div className="relative w-[300px] h-[300px] lg:w-[750px] lg:h-[750px] flex items-center justify-center overflow-visible">
-              {/* Círculo del video */}
-              <div className="relative w-[160px] h-[160px] lg:w-[450px] lg:h-[450px] z-0">
-                <div
-                  className="absolute inset-0 bg-[#83A98A]/20 rounded-full blur-3xl"
-                  aria-hidden="true"
-                />
+            <div className="relative w-full h-[400px] lg:h-[600px] flex items-center justify-center overflow-visible">
+              
+              {/* Elliptical Orbits SVG (Fondo) */}
+              <div className="absolute inset-0 flex items-center justify-center pointer-events-none z-0">
+                 <svg width="100%" height="100%" viewBox="-400 -200 800 400" className="opacity-50">
+                    <ellipse cx="0" cy="0" rx="260" ry="90" stroke="#83A98A" strokeWidth="2" fill="none" transform="rotate(-15)" />
+                    <ellipse cx="0" cy="0" rx="210" ry="70" stroke="#83A98A" strokeWidth="1" fill="none" transform="rotate(10)" />
+                    <ellipse cx="0" cy="0" rx="240" ry="110" stroke="#83A98A" strokeWidth="1" fill="none" strokeDasharray="6,6" transform="rotate(-5)" />
+                 </svg>
+              </div>
 
-                <div className="relative w-full h-full rounded-full overflow-hidden bg-[#83A98A] shadow-2xl ring-8 ring-white">
+              {/* El personaje (Video con soft-mask para fundir los bordes rectangulares) */}
+              <div className="relative w-[320px] h-[320px] lg:w-[500px] lg:h-[500px] z-10 flex items-center justify-center">
+                {/* Glow brillante detrás del personaje */}
+                <div className="absolute inset-0 bg-white/60 rounded-full blur-3xl" aria-hidden="true" />
+
+                <div 
+                  className="relative w-full h-full"
+                  style={{
+                    WebkitMaskImage: 'radial-gradient(circle at 50% 50%, black 45%, transparent 75%)',
+                    maskImage: 'radial-gradient(circle at 50% 50%, black 45%, transparent 75%)'
+                  }}
+                >
                   <video
                     key={videoUrl}
                     ref={videoRef}
-                    className="w-full h-full object-cover scale-100"
+                    className="w-full h-full object-cover scale-[1.10]"
                     style={{ objectPosition: 'center center' }}
                     autoPlay
                     loop
                     muted
                     playsInline
-                    aria-label="Video de presentación de Tincadia"
+                    aria-label="Personaje de Tincadia"
                   >
-                    <source
-                      src={videoUrl}
-                      type="video/mp4"
-                    />
-                    Tu navegador no soporta el elemento de video.
+                    <source src={videoUrl} type="video/mp4" />
                   </video>
                 </div>
               </div>
 
-              {/* Letras orbitando alrededor del círculo */}
-              <div className="absolute inset-0 z-10 overflow-visible">
-                {['T', 'E', 'C', 'N', 'O', 'L', 'O', 'G', 'I', 'A'].map(
-                  (letter, index) => {
-                    const totalLetters = 10;
-                    const baseAngle = (index * 360) / totalLetters - 90;
-                    const totalAngle = baseAngle + orbitAngle;
-                    const radius = circleRadius;
-                    const animationDelay = (index * 20) / totalLetters;
-
-                    return (
-                      <span
+              {/* Orbiting Badges (Íconos de Accesibilidad) */}
+              <div className="absolute inset-0 pointer-events-none">
+                {[
+                  { Icon: Ear, offset: 0 },
+                  { Icon: EarOff, offset: 90 },
+                  { Icon: Brain, offset: 180 },
+                  { Icon: Subtitles, offset: 270 }
+                ].map((item, index) => {
+                   // Calcular la posición en la elipse (más cerradas)
+                   const angleInRads = ((orbitAngle + item.offset) % 360) * (Math.PI / 180);
+                   const rx = circleRadius * 1.15; // Radio X más estrecho
+                   const ry = circleRadius * 0.45; // Radio Y más estrecho
+                   const x = Math.cos(angleInRads) * rx;
+                   const y = Math.sin(angleInRads) * ry;
+                   
+                   // Inclinación de la órbita (-15 grados)
+                   const tilt = -15 * (Math.PI / 180);
+                   const tiltedX = x * Math.cos(tilt) - y * Math.sin(tilt);
+                   const tiltedY = x * Math.sin(tilt) + y * Math.cos(tilt);
+                   
+                   // Si está en la mitad trasera de la órbita, va atrás del personaje (z-0), sino adelante (z-20)
+                   const zIndex = tiltedY > 0 ? 20 : 0;
+                   const scale = tiltedY > 0 ? 1 : 0.8; // Más pequeño cuando está lejos
+                   const opacity = tiltedY > 0 ? 1 : 0.6; // Más difuso cuando está lejos
+                   
+                   return (
+                     <div
                         key={index}
-                        className="absolute text-xl sm:text-3xl lg:text-4xl font-bold text-black transition-transform duration-75 ease-linear"
+                        className="absolute w-14 h-14 sm:w-16 sm:h-16 rounded-full bg-[#83A98A] flex items-center justify-center border-[3px] border-white transition-transform duration-75 ease-linear shadow-[0_0_30px_rgba(131,169,138,0.8)]"
                         style={{
-                          left: '50%',
-                          top: '50%',
-                          width: '1em',
-                          height: '1em',
-                          marginLeft: '-0.5em',
-                          marginTop: '-0.5em',
-                          transform: `rotate(${totalAngle}deg) translateX(${radius}px) rotate(${-totalAngle}deg)`,
-                          transformOrigin: 'center center',
-                          animationDelay: `${-animationDelay}s`,
-                          willChange: 'transform',
+                           left: '50%',
+                           top: '50%',
+                           marginLeft: '-2rem',
+                           marginTop: '-2rem',
+                           transform: `translate(${tiltedX}px, ${tiltedY}px) scale(${scale})`,
+                           opacity: opacity,
+                           zIndex: zIndex
                         }}
-                      >
-                        {letter}
-                      </span>
-                    );
-                  }
-                )}
+                     >
+                       <item.Icon className="w-6 h-6 sm:w-7 sm:h-7 text-white" strokeWidth={2.5} />
+                     </div>
+                   );
+                })}
               </div>
             </div>
           </div>

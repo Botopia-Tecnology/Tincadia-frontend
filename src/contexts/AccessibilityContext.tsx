@@ -1,7 +1,7 @@
 'use client';
 
 import React, { createContext, useContext, ReactNode } from 'react';
-import { useAccessibility, TextColor } from '@/hooks/useAccessibility';
+import { useAccessibility } from '@/hooks/useAccessibility';
 
 // Define the shape of the context based on the hook's return type
 type AccessibilityContextType = ReturnType<typeof useAccessibility>;

@@ -17,10 +17,6 @@ function getFrameSrc(index: number): string {
   return `${FRAME_PATH}${num}${FRAME_EXT}`;
 }
 
-/** Ease-out cubic for smooth deceleration */
-function easeOutCubic(t: number): number {
-  return 1 - Math.pow(1 - t, 3);
-}
 
 /** Ease-in-out cubic for Apple-like smooth S-curve transitions */
 function easeInOutCubic(t: number): number {

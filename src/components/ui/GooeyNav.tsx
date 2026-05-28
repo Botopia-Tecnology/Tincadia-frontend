@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useRef } from 'react';
 import Link from 'next/link';
 
 interface GooeyNavProps {
@@ -14,18 +14,59 @@ interface GooeyNavProps {
     colors?: number[];
 }
 
+interface Particle {
+    x: number;
+    y: number;
+    color: string;
+    size: number;
+    duration: number;
+    delay: number;
+    startX: number;
+    startY: number;
+}
+
+const generateParticles = (
+    x: number,
+    y: number,
+    particleCount: number,
+    particleDistances: [number, number],
+    animationTime: number,
+    timeVariance: number,
+    colors: number[],
+    colorMap: Record<number, string>
+): Particle[] => {
+    const newParticles = [];
+    for (let i = 0; i < particleCount; i++) {
+        const angle = Math.random() * Math.PI * 2;
+        const distance = Math.random() * (particleDistances[0] - particleDistances[1]) + particleDistances[1];
+        const duration = animationTime + Math.random() * timeVariance;
+        const colorKey = colors[Math.floor(Math.random() * colors.length)];
+
+        newParticles.push({
+            x: x + Math.cos(angle) * distance,
+            y: y + Math.sin(angle) * distance,
+            color: colorMap[colorKey] || '#000000',
+            size: Math.random() * 15 + 10,
+            duration: duration,
+            delay: Math.random() * 100,
+            startX: x,
+            startY: y,
+        });
+    }
+    return newParticles;
+};
+
 export default function GooeyNav({
     items,
     particleCount = 15,
     particleDistances = [90, 10],
-    particleR = 100,
     initialActiveIndex = 0,
     animationTime = 600,
     timeVariance = 300,
     colors = [1, 2, 3, 1, 2, 3, 1, 4],
 }: GooeyNavProps) {
     const [activeIndex, setActiveIndex] = useState(initialActiveIndex);
-    const [particles, setParticles] = useState<{ x: number; y: number; color: string; size: number; duration: number; delay: number; startX: number; startY: number }[]>([]);
+    const [particles, setParticles] = useState<Particle[]>([]);
     const navRef = useRef<HTMLDivElement>(null);
 
     // Map numeric colors to Tincadia palette (dark/black theme requested)
@@ -37,24 +78,16 @@ export default function GooeyNav({
     };
 
     const triggerExplosion = (x: number, y: number) => {
-        const newParticles = [];
-        for (let i = 0; i < particleCount; i++) {
-            const angle = Math.random() * Math.PI * 2;
-            const distance = Math.random() * (particleDistances[0] - particleDistances[1]) + particleDistances[1];
-            const duration = animationTime + Math.random() * timeVariance;
-            const colorKey = colors[Math.floor(Math.random() * colors.length)];
-
-            newParticles.push({
-                x: x + Math.cos(angle) * distance,
-                y: y + Math.sin(angle) * distance,
-                color: colorMap[colorKey] || '#000000',
-                size: Math.random() * 15 + 10,
-                duration: duration,
-                delay: Math.random() * 100,
-                startX: x,
-                startY: y,
-            });
-        }
+        const newParticles = generateParticles(
+            x,
+            y,
+            particleCount,
+            particleDistances,
+            animationTime,
+            timeVariance,
+            colors,
+            colorMap
+        );
         setParticles(newParticles);
 
         // Clear particles after animation

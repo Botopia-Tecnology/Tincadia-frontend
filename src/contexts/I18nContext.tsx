@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 'use client';
 
 import { createContext, useContext, useState, useEffect, ReactNode } from 'react';
@@ -36,7 +37,7 @@ export function I18nProvider({ children, defaultLocale = 'es' }: I18nProviderPro
   useEffect(() => {
     const savedLocale = localStorage.getItem('tincadia-locale') as Locale | null;
     if (savedLocale && (savedLocale === 'es' || savedLocale === 'en' || savedLocale === 'pt')) {
-      setLocaleState(savedLocale);
+      setTimeout(() => setLocaleState(savedLocale), 0);
     }
   }, []);
 
