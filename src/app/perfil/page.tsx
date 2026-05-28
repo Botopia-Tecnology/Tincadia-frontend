@@ -4,6 +4,8 @@ import { useRouter } from 'next/navigation';
 import { useUserProfile } from '@/hooks/useUserProfile';
 import { InterpreterRegistrationForm } from '@/components/landing/InterpreterRegistrationForm';
 import { JobSeekerRegistrationForm } from '@/components/landing/JobSeekerRegistrationForm';
+import { InterpreterFormData } from '@/hooks/useInterpreterForm';
+import { JobSeekerFormData } from '@/hooks/useJobSeekerForm';
 import {
     User as UserIcon,
     CreditCard,
@@ -16,7 +18,7 @@ import {
 // Sub-components
 import { ProfileInfo } from '@/components/profile/ProfileInfo';
 import { ApplicationsList } from '@/components/profile/ApplicationsList';
-import { SubscriptionCard } from '@/components/profile/SubscriptionCard';
+import { SubscriptionCard, ClientSubscription } from '@/components/profile/SubscriptionCard';
 import { TransactionsList } from '@/components/profile/TransactionsList';
 
 export default function ProfilePage() {
@@ -54,9 +56,9 @@ export default function ProfilePage() {
             {editingApplication && (
                 <div className="fixed inset-0 z-50 flex items-center justify-center px-4 py-6 bg-black/80 backdrop-blur-sm overflow-y-auto">
                     <div className="w-full max-w-4xl max-h-full overflow-y-auto rounded-2xl relative">
-                        {editingApplication.form?.type === 'interpreter_registration' ? (
+                        {(editingApplication.form as { type?: string })?.type === 'interpreter_registration' ? (
                             <InterpreterRegistrationForm
-                                initialData={editingApplication.data}
+                                initialData={editingApplication.data as Partial<InterpreterFormData>}
                                 submissionId={editingApplication.id}
                                 onSuccess={() => {
                                     setEditingApplication(null);
@@ -64,9 +66,9 @@ export default function ProfilePage() {
                                 }}
                                 onCancel={() => setEditingApplication(null)}
                             />
-                        ) : editingApplication.form?.type === 'job_seeker_registration' ? (
+                        ) : (editingApplication.form as { type?: string })?.type === 'job_seeker_registration' ? (
                             <JobSeekerRegistrationForm
-                                initialData={editingApplication.data}
+                                initialData={editingApplication.data as Partial<JobSeekerFormData>}
                                 submissionId={editingApplication.id}
                                 onSuccess={() => {
                                     setEditingApplication(null);
@@ -114,7 +116,7 @@ export default function ProfilePage() {
                                 return (
                                     <button
                                         key={tab.id}
-                                        onClick={() => setActiveTab(tab.id as any)}
+                                        onClick={() => setActiveTab(tab.id as 'profile' | 'applications' | 'subscription' | 'transactions')}
                                         className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg transition-colors ${activeTab === tab.id
                                             ? 'bg-[#83A98A] text-white font-medium'
                                             : 'text-gray-400 hover:bg-gray-700/50 hover:text-white'
@@ -142,7 +144,7 @@ export default function ProfilePage() {
                     <div className="flex-1">
                         {activeTab === 'profile' && <ProfileInfo user={user} />}
                         {activeTab === 'applications' && <ApplicationsList applications={applications} onEdit={setEditingApplication} />}
-                        {activeTab === 'subscription' && <SubscriptionCard subscription={subscription} user={user} onUpdate={refresh} />}
+                        {activeTab === 'subscription' && <SubscriptionCard subscription={subscription as ClientSubscription | null} user={user} onUpdate={refresh} />}
                         {activeTab === 'transactions' && <TransactionsList transactions={transactions} />}
                     </div>
                 </div>

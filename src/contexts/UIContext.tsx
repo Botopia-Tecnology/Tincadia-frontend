@@ -17,6 +17,12 @@ interface UIContextType {
 
 const UIContext = createContext<UIContextType | undefined>(undefined);
 
+declare global {
+    interface Window {
+        openLoginPanel?: () => void;
+    }
+}
+
 export function UIProvider({ children }: { children: ReactNode }) {
     const [isRegistrationPanelOpen, setIsRegistrationPanelOpen] = useState(false);
     const [registrationEmail, setRegistrationEmail] = useState('');
@@ -28,9 +34,9 @@ export function UIProvider({ children }: { children: ReactNode }) {
 
     // Expose login panel function globally for Navbar (legacy support if needed, but context is better)
     useEffect(() => {
-        (window as any).openLoginPanel = openLoginPanel;
+        window.openLoginPanel = openLoginPanel;
         return () => {
-            delete (window as any).openLoginPanel;
+            delete window.openLoginPanel;
         };
     }, []);
 

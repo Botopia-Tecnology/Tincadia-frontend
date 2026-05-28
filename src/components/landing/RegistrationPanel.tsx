@@ -79,9 +79,10 @@ export function RegistrationPanel({ isOpen, onClose, initialEmail = '' }: Regist
           redirectURI: process.env.NEXT_PUBLIC_APP_URL || '',
           usePopup: true,
         },
-        onError: (error: any) => {
+        onError: (error: unknown) => {
           console.error('Apple Sign In Error:', error);
-          throw new Error(error.error || 'Error en inicio de sesión con Apple');
+          const errorMessage = error && typeof error === 'object' && 'error' in error ? String((error as { error: unknown }).error) : 'Error en inicio de sesión con Apple';
+          throw new Error(errorMessage);
         },
       });
 

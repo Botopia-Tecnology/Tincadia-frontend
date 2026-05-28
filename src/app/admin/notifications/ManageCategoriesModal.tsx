@@ -69,7 +69,7 @@ export default function ManageCategoriesModal({ isOpen, onClose, onUpdate }: Pro
             setLabel('');
             fetchCategories();
             onUpdate();
-        } catch (error) {
+        } catch {
             alert('Error al crear categoría');
         } finally {
             setCreating(false);
@@ -82,7 +82,7 @@ export default function ManageCategoriesModal({ isOpen, onClose, onUpdate }: Pro
             await notificationsService.deleteCategory(id);
             setCategories(prev => prev.filter(c => c.id !== id));
             onUpdate();
-        } catch (error) {
+        } catch {
             alert('Error al eliminar');
         }
     };

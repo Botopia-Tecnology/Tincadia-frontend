@@ -51,7 +51,7 @@ export const notificationsService = {
     /**
      * Create notification
      */
-    createNotification: async (data: any): Promise<AppNotification> => {
+    createNotification: async (data: Partial<AppNotification>): Promise<AppNotification> => {
         const response = await fetch(buildUrl(NOTIFICATION_ENDPOINTS.CREATE), {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
@@ -79,7 +79,7 @@ export const notificationsService = {
         return response.json();
     },
 
-    createCategory: async (data: any): Promise<NotificationCategory> => {
+    createCategory: async (data: Partial<NotificationCategory>): Promise<NotificationCategory> => {
         const response = await fetch(`${buildUrl(NOTIFICATION_ENDPOINTS.CREATE)}/categories`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },

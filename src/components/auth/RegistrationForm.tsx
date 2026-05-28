@@ -4,7 +4,7 @@ import { useState } from 'react';
 import Link from 'next/link';
 import { Eye, EyeOff } from 'lucide-react';
 import { useTranslation } from '@/hooks/useTranslation';
-import { DOCUMENT_TYPES, type DocumentTypeId } from '@/types/auth.types';
+import { DOCUMENT_TYPES, type DocumentTypeId, COUNTRIES } from '@/types/auth.types';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
 
@@ -39,6 +39,7 @@ export function RegistrationForm({
     const t = useTranslation();
     const [showPassword, setShowPassword] = useState(false);
     const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+    const [selectedCountry, setSelectedCountry] = useState(COUNTRIES[0]);
 
     const validationSchema = Yup.object({
         nombre: Yup.string().required(t('forms.common.required') as string),
@@ -66,7 +67,11 @@ export function RegistrationForm({
         },
         validationSchema,
         onSubmit: async (values) => {
-            await onSubmit(values);
+            const sanitizedPhone = values.telefono.replace(/\D/g, '');
+            await onSubmit({
+                ...values,
+                telefono: `${selectedCountry.dialCode}${sanitizedPhone}`
+            });
         },
     });
 
@@ -145,15 +150,34 @@ export function RegistrationForm({
             </div>
 
             <div>
-                <input
-                    type="tel"
-                    name="telefono"
-                    onChange={formik.handleChange}
-                    onBlur={formik.handleBlur}
-                    value={formik.values.telefono}
-                    className={`w-full bg-transparent text-lg text-gray-900 placeholder-gray-400 border-0 border-b focus:outline-none focus:border-gray-900 transition-colors pb-2 ${formik.touched.telefono && formik.errors.telefono ? 'border-red-500' : 'border-gray-300'}`}
-                    placeholder={t('registration.panel.phone')}
-                />
+                <div className="flex gap-2">
+                    <select
+                        className="w-[120px] px-2 py-3 border-0 border-b border-gray-300 bg-transparent text-lg text-gray-900 focus:outline-none focus:border-gray-900 transition-colors pb-2"
+                        value={selectedCountry.code}
+                        onChange={(e) => {
+                            const country = COUNTRIES.find(c => c.code === e.target.value);
+                            if (country) setSelectedCountry(country);
+                        }}
+                    >
+                        {COUNTRIES.map((country) => (
+                            <option key={country.code} value={country.code} className="bg-white text-gray-900">
+                                {country.flag} {country.dialCode}
+                            </option>
+                        ))}
+                    </select>
+                    <input
+                        type="tel"
+                        name="telefono"
+                        onChange={(e) => {
+                            const sanitized = e.target.value.replace(/\D/g, '');
+                            formik.setFieldValue('telefono', sanitized);
+                        }}
+                        onBlur={formik.handleBlur}
+                        value={formik.values.telefono}
+                        className={`flex-1 bg-transparent text-lg text-gray-900 placeholder-gray-400 border-0 border-b focus:outline-none focus:border-gray-900 transition-colors pb-2 ${formik.touched.telefono && formik.errors.telefono ? 'border-red-500' : 'border-gray-300'}`}
+                        placeholder={t('registration.panel.phone')}
+                    />
+                </div>
                 {formik.touched.telefono && formik.errors.telefono && (
                     <p className="text-red-500 text-sm mt-1">{formik.errors.telefono}</p>
                 )}

@@ -34,7 +34,7 @@ export interface InterpreterFormData {
 }
 
 interface UseInterpreterFormProps {
-    initialData?: any;
+    initialData?: Partial<InterpreterFormData>;
     submissionId?: string;
     onSuccess?: () => void;
 }
@@ -65,36 +65,56 @@ export function useInterpreterForm({ initialData, submissionId, onSuccess }: Use
         serviceTypes: getArray('forms.interpreter.serviceTypes'),
     }), [getArray]);
 
-    const fetchFormId = useCallback(async () => {
-        try {
-            const form = await formsService.findFormByType('interpreter_registration');
-            setFormId(form.id);
-        } catch (error: any) {
-            setFormIdError(error?.status === 404 
-                ? 'El formulario no está configurado.' 
-                : 'No se pudo cargar la configuración.');
-        }
+    useEffect(() => {
+        let active = true;
+        const fetchFormId = async () => {
+            try {
+                const form = await formsService.findFormByType('interpreter_registration');
+                if (active) {
+                    setFormId(form.id);
+                }
+            } catch (error) {
+                if (active) {
+                    const status = error && typeof error === 'object' && 'status' in error ? (error as { status: number }).status : undefined;
+                    setFormIdError(
+                        status === 404
+                            ? 'El formulario no está configurado.'
+                            : 'No se pudo cargar la configuración.'
+                    );
+                }
+            }
+        };
+        fetchFormId();
+        return () => {
+            active = false;
+        };
     }, []);
 
-    useEffect(() => {
-        fetchFormId();
-    }, [fetchFormId]);
-
-    // Initialize "Other" fields
+    // Initialize "Other" fields safely
     useEffect(() => {
         if (initialData) {
-            if (initialData.areasEspecialidad?.length) {
+            if (initialData.areasEspecialidad?.length && options.specialtyAreas?.length) {
                 const lastOption = options.specialtyAreas[options.specialtyAreas.length - 1];
-                const customArea = initialData.areasEspecialidad.find((a: string) => a.startsWith(lastOption + ' - '));
-                if (customArea) setOtraAreaEspecialidad(customArea.split(' - ')[1]);
+                const customArea = initialData.areasEspecialidad.find((a) => a.startsWith(lastOption + ' - '));
+                if (customArea) {
+                    const value = customArea.split(' - ')[1];
+                    if (value !== otraAreaEspecialidad) {
+                        setTimeout(() => setOtraAreaEspecialidad(value), 0);
+                    }
+                }
             }
-            if (initialData.tipoServicio?.length) {
+            if (initialData.tipoServicio?.length && options.serviceTypes?.length) {
                 const lastOption = options.serviceTypes[options.serviceTypes.length - 1];
-                const customService = initialData.tipoServicio.find((t: string) => t.startsWith(lastOption + ' - '));
-                if (customService) setOtroTipoServicio(customService.split(' - ')[1]);
+                const customService = initialData.tipoServicio.find((t) => t.startsWith(lastOption + ' - '));
+                if (customService) {
+                    const value = customService.split(' - ')[1];
+                    if (value !== otroTipoServicio) {
+                        setTimeout(() => setOtroTipoServicio(value), 0);
+                    }
+                }
             }
         }
-    }, [initialData, options.specialtyAreas, options.serviceTypes]);
+    }, [initialData, options.specialtyAreas, options.serviceTypes, otraAreaEspecialidad, otroTipoServicio]);
 
     const validationSchema = useMemo(() => Yup.object({
         nombreCompleto: Yup.string().required(t('forms.common.required') as string),
@@ -140,7 +160,7 @@ export function useInterpreterForm({ initialData, submissionId, onSuccess }: Use
                     const form = await formsService.findFormByType('interpreter_registration');
                     currentFormId = form.id;
                     setFormId(currentFormId);
-                } catch (error) {
+                } catch {
                     setSubmitStatus('error');
                     return;
                 }
@@ -189,7 +209,7 @@ export function useInterpreterForm({ initialData, submissionId, onSuccess }: Use
                     setOtraAreaEspecialidad('');
                     setOtroTipoServicio('');
                 }
-            } catch (error) {
+            } catch {
                 setSubmitStatus('error');
             }
         },
@@ -211,7 +231,7 @@ export function useInterpreterForm({ initialData, submissionId, onSuccess }: Use
         formik.setFieldValue(name, currentArray.includes(value) ? currentArray.filter(i => i !== value) : [...currentArray, value]);
     };
 
-    const handleFileChange = (name: 'hojaVida' | 'certificaciones', file: File | null) => {
+    const handleFileChange = (name: keyof InterpreterFormData, file: File | null) => {
         setFileErrors(prev => ({ ...prev, [name]: null }));
         if (file && file.size > MAX_FILE_SIZE) {
             setFileErrors(prev => ({ ...prev, [name]: `El archivo pesa ${(file.size / (1024 * 1024)).toFixed(2)}MB. Máximo 50MB.` }));

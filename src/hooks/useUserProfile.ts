@@ -3,8 +3,8 @@
 import { useState, useEffect, useCallback } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
 import { User, userService } from '@/services/user.service';
-import { formsService } from '@/services/forms.service';
-import { Payment, paymentsService } from '@/services/payments.service';
+import { formsService, FormSubmission } from '@/services/forms.service';
+import { Payment, paymentsService, Subscription } from '@/services/payments.service';
 
 export type Tab = 'profile' | 'transactions' | 'subscription' | 'applications';
 
@@ -13,10 +13,10 @@ export function useUserProfile() {
     const [activeTab, setActiveTab] = useState<Tab>('profile');
     const [user, setUser] = useState<User | null>(null);
     const [transactions, setTransactions] = useState<Payment[]>([]);
-    const [subscription, setSubscription] = useState<any>(null);
-    const [applications, setApplications] = useState<any[]>([]);
+    const [subscription, setSubscription] = useState<Subscription | null>(null);
+    const [applications, setApplications] = useState<FormSubmission[]>([]);
     const [loading, setLoading] = useState(true);
-    const [editingApplication, setEditingApplication] = useState<any | null>(null);
+    const [editingApplication, setEditingApplication] = useState<FormSubmission | null>(null);
 
     const loadData = useCallback(async () => {
         try {

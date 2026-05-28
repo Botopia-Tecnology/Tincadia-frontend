@@ -1,6 +1,15 @@
 'use client';
 
-export function DisabilityInfo({ formik, options, t }: any) {
+import { FormikProps } from 'formik';
+import { JobSeekerFormData } from '@/hooks/useJobSeekerForm';
+
+interface DisabilityInfoProps {
+    formik: FormikProps<JobSeekerFormData>;
+    options: Record<string, string[]>;
+    t: (key: string) => string;
+}
+
+export function DisabilityInfo({ formik, options, t }: DisabilityInfoProps) {
     return (
         <div className="grid md:grid-cols-2 gap-6 bg-gray-50 p-6 rounded-xl border border-gray-100">
             <div>
@@ -10,7 +19,7 @@ export function DisabilityInfo({ formik, options, t }: any) {
                 <select
                     id="tipoDiscapacidad"
                     name="tipoDiscapacidad"
-                    value={formik.values.tipoDiscapacidad}
+                    value={(formik.values.tipoDiscapacidad as string) || ''}
                     onChange={formik.handleChange}
                     className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#83A98A] outline-none"
                 >
@@ -27,7 +36,7 @@ export function DisabilityInfo({ formik, options, t }: any) {
                 <select
                     id="usaLSC"
                     name="usaLSC"
-                    value={formik.values.usaLSC}
+                    value={(formik.values.usaLSC as string) || ''}
                     onChange={formik.handleChange}
                     className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#83A98A] outline-none"
                 >

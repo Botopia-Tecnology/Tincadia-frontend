@@ -4,7 +4,7 @@ import { useEffect, useState, useMemo } from 'react';
 import { contentService, Course } from '@/services/content.service';
 import { Loader2, BookOpen, Search, PlayCircle, Grid, Layers } from 'lucide-react';
 import Link from 'next/link';
-
+import Image from 'next/image';
 export default function CoursesPage() {
     const [courses, setCourses] = useState<Course[]>([]);
     const [loading, setLoading] = useState(true);
@@ -155,10 +155,12 @@ export default function CoursesPage() {
                                                 {/* Thumbnail */}
                                                 <div className="aspect-video bg-slate-100 relative overflow-hidden">
                                                     {course.thumbnailUrl ? (
-                                                        <img
+                                                        <Image
                                                             src={course.thumbnailUrl}
                                                             alt={course.title}
-                                                            className="w-full h-full object-cover group-hover:scale-105 transition-all duration-500"
+                                                            fill
+                                                            className="object-cover group-hover:scale-105 transition-all duration-500"
+                                                            unoptimized
                                                         />
                                                     ) : (
                                                         <div className="w-full h-full flex items-center justify-center text-slate-300">

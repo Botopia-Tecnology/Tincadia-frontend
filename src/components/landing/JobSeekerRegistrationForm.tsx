@@ -1,7 +1,7 @@
 'use client';
 
 import { X, CheckCircle2, Briefcase } from 'lucide-react';
-import { useJobSeekerForm } from '@/hooks/useJobSeekerForm';
+import { useJobSeekerForm, JobSeekerFormData } from '@/hooks/useJobSeekerForm';
 
 // Sub-components
 import { JobSeekerPersonalInfo } from '../forms/jobseeker/JobSeekerPersonalInfo';
@@ -11,7 +11,7 @@ import { JobSeekerFiles } from '../forms/jobseeker/JobSeekerFiles';
 import { JobSeekerFooter } from '../forms/jobseeker/JobSeekerFooter';
 
 interface JobSeekerRegistrationFormProps {
-    initialData?: any;
+    initialData?: Partial<JobSeekerFormData>;
     submissionId?: string;
     onSuccess?: () => void;
     onCancel?: () => void;

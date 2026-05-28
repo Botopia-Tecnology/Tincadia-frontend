@@ -6,7 +6,7 @@ export interface FormSubmission {
         type: string;
         description: string;
     };
-    data: Record<string, any>;
+    data: Record<string, unknown>;
     submittedBy?: string;
     fullName?: string;
     email?: string;

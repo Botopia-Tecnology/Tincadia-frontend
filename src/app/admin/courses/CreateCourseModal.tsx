@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { X, Loader2, UploadCloud } from 'lucide-react';
 import { contentService } from '@/services/content.service';
 
@@ -25,13 +25,7 @@ const [previewLimit, setPreviewLimit] = useState<number>(3);
     const [isCreatingCategory, setIsCreatingCategory] = useState(false);
     const [newCategoryName, setNewCategoryName] = useState('');
 
-    useEffect(() => {
-        if (isOpen) {
-            loadCategories();
-        }
-    }, [isOpen]);
-
-    const loadCategories = async () => {
+    const loadCategories = useCallback(async () => {
         try {
             const data = await contentService.getCategories();
             setCategories(data);
@@ -39,10 +33,15 @@ const [previewLimit, setPreviewLimit] = useState<number>(3);
             if (data.length > 0 && !categoryId) {
                 setCategoryId(data[0].id);
             }
-        } catch (error) {
-            console.error('Failed to load categories');
+        } catch {
         }
-    };
+    }, [categoryId]);
+
+    useEffect(() => {
+        if (isOpen) {
+            loadCategories();
+        }
+    }, [isOpen, loadCategories]);
 
     const handleCreateCategory = async () => {
         if (!newCategoryName.trim()) return;
@@ -52,8 +51,7 @@ const [previewLimit, setPreviewLimit] = useState<number>(3);
             setCategoryId(newCat.id); // Auto select new category
             setIsCreatingCategory(false);
             setNewCategoryName('');
-        } catch (error) {
-            alert('Failed to create category');
+        } catch {
         }
     };
 

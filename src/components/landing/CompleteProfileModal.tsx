@@ -9,9 +9,8 @@
 
 import { useState } from 'react';
 import { X, Loader2 } from 'lucide-react';
-import { useTranslation } from '@/hooks/useTranslation';
 import { useAuth } from '@/contexts/AuthContext';
-import { DOCUMENT_TYPES, type DocumentTypeId } from '@/types/auth.types';
+import { DOCUMENT_TYPES, type DocumentTypeId, COUNTRIES } from '@/types/auth.types';
 import { GridBackground } from '@/components/ui/GridBackground';
 
 interface CompleteProfileModalProps {
@@ -19,21 +18,7 @@ interface CompleteProfileModalProps {
     onClose: () => void;
 }
 
-const COUNTRIES = [
-    { code: 'CO', name: 'Colombia', flag: '🇨🇴', dialCode: '+57' },
-    { code: 'US', name: 'United States', flag: '🇺🇸', dialCode: '+1' },
-    { code: 'MX', name: 'Mexico', flag: '🇲🇽', dialCode: '+52' },
-    { code: 'ES', name: 'Spain', flag: '🇪🇸', dialCode: '+34' },
-    { code: 'AR', name: 'Argentina', flag: '🇦🇷', dialCode: '+54' },
-    { code: 'CL', name: 'Chile', flag: '🇨🇱', dialCode: '+56' },
-    { code: 'PE', name: 'Peru', flag: '🇵🇪', dialCode: '+51' },
-    { code: 'EC', name: 'Ecuador', flag: '🇪🇨', dialCode: '+593' },
-    { code: 'VE', name: 'Venezuela', flag: '🇻🇪', dialCode: '+58' },
-    { code: 'BR', name: 'Brazil', flag: '🇧🇷', dialCode: '+55' },
-];
-
 export function CompleteProfileModal({ isOpen, onClose }: CompleteProfileModalProps) {
-    const t = useTranslation();
     const { user, updateProfile, isLoading, error, clearError, profileComplete } = useAuth();
 
     const [formData, setFormData] = useState({
@@ -54,6 +39,9 @@ export function CompleteProfileModal({ isOpen, onClose }: CompleteProfileModalPr
         const { name, value } = e.target;
         if (name === 'documentTypeId') {
             setFormData(prev => ({ ...prev, [name]: value ? Number(value) as DocumentTypeId : '' }));
+        } else if (name === 'phone') {
+            const sanitized = value.replace(/\D/g, '');
+            setFormData(prev => ({ ...prev, [name]: sanitized }));
         } else {
             setFormData(prev => ({ ...prev, [name]: value }));
         }

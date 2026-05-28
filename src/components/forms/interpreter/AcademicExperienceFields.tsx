@@ -1,15 +1,27 @@
-'use client';
+import { FormikProps } from 'formik';
+import { InterpreterFormData } from '@/hooks/useInterpreterForm';
 
-export function AcademicExperienceFields({ 
-    formik, 
-    options, 
-    otraAreaEspecialidad, 
-    setOtraAreaEspecialidad, 
-    handleCheckboxChange, 
-    otroTipoServicio, 
-    setOtroTipoServicio, 
-    t 
-}: any) {
+interface AcademicExperienceProps {
+    formik: FormikProps<InterpreterFormData>;
+    options: Record<string, string[]>;
+    otraAreaEspecialidad: string;
+    setOtraAreaEspecialidad: (val: string) => void;
+    handleCheckboxChange: (field: keyof InterpreterFormData, value: string) => void;
+    otroTipoServicio: string;
+    setOtroTipoServicio: (val: string) => void;
+    t: (key: string) => string;
+}
+
+export function AcademicExperienceFields({
+    formik,
+    options,
+    otraAreaEspecialidad,
+    setOtraAreaEspecialidad,
+    handleCheckboxChange,
+    otroTipoServicio,
+    setOtroTipoServicio,
+    t
+}: AcademicExperienceProps) {
     return (
         <div className="space-y-8">
             {/* 6. ¿Eres intérprete certificado? */}

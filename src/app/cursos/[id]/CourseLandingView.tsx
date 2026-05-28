@@ -4,6 +4,7 @@
 import { Course } from '@/services/content.service';
 import { ArrowLeft, CheckCircle, PlayCircle, Lock, BookOpen, Clock } from 'lucide-react';
 import Link from 'next/link';
+import Image from 'next/image';
 
 interface CourseLandingViewProps {
     course: Course;
@@ -94,14 +95,14 @@ export function CourseLandingView({ course, onBuy, isAuthenticated }: CourseLand
                         <div>
                             <h3 className="text-2xl font-bold mb-6">Contenido del curso</h3>
                             <div className="border border-slate-200 rounded-xl divide-y divide-slate-200">
-                                {course.modules?.map((module: any) => (
+                                {course.modules?.map((module) => (
                                     <div key={module.id} className="p-4 bg-white hover:bg-slate-50 transition-colors">
                                         <div className="flex justify-between items-center mb-2">
                                             <h4 className="font-bold text-slate-900">{module.title}</h4>
                                             <span className="text-xs text-slate-500">{module.lessons?.length || 0} lecciones</span>
                                         </div>
                                         <div className="pl-4 border-l-2 border-slate-200 space-y-2 mt-3">
-                                            {module.lessons?.slice(0, 3).map((lesson: any) => (
+                                            {module.lessons?.slice(0, 3).map((lesson) => (
                                                 <div key={lesson.id} className="flex items-center justify-between text-sm text-slate-600">
                                                     <div className="flex items-center gap-2">
                                                         {lesson.isFreePreview ? <PlayCircle size={14} className="text-indigo-600" /> : <Lock size={14} className="text-slate-400" />}
@@ -112,7 +113,7 @@ export function CourseLandingView({ course, onBuy, isAuthenticated }: CourseLand
                                             ))}
                                             {(module.lessons?.length || 0) > 3 && (
                                                 <div className="text-xs text-slate-400 pl-6 pt-1">
-                                                    + {module.lessons.length - 3} lecciones más
+                                                    + {(module.lessons?.length || 0) - 3} lecciones más
                                                 </div>
                                             )}
                                         </div>
@@ -129,7 +130,7 @@ export function CourseLandingView({ course, onBuy, isAuthenticated }: CourseLand
                             <div className="rounded-2xl overflow-hidden shadow-2xl border border-slate-100 bg-white">
                                 {course.thumbnailUrl && (
                                     <div className="aspect-video relative bg-slate-100">
-                                        <img src={course.thumbnailUrl} alt={course.title} className="w-full h-full object-cover" />
+                                        <Image src={course.thumbnailUrl} alt={course.title} fill className="object-cover" unoptimized />
                                         <div className="absolute inset-0 bg-black/10 flex items-center justify-center">
                                             <div className="bg-white/90 backdrop-blur rounded-full p-4 shadow-lg">
                                                 <PlayCircle size={40} className="text-indigo-600 ml-1" />

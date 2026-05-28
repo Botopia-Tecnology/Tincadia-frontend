@@ -134,9 +134,9 @@ function ResetPasswordContent() {
             }
 
             setIsSuccess(true);
-        } catch (err: any) {
+        } catch (err: unknown) {
             console.error('Error updating password:', err);
-            setError(err.message || 'Ocurrió un error al actualizar la contraseña');
+            setError(err instanceof Error ? err.message : 'Ocurrió un error al actualizar la contraseña');
         } finally {
             setIsLoading(false);
         }

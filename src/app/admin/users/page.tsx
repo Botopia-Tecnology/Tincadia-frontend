@@ -1,7 +1,7 @@
 'use client';
 
-import { Search, MoreVertical, Loader2, Edit, Trash2, Check, X, ChevronLeft, ChevronRight, Filter, ListFilter, Mail, Phone, Calendar, User as UserIcon, Shield } from 'lucide-react';
-import { useEffect, useState, useRef } from 'react';
+import { Search, MoreVertical, Loader2, Edit, Trash2, Check, X, ChevronLeft, ChevronRight, Filter, ListFilter, Mail, Phone, Calendar, Shield } from 'lucide-react';
+import { useEffect, useState, useRef, useCallback } from 'react';
 import { usersService, User } from '@/services/users.service';
 import { useAuth } from '@/contexts/AuthContext';
 
@@ -45,18 +45,7 @@ export default function UsersPage() {
         };
     }, [selectedUser]);
 
-    useEffect(() => {
-        if (currentUser?.id) {
-            fetchUsers();
-        }
-    }, [currentUser]);
-
-    // Reset page on filter/size change
-    useEffect(() => {
-        setCurrentPage(1);
-    }, [searchTerm, roleFilter, statusFilter, usersPerPage]);
-
-    const fetchUsers = async () => {
+    const fetchUsers = useCallback(async () => {
         try {
             setLoading(true);
             const data = await usersService.getAllUsers(currentUser!.id);
@@ -66,7 +55,18 @@ export default function UsersPage() {
         } finally {
             setLoading(false);
         }
-    };
+    }, [currentUser]);
+
+    useEffect(() => {
+        if (currentUser?.id) {
+            fetchUsers();
+        }
+    }, [currentUser?.id, fetchUsers]);
+
+    // Reset page on filter/size change
+    useEffect(() => {
+        setCurrentPage(1);
+    }, [searchTerm, roleFilter, statusFilter, usersPerPage]);
 
     // Filter Logic
     const filteredUsers = users.filter(user => {

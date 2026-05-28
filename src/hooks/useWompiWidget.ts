@@ -1,11 +1,11 @@
 'use client';
 
-import { useEffect, useCallback, useRef } from 'react';
+import { useEffect, useCallback, useRef, useState } from 'react';
 import { WompiWidgetConfig } from '@/services/payments.service';
 
 declare global {
     interface Window {
-        WidgetCheckout: any;
+        WidgetCheckout: new (config: Record<string, unknown>) => { open: (cb: (res: WompiResult) => void) => void };
     }
 }
 
@@ -23,22 +23,39 @@ export interface WompiResult {
 
 interface UseWompiWidgetOptions {
     onSuccess?: (result: WompiResult) => void;
-    onError?: (error: any) => void;
+    onError?: (error: unknown) => void;
     onClose?: () => void;
 }
 
 export function useWompiWidget(options: UseWompiWidgetOptions = {}) {
-    const scriptLoaded = useRef(false);
-    const checkoutRef = useRef<any>(null);
+    const [isReady, setIsReady] = useState(() => {
+        if (typeof window !== 'undefined') {
+            return !!document.querySelector('script[src="https://checkout.wompi.co/widget.js"]');
+        }
+        return false;
+    });
+    const checkoutRef = useRef<{ open: (cb: (res: WompiResult) => void) => void } | null>(null);
 
     // Cargar el script de Wompi
     useEffect(() => {
-        if (typeof window === 'undefined' || scriptLoaded.current) return;
+        if (typeof window === 'undefined' || isReady) return;
+
+        // Si ya está listo desde el estado inicial, no hacemos nada
+        if (isReady) return;
 
         const existingScript = document.querySelector('script[src="https://checkout.wompi.co/widget.js"]');
-
+        
         if (existingScript) {
-            scriptLoaded.current = true;
+            // Ya existe pero el estado no lo reflejaba (edge case)
+            if (window.WidgetCheckout) {
+                setTimeout(() => setIsReady(true), 0);
+            } else {
+                const handleLoad = () => setIsReady(true);
+                existingScript.addEventListener('load', handleLoad);
+                return () => {
+                    existingScript.removeEventListener('load', handleLoad);
+                };
+            }
             return;
         }
 
@@ -46,7 +63,7 @@ export function useWompiWidget(options: UseWompiWidgetOptions = {}) {
         script.src = 'https://checkout.wompi.co/widget.js';
         script.async = true;
         script.onload = () => {
-            scriptLoaded.current = true;
+            setIsReady(true);
         };
         script.onerror = () => {
             console.error('Failed to load Wompi widget script');
@@ -58,7 +75,7 @@ export function useWompiWidget(options: UseWompiWidgetOptions = {}) {
         return () => {
             // No removemos el script para evitar problemas de recarga
         };
-    }, [options]);
+    }, [options, isReady]);
 
     // Abrir el widget de Wompi
     const openWidget = useCallback((config: WompiWidgetConfig) => {
@@ -74,7 +91,7 @@ export function useWompiWidget(options: UseWompiWidgetOptions = {}) {
         try {
             console.log('📦 Widget config received:', config);
             // Crear configuración del checkout
-            const checkoutConfig: any = {
+            const checkoutConfig: Record<string, unknown> = {
                 currency: config.currency,
                 amountInCents: config.amountInCents,
                 reference: config.reference,
@@ -102,7 +119,6 @@ export function useWompiWidget(options: UseWompiWidgetOptions = {}) {
                 };
             }
 
-            // Crear instancia del checkout
             checkoutRef.current = new window.WidgetCheckout(checkoutConfig);
 
             // Abrir el widget
@@ -127,6 +143,6 @@ export function useWompiWidget(options: UseWompiWidgetOptions = {}) {
 
     return {
         openWidget,
-        isReady: scriptLoaded.current,
+        isReady,
     };
 }

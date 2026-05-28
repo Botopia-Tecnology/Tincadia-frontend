@@ -2,8 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { contentService } from '@/services/content.service';
-import { Loader2, Plus, Trash2, Edit2, X, FolderKanban } from 'lucide-react';
-import Link from 'next/link';
+import { Loader2, Plus, Trash2, FolderKanban } from 'lucide-react';
 
 export default function CategoriesPage() {
     const [categories, setCategories] = useState<{ id: string; name: string }[]>([]);
@@ -33,7 +32,7 @@ export default function CategoriesPage() {
             setNewCategoryName('');
             setIsCreating(false);
             loadCategories();
-        } catch (error) {
+        } catch {
             alert('Failed to create category');
         }
     };
@@ -43,8 +42,7 @@ export default function CategoriesPage() {
         try {
             await contentService.deleteCategory(id);
             loadCategories();
-        } catch (error) {
-            alert('Failed to delete category');
+        } catch {
         }
     };
 

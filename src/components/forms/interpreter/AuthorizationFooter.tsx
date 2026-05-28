@@ -1,8 +1,18 @@
 'use client';
 
 import { X, Loader2 } from 'lucide-react';
+import { FormikProps } from 'formik';
+import { InterpreterFormData } from '@/hooks/useInterpreterForm';
 
-export function AuthorizationFooter({ formik, submitStatus, formIdError, isEditing, t }: any) {
+interface AuthorizationFooterProps {
+    formik: FormikProps<InterpreterFormData>;
+    submitStatus: string;
+    formIdError: string | null;
+    isEditing: boolean;
+    t: (key: string) => string;
+}
+
+export function AuthorizationFooter({ formik, submitStatus, formIdError, isEditing, t }: AuthorizationFooterProps) {
     return (
         <div className="space-y-8 pt-6 border-t border-gray-100">
             {/* 15. Autorización */}

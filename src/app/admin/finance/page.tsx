@@ -1,6 +1,6 @@
 'use client';
 
-import { DollarSign, TrendingUp, CreditCard, Download, Loader2, Calendar, Filter, Search, X, ChevronLeft, ChevronRight, Eye } from 'lucide-react';
+import { DollarSign, TrendingUp, CreditCard, Download, Loader2, Filter, Search, X, ChevronLeft, ChevronRight, Eye } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { financeService, Payment, Subscription } from '@/services/finance.service';
 
@@ -77,15 +77,15 @@ export default function FinancePage() {
             if (statusFilter !== 'all' && item.status !== statusFilter) return false;
 
             // Plan Filter
-            // @ts-ignore
-            const itemName = ((typeof item.plan === 'string' ? item.plan : item.plan?.name) || '').toLowerCase();
-            // @ts-ignore
+            // Payment.plan is string, Subscription.plan is object
+            const itemPlan = ((item as unknown) as { plan?: string | { name?: string } }).plan;
+            const itemName = ((typeof itemPlan === 'string' ? itemPlan : itemPlan?.name) || '').toLowerCase();
             if (planFilter !== 'all' && !itemName.includes(planFilter.toLowerCase())) return false;
 
             // Search Term
             if (searchTerm) {
                 const term = searchTerm.toLowerCase();
-                // @ts-ignore
+                // @ts-expect-error — reference and customerEmail exist only on Payment
                 const searchString = `${item.id} ${item.userId} ${item.reference || ''} ${item.customerEmail || ''}`.toLowerCase();
                 if (!searchString.includes(term)) return false;
             }
@@ -226,8 +226,8 @@ export default function FinancePage() {
                                 className="bg-slate-950/50 border border-white/10 text-slate-300 text-sm rounded-xl pl-10 pr-8 py-2.5 focus:ring-2 focus:ring-emerald-500/50 outline-none appearance-none cursor-pointer hover:bg-slate-900/80 transition-all"
                             >
                                 <option value="all">Todos los planes</option>
-                                {uniquePlans.map((plan: any) => (
-                                    <option key={plan} value={plan}>{plan.replace(/_/g, ' ')}</option>
+                                {uniquePlans.map((plan) => (
+                                    <option key={plan} value={plan}>{(plan || '').replace(/_/g, ' ')}</option>
                                 ))}
                             </select>
                         </div>
@@ -285,7 +285,7 @@ export default function FinancePage() {
                                         </td>
                                     </tr>
                                 ) : (
-                                    paginatedItems.map((item: any) => (
+                                    (paginatedItems as Array<Payment & Subscription>).map((item) => (
                                         <tr key={item.id} className="hover:bg-white/[0.02] transition-colors group">
                                             {/* ID Column */}
                                             <td className="px-8 py-5">
@@ -322,7 +322,10 @@ export default function FinancePage() {
                                             {/* Plan Column */}
                                             <td className="px-6 py-5">
                                                 <span className="text-slate-300 text-sm font-medium px-2.5 py-1 rounded bg-white/5 border border-white/5">
-                                                    {((typeof item.plan === 'string' ? item.plan : item.plan?.name) || 'Standard').replace(/_/g, ' ')}
+                                                    {(() => {
+                                                        const itemPlan = ((item as unknown) as { plan?: string | { name?: string } }).plan;
+                                                        return ((typeof itemPlan === 'string' ? itemPlan : itemPlan?.name) || 'Standard').replace(/_/g, ' ');
+                                                    })()}
                                                 </span>
                                             </td>
 

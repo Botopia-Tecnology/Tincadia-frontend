@@ -1,6 +1,18 @@
 'use client';
 
-export function EducationWorkInfo({ formik, options, otraAreaLaboral, setOtraAreaLaboral, handleCheckboxChange, t }: any) {
+import { FormikProps } from 'formik';
+import { JobSeekerFormData } from '@/hooks/useJobSeekerForm';
+
+interface EducationWorkInfoProps {
+    formik: FormikProps<JobSeekerFormData>;
+    options: Record<string, string[]>;
+    otraAreaLaboral: string;
+    setOtraAreaLaboral: (val: string) => void;
+    handleCheckboxChange: (area: string) => void;
+    t: (key: string) => string;
+}
+
+export function EducationWorkInfo({ formik, options, otraAreaLaboral, setOtraAreaLaboral, handleCheckboxChange, t }: EducationWorkInfoProps) {
     return (
         <div className="space-y-8">
             <div>

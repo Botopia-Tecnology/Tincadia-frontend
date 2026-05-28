@@ -20,7 +20,7 @@ export function AboutContent() {
         // BUT looking at ImpactSection line 112: (t(`impact.${activeTab}.items`) as unknown as string[])
         // It seems it can return arrays.
 
-        const items = t('aboutUs.values.items') as unknown as any[];
+        const items = t('aboutUs.values.items') as unknown as Array<{ title: string; description: string }>;
         return Array.isArray(items) ? items : [];
     };
 
@@ -29,68 +29,95 @@ export function AboutContent() {
     const icons = [Heart, Scale, Lightbulb, Shield, Users];
 
     return (
-        <section className="pt-10 pb-20 px-6 lg:px-8 max-w-7xl mx-auto">
+        <section className="relative pt-16 pb-20 px-6 lg:px-8 max-w-[90rem] mx-auto overflow-hidden">
+            {/* Background geometric elements */}
+            <div className="absolute inset-0 -z-10 pointer-events-none">
+                {/* Dot grid pattern (top left) */}
+                <div className="absolute top-10 left-10 w-64 h-64 opacity-20" style={{ backgroundImage: 'radial-gradient(circle, #94a3b8 2px, transparent 2px)', backgroundSize: '24px 24px' }}></div>
+                {/* Thin lines giving tech feel */}
+                <svg className="absolute w-full h-full opacity-30" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M0,150 Q400,400 1000,0" stroke="#83A98A" fill="none" strokeWidth="0.5" />
+                    <path d="M-100,500 Q500,50 1400,600" stroke="#83A98A" fill="none" strokeWidth="0.5" />
+                    <path d="M800,-100 Q900,500 1600,200" stroke="#94a3b8" fill="none" strokeWidth="0.5" />
+                </svg>
+            </div>
 
             {/* Section Title */}
-            <div className="text-center mb-16">
-                <h1 className="text-5xl font-bold text-gray-900 mb-4">¿Quiénes Somos?</h1>
-                <p className="text-xl text-gray-600 max-w-2xl mx-auto">
+            <div className="text-center mb-16 relative z-10">
+                <h1 className="text-4xl md:text-5xl font-extrabold text-[#0F172A] mb-3">¿Quiénes Somos?</h1>
+                <div className="w-16 h-1.5 bg-gradient-to-r from-[#4ade80] to-[#2dd4bf] mx-auto rounded-full mb-6"></div>
+                <p className="text-lg text-gray-800 max-w-2xl mx-auto font-medium">
                     Conoce nuestra misión, visión y los valores que nos guían
                 </p>
-                <div className="w-24 h-1 bg-[#83A98A] mx-auto rounded-full mt-6"></div>
             </div>
 
             {/* Mission & Vision Grid */}
-            <div className="grid md:grid-cols-2 gap-12 mb-24">
+            <div className="grid md:grid-cols-2 gap-8 mb-24 relative z-10 max-w-5xl mx-auto">
                 {/* Mission */}
-                <div className="bg-white p-8 rounded-3xl border border-gray-100 shadow-sm hover:shadow-md transition-shadow relative overflow-hidden group">
-                    <div className="absolute top-0 right-0 p-8 opacity-5 group-hover:opacity-10 transition-opacity">
-                        <Target className="w-32 h-32 text-indigo-600" />
-                    </div>
-                    <div className="flex items-center gap-4 mb-6">
-                        <div className="w-12 h-12 rounded-xl bg-indigo-50 flex items-center justify-center text-indigo-600">
-                            <Target className="w-6 h-6" />
+                <div className="bg-gradient-to-br from-[#E9E4FC] via-white to-[#E1F4EA] p-10 rounded-[2rem] border border-white/80 shadow-[0_10px_40px_-10px_rgba(0,0,0,0.08)] backdrop-blur-sm">
+                    <div className="mb-6 flex items-start">
+                        <div className="relative">
+                            <Target className="w-14 h-14 text-[#4F46E5]" strokeWidth={2} />
+                            <div className="absolute top-1/2 -translate-y-1/2 left-10">
+                                <svg width="40" height="24" viewBox="0 0 40 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M0 6 Q 10 -4, 20 6 T 40 6" stroke="#4F46E5" strokeWidth="2" strokeLinecap="round" fill="none" opacity="0.6"/>
+                                    <path d="M0 12 Q 10 2, 20 12 T 40 12" stroke="#4F46E5" strokeWidth="2" strokeLinecap="round" fill="none" opacity="0.4"/>
+                                    <path d="M0 18 Q 10 8, 20 18 T 40 18" stroke="#4F46E5" strokeWidth="2" strokeLinecap="round" fill="none" opacity="0.2"/>
+                                </svg>
+                            </div>
                         </div>
-                        <h2 className="text-3xl font-bold text-gray-900">{t('aboutUs.mission.title')}</h2>
                     </div>
-                    <p className="text-gray-600 leading-relaxed text-lg">
+                    <h2 className="text-[2.5rem] font-bold text-[#0F172A] mb-6 leading-tight">{t('aboutUs.mission.title')}</h2>
+                    <p className="text-gray-900 leading-relaxed text-[1.05rem] font-medium">
                         {t('aboutUs.mission.description')}
                     </p>
                 </div>
 
                 {/* Vision */}
-                <div className="bg-white p-8 rounded-3xl border border-gray-100 shadow-sm hover:shadow-md transition-shadow relative overflow-hidden group">
-                    <div className="absolute top-0 right-0 p-8 opacity-5 group-hover:opacity-10 transition-opacity">
-                        <Eye className="w-32 h-32 text-[#83A98A]" />
-                    </div>
-                    <div className="flex items-center gap-4 mb-6">
-                        <div className="w-12 h-12 rounded-xl bg-[#83A98A]/10 flex items-center justify-center text-[#83A98A]">
-                            <Eye className="w-6 h-6" />
+                <div className="bg-gradient-to-br from-[#E1F4EA] via-white to-[#E9E4FC] p-10 rounded-[2rem] border border-white/80 shadow-[0_10px_40px_-10px_rgba(0,0,0,0.08)] backdrop-blur-sm">
+                    <div className="mb-6 flex items-start">
+                        <div className="relative">
+                            <Eye className="w-14 h-14 text-[#10B981]" strokeWidth={2} />
+                            <div className="absolute top-1/2 -translate-y-1/2 left-12">
+                                <svg width="35" height="24" viewBox="0 0 35 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M0 6 Q 10 -4, 20 6 T 35 6" stroke="#10B981" strokeWidth="2" strokeLinecap="round" fill="none" opacity="0.6"/>
+                                    <path d="M0 12 Q 10 2, 20 12 T 35 12" stroke="#10B981" strokeWidth="2" strokeLinecap="round" fill="none" opacity="0.4"/>
+                                    <path d="M0 18 Q 10 8, 20 18 T 35 18" stroke="#10B981" strokeWidth="2" strokeLinecap="round" fill="none" opacity="0.2"/>
+                                </svg>
+                            </div>
                         </div>
-                        <h2 className="text-3xl font-bold text-gray-900">{t('aboutUs.vision.title')}</h2>
                     </div>
-                    <p className="text-gray-600 leading-relaxed text-lg">
+                    <h2 className="text-[2.5rem] font-bold text-[#0F172A] mb-6 leading-tight">{t('aboutUs.vision.title')}</h2>
+                    <p className="text-gray-900 leading-relaxed text-[1.05rem] font-medium">
                         {t('aboutUs.vision.description')}
                     </p>
                 </div>
             </div>
 
             {/* Values Section */}
-            <div className="text-center mb-16">
-                <h2 className="text-4xl font-bold text-gray-900 mb-6">{t('aboutUs.values.title')}</h2>
-                <div className="w-24 h-1 bg-[#83A98A] mx-auto rounded-full"></div>
+            <div className="text-center mb-12 relative z-10 mt-16">
+                <h2 className="text-4xl md:text-5xl font-extrabold text-[#0F172A] mb-4">{t('aboutUs.values.title') || 'Nuestros Valores'}</h2>
+                <p className="text-[1.1rem] text-gray-800 max-w-2xl mx-auto font-medium">
+                    Los principios que guían nuestra misión de inclusión tecnológica.
+                </p>
             </div>
 
-            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-                {values.map((value: any, index: number) => {
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-6 gap-6 relative z-10 max-w-[70rem] mx-auto">
+                {values.map((value, index: number) => {
                     const Icon = icons[index % icons.length];
+                    const colSpanClass = index < 2 ? "lg:col-span-3" : "lg:col-span-2";
+                    
                     return (
-                        <div key={index} className="bg-white p-8 rounded-2xl border border-gray-100 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300">
-                            <div className="w-14 h-14 rounded-full bg-gray-50 flex items-center justify-center text-gray-600 mb-6 group-hover:bg-[#83A98A]/10 group-hover:text-[#83A98A] transition-colors">
-                                <Icon className="w-7 h-7" />
+                        <div key={index} className={`bg-white p-7 sm:p-9 rounded-[1.5rem] border border-gray-100 shadow-[0_4px_20px_rgb(0,0,0,0.03)] hover:border-[#10B981]/60 hover:shadow-[0_12px_40px_rgba(16,185,129,0.15)] hover:-translate-y-1 transition-all duration-300 flex flex-col ${colSpanClass}`}>
+                            <div className="flex items-center gap-4 mb-4">
+                                <div className="w-12 h-12 rounded-xl bg-[#E1F4EA] flex items-center justify-center text-[#10B981] shrink-0">
+                                    <Icon className="w-6 h-6" strokeWidth={2.5} />
+                                </div>
+                                <h3 className="text-xl font-bold text-[#0F172A] leading-tight">
+                                    {index + 1}. {(value.title || '').replace(/^\d+\.\s*/, '')}
+                                </h3>
                             </div>
-                            <h3 className="text-xl font-bold text-gray-900 mb-3">{value.title}</h3>
-                            <p className="text-gray-600 leading-relaxed">
+                            <p className="text-gray-800 text-[0.95rem] leading-relaxed">
                                 {value.description}
                             </p>
                         </div>

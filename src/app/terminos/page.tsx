@@ -5,7 +5,7 @@ import { useTranslation } from '@/hooks/useTranslation';
 
 export default function TermsPage() {
     const t = useTranslation();
-    const definitionsItems = t('terms.sections.definitions.items') as unknown as any[];
+    const definitionsItems = t('terms.sections.definitions.items') as unknown as Array<{ term: string; definition: string }>;
     const aiItems = t('terms.sections.ai.items') as unknown as string[];
     const responsibilitiesItems = t('terms.sections.responsibilities.items') as unknown as string[];
     const licenseItems = t('terms.sections.license.items') as unknown as string[];

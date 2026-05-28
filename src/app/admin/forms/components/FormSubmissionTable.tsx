@@ -43,13 +43,13 @@ export function FormSubmissionTable({ submissions, onViewDetails }: FormSubmissi
                                     </div>
                                 </td>
                                 <td className="px-4 py-3 text-slate-300">
-                                    {submission.fullName || submission.data?.nombreCompleto || 'N/A'}
+                                    {(submission.fullName as string) || (submission.data?.nombreCompleto as string) || 'N/A'}
                                 </td>
                                 <td className="px-4 py-3 text-slate-400 text-sm">
-                                    {submission.email || submission.data?.correoElectronico || 'N/A'}
+                                    {(submission.email as string) || (submission.data?.correoElectronico as string) || 'N/A'}
                                 </td>
                                 <td className="px-4 py-3 text-slate-400 text-sm">
-                                    {submission.phone || submission.data?.telefono || submission.data?.telefonoWhatsapp || 'N/A'}
+                                    {(submission.phone as string) || (submission.data?.telefono as string) || (submission.data?.telefonoWhatsapp as string) || 'N/A'}
                                 </td>
                                 <td className="px-4 py-3 text-slate-400 text-sm">
                                     {formatDate(submission.createdAt)}

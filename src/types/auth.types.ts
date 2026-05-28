@@ -34,6 +34,30 @@ export const DOCUMENT_TYPES: DocumentType[] = [
 ];
 
 // ===========================================
+// Countries and Dial Codes
+// ===========================================
+
+export interface Country {
+    code: string;
+    name: string;
+    flag: string;
+    dialCode: string;
+}
+
+export const COUNTRIES: Country[] = [
+    { code: 'CO', name: 'Colombia', flag: '🇨🇴', dialCode: '+57' },
+    { code: 'US', name: 'United States', flag: '🇺🇸', dialCode: '+1' },
+    { code: 'MX', name: 'Mexico', flag: '🇲🇽', dialCode: '+52' },
+    { code: 'ES', name: 'Spain', flag: '🇪🇸', dialCode: '+34' },
+    { code: 'AR', name: 'Argentina', flag: '🇦🇷', dialCode: '+54' },
+    { code: 'CL', name: 'Chile', flag: '🇨🇱', dialCode: '+56' },
+    { code: 'PE', name: 'Peru', flag: '🇵🇪', dialCode: '+51' },
+    { code: 'EC', name: 'Ecuador', flag: '🇪🇨', dialCode: '+593' },
+    { code: 'VE', name: 'Venezuela', flag: '🇻🇪', dialCode: '+58' },
+    { code: 'BR', name: 'Brazil', flag: '🇧🇷', dialCode: '+55' },
+];
+
+// ===========================================
 // User Types
 // ===========================================
 

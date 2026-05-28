@@ -5,16 +5,37 @@ import { CONTENT_ENDPOINTS, buildUrl } from '@/config/api.config';
 // Interfaces
 // ===========================================
 
+export interface Module {
+    id: string;
+    title: string;
+    description?: string;
+    isPaid?: boolean;
+    courseId?: string;
+    lessons?: Lesson[];
+}
+
+export interface Lesson {
+    id: string;
+    title: string;
+    content?: string;
+    isPaid?: boolean;
+    isFreePreview?: boolean;
+    moduleId?: string;
+    videoUrl?: string;
+}
+
+export interface Category {
+    id: string;
+    name: string;
+}
+
 export interface Course {
     id: string;
     title: string;
     description: string;
     thumbnailUrl: string;
     categoryId: string;
-    category?: {
-        id: string;
-        name: string;
-    };
+    category?: Category;
     isPublished: boolean;
     accessScope?: 'course' | 'module' | 'lesson';
     isPaid?: boolean;
@@ -23,7 +44,7 @@ export interface Course {
     learningPoints?: string[];
     features?: string[];
     previewLimit?: number | null;
-    modules?: any[];
+    modules?: Module[];
 }
 
 export interface LandingConfigItem {
@@ -99,7 +120,7 @@ export const contentService = {
 
     // --- Module ---
 
-    createModule: async (courseId: string, data: { title: string; description?: string; isPaid?: boolean }): Promise<any> => {
+    createModule: async (courseId: string, data: { title: string; description?: string; isPaid?: boolean }): Promise<Module> => {
         try {
             const url = buildUrl(CONTENT_ENDPOINTS.CREATE_MODULE).replace(':courseId', courseId);
             const response = await fetch(url, {
@@ -115,7 +136,7 @@ export const contentService = {
         }
     },
 
-    updateModule: async (id: string, data: { title?: string; description?: string; isPaid?: boolean }): Promise<any> => {
+    updateModule: async (id: string, data: { title?: string; description?: string; isPaid?: boolean }): Promise<Module> => {
         const url = buildUrl(CONTENT_ENDPOINTS.UPDATE_MODULE).replace(':id', id);
         const response = await fetch(url, {
             method: 'PUT',
@@ -133,7 +154,7 @@ export const contentService = {
 
     // --- Lesson ---
 
-    createLesson: async (moduleId: string, data: { title: string; content?: string; isPaid?: boolean; isFreePreview?: boolean }): Promise<any> => {
+    createLesson: async (moduleId: string, data: { title: string; content?: string; isPaid?: boolean; isFreePreview?: boolean }): Promise<Lesson> => {
         try {
             const url = buildUrl(CONTENT_ENDPOINTS.CREATE_LESSON).replace(':moduleId', moduleId);
             const response = await fetch(url, {
@@ -149,7 +170,7 @@ export const contentService = {
         }
     },
 
-    updateLesson: async (id: string, data: any): Promise<any> => {
+    updateLesson: async (id: string, data: Partial<Lesson>): Promise<Lesson> => {
         const url = buildUrl(CONTENT_ENDPOINTS.UPDATE_LESSON).replace(':id', id);
         const response = await fetch(url, {
             method: 'PUT',
@@ -183,7 +204,7 @@ export const contentService = {
         }
     },
 
-    createCategory: async (name: string): Promise<any> => {
+    createCategory: async (name: string): Promise<Category> => {
         try {
             const response = await fetch(buildUrl(CONTENT_ENDPOINTS.CREATE_CATEGORY), {
                 method: 'POST',
@@ -198,7 +219,7 @@ export const contentService = {
         }
     },
 
-    updateCategory: async (id: string, name: string): Promise<any> => {
+    updateCategory: async (id: string, name: string): Promise<Category> => {
         const url = buildUrl(CONTENT_ENDPOINTS.UPDATE_CATEGORY).replace(':id', id);
         const response = await fetch(url, {
             method: 'PUT',
@@ -214,7 +235,7 @@ export const contentService = {
         await fetch(url, { method: 'DELETE' });
     },
 
-    uploadThumbnail: async (courseId: string, file: File): Promise<any> => {
+    uploadThumbnail: async (courseId: string, file: File): Promise<{ url: string; [key: string]: unknown }> => {
         try {
             const formData = new FormData();
             formData.append('thumbnail', file);
@@ -233,7 +254,7 @@ export const contentService = {
         }
     },
 
-    uploadLessonVideo: async (lessonId: string, file: File): Promise<any> => {
+    uploadLessonVideo: async (lessonId: string, file: File): Promise<{ url: string; [key: string]: unknown }> => {
         try {
             const formData = new FormData();
             formData.append('video', file);
@@ -255,7 +276,7 @@ export const contentService = {
     /**
      * Get landing configuration by key
      */
-    getLandingConfig: async (key: string): Promise<any> => {
+    getLandingConfig: async (key: string): Promise<LandingConfigItem | { key: string; value: string }> => {
         try {
             const url = buildUrl(CONTENT_ENDPOINTS.LANDING_CONFIG).replace(':key', key);
             const response = await fetch(url);
@@ -314,7 +335,7 @@ export interface PricingPlan {
         correction_limit?: number;
         lsc_enabled?: boolean;
         interpreter_enabled?: boolean;
-        [key: string]: any;
+        [key: string]: unknown;
     };
 }
 

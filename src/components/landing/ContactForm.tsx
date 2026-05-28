@@ -2,7 +2,22 @@
 
 import { useTranslation } from '@/hooks/useTranslation';
 
-export function ContactForm({ formik, submitStatus, formIdError }: any) {
+import { FormikProps } from 'formik';
+
+interface ContactFormData {
+    name: string;
+    phone: string;
+    email: string;
+    message: string;
+}
+
+interface ContactFormProps {
+    formik: FormikProps<ContactFormData>;
+    submitStatus?: string;
+    formIdError?: string;
+}
+
+export function ContactForm({ formik, submitStatus, formIdError }: ContactFormProps) {
     const t = useTranslation();
     
     return (

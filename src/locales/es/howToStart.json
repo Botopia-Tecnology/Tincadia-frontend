@@ -4,47 +4,47 @@
     "subtitle": "Explora nuestras funcionalidades principales y descubre cómo cada herramienta facilita la comunicación inclusiva.",
     "features": {
         "voiceToText": {
-            "title": "Transcripción de voz a texto",
-            "subtitle": "Convierte conversaciones en tiempo real",
-            "description": "Captura cualquier conversación y conviértela automáticamente en texto. Participa activamente en clases, reuniones o conversaciones cotidianas sin perder detalle.",
+            "title": "Corrección de texto CON IA",
+            "subtitle": "Mejora tu escritura en tiempo real",
+            "description": "Escribe con confianza. Nuestra Inteligencia Artificial analiza tu texto y sugiere correcciones gramaticales y de estilo al instante, ideal para cualquier contexto.",
             "steps": [
-                "Activa el micrófono en la aplicación",
-                "La IA comienza a transcribir automáticamente",
-                "Lee el texto en tiempo real en tu pantalla",
-                "Guarda y comparte las transcripciones"
+                "Abre la aplicación Tincadia",
+                "Escribe o pega tu texto",
+                "La IA analiza y corrige errores",
+                "Aplica las sugerencias automáticamente"
             ]
         },
         "translation": {
-            "title": "Formación Accesible",
-            "subtitle": "Aprende sin barreras",
-            "description": "Accede a cursos educativos diseñados para todos, con contenido adaptado, módulos interactivos y seguimiento de progreso.",
+            "title": "Llamadas para solicitar intérpretes",
+            "subtitle": "Con soporte de Closed Captions (CC)",
+            "description": "Solicita un intérprete en tiempo real mediante videollamada. Cuenta con subtítulos (CC) integrados para que no pierdas ningún detalle de la conversación.",
             "steps": [
-                "Explora nuestro catálogo de cursos",
-                "Inscríbete en el tema de tu interés",
-                "Aprende con lecciones adaptadas",
-                "Obtén tu certificación"
+                "Selecciona solicitar intérprete",
+                "Conéctate mediante videollamada",
+                "Comunícate con soporte en vivo",
+                "Lee los subtítulos (CC) en pantalla"
             ]
         },
         "interpretation": {
-            "title": "Intérprete LSC con IA",
-            "subtitle": "Comunicación en tiempo real",
-            "description": "Nuestra avanzada Inteligencia Artificial reconoce y traduce la Lengua de Señas Colombiana a texto y voz al instante, eliminando barreras de comunicación.",
+            "title": "Solicitudes de emergencia",
+            "subtitle": "Asistencia rápida cuando más lo necesitas",
+            "description": "En situaciones críticas, Tincadia te permite contactar servicios de emergencia de forma rápida y accesible, enviando tu ubicación y detalles al instante.",
             "steps": [
-                "Activa la cámara en la aplicación",
-                "Realiza las señas frente a la cámara",
-                "La IA interpreta y traduce al instante",
-                "Tu mensaje es escuchado o leído"
+                "Presiona el botón de emergencia",
+                "Selecciona el tipo de asistencia",
+                "Tu ubicación se envía automáticamente",
+                "Recibe ayuda especializada"
             ]
         },
         "writingAssistant": {
-            "title": "Asistente de escritura IA",
-            "subtitle": "Mejora tu comunicación escrita",
-            "description": "Escribe con confianza usando nuestro asistente inteligente que corrige gramática, tono y estilo para cualquier contexto: redes sociales, trabajo o estudios.",
+            "title": "Y mucho más...",
+            "subtitle": "Descubre todas nuestras herramientas",
+            "description": "Tincadia está en constante evolución. Ofrecemos herramientas diseñadas a medida para romper las barreras de comunicación en todos los ámbitos.",
             "steps": [
-                "Escribe tu mensaje o documento",
-                "El asistente sugiere mejoras en tiempo real",
-                "Acepta o ajusta las sugerencias",
-                "Publica o envía tu texto perfeccionado"
+                "Explora la aplicación",
+                "Descubre nuevas funcionalidades",
+                "Personaliza tu experiencia",
+                "Únete a nuestra comunidad inclusiva"
             ]
         }
     }

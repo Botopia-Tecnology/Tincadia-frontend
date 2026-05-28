@@ -1,8 +1,8 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import Link from 'next/link';
-import { Users, BookOpen, FileText, TrendingUp, RefreshCw, Activity, ArrowUpRight } from 'lucide-react';
+import { Users, BookOpen, TrendingUp, RefreshCw, Activity, ArrowUpRight } from 'lucide-react';
 import { useAuth } from '@/contexts/AuthContext';
 import { usersService } from '@/services/users.service';
 import { AdminStatCard } from '@/components/admin/AdminStatCard';
@@ -23,14 +23,22 @@ interface DashboardStats {
     }>;
 }
 
+interface ApiUser {
+    id: string;
+    firstName?: string;
+    lastName?: string;
+    email?: string;
+    createdAt: string;
+}
+
 export default function AdminDashboard() {
     const { user: currentUser } = useAuth();
     const [stats, setStats] = useState<DashboardStats | null>(null);
-    const [analyticsData, setAnalyticsData] = useState<any[]>([]);
+    const [analyticsData, setAnalyticsData] = useState<Array<{ labels: string; data: number }>>([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
 
-    const fetchDashboardData = async () => {
+    const fetchDashboardData = useCallback(async () => {
         if (!currentUser?.id) return;
 
         setLoading(true);
@@ -45,9 +53,9 @@ export default function AdminDashboard() {
             ]);
 
             // Process Users
-            let users: any[] = [];
+            let users: ApiUser[] = [];
             if (usersRes.status === 'fulfilled') {
-                users = usersRes.value;
+                users = usersRes.value as ApiUser[];
             }
 
             // Process Courses
@@ -58,7 +66,7 @@ export default function AdminDashboard() {
             }
 
             // Sort Users by Date (Newest first)
-            const sortedUsers = [...users].sort((a: any, b: any) =>
+            const sortedUsers = [...users].sort((a, b) =>
                 new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
             );
 
@@ -75,7 +83,7 @@ export default function AdminDashboard() {
 
                     // Process PostHog response to match Recharts format if chart data exists
                     if (data.pageviews?.chart) {
-                        setAnalyticsData(data.pageviews.chart.map((item: any) => ({
+                        setAnalyticsData(data.pageviews.chart.map((item: { label: string; value: number }) => ({
                             labels: item.label,
                             data: item.value
                         })));
@@ -91,7 +99,7 @@ export default function AdminDashboard() {
                 totalCourses: coursesCount,
                 pageviews,
                 uniques,
-                recentUsers: sortedUsers.slice(0, 5).map((u: any) => ({
+                recentUsers: sortedUsers.slice(0, 5).map((u) => ({
                     id: u.id,
                     firstName: u.firstName || 'N/A',
                     lastName: u.lastName || '',
@@ -106,13 +114,13 @@ export default function AdminDashboard() {
         } finally {
             setLoading(false);
         }
-    };
+    }, [currentUser?.id]);
 
     useEffect(() => {
         if (currentUser?.id) {
             fetchDashboardData();
         }
-    }, [currentUser?.id]);
+    }, [currentUser?.id, fetchDashboardData]);
 
     const formatDate = (dateString: string) => {
         if (!dateString) return 'N/A';
@@ -286,20 +294,3 @@ export default function AdminDashboard() {
         </div>
     );
 }
-
-// Add simple CSS for custom scrollbar if not present
-const style = `
-  .custom-scrollbar::-webkit-scrollbar {
-    width: 4px;
-  }
-  .custom-scrollbar::-webkit-scrollbar-track {
-    background: transparent; 
-  }
-  .custom-scrollbar::-webkit-scrollbar-thumb {
-    background: #334155; 
-    border-radius: 2px;
-  }
-  .custom-scrollbar::-webkit-scrollbar-thumb:hover {
-    background: #475569; 
-  }
-`;

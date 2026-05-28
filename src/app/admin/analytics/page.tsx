@@ -9,7 +9,7 @@ const POSTHOG_HOST = 'https://us.posthog.com';
 const POSTHOG_PROJECT_ID = '275150';
 
 interface DashboardStats {
-    pageviews: { total: number; chart: any[] };
+    pageviews: { total: number; chart: Array<{ label: string; value: number }> };
     uniques: { total: number };
     sessionStats: {
         avgDuration: number;
@@ -20,13 +20,13 @@ interface DashboardStats {
     topSources: Array<{ source: string; visitors: number; views: number }>;
     devices: Array<{ name: string; visitors: number; views: number }>;
     geo: Array<{ country: string; count: number }>;
-    debug?: any;
+    debug?: Record<string, string>;
 }
 
 import { DateRangeSelector } from '@/components/admin/DateRangeSelector';
 
 export default function AnalyticsPage() {
-    const [analyticsData, setAnalyticsData] = useState<any[]>([]);
+    const [analyticsData, setAnalyticsData] = useState<Array<{ labels: string; data: number }>>([]);
     const [stats, setStats] = useState<DashboardStats | null>(null);
     const [loading, setLoading] = useState(true);
     const [dateRange, setDateRange] = useState('-7d');
@@ -40,7 +40,7 @@ export default function AnalyticsPage() {
                     const data = await res.json();
                     setStats(data);
                     if (data.pageviews?.chart) {
-                        setAnalyticsData(data.pageviews.chart.map((item: any) => ({
+                        setAnalyticsData(data.pageviews.chart.map((item: { label: string; value: number }) => ({
                             labels: item.label,
                             data: item.value
                         })));
@@ -291,7 +291,7 @@ export default function AnalyticsPage() {
                     <p className="text-sm text-slate-400">
                         Los datos se están extrayendo directamente de la API de PostHog.
                         Para análisis más profundos como embudos, grabaciones de sesión o mapas de calor,
-                        utiliza el botón "PostHog Avanzado".
+                        utiliza el botón &quot;PostHog Avanzado&quot;.
                     </p>
                 </div>
             </div>

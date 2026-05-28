@@ -7,6 +7,13 @@ import { useTranslation } from '@/hooks/useTranslation';
 import { formsService } from '@/services/forms.service';
 import { authService } from '@/services/auth.service';
 
+export interface FormFile {
+    url: string;
+    name: string;
+    size: number;
+    type: string;
+}
+
 export interface JobSeekerFormData {
     nombreCompleto: string;
     documentoIdentidad: string;
@@ -20,15 +27,15 @@ export interface JobSeekerFormData {
     experienciaLaboral: string;
     habilidadesTecnicas: string;
     habilidadesBlandas: string;
-    certificacionesCursos: any | null;
-    certificacionDiscapacidad: any | null;
-    hojaVida: any | null;
+    certificacionesCursos: File | FormFile | null;
+    certificacionDiscapacidad: File | FormFile | null;
+    hojaVida: File | FormFile | null;
     recibirCapacitacion: 'si' | 'no' | '';
     autorizaTratamientoDatos: 'si' | 'no' | '';
 }
 
 interface UseJobSeekerFormProps {
-    initialData?: any;
+    initialData?: Partial<JobSeekerFormData>;
     submissionId?: string;
     onSuccess?: () => void;
 }
@@ -57,28 +64,43 @@ export function useJobSeekerForm({ initialData, submissionId, onSuccess }: UseJo
         workAreas: getArray('forms.jobSeeker.workAreas'),
     }), [getArray]);
 
-    const fetchFormId = useCallback(async () => {
-        try {
-            const form = await formsService.findFormByType('job_seeker_registration');
-            setFormId(form.id);
-        } catch (error: any) {
-            setFormIdError(error?.status === 404 
-                ? 'El formulario no está configurado.' 
-                : 'No se pudo cargar la configuración.');
-        }
+    useEffect(() => {
+        let active = true;
+        const fetchFormId = async () => {
+            try {
+                const form = await formsService.findFormByType('job_seeker_registration');
+                if (active) {
+                    setFormId(form.id);
+                }
+            } catch (error) {
+                if (active) {
+                    const status = error && typeof error === 'object' && 'status' in error ? (error as { status: number }).status : undefined;
+                    setFormIdError(
+                        status === 404
+                            ? 'El formulario no está configurado.'
+                            : 'No se pudo cargar la configuración.'
+                    );
+                }
+            }
+        };
+        fetchFormId();
+        return () => {
+            active = false;
+        };
     }, []);
 
     useEffect(() => {
-        fetchFormId();
-    }, [fetchFormId]);
-
-    useEffect(() => {
-        if (initialData?.areaLaboralInteres?.length) {
+        if (initialData?.areaLaboralInteres?.length && options.workAreas?.length) {
             const lastOption = options.workAreas[options.workAreas.length - 1];
-            const customArea = initialData.areaLaboralInteres.find((a: string) => a.startsWith(lastOption + ' - '));
-            if (customArea) setOtraAreaLaboral(customArea.split(' - ')[1]);
+            const customArea = initialData.areaLaboralInteres.find((a) => a.startsWith(lastOption + ' - '));
+            if (customArea) {
+                const value = customArea.split(' - ')[1];
+                if (value !== otraAreaLaboral) {
+                    setTimeout(() => setOtraAreaLaboral(value), 0);
+                }
+            }
         }
-    }, [initialData, options.workAreas]);
+    }, [initialData, options.workAreas, otraAreaLaboral]);
 
     const validationSchema = useMemo(() => Yup.object({
         nombreCompleto: Yup.string().required(t('forms.common.required') as string),
@@ -127,7 +149,7 @@ export function useJobSeekerForm({ initialData, submissionId, onSuccess }: UseJo
                     const form = await formsService.findFormByType('job_seeker_registration');
                     currentFormId = form.id;
                     setFormId(currentFormId);
-                } catch (error) {
+                } catch {
                     setSubmitStatus('error');
                     return;
                 }
@@ -181,7 +203,7 @@ export function useJobSeekerForm({ initialData, submissionId, onSuccess }: UseJo
                     resetForm();
                     setOtraAreaLaboral('');
                 }
-            } catch (error) {
+            } catch {
                 setSubmitStatus('error');
             }
         },
@@ -203,7 +225,7 @@ export function useJobSeekerForm({ initialData, submissionId, onSuccess }: UseJo
         formik.setFieldValue('areaLaboralInteres', currentArray.includes(value) ? currentArray.filter(i => i !== value) : [...currentArray, value]);
     };
 
-    const handleFileChange = (field: 'hojaVida' | 'certificacionesCursos' | 'certificacionDiscapacidad', file: File | null) => {
+    const handleFileChange = (field: keyof JobSeekerFormData, file: File | null) => {
         setFileError(null);
         if (file && file.size > MAX_FILE_SIZE) {
             setFileError(`El archivo pesa ${(file.size / (1024 * 1024)).toFixed(2)}MB. Máximo 50MB.`);

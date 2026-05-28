@@ -1,6 +1,5 @@
 'use client';
 
-import Link from 'next/link';
 import { GraduationCap, Languages, PenTool } from 'lucide-react';
 import { useTranslation } from '@/hooks/useTranslation';
 import { useState, useEffect, useMemo } from 'react';
@@ -14,7 +13,7 @@ export function Services() {
   useEffect(() => {
     const fetchConfig = async () => {
       try {
-        const data = await api.get<any[]>('/content/landing-config');
+        const data = await api.get<Array<{ key: string; value: string }>>('/content/landing-config');
         const configMap = data.reduce((acc, item) => ({ ...acc, [item.key]: item.value }), {});
         setConfig(configMap);
       } catch (error) {

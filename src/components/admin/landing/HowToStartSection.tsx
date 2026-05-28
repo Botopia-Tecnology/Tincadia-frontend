@@ -1,17 +1,17 @@
-'use client';
-
+import Image from 'next/image';
 import { useState, useEffect } from 'react';
 import { PlayCircle, Loader2, Save } from 'lucide-react';
 import { LandingConfigItem } from '@/app/admin/landing/types';
 import { CloudinaryUploadWidget } from '@/components/common/CloudinaryUploadWidget';
+
+const STEPS = [1, 2, 3, 4];
 
 export function HowToStartSection({ items, onSave, saving }: {
     items: LandingConfigItem[];
     onSave: (item: LandingConfigItem) => void;
     saving: string | null;
 }) {
-    const steps = [1, 2, 3, 4];
-    const ensureItems = steps.map(step => {
+    const ensureItems = STEPS.map(step => {
         const key = `how_to_start_step_${step}`;
         const existing = items.find(i => i.key === key);
         return existing || {
@@ -25,7 +25,7 @@ export function HowToStartSection({ items, onSave, saving }: {
     const [localItems, setLocalItems] = useState(ensureItems);
 
     useEffect(() => {
-        const merged = steps.map(step => {
+        const merged = STEPS.map(step => {
             const key = `how_to_start_step_${step}`;
             const existingInProps = items.find(i => i.key === key);
             return existingInProps || {
@@ -35,7 +35,7 @@ export function HowToStartSection({ items, onSave, saving }: {
                 updatedAt: new Date().toISOString()
             } as LandingConfigItem;
         });
-        setLocalItems(merged);
+        setTimeout(() => setLocalItems(merged), 0);
     }, [items]);
 
     const handleChange = (key: string, newValue: string) => {
@@ -49,7 +49,7 @@ export function HowToStartSection({ items, onSave, saving }: {
             <div className="bg-blue-900/20 p-4 rounded-xl border border-blue-500/20 mb-6">
                 <div>
                     <h3 className="text-blue-200 font-semibold flex items-center gap-2">
-                        <PlayCircle className="w-5 h-5" /> Configuración "Cómo Empezar"
+                        <PlayCircle className="w-5 h-5" /> Configuración &quot;Cómo Empezar&quot;
                     </h3>
                     <p className="text-sm text-blue-300/60 mt-1">
                         Sube una imagen o video para cada uno de los 4 pasos. El sistema detectará automáticamente si es video o imagen por la extensión.
@@ -80,7 +80,9 @@ export function HowToStartSection({ items, onSave, saving }: {
                                         isVideo ? (
                                             <video src={item.value} className="w-full h-full object-cover" controls />
                                         ) : (
-                                            <img src={item.value} alt={item.description} className="w-full h-full object-cover" />
+                                            <div className="relative w-full h-full">
+                                                <Image src={item.value} alt={item.description} fill className="object-cover" unoptimized />
+                                            </div>
                                         )
                                     ) : (
                                         <div className="text-slate-600 flex flex-col items-center">

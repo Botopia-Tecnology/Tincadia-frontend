@@ -1,12 +1,21 @@
 'use client';
 
 import { FileText, Upload, Link as LinkIcon, X } from 'lucide-react';
+import { FormikProps } from 'formik';
+import { InterpreterFormData } from '@/hooks/useInterpreterForm';
 
-export function FileUploadFields({ formik, handleFileChange, fileErrors, t }: any) {
-    const renderFileUpload = (field: string, labelKey: string, isRequired: boolean = false, accept: string = ".pdf") => {
-        const file = formik.values[field];
+interface FileUploadFieldsProps {
+    formik: FormikProps<InterpreterFormData>;
+    handleFileChange: (field: keyof InterpreterFormData, file: File | null) => void;
+    fileErrors: Record<string, string | null>;
+    t: (key: string) => string;
+}
+
+export function FileUploadFields({ formik, handleFileChange, fileErrors, t }: FileUploadFieldsProps) {
+    const renderFileUpload = (field: keyof InterpreterFormData, labelKey: string, isRequired: boolean = false, accept: string = ".pdf") => {
+        const file = formik.values[field as keyof InterpreterFormData] as { name?: string } | undefined | string;
         const hasFile = !!file;
-        const fileName = file?.name || (typeof file === 'string' ? file.split('/').pop() : '');
+        const fileName = (typeof file === 'object' && file !== null && 'name' in file) ? file.name : (typeof file === 'string' ? file.split('/').pop() : '');
 
         return (
             <div className="relative">
@@ -24,11 +33,10 @@ export function FileUploadFields({ formik, handleFileChange, fileErrors, t }: an
                     />
                     <label
                         htmlFor={field}
-                        className={`flex flex-col items-center justify-center gap-2 w-full p-6 border-2 border-dashed rounded-xl transition-all cursor-pointer bg-white ${
-                            hasFile 
-                                ? 'border-[#83A98A] bg-[#83A98A]/5' 
+                        className={`flex flex-col items-center justify-center gap-2 w-full p-6 border-2 border-dashed rounded-xl transition-all cursor-pointer bg-white ${hasFile
+                                ? 'border-[#83A98A] bg-[#83A98A]/5'
                                 : (formik.touched[field] && formik.errors[field] ? 'border-red-400 bg-red-50/30' : 'border-gray-200 hover:border-[#83A98A] hover:bg-gray-50')
-                        }`}
+                            }`}
                     >
                         {hasFile ? (
                             <div className="flex flex-col items-center gap-2">
@@ -91,7 +99,7 @@ export function FileUploadFields({ formik, handleFileChange, fileErrors, t }: an
                         type="url"
                         onChange={formik.handleChange}
                         onBlur={formik.handleBlur}
-                        value={formik.values.redesSocialesPortafolio}
+                        value={(formik.values.redesSocialesPortafolio as string) || ''}
                         placeholder={t('forms.interpreter.fields.socialPlaceholder')}
                         className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#83A98A] outline-none"
                     />
