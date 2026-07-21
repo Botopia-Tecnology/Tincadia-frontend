@@ -84,7 +84,7 @@ export function DownloadAppSection() {
 
                     {/* Store buttons */}
                     <div className="flex flex-col gap-4 mb-12">
-                        <a href="#" className="inline-flex items-center gap-4 rounded-xl border border-gray-200 px-5 py-4 hover:border-[#83A98A] hover:bg-gray-50 transition-all justify-center shadow-sm">
+                        <a href="https://apps.apple.com/co/app/tincadia/id6756493332" target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-4 rounded-xl border border-gray-200 px-5 py-4 hover:border-[#83A98A] hover:bg-gray-50 transition-all justify-center shadow-sm">
                             <div className="relative w-7 h-7 flex-shrink-0">
                                 <Image src="https://res.cloudinary.com/do1mvhvms/image/upload/v1767786854/appstore_vqf0e9.jpg" alt="App Store" fill className="object-contain" unoptimized />
                             </div>
@@ -170,7 +170,7 @@ export function DownloadAppSection() {
 
                                         {/* Store buttons */}
                                         <div className="flex flex-row gap-4 mb-6">
-                                            <a href="#" className="inline-flex items-center gap-3 rounded-lg border border-gray-300 px-5 py-3 hover:border-[#83A98A] hover:bg-gray-50 transition-all">
+                                            <a href="https://apps.apple.com/co/app/tincadia/id6756493332" target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-3 rounded-lg border border-gray-300 px-5 py-3 hover:border-[#83A98A] hover:bg-gray-50 transition-all">
                                                 <div className="relative w-6 h-6 flex-shrink-0">
                                                     <Image src="https://res.cloudinary.com/do1mvhvms/image/upload/v1767786854/appstore_vqf0e9.jpg" alt="App Store" fill className="object-contain" unoptimized />
                                                 </div>
