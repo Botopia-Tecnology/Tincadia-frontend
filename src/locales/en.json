@@ -287,7 +287,8 @@
     "whatsappDesc": "Official channel for information, events, and TINCADIA news.",
     "youtube": "YouTube",
     "youtubeDesc": "Videos about inclusion, accessibility, and impact testimonials.",
-    "copyright": "© 2026 TINCADIA. All rights reserved. Powered By Botopia Technology S.A.S"
+    "copyright": "© 2026 TINCADIA. All rights reserved. Powered By Botopia Technology S.A.S",
+    "poweredBy": "Powered By Botopia Technology S.A.S"
   },
   "accessibility": {
     "highContrast": "Toggle High Contrast",
@@ -297,7 +298,8 @@
     "disableAnimations": "Disable Animations",
     "decreaseText": "Decrease Text Size",
     "resetText": "Reset Text Size",
-    "increaseText": "Increase Text Size"
+    "increaseText": "Increase Text Size",
+    "darkMode": "Dark Mode"
   },
   "findInclusiveCompany": {
     "title": "Find an Inclusive Company",
@@ -643,6 +645,41 @@
     "noAccount": "Don't have an account?",
     "signUp": "Sign up"
   },
+  "aboutUs": {
+    "mission": {
+      "title": "Mission",
+      "description": "To drive social inclusion and equal opportunities through the development of innovative technology and artificial intelligence solutions. We are dedicated to removing communication barriers for people with hearing disabilities and other conditions, connecting strategic sectors and enabling accessible environments that empower the autonomy and talent of every individual."
+    },
+    "vision": {
+      "title": "Vision",
+      "description": "To become the leading benchmark for inclusive technology at the regional level, transforming the way society and companies engage with disability. We aspire to a future where TINCADIA's technology is the global standard for accessibility, achieving a fully integrated world where communication barriers are a thing of the past."
+    },
+    "values": {
+      "title": "Our Values",
+      "items": [
+        {
+          "title": "1. Technological Empathy",
+          "description": "We don't build technology for the sake of innovation alone; we design solutions from a deep understanding of the daily needs and challenges of people with disabilities. We put the human factor at the center of every line of code."
+        },
+        {
+          "title": "2. Commitment to Equity",
+          "description": "We work tirelessly to level the playing field. We believe that access to communication and information is a fundamental right, and our tools are the means to guarantee it."
+        },
+        {
+          "title": "3. Disruptive and Inclusive Innovation",
+          "description": "We constantly look to Artificial Intelligence and new technologies for creative ways to break down barriers. If a limitation exists, we look for the technological way to overcome it."
+        },
+        {
+          "title": "4. Integrity and Transparency",
+          "description": "We act with honesty in data handling and in our business relationships. Trust is the foundation of our community, especially when we manage information that impacts people's lives."
+        },
+        {
+          "title": "5. Radical Collaboration",
+          "description": "We understand that inclusion is a collective endeavor. We foster alliances between public and private sectors and social organizations to create an ecosystem where accessibility is the norm, not the exception."
+        }
+      ]
+    }
+  },
   "impact": {
     "title": "Why choose us?",
     "subtitle": "TINCADIA not only connects talent: it educates, raises awareness, and measures social impact to transform inclusion into real actions.",
@@ -768,6 +805,19 @@
       "childSafety": {
         "title": "8. Child Safety Protection Standards (CSAE)",
         "content": "TINCADIA has a ZERO TOLERANCE policy towards child sexual abuse and exploitation (CSAE). We strictly prohibit the use of our platform to share, promote, or facilitate any type of child abuse material. We implement monitoring measures, immediate reporting mechanisms, and actively collaborate with legal authorities to report any suspicious activity and ensure a safe environment."
+      },
+      "emergencyDisclaimer": {
+        "title": "9. End User License Agreement (EULA) – SOS Functionality and Emergency Services",
+        "intro": "The TINCADIA application includes a feature called \"Help Center\" or \"SOS\", designed to assist people with hearing disabilities in communicating with emergency lines (such as 123 in Colombia). By using this feature, the User acknowledges and accepts the following:",
+        "items": [
+          "TINCADIA is NOT an emergency service, nor a substitute for official emergency services (police, firefighters, ambulance, or other rescue agencies). The SOS feature is a communication assistance tool.",
+          "The SOS feature facilitates sending location information (GPS coordinates, approximate address) via SMS, AI-generated audio, and messaging. However, TINCADIA does not guarantee that emergency services will receive, identify, or act upon the User's location.",
+          "Location accuracy depends on external factors such as the device's GPS signal, mobile network coverage, and environmental conditions. TINCADIA is not responsible for inaccuracies in geolocation.",
+          "The generation and playback of emergency audio depends on Internet connectivity and on the emergency line operator being able to hear and understand the message. TINCADIA does not guarantee the availability or effectiveness of this feature in all circumstances.",
+          "The User accepts that use of the SOS feature is at their sole responsibility and risk. TINCADIA, its directors, employees, and collaborators shall not be liable for direct, indirect, incidental, or consequential damages arising from the use or inability to use this feature.",
+          "In the event of a real emergency, the User must attempt to contact emergency services directly by all available means, without relying exclusively on TINCADIA's SOS feature."
+        ],
+        "footer": "By using the SOS feature, the User declares that they have read, understood, and fully accepted this agreement."
       }
     },
     "note": "TINCADIA reserves the right to unilaterally modify these terms at any time. Modifications will be effective from their publication on the platform. It is the user's responsibility to review them periodically.",

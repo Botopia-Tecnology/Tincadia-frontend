@@ -287,7 +287,8 @@
     "whatsappDesc": "Canal oficial para información, eventos y novedades de TINCADIA.",
     "youtube": "YouTube",
     "youtubeDesc": "Videos sobre inclusión, accesibilidad y testimonios de impacto.",
-    "copyright": "© 2026 TINCADIA. Todos los derechos reservados. Powered By Botopia Technology S.A.S"
+    "copyright": "© 2026 TINCADIA. Todos los derechos reservados. Powered By Botopia Technology S.A.S",
+    "poweredBy": "Powered By Botopia Technology S.A.S"
   },
   "accessibility": {
     "highContrast": "Activar alto contraste",
@@ -297,7 +298,8 @@
     "disableAnimations": "Desactivar animaciones",
     "decreaseText": "Disminuir tamaño de texto",
     "resetText": "Restablecer tamaño de texto",
-    "increaseText": "Aumentar tamaño de texto"
+    "increaseText": "Aumentar tamaño de texto",
+    "darkMode": "Modo oscuro"
   },
   "findInclusiveCompany": {
     "title": "Encuentra una Empresa Inclusiva",
