@@ -287,7 +287,8 @@
     "whatsappDesc": "Canal oficial para informações, eventos e novidades da TINCADIA.",
     "youtube": "YouTube",
     "youtubeDesc": "Vídeos sobre inclusão, acessibilidade e depoimentos de impacto.",
-    "copyright": "© 2026 TINCADIA. Todos os direitos reservados. Powered By Botopia Technology S.A.S"
+    "copyright": "© 2026 TINCADIA. Todos os direitos reservados. Powered By Botopia Technology S.A.S",
+    "poweredBy": "Powered By Botopia Technology S.A.S"
   },
   "accessibility": {
     "highContrast": "Alto Contraste",
@@ -297,7 +298,8 @@
     "disableAnimations": "Desativar Animações",
     "decreaseText": "Diminuir Texto",
     "resetText": "Redefinir Texto",
-    "increaseText": "Aumentar Texto"
+    "increaseText": "Aumentar Texto",
+    "darkMode": "Modo Escuro"
   },
   "findInclusiveCompany": {
     "title": "Encontre uma Empresa Inclusiva",
@@ -643,6 +645,41 @@
     "noAccount": "Não tem uma conta?",
     "signUp": "Cadastre-se"
   },
+  "aboutUs": {
+    "mission": {
+      "title": "Missão",
+      "description": "Impulsionar a inclusão social e a igualdade de oportunidades por meio do desenvolvimento de tecnologia inovadora e soluções de inteligência artificial. Dedicamo-nos a eliminar as barreiras de comunicação para pessoas com deficiência auditiva e outras condições, conectando setores estratégicos e facilitando ambientes acessíveis que potencializem a autonomia e o talento de cada indivíduo."
+    },
+    "vision": {
+      "title": "Visão",
+      "description": "Tornar-nos a referência líder em tecnologia inclusiva em nível regional, transformando a maneira como a sociedade e as empresas interagem com a deficiência. Aspiramos a um futuro em que a tecnologia da TINCADIA seja o padrão global de acessibilidade, alcançando um mundo plenamente integrado onde as barreiras de comunicação sejam coisa do passado."
+    },
+    "values": {
+      "title": "Nossos Valores",
+      "items": [
+        {
+          "title": "1. Empatia Tecnológica",
+          "description": "Não desenvolvemos tecnologia pelo simples fato de inovar; projetamos soluções a partir da compreensão profunda das necessidades e desafios diários das pessoas com deficiência. Colocamos o fator humano no centro de cada linha de código."
+        },
+        {
+          "title": "2. Compromisso com a Equidade",
+          "description": "Trabalhamos incansavelmente para nivelar o campo de jogo. Acreditamos que o acesso à comunicação e à informação é um direito fundamental, e nossas ferramentas são o meio para garanti-lo."
+        },
+        {
+          "title": "3. Inovação Disruptiva e Inclusiva",
+          "description": "Buscamos constantemente na Inteligência Artificial e nas novas tecnologias formas criativas de romper barreiras. Se existe uma limitação, buscamos a maneira tecnológica de superá-la."
+        },
+        {
+          "title": "4. Integridade e Transparência",
+          "description": "Agimos com honestidade no tratamento de dados e em nossas relações comerciais. A confiança é a base da nossa comunidade, especialmente quando gerenciamos informações que impactam a vida das pessoas."
+        },
+        {
+          "title": "5. Colaboração Radical",
+          "description": "Entendemos que a inclusão é uma tarefa coletiva. Fomentamos alianças entre setores públicos, privados e organizações sociais para criar um ecossistema onde a acessibilidade seja a norma, não a exceção."
+        }
+      ]
+    }
+  },
   "impact": {
     "title": "Por que nos escolher?",
     "subtitle": "A TINCADIA não apenas conecta talentos: educa, conscientiza e mede o impacto social para transformar a inclusão em ações reais.",
@@ -768,6 +805,19 @@
       "childSafety": {
         "title": "8. Padrões de Segurança para Proteção Infantil (CSAE)",
         "content": "A TINCADIA tem uma política de TOLERÂNCIA ZERO contra a exploração e o abuso sexual infantil (CSAE). Proibimos estritamente o uso de nossa plataforma para compartilhar, promover ou facilitar qualquer tipo de material de abuso infantil. Implementamos medidas de monitoramento, mecanismos de denúncia imediata e colaboramos ativamente com as autoridades legais para denunciar qualquer atividade suspeita e garantir um ambiente seguro."
+      },
+      "emergencyDisclaimer": {
+        "title": "9. Acordo de Licença de Usuário Final (EULA) – Funcionalidade SOS e Serviços de Emergência",
+        "intro": "O aplicativo TINCADIA inclui uma funcionalidade denominada \"Central de Ajuda\" ou \"SOS\", projetada para auxiliar pessoas com deficiência auditiva na comunicação com linhas de emergência (como o 123 na Colômbia). Ao utilizar esta funcionalidade, o Usuário reconhece e aceita o seguinte:",
+        "items": [
+          "A TINCADIA NÃO é um serviço de emergência, nem um substituto dos serviços oficiais de emergência (polícia, bombeiros, ambulância ou outros órgãos de socorro). A funcionalidade SOS é uma ferramenta de assistência comunicativa.",
+          "A funcionalidade SOS facilita o envio de informações de localização (coordenadas GPS, endereço aproximado) por SMS, áudio gerado por inteligência artificial e mensagens. No entanto, a TINCADIA não garante que os serviços de emergência recebam, identifiquem ou ajam sobre a localização do Usuário.",
+          "A precisão da localização depende de fatores externos como o sinal de GPS do dispositivo, a cobertura da rede móvel e as condições do ambiente. A TINCADIA não se responsabiliza por imprecisões na geolocalização.",
+          "A geração e reprodução de áudio de emergência depende da conectividade com a Internet e de que o operador da linha de emergência possa ouvir e compreender a mensagem. A TINCADIA não garante a disponibilidade nem a eficácia desta função em todas as circunstâncias.",
+          "O Usuário aceita que o uso da funcionalidade SOS é de sua exclusiva responsabilidade e risco. A TINCADIA, seus diretores, funcionários e colaboradores não serão responsáveis por danos diretos, indiretos, incidentais ou consequenciais decorrentes do uso ou da impossibilidade de uso desta funcionalidade.",
+          "Em caso de emergência real, o Usuário deve tentar contatar diretamente os serviços de emergência por todos os meios disponíveis, sem depender exclusivamente da funcionalidade SOS da TINCADIA."
+        ],
+        "footer": "Ao utilizar a funcionalidade SOS, o Usuário declara ter lido, compreendido e aceitado integralmente este acordo."
       }
     },
     "note": "A TINCADIA reserva-se o direito de modificar unilateralmente estes termos a qualquer momento. As modificações entrarão em vigor a partir de sua publicação na plataforma. É responsabilidade do usuário revisá-los periodicamente.",
@@ -821,6 +871,10 @@
       "modifications": {
         "title": "5. Modificações",
         "content": "Reservamo-nos o direito de modificar esta Política. As alterações serão publicadas na Plataforma com a data da última atualização."
+      },
+      "childSafety": {
+        "title": "6. Padrões de Segurança para Proteção Infantil (CSAE)",
+        "content": "A TINCADIA tem uma política de TOLERÂNCIA ZERO contra a exploração e o abuso sexual infantil (CSAE). Proibimos estritamente o uso de nossa plataforma para compartilhar, promover ou facilitar qualquer tipo de material de abuso infantil. Implementamos medidas de monitoramento, mecanismos de denúncia imediata e colaboramos ativamente com as autoridades legais para denunciar qualquer atividade suspeita e garantir um ambiente seguro."
       }
     },
     "contact": {
