@@ -90,12 +90,22 @@ export default function UsersPage() {
     const currentUsers = filteredUsers.slice(indexOfFirstUser, indexOfLastUser);
     const totalPages = Math.ceil(filteredUsers.length / usersPerPage);
 
-    const handleUpdateRole = async (userId: string) => {
+    const handleUpdateRole = async (user: User) => {
         try {
-            await usersService.updateUserRole(userId, selectedRole);
+            if (selectedRole === 'interpreter') {
+                // El endpoint de promoción guarda 'interpreter' en minúscula,
+                // que es el valor que consulta el resto del sistema (chat, llamadas)
+                if (!user.email) {
+                    alert('Este usuario no tiene correo asociado; no es posible asignarle el rol de intérprete.');
+                    return;
+                }
+                await usersService.promoteToInterpreter(user.email);
+            } else {
+                await usersService.updateUserRole(user.id, selectedRole);
+            }
             // Update local state and selected user if needed
-            setUsers(users.map(u => u.id === userId ? { ...u, role: selectedRole } : u));
-            if (selectedUser?.id === userId) {
+            setUsers(users.map(u => u.id === user.id ? { ...u, role: selectedRole } : u));
+            if (selectedUser?.id === user.id) {
                 setSelectedUser(prev => prev ? ({ ...prev, role: selectedRole }) : null);
             }
             setEditingUserId(null);
@@ -131,9 +141,14 @@ export default function UsersPage() {
 
     const startEditing = (user: User) => {
         setEditingUserId(user.id);
-        setSelectedRole(user.role);
+        // Normalizar el valor legado 'Interpreter' para que la actualización sea válida
+        setSelectedRole(user.role?.toLowerCase() === 'interpreter' ? 'interpreter' : user.role);
         setActiveMenuUserId(null);
     };
+
+    // El rol de intérprete se muestra siempre en minúscula, aunque venga con el valor legado
+    const displayRole = (role: string) =>
+        role?.toLowerCase() === 'interpreter' ? 'interpreter' : role;
 
     const formatDate = (dateString: string) => {
         if (!dateString) return '-';
@@ -163,10 +178,10 @@ export default function UsersPage() {
                                 onChange={(e) => setRoleFilter(e.target.value)}
                                 className="w-full sm:w-auto pl-10 pr-8 py-2 bg-slate-800 border border-slate-700 rounded-lg text-white text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 appearance-none cursor-pointer hover:border-slate-600 transition-colors"
                             >
-                                <option value="all">Roles (Todos)</option>
-                                <option value="User">Usuarios</option>
-                                <option value="Admin">Admin</option>
-                                <option value="Interpreter">Intérpretes</option>
+                                <option value="all" className="bg-slate-800 text-white">Roles (Todos)</option>
+                                <option value="User" className="bg-slate-800 text-white">Usuarios</option>
+                                <option value="Admin" className="bg-slate-800 text-white">Admin</option>
+                                <option value="interpreter" className="bg-slate-800 text-white">Intérpretes</option>
                             </select>
                         </div>
 
@@ -178,10 +193,10 @@ export default function UsersPage() {
                                 onChange={(e) => setStatusFilter(e.target.value)}
                                 className="w-full sm:w-auto pl-10 pr-8 py-2 bg-slate-800 border border-slate-700 rounded-lg text-white text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 appearance-none cursor-pointer hover:border-slate-600 transition-colors"
                             >
-                                <option value="all">Estado (Todos)</option>
-                                <option value="Active">Activo</option>
-                                <option value="Inactive">Inactivo</option>
-                                <option value="Pending">Pendiente</option>
+                                <option value="all" className="bg-slate-800 text-white">Estado (Todos)</option>
+                                <option value="Active" className="bg-slate-800 text-white">Activo</option>
+                                <option value="Inactive" className="bg-slate-800 text-white">Inactivo</option>
+                                <option value="Pending" className="bg-slate-800 text-white">Pendiente</option>
                             </select>
                         </div>
                     </div>
@@ -251,13 +266,13 @@ export default function UsersPage() {
                                                                 <select
                                                                     value={selectedRole}
                                                                     onChange={(e) => setSelectedRole(e.target.value)}
-                                                                    className="bg-transparent text-white text-xs rounded px-1 py-1 focus:outline-none"
+                                                                    className="bg-slate-900 text-white text-xs rounded px-1 py-1 focus:outline-none"
                                                                 >
-                                                                    <option value="User">User</option>
-                                                                    <option value="Admin">Admin</option>
-                                                                    <option value="interpreter">Interpreter</option>
+                                                                    <option value="User" className="bg-slate-900 text-white">User</option>
+                                                                    <option value="Admin" className="bg-slate-900 text-white">Admin</option>
+                                                                    <option value="interpreter" className="bg-slate-900 text-white">interpreter</option>
                                                                 </select>
-                                                                <button onClick={() => handleUpdateRole(user.id)} className="p-1 hover:bg-emerald-500/20 text-emerald-400 rounded transition">
+                                                                <button onClick={() => handleUpdateRole(user)} className="p-1 hover:bg-emerald-500/20 text-emerald-400 rounded transition">
                                                                     <Check size={14} />
                                                                 </button>
                                                                 <button onClick={() => setEditingUserId(null)} className="p-1 hover:bg-rose-500/20 text-rose-400 rounded transition">
@@ -269,7 +284,7 @@ export default function UsersPage() {
                                                                     (user.role === 'Interpreter' || user.role === 'interpreter') ? 'bg-orange-500/10 text-orange-400 border-orange-500/20' :
                                                                         'bg-blue-500/10 text-blue-400 border-blue-500/20'
                                                                 }`}>
-                                                                {user.role}
+                                                                {displayRole(user.role)}
                                                             </span>
                                                         )}
                                                     </td>
@@ -345,10 +360,10 @@ export default function UsersPage() {
                                         onChange={(e) => setUsersPerPage(Number(e.target.value))}
                                         className="bg-slate-800 border border-slate-700 rounded px-2 py-1 text-white focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm"
                                     >
-                                        <option value={5}>5</option>
-                                        <option value={10}>10</option>
-                                        <option value={20}>20</option>
-                                        <option value={50}>50</option>
+                                        <option value={5} className="bg-slate-800 text-white">5</option>
+                                        <option value={10} className="bg-slate-800 text-white">10</option>
+                                        <option value={20} className="bg-slate-800 text-white">20</option>
+                                        <option value={50} className="bg-slate-800 text-white">50</option>
                                     </select>
                                     <span>
                                         <span className="font-medium text-white">{filteredUsers.length > 0 ? indexOfFirstUser + 1 : 0}</span> - <span className="font-medium text-white">{Math.min(indexOfLastUser, filteredUsers.length)}</span> de <span className="font-medium text-white">{filteredUsers.length}</span>
@@ -434,7 +449,7 @@ export default function UsersPage() {
                                                 (selectedUser.role === 'Interpreter' || selectedUser.role === 'interpreter') ? 'bg-orange-500/10 text-orange-400 border-orange-500/20' :
                                                     'bg-blue-500/10 text-blue-400 border-blue-500/20'
                                             }`}>
-                                            {selectedUser.role}
+                                            {displayRole(selectedUser.role)}
                                         </span>
                                         <span className={`px-3 py-1 rounded-full text-xs font-semibold border ${selectedUser.status === 'Active' ? 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20' :
                                                 'bg-slate-500/10 text-slate-400 border-slate-500/20'

@@ -1,7 +1,8 @@
 'use client';
 
 import { useState, useEffect, useCallback } from 'react';
-import { X, Loader2, UploadCloud } from 'lucide-react';
+import { createPortal } from 'react-dom';
+import { X, Loader2, UploadCloud, Check, Lock, Unlock, Plus } from 'lucide-react';
 import { contentService } from '@/services/content.service';
 
 interface CreateCourseModalProps {
@@ -65,6 +66,10 @@ const [previewLimit, setPreviewLimit] = useState<number>(3);
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
+        if (!categoryId) {
+            alert('Selecciona una categoría para el curso.');
+            return;
+        }
         setIsLoading(true);
         try {
             // 1. Create Course
@@ -94,9 +99,9 @@ const [previewLimit, setPreviewLimit] = useState<number>(3);
         }
     };
 
-    return (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/80 backdrop-blur-md p-4">
-            <div className="bg-slate-900 border border-slate-700 rounded-xl w-full max-w-md shadow-2xl max-h-[90vh] overflow-y-auto custom-scrollbar">
+    return createPortal(
+        <div className="fixed inset-0 z-[100] flex items-center justify-center bg-slate-950/90 backdrop-blur-md p-4">
+            <div className="bg-slate-900 border border-slate-700 rounded-xl w-full max-w-lg shadow-2xl max-h-[90vh] overflow-y-auto [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
                 <div className="sticky top-0 bg-slate-900 z-10 flex justify-between items-center p-6 border-b border-slate-700">
                     <h2 className="text-xl font-bold text-white">Create New Course</h2>
                     <button onClick={onClose} className="text-slate-400 hover:text-white transition-colors">
@@ -129,51 +134,68 @@ const [previewLimit, setPreviewLimit] = useState<number>(3);
                     </div>
 
                     <div>
-                        <label className="block text-sm font-medium text-slate-400 mb-1">Category</label>
-                        {!isCreatingCategory ? (
-                            <div className="flex gap-2">
-                                <select
-                                    required
-                                    value={categoryId}
-                                    onChange={(e) => setCategoryId(e.target.value)}
-                                    className="w-full bg-slate-800 border border-slate-700 rounded-lg p-2.5 text-white focus:ring-2 focus:ring-blue-500"
-                                >
-                                    <option value="" disabled>Select a category</option>
-                                    {categories.map(cat => (
-                                        <option key={cat.id} value={cat.id}>{cat.name}</option>
-                                    ))}
-                                </select>
+                        <label className="block text-sm font-medium text-slate-400 mb-2">Categoría</label>
+                        <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
+                            {categories.map(cat => {
+                                const isSelected = categoryId === cat.id;
+                                return (
+                                    <button
+                                        key={cat.id}
+                                        type="button"
+                                        onClick={() => setCategoryId(cat.id)}
+                                        title={cat.name}
+                                        className={`flex items-center gap-2 px-3 py-2.5 rounded-lg border text-sm font-medium transition-all text-left ${isSelected
+                                            ? 'bg-blue-600/20 border-blue-500 text-white'
+                                            : 'bg-slate-800 border-slate-700 text-slate-300 hover:border-slate-500 hover:text-white'
+                                            }`}
+                                    >
+                                        <span className={`w-4 h-4 rounded-full border flex items-center justify-center shrink-0 ${isSelected ? 'bg-blue-500 border-blue-500' : 'border-slate-500'}`}>
+                                            {isSelected && <Check size={11} className="text-white" strokeWidth={3} />}
+                                        </span>
+                                        <span className="truncate">{cat.name}</span>
+                                    </button>
+                                );
+                            })}
+
+                            {!isCreatingCategory && (
                                 <button
                                     type="button"
                                     onClick={() => setIsCreatingCategory(true)}
-                                    className="px-3 bg-slate-800 border border-slate-700 rounded-lg hover:bg-slate-700 text-white"
+                                    className="flex items-center justify-center gap-1.5 px-3 py-2.5 rounded-lg border border-dashed border-slate-600 text-slate-400 text-sm hover:border-slate-400 hover:text-white transition-all"
                                 >
-                                    +
+                                    <Plus size={15} />
+                                    Nueva
                                 </button>
-                            </div>
-                        ) : (
-                            <div className="flex gap-2">
+                            )}
+                        </div>
+
+                        {categories.length === 0 && !isCreatingCategory && (
+                            <p className="text-xs text-slate-500 mt-2">No hay categorías. Crea una nueva para continuar.</p>
+                        )}
+
+                        {isCreatingCategory && (
+                            <div className="flex gap-2 mt-2">
                                 <input
                                     type="text"
                                     autoFocus
                                     value={newCategoryName}
                                     onChange={(e) => setNewCategoryName(e.target.value)}
                                     className="w-full bg-slate-800 border border-slate-700 rounded-lg p-2.5 text-white focus:ring-2 focus:ring-blue-500"
-                                    placeholder="New Category Name"
+                                    placeholder="Nombre de la nueva categoría"
                                 />
                                 <button
                                     type="button"
                                     onClick={handleCreateCategory}
-                                    className="px-3 bg-indigo-600 rounded-lg hover:bg-indigo-700 text-white"
+                                    className="px-4 bg-indigo-600 rounded-lg hover:bg-indigo-700 text-white text-sm font-medium"
                                 >
-                                    Save
+                                    Guardar
                                 </button>
                                 <button
                                     type="button"
                                     onClick={() => setIsCreatingCategory(false)}
-                                    className="px-3 bg-slate-800 border border-slate-700 rounded-lg hover:bg-slate-700 text-white"
+                                    className="px-4 bg-slate-800 border border-slate-700 rounded-lg hover:bg-slate-700 text-white text-sm"
                                 >
-                                    Cancel
+                                    Cancelar
                                 </button>
                             </div>
                         )}
@@ -187,48 +209,58 @@ const [previewLimit, setPreviewLimit] = useState<number>(3);
                                 onChange={(e) => setAccessScope(e.target.value as 'course' | 'module' | 'lesson')}
                                 className="w-full bg-slate-800 border border-slate-700 rounded-lg p-2.5 text-white focus:ring-2 focus:ring-blue-500"
                             >
-                                <option value="course">Curso completo (un pago)</option>
-                                <option value="module">Por módulos</option>
-                                <option value="lesson">Por lecciones/videos</option>
+                                <option value="course" className="bg-slate-800 text-white">Curso completo (un pago)</option>
+                                <option value="module" className="bg-slate-800 text-white">Por módulos</option>
+                                <option value="lesson" className="bg-slate-800 text-white">Por lecciones/videos</option>
                             </select>
                         </div>
 
                         {accessScope === 'course' && (
                             <div className="flex flex-col">
-                                <label className="block text-sm font-medium text-slate-400 mb-1">Curso de pago</label>
-                                <div className="flex gap-3 h-[42px]">
+                                <label className="block text-sm font-medium text-slate-400 mb-1">Tipo de curso</label>
+                                <div className="grid grid-cols-2 gap-2">
                                     <button
                                         type="button"
-                                        onClick={() => setIsPaid(!isPaid)}
-                                        className={`flex-1 px-4 py-2 rounded-lg border font-medium transition-all duration-200 ${isPaid
-                                            ? 'bg-amber-500/10 border-amber-500/50 text-amber-200 hover:bg-amber-500/20'
-                                            : 'bg-emerald-500/10 border-emerald-500/50 text-emerald-200 hover:bg-emerald-500/20'
+                                        onClick={() => setIsPaid(false)}
+                                        aria-pressed={!isPaid}
+                                        className={`flex items-center justify-center gap-2 px-3 py-2.5 rounded-lg border text-sm font-medium transition-all ${!isPaid
+                                            ? 'bg-emerald-500/15 border-emerald-500 text-emerald-300'
+                                            : 'bg-slate-800 border-slate-700 text-slate-400 hover:border-slate-500 hover:text-white'
                                             }`}
                                     >
-                                        {isPaid ? '🔒 De pago' : '🔓 Libre'}
+                                        {!isPaid ? <Check size={15} strokeWidth={3} /> : <Unlock size={15} />}
+                                        Libre
                                     </button>
-                                    
-                                    {isPaid && (
-                                        <div className="w-24 animate-in fade-in slide-in-from-right-2 duration-300">
-                                            <input
-                                                type="number"
-                                                min={0}
-                                                max={10}
-                                                value={previewLimit}
-                                                onChange={(e) => setPreviewLimit(Number(e.target.value))}
-                                                className="w-full h-full bg-slate-800 border border-slate-700 rounded-lg px-3 text-white focus:ring-2 focus:ring-blue-500"
-                                                title="Número de videos gratuitos"
-                                                placeholder="0"
-                                            />
-                                        </div>
-                                    )}
+                                    <button
+                                        type="button"
+                                        onClick={() => setIsPaid(true)}
+                                        aria-pressed={isPaid}
+                                        className={`flex items-center justify-center gap-2 px-3 py-2.5 rounded-lg border text-sm font-medium transition-all ${isPaid
+                                            ? 'bg-amber-500/15 border-amber-500 text-amber-300'
+                                            : 'bg-slate-800 border-slate-700 text-slate-400 hover:border-slate-500 hover:text-white'
+                                            }`}
+                                    >
+                                        {isPaid ? <Check size={15} strokeWidth={3} /> : <Lock size={15} />}
+                                        De pago
+                                    </button>
                                 </div>
+
                                 {isPaid ? (
-                                    <p className="text-[10px] text-slate-500 mt-1 animate-in fade-in duration-300">
-                                        Videos gratis recomendados: 3-4.
-                                    </p>
+                                    <div className="mt-2 animate-in fade-in slide-in-from-top-1 duration-200">
+                                        <label className="block text-xs text-slate-500 mb-1">Videos gratuitos de muestra</label>
+                                        <input
+                                            type="number"
+                                            min={0}
+                                            max={10}
+                                            value={previewLimit}
+                                            onChange={(e) => setPreviewLimit(Number(e.target.value))}
+                                            className="w-full bg-slate-800 border border-slate-700 rounded-lg px-3 py-2 text-white focus:ring-2 focus:ring-blue-500"
+                                            placeholder="0"
+                                        />
+                                        <p className="text-[10px] text-slate-500 mt-1">Recomendado: 3-4.</p>
+                                    </div>
                                 ) : (
-                                    <p className="text-[10px] text-slate-400 mt-1 animate-in fade-in duration-300 italic">
+                                    <p className="text-[10px] text-slate-400 mt-1 italic">
                                         Todo el contenido será gratuito.
                                     </p>
                                 )}
@@ -268,6 +300,7 @@ const [previewLimit, setPreviewLimit] = useState<number>(3);
                     </div>
                 </form>
             </div>
-        </div>
+        </div>,
+        document.body
     );
 }

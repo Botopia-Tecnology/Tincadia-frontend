@@ -10,6 +10,7 @@ import {
     Settings,
     Bell,
     CreditCard,
+    BadgeDollarSign,
     LogOut,
     FileText,
     Home,
@@ -77,7 +78,7 @@ export function AdminSidebar({ isOpen = false, onClose }: AdminSidebarProps) {
                     <SidebarItem href="/admin/courses" icon={BookOpen} label="Cursos (CMS)" />
                     <SidebarItem href="/admin/notifications" icon={Bell} label="Notificaciones" />
                     <SidebarItem href="/admin/finance" icon={CreditCard} label="Finanzas" />
-                    <SidebarItem href="/admin/pricing" icon={CreditCard} label="Precios" />
+                    <SidebarItem href="/admin/pricing" icon={BadgeDollarSign} label="Precios" />
                     <SidebarItem href="/admin/forms" icon={FileText} label="Formularios" />
                     <SidebarItem href="/admin/landing" icon={Settings} label="Landing Page" />
                     <SidebarItem href="/admin/analytics" icon={BarChart3} label="Analytics" />

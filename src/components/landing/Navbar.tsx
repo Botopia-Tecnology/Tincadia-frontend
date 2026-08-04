@@ -3,7 +3,7 @@
 import { useState, useCallback, useRef, useEffect, useMemo } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { Menu, ChevronDown, Building2, MessageSquare, LogOut, User, LayoutDashboard } from 'lucide-react';
+import { Menu, ChevronDown, HeartHandshake, Hand, LogOut, User, LayoutDashboard } from 'lucide-react';
 import { Logo } from '@/components/ui/Logo';
 import { MobileMenu } from './MobileMenu';
 import { useScrollLock } from '@/hooks/useScrollLock';
@@ -42,14 +42,14 @@ export function Navbar({ isBannerVisible = false }: { isBannerVisible?: boolean 
       name: t('navbar.findInclusiveCompany'),
       description: t('navbar.findInclusiveCompanyDesc'),
       href: '/empresas-inclusivas',
-      icon: Building2,
+      icon: HeartHandshake,
       iconColor: 'bg-blue-100 text-blue-600',
     },
     {
       name: t('navbar.becomeInterpreter'),
       description: t('navbar.becomeInterpreterDesc'),
       href: '/ser-interprete',
-      icon: MessageSquare,
+      icon: Hand,
       iconColor: 'bg-purple-100 text-purple-600',
     },
   ], [t]);

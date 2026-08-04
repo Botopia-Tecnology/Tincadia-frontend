@@ -169,7 +169,7 @@ export default function AdminDashboard() {
                     icon={Users}
                     color="text-blue-400 bg-blue-400/10 border-blue-400/20"
                     loading={loading}
-                    trend="+12%"
+                    trend="Registrados"
                     trendUp={true}
                 />
                 <AdminStatCard

@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import { createPortal } from 'react-dom';
 import { X, Loader2, Plus, Trash2 } from 'lucide-react';
 import { contentService, Course } from '@/services/content.service';
 
@@ -94,9 +95,9 @@ export default function EditCourseModal({ isOpen, onClose, onSuccess, course }: 
         setFeatures(features.filter((_, i) => i !== index));
     };
 
-    return (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/80 backdrop-blur-md p-4">
-            <div className="bg-slate-900 border border-slate-700 rounded-xl w-full max-w-2xl shadow-2xl max-h-[90vh] overflow-y-auto custom-scrollbar">
+    return createPortal(
+        <div className="fixed inset-0 z-[100] flex items-center justify-center bg-slate-950/90 backdrop-blur-md p-4">
+            <div className="bg-slate-900 border border-slate-700 rounded-xl w-full max-w-2xl shadow-2xl max-h-[90vh] overflow-y-auto [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
                 <div className="sticky top-0 bg-slate-900 z-10 flex justify-between items-center p-6 border-b border-slate-700">
                     <h2 className="text-xl font-bold text-white">Editar Información del Curso</h2>
                     <button onClick={onClose} className="text-slate-400 hover:text-white transition-colors">
@@ -128,7 +129,7 @@ export default function EditCourseModal({ isOpen, onClose, onSuccess, course }: 
                                     className="w-full bg-slate-800 border border-slate-700 rounded-lg p-2.5 text-white focus:ring-2 focus:ring-indigo-500"
                                 >
                                     {categories.map(cat => (
-                                        <option key={cat.id} value={cat.id}>{cat.name}</option>
+                                        <option key={cat.id} value={cat.id} className="bg-slate-800 text-white">{cat.name}</option>
                                     ))}
                                 </select>
                             </div>
@@ -249,6 +250,7 @@ export default function EditCourseModal({ isOpen, onClose, onSuccess, course }: 
                     </div>
                 </form>
             </div>
-        </div>
+        </div>,
+        document.body
     );
 }
