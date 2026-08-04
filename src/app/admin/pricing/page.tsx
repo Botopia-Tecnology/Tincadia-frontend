@@ -328,7 +328,7 @@ export default function PricingAdminPage() {
                             {/* Features / Límites */}
                             <div className="pt-4 border-t border-slate-800">
                                 <label className="text-sm font-bold text-gray-300 mb-2 block">
-                                    ⚙️ Límites y Funcionalidades Técnicas
+                                    Límites y Funcionalidades Técnicas
                                 </label>
                                 
                                 <div className="space-y-3">
@@ -383,7 +383,7 @@ export default function PricingAdminPage() {
                                                 onChange={(e) => updateFeatureField('tts_enabled', e.target.checked)}
                                                 className="rounded"
                                             />
-                                            🔊 Google TTS
+                                            Google TTS
                                         </label>
                                     </div>
                                 </div>
@@ -392,7 +392,7 @@ export default function PricingAdminPage() {
                             {/* Includes */}
                             <div>
                                 <label className="text-xs text-gray-400 font-bold flex items-center gap-2">
-                                    ✅ Incluye:
+                                    Incluye:
                                     <button onClick={() => addArrayItem('includes')} className="text-blue-400 hover:text-blue-300">
                                         <Plus size={14} />
                                     </button>
@@ -420,7 +420,7 @@ export default function PricingAdminPage() {
                             {/* Excludes */}
                             <div>
                                 <label className="text-xs text-gray-400 font-bold flex items-center gap-2">
-                                    ❌ No Incluye:
+                                    No Incluye:
                                     <button onClick={() => addArrayItem('excludes')} className="text-blue-400 hover:text-blue-300">
                                         <Plus size={14} />
                                     </button>
@@ -552,7 +552,7 @@ export default function PricingAdminPage() {
                                             </div>
                                         </div>
                                         <p className="text-xs text-gray-500 bg-slate-800 p-2 rounded">
-                                            💡 Escribe el precio sin símbolos (ej: 29900). Los centavos se calculan automáticamente.
+                                            Escribe el precio sin símbolos (ej: 29900). Los centavos se calculan automáticamente.
                                         </p>
                                     </>
                                 )}
@@ -580,7 +580,7 @@ export default function PricingAdminPage() {
                                 {/* Features / Límites */}
                                 <div className="pt-4 border-t border-slate-800">
                                     <label className="text-sm font-bold text-gray-300 mb-2 block">
-                                        ⚙️ Límites y Funcionalidades Técnicas
+                                        Límites y Funcionalidades Técnicas
                                     </label>
                                     
                                     <div className="space-y-3">
@@ -635,7 +635,7 @@ export default function PricingAdminPage() {
                                                     onChange={(e) => updateFeatureField('tts_enabled', e.target.checked)}
                                                     className="rounded"
                                                 />
-                                                🔊 Google TTS
+                                                Google TTS
                                             </label>
                                         </div>
                                     </div>
@@ -644,7 +644,7 @@ export default function PricingAdminPage() {
                                 {/* Includes */}
                                 <div>
                                     <label className="text-xs text-gray-400 font-bold flex items-center gap-2">
-                                        ✅ Incluye:
+                                        Incluye:
                                         <button onClick={() => addArrayItem('includes')} className="text-blue-400 hover:text-blue-300">
                                             <Plus size={14} />
                                         </button>
@@ -668,7 +668,7 @@ export default function PricingAdminPage() {
                                 {/* Excludes */}
                                 <div>
                                     <label className="text-xs text-gray-400 font-bold flex items-center gap-2">
-                                        ❌ No Incluye:
+                                        No Incluye:
                                         <button onClick={() => addArrayItem('excludes')} className="text-blue-400 hover:text-blue-300">
                                             <Plus size={14} />
                                         </button>

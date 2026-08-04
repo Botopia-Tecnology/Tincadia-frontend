@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
-import { ChevronDown, Building2, MessageSquare } from 'lucide-react';
+import { ChevronDown, HeartHandshake, Hand } from 'lucide-react';
 
 interface ServiceCategory {
   title: string;
@@ -23,14 +23,14 @@ const serviceCategories: ServiceCategory[] = [
         name: 'Encontrar una empresa inclusiva',
         description: 'Conecta con empresas comprometidas con la inclusión',
         href: '#empresas-inclusivas',
-        icon: <Building2 className="w-6 h-6" />,
+        icon: <HeartHandshake className="w-6 h-6" />,
         iconColor: 'bg-blue-100 text-blue-600',
       },
       {
         name: 'Convertirte en un intérprete',
         description: 'Únete a nuestra red de intérpretes profesionales',
         href: '#ser-interprete',
-        icon: <MessageSquare className="w-6 h-6" />,
+        icon: <Hand className="w-6 h-6" />,
         iconColor: 'bg-purple-100 text-purple-600',
       },
     ],

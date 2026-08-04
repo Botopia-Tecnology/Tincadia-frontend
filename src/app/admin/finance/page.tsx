@@ -1,8 +1,10 @@
 'use client';
 
 import { DollarSign, TrendingUp, CreditCard, Download, Loader2, Filter, Search, X, ChevronLeft, ChevronRight, Eye } from 'lucide-react';
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { financeService, Payment, Subscription } from '@/services/finance.service';
+import { usersService } from '@/services/users.service';
+import { useAuth } from '@/contexts/AuthContext';
 
 const STATUS_COLORS: Record<string, string> = {
     APPROVED: 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20',
@@ -16,9 +18,11 @@ const STATUS_COLORS: Record<string, string> = {
 };
 
 export default function FinancePage() {
+    const { user: currentUser } = useAuth();
     const [activeView, setActiveView] = useState<'transactions' | 'subscriptions'>('transactions');
     const [transactions, setTransactions] = useState<Payment[]>([]);
     const [subscriptions, setSubscriptions] = useState<Subscription[]>([]);
+    const [userMap, setUserMap] = useState<Record<string, { name: string; email: string }>>({});
     const [loading, setLoading] = useState(true);
     const [totalRevenue, setTotalRevenue] = useState(0);
     const [activeSubscriptionsCount, setActiveSubscriptionsCount] = useState(0);
@@ -36,6 +40,25 @@ export default function FinancePage() {
     useEffect(() => {
         loadData();
     }, []);
+
+    // Directorio de usuarios para resolver nombre/correo del dueño de cada suscripción
+    useEffect(() => {
+        if (!currentUser?.id) return;
+        usersService.getAllUsers(currentUser.id)
+            .then(users => {
+                setUserMap(prev => {
+                    const next = { ...prev };
+                    users.forEach(u => {
+                        next[u.id] = {
+                            name: `${u.firstName || ''} ${u.lastName || ''}`.trim(),
+                            email: u.email || ''
+                        };
+                    });
+                    return next;
+                });
+            })
+            .catch(() => { /* sin permisos o error: se usa el fallback de transacciones */ });
+    }, [currentUser?.id]);
 
     const loadData = async () => {
         setLoading(true);
@@ -68,6 +91,23 @@ export default function FinancePage() {
         }
     };
 
+    // Fallback: datos de cliente tomados de sus transacciones (por si el usuario no está en el directorio)
+    const paymentInfoByUser = useMemo(() => {
+        const map: Record<string, { name: string; email: string }> = {};
+        transactions.forEach(t => {
+            if (t.userId && (t.customerName || t.customerEmail)) {
+                map[t.userId] = { name: t.customerName || '', email: t.customerEmail || '' };
+            }
+        });
+        return map;
+    }, [transactions]);
+
+    const resolveUser = (userId: string) => {
+        const info = userMap[userId] || paymentInfoByUser[userId];
+        if (!info || (!info.name && !info.email)) return null;
+        return info;
+    };
+
     // Filter Logic
     const getFilteredData = () => {
         const sourceData = activeView === 'transactions' ? transactions : subscriptions;
@@ -85,8 +125,9 @@ export default function FinancePage() {
             // Search Term
             if (searchTerm) {
                 const term = searchTerm.toLowerCase();
+                const owner = userMap[item.userId] || paymentInfoByUser[item.userId];
                 // @ts-expect-error — reference and customerEmail exist only on Payment
-                const searchString = `${item.id} ${item.userId} ${item.reference || ''} ${item.customerEmail || ''}`.toLowerCase();
+                const searchString = `${item.id} ${item.userId} ${item.reference || ''} ${item.customerEmail || ''} ${owner?.name || ''} ${owner?.email || ''}`.toLowerCase();
                 if (!searchString.includes(term)) return false;
             }
 
@@ -313,9 +354,19 @@ export default function FinancePage() {
                                                         <div className="text-slate-500 text-xs">{item.customerEmail}</div>
                                                     </div>
                                                 ) : (
-                                                    <div className="text-slate-400 font-mono text-xs bg-slate-900/50 px-2 py-1 rounded w-fit border border-white/5">
-                                                        User: {item.userId.substring(0, 8)}
-                                                    </div>
+                                                    (() => {
+                                                        const owner = resolveUser(item.userId);
+                                                        return owner ? (
+                                                            <div>
+                                                                <div className="text-white font-medium text-sm">{owner.name || 'Sin nombre'}</div>
+                                                                <div className="text-slate-500 text-xs">{owner.email}</div>
+                                                            </div>
+                                                        ) : (
+                                                            <div className="text-slate-400 font-mono text-xs bg-slate-900/50 px-2 py-1 rounded w-fit border border-white/5" title={item.userId}>
+                                                                User: {item.userId.substring(0, 8)}
+                                                            </div>
+                                                        );
+                                                    })()
                                                 )}
                                             </td>
 

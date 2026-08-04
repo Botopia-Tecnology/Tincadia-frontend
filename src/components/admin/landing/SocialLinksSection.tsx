@@ -1,7 +1,8 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { Mail, Linkedin, Instagram, Facebook, Twitter, Youtube, Music, Phone, MessageCircle, Send, PlayCircle, Github, Loader2, Save } from 'lucide-react';
+import { Mail, Linkedin, Instagram, Facebook, Twitter, Youtube, Phone, MessageCircle, Send, PlayCircle, Github, Loader2, Save } from 'lucide-react';
+import { TikTokIcon } from '@/components/common/SocialIcon';
 import { LandingConfigItem, SocialLink } from '@/app/admin/landing/types';
 
 const PREDEFINED_NETWORKS = [
@@ -10,7 +11,7 @@ const PREDEFINED_NETWORKS = [
     { name: 'Facebook', icon: Facebook, color: '#1877F2' },
     { name: 'Twitter', icon: Twitter, color: '#1DA1F2' },
     { name: 'Youtube', icon: Youtube, color: '#FF0000' },
-    { name: 'TikTok', icon: Music, color: '#000000' },
+    { name: 'TikTok', icon: TikTokIcon, color: '#000000' },
     { name: 'WhatsApp', icon: Phone, color: '#25D366' },
     { name: 'Discord', icon: MessageCircle, color: '#5865F2' },
     { name: 'Telegram', icon: Send, color: '#0088CC' },

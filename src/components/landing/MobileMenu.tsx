@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
-import { X, ChevronDown, Building2, MessageSquare, User, LogOut, LayoutDashboard } from 'lucide-react';
+import { X, ChevronDown, HeartHandshake, Hand, User, LogOut, LayoutDashboard } from 'lucide-react';
 import { Logo } from '@/components/ui/Logo';
 import { LanguageSelector } from '@/components/ui/LanguageSelector';
 import { useTranslation } from '@/hooks/useTranslation';
@@ -20,14 +20,14 @@ const servicesDropdownItems = [
     name: 'Encontrar una empresa inclusiva',
     description: 'Conecta con empresas comprometidas con la inclusión',
     href: '/empresas-inclusivas',
-    icon: Building2,
+    icon: HeartHandshake,
     iconColor: 'bg-blue-100 text-blue-600',
   },
   {
     name: 'Convertirte en un intérprete',
     description: 'Únete a nuestra red de intérpretes profesionales',
     href: '/ser-interprete',
-    icon: MessageSquare,
+    icon: Hand,
     iconColor: 'bg-purple-100 text-purple-600',
   },
 ];
