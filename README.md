@@ -1,91 +1,88 @@
 # Tincadia Frontend
 
-Frontend de Tincadia, una plataforma de tecnología inclusiva que conecta a personas sordas, oyentes y organizaciones mediante soluciones accesibles, inteligencia artificial y herramientas de comunicación.
+Sitio web y panel de administración de Tincadia, plataforma de tecnología inclusiva que conecta a personas sordas, oyentes y organizaciones.
 
-Este proyecto está construido con [Next.js](https://nextjs.org) y [React](https://react.dev).
+Construido con [Next.js](https://nextjs.org) 16 (App Router) y [React](https://react.dev) 19.
 
-## Requisitos Previos
+## Requisitos previos
 
-Antes de comenzar, asegúrate de tener instalado:
-
-- [Node.js](https://nodejs.org/) (versión 18 o superior)
-- [npm](https://www.npmjs.com/), [yarn](https://yarnpkg.com/), [pnpm](https://pnpm.io/) o [bun](https://bun.sh/)
+- [Node.js](https://nodejs.org/) 18 o superior
+- [Bun](https://bun.sh/) (gestor de paquetes del proyecto)
+- El [backend](https://github.com/Botopia-Tecnology/Tincadia-backend) corriendo, o la URL de un entorno desplegado
 
 ## Instalación
 
-1. Clona el repositorio:
-```bash
-git clone <url-del-repositorio>
-cd tincadia-front
-```
-
-2. Instala las dependencias:
 ```bash
 bun install
+cp .env.example .env.local
 ```
 
-## Ejecutar el Proyecto
+Rellena `.env.local` antes de arrancar. Lo mínimo es `NEXT_PUBLIC_API_URL`.
 
-### Modo Desarrollo
+> **Cuidado con el puerto.** El `.env.example` trae `http://localhost:3000`, que es el puerto donde corre este mismo Next. El API Gateway escucha en **3001**, así que en local suele ser `http://localhost:3001`.
 
-Para ejecutar el servidor de desarrollo:
+Todas las variables llevan prefijo `NEXT_PUBLIC_`, así que **viajan al navegador**. Ahí no va nada secreto: ni claves de servicio, ni credenciales de base de datos.
+
+## Ejecución
 
 ```bash
-bun dev
+bun dev            # desarrollo, http://localhost:3000
+bun run build      # build de producción
+bun start          # compila y sirve producción
+bun run lint       # ESLint
 ```
 
-Abre [http://localhost:3000](http://localhost:3000) en tu navegador para ver el resultado.
+## Estructura
 
-La página se actualiza automáticamente cuando editas los archivos.
-
-### Modo Producción
-
-Para construir y ejecutar en modo producción:
-
-```bash
-# Construir la aplicación
-bun run build
-
-# Iniciar el servidor de producción
-bun start
+```
+tincadia-front/
+├── src/
+│   ├── app/          # Rutas (App Router)
+│   │   ├── admin/    # Panel de administración
+│   │   └── api/      # Route handlers
+│   ├── components/   # Componentes reutilizables
+│   ├── config/       # Configuración y variables de entorno
+│   ├── contexts/     # Contextos de React (i18n, sesión…)
+│   ├── hooks/        # Hooks propios
+│   ├── lib/          # Utilidades y cliente HTTP
+│   ├── locales/      # Traducciones (es, en, pt)
+│   ├── services/     # Clientes del API Gateway
+│   ├── styles/
+│   └── types/
+└── public/
 ```
 
-### Linting
+### Rutas públicas
 
-Para ejecutar el linter y verificar el código:
+Landing (`/`), `nosotros`, `cursos`, `pricing`, `contacto`, `empresas-inclusivas`, `ser-interprete`, `pagos`, `perfil`, `reset-password`, y las legales `terminos` y `privacidad`.
 
-```bash
-bun run lint
-```
+### Panel de administración
 
-## Scripts Disponibles
+Bajo `/admin`: analítica, categorías, cursos, finanzas, formularios, edición de la landing y notificaciones. Las gráficas usan **Recharts**.
 
-- `bun dev` - Inicia el servidor de desarrollo
-- `bun run build` - Construye la aplicación para producción
-- `bun start` - Inicia el servidor de producción
-- `bun run lint` - Ejecuta el linter para verificar el código
+## Conexión con el backend
 
+Todo pasa por el **API Gateway**; este frontend no habla con los microservicios ni con Supabase directamente. Los clientes viven en `src/services/`, uno por dominio (`auth`, `content`, `finance`, `forms`, `notifications`, `payments`, `users`).
 
+La URL base y el timeout salen de `NEXT_PUBLIC_API_URL` y `NEXT_PUBLIC_API_TIMEOUT`.
 
-## Tecnologías Utilizadas
+## Internacionalización
 
-- **Next.js 16** - Framework de React para producción
-- **React 19** - Biblioteca de JavaScript para interfaces de usuario
-- **TypeScript** - Superset tipado de JavaScript
-- **Tailwind CSS** - Framework de CSS utility-first
-- **Lucide React** - Iconos SVG
+Español, inglés y portugués en `src/locales/`. Al añadir una clave, edítala en los **tres** archivos.
 
-## Learn More
+## Tecnologías
 
-To learn more about Next.js, take a look at the following resources:
+- **Next.js 16** con App Router
+- **React 19**
+- **TypeScript** en modo estricto
+- **Tailwind CSS 4**
+- **Recharts** para las gráficas del panel
+- **Microsoft Clarity** para analítica de uso
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Despliegue
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+Pensado para [Vercel](https://vercel.com/). Hay que configurar las variables de entorno en el proyecto: no se heredan del `.env.local`, que es solo local y no se versiona.
 
-## Deploy on Vercel
+## Licencia
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Privado — Tincadia.
