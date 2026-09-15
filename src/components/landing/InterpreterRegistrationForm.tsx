@@ -33,6 +33,7 @@ export function InterpreterRegistrationForm({
         formIdError,
         submitStatus,
         setSubmitStatus,
+        errorMessage,
         fileErrors,
         handleDocumentBlur,
         handleCheckboxChange,
@@ -124,6 +125,7 @@ export function InterpreterRegistrationForm({
                     <AuthorizationFooter 
                         formik={formik} 
                         submitStatus={submitStatus} 
+                        errorMessage={errorMessage}
                         formIdError={formIdError} 
                         isEditing={isEditing} 
                         t={t} 

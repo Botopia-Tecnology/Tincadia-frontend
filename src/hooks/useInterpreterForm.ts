@@ -6,6 +6,7 @@ import * as Yup from 'yup';
 import { useTranslation } from '@/hooks/useTranslation';
 import { formsService } from '@/services/forms.service';
 import { authService } from '@/services/auth.service';
+import { useAuth } from '@/contexts/AuthContext';
 
 export interface FileData {
     name: string;
@@ -43,6 +44,7 @@ const MAX_FILE_SIZE = 50 * 1024 * 1024;
 
 export function useInterpreterForm({ initialData, submissionId, onSuccess }: UseInterpreterFormProps = {}) {
     const t = useTranslation();
+    const { user } = useAuth();
     const isEditing = !!submissionId;
 
     const [otraAreaEspecialidad, setOtraAreaEspecialidad] = useState('');
@@ -50,6 +52,7 @@ export function useInterpreterForm({ initialData, submissionId, onSuccess }: Use
     const [formId, setFormId] = useState<string | null>(null);
     const [formIdError, setFormIdError] = useState<string | null>(null);
     const [submitStatus, setSubmitStatus] = useState<'idle' | 'success' | 'error'>('idle');
+    const [errorMessage, setErrorMessage] = useState<string | null>(null);
     const [fileErrors, setFileErrors] = useState<{ [key: string]: string | null }>({});
 
     const getArray = useCallback((key: string): string[] => {
@@ -194,7 +197,7 @@ export function useInterpreterForm({ initialData, submissionId, onSuccess }: Use
                     await formsService.updateSubmission(submissionId, { data: submissionData });
                     if (onSuccess) onSuccess();
                 } else {
-                    const response = await formsService.submitForm(currentFormId!, submissionData);
+                    const response = await formsService.submitForm(currentFormId!, submissionData, user?.id);
                     if (response.userStatus === 'registered') {
                         alert('Este documento ya se encuentra registrado. Por favor inicie sesión.');
                         window.location.href = '/login';
@@ -203,14 +206,22 @@ export function useInterpreterForm({ initialData, submissionId, onSuccess }: Use
                 }
 
                 setSubmitStatus('success');
+                setErrorMessage(null);
                 if (!isEditing) {
                     setTimeout(() => setSubmitStatus('idle'), 5000);
                     resetForm();
                     setOtraAreaEspecialidad('');
                     setOtroTipoServicio('');
                 }
-            } catch {
+            } catch (err: any) {
                 setSubmitStatus('error');
+                const backendMsg = err?.response?.data?.message || err?.data?.message || err?.message;
+                const finalMsg = Array.isArray(backendMsg) ? backendMsg[0] : backendMsg;
+                if (finalMsg && typeof finalMsg === 'string' && !finalMsg.includes('Failed to fetch') && !finalMsg.includes('NetworkError')) {
+                    setErrorMessage(finalMsg);
+                } else {
+                    setErrorMessage('Debes registrarte o iniciar sesión primero para poder enviar tu solicitud.');
+                }
             }
         },
     });
@@ -250,6 +261,8 @@ export function useInterpreterForm({ initialData, submissionId, onSuccess }: Use
         formIdError,
         submitStatus,
         setSubmitStatus,
+        errorMessage,
+        setErrorMessage,
         fileErrors,
         handleDocumentBlur,
         handleCheckboxChange,
