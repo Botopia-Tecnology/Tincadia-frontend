@@ -6,6 +6,7 @@ import * as Yup from 'yup';
 import { useTranslation } from '@/hooks/useTranslation';
 import { formsService } from '@/services/forms.service';
 import { authService } from '@/services/auth.service';
+import { useAuth } from '@/contexts/AuthContext';
 
 export interface FormFile {
     url: string;
@@ -44,12 +45,14 @@ const MAX_FILE_SIZE = 50 * 1024 * 1024;
 
 export function useJobSeekerForm({ initialData, submissionId, onSuccess }: UseJobSeekerFormProps = {}) {
     const t = useTranslation();
+    const { user } = useAuth();
     const isEditing = !!submissionId;
 
     const [otraAreaLaboral, setOtraAreaLaboral] = useState('');
     const [formId, setFormId] = useState<string | null>(null);
     const [formIdError, setFormIdError] = useState<string | null>(null);
     const [submitStatus, setSubmitStatus] = useState<'idle' | 'success' | 'error'>('idle');
+    const [errorMessage, setErrorMessage] = useState<string | null>(null);
     const [fileError, setFileError] = useState<string | null>(null);
 
     const getArray = useCallback((key: string): string[] => {
@@ -189,7 +192,7 @@ export function useJobSeekerForm({ initialData, submissionId, onSuccess }: UseJo
                     await formsService.updateSubmission(submissionId, { data: submissionData });
                     if (onSuccess) onSuccess();
                 } else {
-                    const response = await formsService.submitForm(currentFormId!, submissionData);
+                    const response = await formsService.submitForm(currentFormId!, submissionData, user?.id);
                     if (response.userStatus === 'registered') {
                         alert(t('forms.jobSeeker.messages.alreadyRegistered') || 'Usuario ya registrado.');
                         window.location.href = '/login';
@@ -198,13 +201,21 @@ export function useJobSeekerForm({ initialData, submissionId, onSuccess }: UseJo
                 }
 
                 setSubmitStatus('success');
+                setErrorMessage(null);
                 if (!isEditing) {
                     setTimeout(() => setSubmitStatus('idle'), 5000);
                     resetForm();
                     setOtraAreaLaboral('');
                 }
-            } catch {
+            } catch (err: any) {
                 setSubmitStatus('error');
+                const backendMsg = err?.response?.data?.message || err?.data?.message || err?.message;
+                const finalMsg = Array.isArray(backendMsg) ? backendMsg[0] : backendMsg;
+                if (finalMsg && typeof finalMsg === 'string' && !finalMsg.includes('Failed to fetch') && !finalMsg.includes('NetworkError')) {
+                    setErrorMessage(finalMsg);
+                } else {
+                    setErrorMessage('Debes registrarte o iniciar sesión primero para poder enviar tu solicitud.');
+                }
             }
         },
     });
@@ -215,7 +226,7 @@ export function useJobSeekerForm({ initialData, submissionId, onSuccess }: UseJo
         if (docNumber?.length > 4) {
             try {
                 const { exists } = await authService.checkDocumentExists(docNumber);
-                if (!exists) formik.setFieldError('documentoIdentidad', 'Este documento no se encuentra registrado.');
+                if (!exists) formik.setFieldError('documentoIdentidad', 'Este documento no se encuentra registrado. Debes registrarte primero.');
             } catch (error) { console.error(error); }
         }
     };
@@ -242,6 +253,8 @@ export function useJobSeekerForm({ initialData, submissionId, onSuccess }: UseJo
         formIdError,
         submitStatus,
         setSubmitStatus,
+        errorMessage,
+        setErrorMessage,
         fileError,
         handleDocumentBlur,
         handleCheckboxChange,

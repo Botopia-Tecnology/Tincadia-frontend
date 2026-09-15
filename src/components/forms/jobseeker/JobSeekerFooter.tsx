@@ -7,12 +7,13 @@ import { JobSeekerFormData } from '@/hooks/useJobSeekerForm';
 interface JobSeekerFooterProps {
     formik: FormikProps<JobSeekerFormData>;
     submitStatus: string;
+    errorMessage?: string | null;
     formIdError: string | null;
     isEditing: boolean;
     t: (key: string) => string;
 }
 
-export function JobSeekerFooter({ formik, submitStatus, formIdError, isEditing, t }: JobSeekerFooterProps) {
+export function JobSeekerFooter({ formik, submitStatus, errorMessage, formIdError, isEditing, t }: JobSeekerFooterProps) {
     return (
         <div className="space-y-8 pt-6 border-t border-gray-100">
             <div className="grid md:grid-cols-2 gap-8">
@@ -67,10 +68,26 @@ export function JobSeekerFooter({ formik, submitStatus, formIdError, isEditing, 
 
             {submitStatus === 'error' && (
                 <div className="bg-red-50 border border-red-200 rounded-xl p-4 flex gap-3 animate-in shake duration-500">
-                    <X className="w-5 h-5 text-red-600 shrink-0" />
-                    <div>
+                    <X className="w-5 h-5 text-red-600 shrink-0 mt-0.5" />
+                    <div className="space-y-2 flex-1">
                         <h3 className="text-sm font-bold text-red-900">Error al enviar</h3>
-                        <p className="text-sm text-red-700 mt-1">Hubo un problema procesando tu solicitud. Por favor intenta de nuevo.</p>
+                        <p className="text-sm text-red-700">
+                            {errorMessage || 'Debes registrarte o iniciar sesión primero para poder enviar tu solicitud.'}
+                        </p>
+                        <div className="pt-2 flex flex-wrap gap-3">
+                            <a
+                                href="/registro"
+                                className="text-xs font-semibold bg-[#83A98A] text-white px-4 py-2 rounded-lg hover:bg-[#6D8F75] transition-colors inline-flex items-center"
+                            >
+                                Registrarme ahora
+                            </a>
+                            <a
+                                href="/login"
+                                className="text-xs font-semibold bg-white border border-gray-300 text-gray-700 px-4 py-2 rounded-lg hover:bg-gray-50 transition-colors inline-flex items-center"
+                            >
+                                Iniciar sesión
+                            </a>
+                        </div>
                     </div>
                 </div>
             )}

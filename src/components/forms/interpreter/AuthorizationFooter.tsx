@@ -7,12 +7,13 @@ import { InterpreterFormData } from '@/hooks/useInterpreterForm';
 interface AuthorizationFooterProps {
     formik: FormikProps<InterpreterFormData>;
     submitStatus: string;
+    errorMessage?: string | null;
     formIdError: string | null;
     isEditing: boolean;
     t: (key: string) => string;
 }
 
-export function AuthorizationFooter({ formik, submitStatus, formIdError, isEditing, t }: AuthorizationFooterProps) {
+export function AuthorizationFooter({ formik, submitStatus, errorMessage, formIdError, isEditing, t }: AuthorizationFooterProps) {
     return (
         <div className="space-y-8 pt-6 border-t border-gray-100">
             {/* 15. Autorización */}
@@ -48,13 +49,29 @@ export function AuthorizationFooter({ formik, submitStatus, formIdError, isEditi
             )}
 
             {submitStatus === 'error' && (
-                <div className="bg-red-50 border border-red-200 rounded-xl p-4 flex gap-3">
+                <div className="bg-red-50 border border-red-200 rounded-xl p-4 flex gap-3 animate-in shake duration-500">
                     <div className="p-2 bg-red-100 rounded-full h-fit">
                         <X className="w-5 h-5 text-red-600" />
                     </div>
-                    <div>
-                        <h3 className="text-sm font-bold text-red-900">No pudimos enviar tu solicitud</h3>
-                        <p className="text-sm text-red-700 mt-1">Verifica tu conexión e intenta de nuevo. Los archivos no deben superar los 50MB.</p>
+                    <div className="space-y-2 flex-1">
+                        <h3 className="text-sm font-bold text-red-900">Error al enviar</h3>
+                        <p className="text-sm text-red-700">
+                            {errorMessage || 'Debes registrarte o iniciar sesión primero para poder enviar tu solicitud.'}
+                        </p>
+                        <div className="pt-2 flex flex-wrap gap-3">
+                            <a
+                                href="/registro"
+                                className="text-xs font-semibold bg-[#83A98A] text-white px-4 py-2 rounded-lg hover:bg-[#6D8F75] transition-colors inline-flex items-center"
+                            >
+                                Registrarme ahora
+                            </a>
+                            <a
+                                href="/login"
+                                className="text-xs font-semibold bg-white border border-gray-300 text-gray-700 px-4 py-2 rounded-lg hover:bg-gray-50 transition-colors inline-flex items-center"
+                            >
+                                Iniciar sesión
+                            </a>
+                        </div>
                     </div>
                 </div>
             )}

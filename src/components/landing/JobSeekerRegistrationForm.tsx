@@ -32,6 +32,7 @@ export function JobSeekerRegistrationForm({
         formIdError,
         submitStatus,
         setSubmitStatus,
+        errorMessage,
         fileError,
         handleDocumentBlur,
         handleCheckboxChange,
@@ -124,6 +125,7 @@ export function JobSeekerRegistrationForm({
                     <JobSeekerFooter 
                         formik={formik} 
                         submitStatus={submitStatus} 
+                        errorMessage={errorMessage}
                         formIdError={formIdError} 
                         isEditing={isEditing} 
                         t={t} 
