@@ -190,6 +190,20 @@ class PaymentsService {
     async cancelSubscription(subscriptionId: string): Promise<SubscriptionCancellation> {
         return api.post<SubscriptionCancellation>(`${this.baseUrl}/subscriptions/${subscriptionId}/cancel`, {});
     }
+
+    /**
+     * Obtiene el estado del modo global de acceso libre (Free Premium)
+     */
+    async getFreePremiumMode(): Promise<{ enabled: boolean }> {
+        return api.get<{ enabled: boolean }>(`${this.baseUrl}/settings/free-premium`);
+    }
+
+    /**
+     * Activa o desactiva el modo global de acceso libre (Free Premium)
+     */
+    async setFreePremiumMode(enabled: boolean): Promise<{ enabled: boolean }> {
+        return api.post<{ enabled: boolean }>(`${this.baseUrl}/settings/free-premium`, { enabled });
+    }
 }
 
 export const paymentsService = new PaymentsService();

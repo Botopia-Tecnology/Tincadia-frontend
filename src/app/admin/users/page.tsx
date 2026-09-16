@@ -1,14 +1,56 @@
 'use client';
 
-import { Search, MoreVertical, Loader2, Edit, Trash2, Check, X, ChevronLeft, ChevronRight, Filter, ListFilter, Mail, Phone, Calendar, Shield } from 'lucide-react';
+import { Search, MoreVertical, Loader2, Edit, Trash2, Check, X, ChevronLeft, ChevronRight, Filter, ListFilter, Mail, Phone, Calendar, Shield, Sparkles } from 'lucide-react';
 import { useEffect, useState, useRef, useCallback } from 'react';
 import { usersService, User } from '@/services/users.service';
+import { paymentsService } from '@/services/payments.service';
 import { useAuth } from '@/contexts/AuthContext';
 
 export default function UsersPage() {
     const { user: currentUser } = useAuth();
     const [users, setUsers] = useState<User[]>([]);
     const [loading, setLoading] = useState(true);
+
+    // Global Free Premium Mode State
+    const [freePremiumEnabled, setFreePremiumEnabled] = useState<boolean>(false);
+    const [loadingFreePremium, setLoadingFreePremium] = useState<boolean>(true);
+    const [updatingFreePremium, setUpdatingFreePremium] = useState<boolean>(false);
+
+    const loadFreePremiumStatus = useCallback(async () => {
+        try {
+            setLoadingFreePremium(true);
+            const res = await paymentsService.getFreePremiumMode();
+            setFreePremiumEnabled(!!res?.enabled);
+        } catch (error) {
+            console.error('Error fetching free premium status:', error);
+        } finally {
+            setLoadingFreePremium(false);
+        }
+    }, []);
+
+    useEffect(() => {
+        loadFreePremiumStatus();
+    }, [loadFreePremiumStatus]);
+
+    const toggleFreePremium = async () => {
+        const nextState = !freePremiumEnabled;
+        const confirmMsg = nextState
+            ? '¿Deseas activar el Modo Acceso Libre?\n\nTodos los usuarios (nuevos y existentes) tendrán acceso ilimitado a todas las funcionalidades Premium sin costo.'
+            : '¿Deseas desactivar el Modo Acceso Libre?\n\nLas funcionalidades Premium volverán a estar restringidas únicamente a usuarios con suscripción de pago activa.';
+
+        if (!window.confirm(confirmMsg)) return;
+
+        try {
+            setUpdatingFreePremium(true);
+            const res = await paymentsService.setFreePremiumMode(nextState);
+            setFreePremiumEnabled(res.enabled);
+        } catch (error) {
+            console.error('Error toggling free premium mode:', error);
+            alert('No se pudo actualizar el Modo Acceso Libre');
+        } finally {
+            setUpdatingFreePremium(false);
+        }
+    };
 
     // Filters & Search
     const [searchTerm, setSearchTerm] = useState('');
@@ -161,6 +203,49 @@ export default function UsersPage() {
 
     return (
         <div className="space-y-6 p-2 relative">
+            {/* Control Maestro: Modo Acceso Libre (Global Free Premium) */}
+            <div className={`p-4 rounded-2xl border transition-all duration-300 flex flex-col md:flex-row items-start md:items-center justify-between gap-4 ${
+                freePremiumEnabled 
+                    ? 'bg-gradient-to-r from-emerald-950/40 via-emerald-900/20 to-slate-900 border-emerald-500/40 shadow-lg shadow-emerald-950/20' 
+                    : 'bg-slate-900/80 border-slate-800'
+            }`}>
+                <div className="flex items-center gap-3">
+                    <div className={`p-3 rounded-xl ${freePremiumEnabled ? 'bg-emerald-500/20 text-emerald-400' : 'bg-slate-800 text-slate-400'}`}>
+                        <Sparkles className="w-5 h-5" />
+                    </div>
+                    <div>
+                        <div className="flex items-center gap-2 flex-wrap">
+                            <h3 className="text-base font-bold text-white">Modo Acceso Libre (Premium Abierto)</h3>
+                            <span className={`text-xs px-2.5 py-0.5 rounded-full font-medium ${
+                                freePremiumEnabled 
+                                    ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/30' 
+                                    : 'bg-slate-800 text-slate-400 border border-slate-700'
+                            }`}>
+                                {loadingFreePremium ? 'Cargando...' : freePremiumEnabled ? 'Activo para todos' : 'Desactivado'}
+                            </span>
+                        </div>
+                        <p className="text-xs text-slate-400 mt-0.5">
+                            {freePremiumEnabled
+                                ? 'Todos los usuarios de la aplicación (actuales y nuevos) tienen activadas todas las funciones Premium sin cobro.'
+                                : 'Las funciones Premium están restringidas únicamente a usuarios con suscripción de pago activa.'}
+                        </p>
+                    </div>
+                </div>
+
+                <button
+                    onClick={toggleFreePremium}
+                    disabled={updatingFreePremium || loadingFreePremium}
+                    className={`px-5 py-2.5 rounded-xl font-semibold text-sm transition-all flex items-center gap-2 shrink-0 cursor-pointer ${
+                        freePremiumEnabled
+                            ? 'bg-emerald-600 hover:bg-emerald-500 text-white shadow-lg shadow-emerald-600/30'
+                            : 'bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700'
+                    } disabled:opacity-50`}
+                >
+                    {updatingFreePremium && <Loader2 className="w-4 h-4 animate-spin" />}
+                    {freePremiumEnabled ? 'Desactivar Acceso Libre' : 'Activar Acceso Libre'}
+                </button>
+            </div>
+
             <div className="flex flex-col xl:flex-row xl:items-center justify-between gap-4">
                 <div>
                     <h2 className="text-2xl font-bold text-white">Gestión de Usuarios</h2>
